@@ -23,7 +23,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "List all broadcasts by filters", document: false do
+    example "Filter a broadcast", document: false do
       account = create(:account)
       running_broadcast = create(:broadcast, account:, status: :running)
       _stopped_broadcast = create(:broadcast, account:, status: :stopped)
@@ -40,7 +40,7 @@ RSpec.resource "Broadcasts"  do
   end
 
   get "/v1/broadcasts/:id" do
-    example "Get a broadcasts" do
+    example "Fetch a broadcast" do
       account = create(:account)
       broadcast = create(:broadcast, account:)
 
@@ -54,7 +54,34 @@ RSpec.resource "Broadcasts"  do
   end
 
   post "/v1/broadcasts" do
-    example "Create a broadcasts" do
+    with_options scope: %i[data] do
+      parameter(
+        :type, "Must be `broadcast`",
+        required: true
+      )
+    end
+
+    with_options scope: %i[data attributes] do
+      parameter(
+        :channel, "Must be one of #{Broadcast.channel.values.map { |t| "`#{t}`" }.join(", ")}.",
+        required: true
+      )
+      parameter(
+        :audio_url, "A publicly available URL which contains the broadcast message.",
+        required: true
+      )
+      parameter(
+        :metadata, "Set of key-value pairs that you can attach to the broadcast. This can be useful for storing additional information about the broadcast in a structured format."
+      )
+    end
+
+    with_options scope: %i[data attributes beneficiary_filter] do
+      FieldDefinitions::BeneficiaryFields.each do |field|
+        parameter(field.name, field.description, required: false, method: :_disabled)
+      end
+    end
+
+    example "Create a broadcast" do
       account = create(:account)
 
       set_authorization_header_for(account)
@@ -108,7 +135,41 @@ RSpec.resource "Broadcasts"  do
   end
 
   patch "/v1/broadcasts/:id" do
-    example "Update a broadcasts" do
+    with_options scope: %i[data] do
+      parameter(
+        :id, "The unique identifier of the broadcast.",
+        required: true
+      )
+      parameter(
+        :type, "Must be `broadcast`",
+        required: true
+      )
+    end
+
+    # optional(:audio_url).filled(:string)
+    # optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
+    # optional(:status).filled(included_in?: STATES)
+    # optional(:metadata).value(:hash)
+
+    with_options scope: %i[data attributes] do
+      parameter(
+        :audio_url, "A publicly available URL which contains the broadcast message. Can only be updated before the broadcast starts.",
+      )
+      parameter(
+        :status, "Update the status of a broadcast. Must be one of #{V1::UpdateBroadcastRequestSchema::STATES.map { "`#{_1}`" }.join(", ")}."
+      )
+      parameter(
+        :metadata, "Set of key-value pairs that you can attach to the broadcast. This can be useful for storing additional information about the broadcast in a structured format."
+      )
+    end
+
+    with_options scope: %i[data attributes beneficiary_filter] do
+      FieldDefinitions::BeneficiaryFields.each do |field|
+        parameter(field.name, field.description, required: false, method: :_disabled)
+      end
+    end
+
+    example "Update a broadcast" do
       account = create(:account)
       _male_beneficiary = create(:beneficiary, account:, gender: "M")
       female_beneficiary = create(:beneficiary, account:, gender: "F")
@@ -122,8 +183,7 @@ RSpec.resource "Broadcasts"  do
         }
       )
 
-      stub_request(:get, "https://www.example.com/test.mp3")
-        .to_return(status: 200, body: file_fixture("test.mp3"))
+      stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
 
       set_authorization_header_for(account)
       perform_enqueued_jobs do
@@ -159,7 +219,7 @@ RSpec.resource "Broadcasts"  do
       expect(broadcast.delivery_attempts.first.beneficiary).to eq(female_beneficiary)
     end
 
-    example "Failed to update a broadcast", document: false do
+    example "Fail to update a broadcast", document: false do
       account = create(:account)
       broadcast = create(
         :broadcast,

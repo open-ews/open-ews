@@ -13,9 +13,7 @@ module API
       def create
         validate_request_schema(
           with: ::V1::BeneficiaryRequestSchema,
-          serializer_options: { include: [ :addresses ] },
-          # TODO: can remove this once after we rename the model to beneficiary
-          location: ->(resource) { api_v1_beneficiary_path(resource) }
+          serializer_options: { include: [ :addresses ] }
         ) do |permitted_params|
             CreateBeneficiaryWithAddress.new(
               account: current_account,

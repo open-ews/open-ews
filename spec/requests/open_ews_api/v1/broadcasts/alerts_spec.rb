@@ -91,7 +91,7 @@ RSpec.resource "Alerts"  do
   end
 
   get "/v1/broadcasts/:broadcast_id/alerts/:id" do
-    example "Get an alert" do
+    example "Fetch an alert" do
       account = create(:account)
       broadcast = create(:broadcast, account:)
       alert = create(:alert, broadcast: broadcast)
@@ -164,13 +164,16 @@ RSpec.resource "Alerts"  do
       expect(response_body).to match_jsonapi_resource_collection_schema("stat", pagination: false)
       results = json_response.fetch("data").map { |data| data.dig("attributes", "result") }
 
-      expect(results).to contain_exactly({
-            "beneficiary.gender" => "M",
-            "value" => 2
-          }, {
-            "beneficiary.gender" => "F",
-            "value" => 2
-          })
+      expect(results).to contain_exactly(
+        {
+          "beneficiary.gender" => "M",
+          "value" => 2
+        },
+        {
+          "beneficiary.gender" => "F",
+          "value" => 2
+        }
+      )
     end
   end
 end
