@@ -1,11 +1,22 @@
 <%= render "dashboard/settings/frame" do %>
-  <%= render(
-    "shared/resources_table",
-    resource_class: AccessToken,
-    partial: "dashboard/access_tokens/access_token",
-    columns: %i[token created_at],
-    unsortable_columns: %i[token],
-  ) %>
+  <div class="card-header">
+    <h2 class="mb-0">Developers</h2>
+  </div>
 
-  <%= render("shared/pagination", resources: resources) %>
+  <div class="card-body">
+    <%= simple_form_for([:dashboard, current_account.access_tokens.last], html: { novalidate: "novalidate" }) do |f| %>
+      <div class="row">
+        <div class="col">
+          <%= f.input :token, input_html: { readonly: true } %>
+          <%= f.submit "Regenerate", class: "btn btn-danger" %>
+        </div>
+        <div class="col d-flex justify-content-center align-items-center">
+          <p class="">
+            Learn how to use the API at
+            <a href="https://docs.open-ews.org/" target="_blank">https://docs.open-ews.org/</a>.
+          </p>
+        </div>
+      </div>
+    <% end %>
+  </div>
 <% end %>
