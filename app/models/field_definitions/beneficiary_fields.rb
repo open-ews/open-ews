@@ -3,6 +3,7 @@ module FieldDefinitions
   addresses = BeneficiaryAddress.arel_table
 
   BeneficiaryFields = Collection.new([
+    Field.new(name: "phone_number", column: beneficiaries[:phone_number], schema: FilterSchema::StringType.define, description: "The phone number of the beneficiary."),
     Field.new(name: "status", column: beneficiaries[:status], schema: FilterSchema::ListType.define(:string, Beneficiary.status.values), description: "Must be one of #{Beneficiary.status.values.map { |t| "`#{t}`" }.join(", ")}."),
     Field.new(name: "gender", column: beneficiaries[:gender], schema: FilterSchema::ListType.define(Types::UpcaseString, Beneficiary.gender.values), description: "Must be one of `M` or `F`."),
     Field.new(name: "disability_status", column: beneficiaries[:disability_status], schema: FilterSchema::ListType.define(:string, Beneficiary.disability_status.values), description: "Must be one of #{Beneficiary.disability_status.values.map { |t| "`#{t}`" }.join(", ")}."),

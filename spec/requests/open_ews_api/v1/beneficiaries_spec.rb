@@ -24,18 +24,18 @@ RSpec.resource "Beneficiaries"  do
       )
     end
 
-    example "List all disabled beneficiaries", document: false do
+    example "Filter beneficiaries by phone number", document: false do
       account = create(:account)
-      _active_beneficiary = create(:beneficiary, account:)
-      disabled_beneficiary = create(:beneficiary, :disabled, account:, status: "disabled")
+      beneficiary = create(:beneficiary, account:, phone_number: "855715100888")
+      other_beneficiary = create(:beneficiary, account:)
 
       set_authorization_header_for(account)
-      do_request(filter: { status: { eq: "disabled" } })
+      do_request(filter: { phone_number: { eq: "+855 715 100 888" } })
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
       expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-        disabled_beneficiary.id.to_s
+        beneficiary.id.to_s
       )
     end
   end
