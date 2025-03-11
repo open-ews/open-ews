@@ -112,7 +112,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Failed to create a broadcast", document: false do
+    example "Fail to create a broadcast", document: false do
       account = create(:account)
 
       set_authorization_header_for(account)
@@ -146,17 +146,14 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    # optional(:audio_url).filled(:string)
-    # optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
-    # optional(:status).filled(included_in?: STATES)
-    # optional(:metadata).value(:hash)
-
     with_options scope: %i[data attributes] do
       parameter(
         :audio_url, "A publicly available URL which contains the broadcast message. Can only be updated before the broadcast starts.",
       )
       parameter(
-        :status, "Update the status of a broadcast. Must be one of #{V1::UpdateBroadcastRequestSchema::STATES.map { "`#{_1}`" }.join(", ")}."
+        :status,
+        "Update the status of a broadcast. Must be one of #{V1::UpdateBroadcastRequestSchema::STATES.map { "`#{_1}`" }.join(", ")}.",
+        method: :_disabled
       )
       parameter(
         :metadata, "Set of key-value pairs that you can attach to the broadcast. This can be useful for storing additional information about the broadcast in a structured format."
