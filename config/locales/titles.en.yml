@@ -20,20 +20,20 @@ en:
       refresh: Refresh
       update: Edit
     alerts:
-      index: Callout Participations
-      show: Callout Participation %{id}
+      index: Alerts
+      show: Alert %{id}
     app_name: Somleng SCFM
     batch_operations:
       index: Callout Populations
       queue: Start
       show: Callout Population %{id}
     beneficiaries:
-      create: New Contact
-      edit: Edit Contact
+      create: New Beneficiary
+      edit: Edit Beneficiary
       index: Beneficiaries
-      new: New Contact
-      show: Contact %{id}
-      update: Edit Contact
+      new: New Beneficiary
+      show: Beneficiary %{id}
+      update: Edit Beneficiary
     broadcasts:
       create: New Callout
       edit: Edit Callout
