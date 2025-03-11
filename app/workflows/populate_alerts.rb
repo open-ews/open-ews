@@ -12,7 +12,6 @@ class PopulateAlerts < ApplicationWorkflow
   def call
     ApplicationRecord.transaction do
       download_audio_file unless broadcast.audio_file.attached?
-      return if broadcast.errored?
 
       create_alerts
       create_delivery_attempts
@@ -20,7 +19,7 @@ class PopulateAlerts < ApplicationWorkflow
       broadcast.error_message = nil
       broadcast.start!
     end
-  rescue BroadcastStartedError => e
+  rescue BroadcastStartedError, DownloadAudioFile::DownloadFailedError => e
     broadcast.mark_as_errored!(e.message)
   end
 
