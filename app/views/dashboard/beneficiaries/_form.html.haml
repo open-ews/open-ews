@@ -1,6 +1,21 @@
-.card-body
+.card.col-md-6
   = simple_form_for [:dashboard, resource] do |f|
-    = f.input :phone_number, input_html: { autofocus: true }
-    .form-group.actions
+    .card-body
+      .row
+        .col
+          = f.input :phone_number
+        .col
+          = f.input :gender
+      .row
+        .col
+          = f.input :date_of_birth
+        .col
+          = f.input :disability_status
+      .row
+        .col
+          = f.input :language_code
+        .col
+          = f.input :iso_country_code
+
+    .card-footer.text-end
       = f.button :submit, class: 'btn btn-primary'
-      = link_to(translate(:"titles.actions.cancel"), :back, class: 'btn btn-outline-dark')
