@@ -1,8 +1,8 @@
-.card-body
+.card.col-md-6
   = simple_form_for([:dashboard, resource]) do |f|
-    = f.input :channel
-    = f.input :audio_file, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
-    = f.input :audio_url
-    .form-group.actions
+    .card-body
+      = f.input :channel
+      = f.input :audio_file, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
+      = f.input :audio_url
+    .card-footer.text-end
       = f.button :submit, class: 'btn btn-primary'
-      = link_to(translate(:"titles.actions.cancel"), :back, class: 'btn btn-outline-dark')
