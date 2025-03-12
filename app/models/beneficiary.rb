@@ -18,7 +18,7 @@ class Beneficiary < ApplicationRecord
   has_many :delivery_attempts
   has_many :remote_phone_call_events, through: :delivery_attempts
 
-  validates :phone_number, presence: true
+  validates :phone_number, :iso_country_code, presence: true
 
   delegate :call_flow_logic,
            to: :account,
