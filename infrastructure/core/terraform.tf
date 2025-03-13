@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
-    bucket  = "infrastructure.somleng.org"
-    key     = "scfm_core.tfstate"
+    bucket  = "infrastructure.open-ews.org"
+    key     = "open-ews-core.tfstate"
     encrypt = true
     region  = "ap-southeast-1"
   }
