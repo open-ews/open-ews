@@ -6,6 +6,10 @@ output "route53_zone" {
   value = aws_route53_zone.this
 }
 
+output "internal_route53_zone" {
+  value = aws_route53_zone.this_internal
+}
+
 output "rds_cluster" {
   value     = module.rds_cluster
   sensitive = true
