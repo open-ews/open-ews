@@ -33,8 +33,8 @@
           = link_to dashboard_settings_root_path, class: "dropdown-item" do
             %i.icon.ti.ti-settings
             Settings
-          %a.dropdown-item{:href => "./sign-in.html"}
+          = button_to(destroy_user_session_path, class: "dropdown-item", method: :delete, form: { data: { turbo: false } }) do
             %i.icon.ti.ti-logout
-            Logout
+            = translate(:"titles.user_sessions.destroy")
 
     #navbar-menu

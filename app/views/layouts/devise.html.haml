@@ -14,15 +14,22 @@
     %link{rel: "icon", href: "/icon.svg", type: "image/svg+xml"}
     %link{rel: "apple-touch-icon", href: "/icon.png"}
 
+    %link{:href => "https://fonts.googleapis.com", :rel => "preconnect"}/
+    %link{:crossorigin => "", :href => "https://fonts.gstatic.com", :rel => "preconnect"}/
+    %link{:href => "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap", :rel => "stylesheet"}/
+
     = stylesheet_link_tag :app, "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
 
-  %body
+  %body{"data-bs-theme" => cookies[:theme]}
     .page.page-center
       .container.container-tight.py-4
         .text-center.mb-4
           = image_tag "open-ews_landscape_logo.png", class: "w-50"
 
-        <%= render "shared/alerts" %>
 
-        = yield
+        .card.card-md
+          .card-body
+            = render "shared/alerts"
+
+            = yield

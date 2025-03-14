@@ -1,22 +1,26 @@
-<h2><%= translate(:"titles.user_passwords.new") %></h2>
+<h2 class="h2 text-center mb-4"><%= translate(:"titles.user_passwords.new") %></h2>
 
 <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, data: { turbo: false } }) do |f| %>
   <%= f.error_notification %>
 
   <div class="form-inputs">
     <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" } %>
+            required: true,
+            autofocus: true,
+            input_html: {
+              autocomplete: "email",
+            } %>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit, translate(:"titles.user_passwords.create") %>
+  <div class="form-footer">
+    <div class="row">
+      <div class="col">
+        <%= f.button :submit, translate(:"titles.user_passwords.create") %>
+      </div>
+
+      <div class="col text-end">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
   </div>
 <% end %>
-
-<div class="row mt-3">
-  <div class="col-12">
-    <%= render "devise/shared/links" %>
-  </div>
-</div>
