@@ -3,24 +3,19 @@
     .navbar-nav.flex-row.order-md-last
       .d-none.d-md-flex
         .nav-item
-          %a.nav-link.px-0.hide-theme-dark{"aria-label" => "Enable dark mode", "data-bs-original-title" => "Enable dark mode", "data-bs-placement" => "bottom", "data-bs-toggle" => "tooltip", :href => "?theme=dark"}
-            / Download SVG icon from http://tabler.io/icons/icon/moon
-            %svg.icon.icon-1{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
-              %path{:d => "M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"}
-          %a.nav-link.px-0.hide-theme-light{"aria-label" => "Enable light mode", "data-bs-original-title" => "Enable light mode", "data-bs-placement" => "bottom", "data-bs-toggle" => "tooltip", :href => "?theme=light"}
-            / Download SVG icon from http://tabler.io/icons/icon/sun
-            %svg.icon.icon-1{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
-              %path{:d => "M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"}
-              %path{:d => "M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"}
+          = link_to url_for(params: request.query_parameters.merge(theme: 'light')), class: "nav-link px-0 hide-theme-light", title: "Enable light mode" do
+            %i.icon.ti.ti-sun
+          = link_to url_for(params: request.query_parameters.merge(theme: 'dark')), class: "nav-link px-0 hide-theme-dark", title: "Enable dark mode" do
+            %i.icon.ti.ti-moon
         .nav-item.dropdown
-          %a.nav-link.px-0.hide-theme-dark{"aria-label" => "Select language", "data-bs-original-title" => "Select language", "data-bs-toggle" => "dropdown"}
-            %i.ti.ti-language{style: "font-size: 1.2rem"}
+          %a.nav-link.px-0{"aria-label" => "Select language", "data-bs-original-title" => "Select language", "data-bs-toggle" => "dropdown"}
+            %i.icon.ti.ti-language
           .dropdown-menu.dropdown-menu-end.dropdown-menu-arrow
-            %a.dropdown-item{:href => "#"}
+            = button_to(dashboard_locale_path(user: { locale: "en" }), class: "dropdown-item", method: :patch) do
               .i.icon.ti
                 🇬🇧
               English
-            %a.dropdown-item{:href => "#"}
+            = button_to(dashboard_locale_path(user: { locale: "km" }), class: "dropdown-item", method: :patch) do
               .i.icon.ti
                 🇰🇭
               ខែ្មរ
@@ -31,11 +26,11 @@
             %div John Doe
             .mt-1.small.text-secondary PIN Laos
         .dropdown-menu.dropdown-menu-end.dropdown-menu-arrow
-          %a.dropdown-item{:href => "/users/edit"}
+          = link_to edit_user_registration_path, class: "dropdown-item" do
             %i.icon.ti.ti-user
             Profile
           .dropdown-divider
-          %a.dropdown-item{:href => "/dashboard/settings"}
+          = link_to dashboard_settings_root_path, class: "dropdown-item" do
             %i.icon.ti.ti-settings
             Settings
           %a.dropdown-item{:href => "./sign-in.html"}
