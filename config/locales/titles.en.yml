@@ -2,7 +2,7 @@
 en:
   titles:
     home:
-      index: Home
+      index: Dashboard
     access_tokens:
       edit: Edit API Key
       index: API Keys

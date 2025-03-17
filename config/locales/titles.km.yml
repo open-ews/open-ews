@@ -1,6 +1,8 @@
 ---
 km:
   titles:
+    home:
+      index: ព័ត៌មានសង្ខេប
     access_tokens:
       edit: កែប្រែ API Key
       index: API Keys
