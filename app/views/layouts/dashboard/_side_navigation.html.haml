@@ -1,8 +1,14 @@
-%aside{class: "navbar navbar-vertical navbar-expand-lg", "data-bs-theme": "light"}
+%aside{class: "navbar navbar-vertical navbar-expand-lg", "data-bs-theme": "dark"}
   .container-fluid
-    .navbar-brand.navbar-brand-autodark
+    %button.navbar-toggler{"aria-controls" => "sidebar-menu", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-bs-target" => "#sidebar-menu", "data-bs-toggle" => "collapse", type: "button"}
+      %span.navbar-toggler-icon
+
+    .navbar-brand
       = link_to dashboard_root_path do
         = image_tag("open-ews_landscape_logo.png", class: "navbar-brand-image")
+
+    .navbar-nav.flex-row.d-lg-none
+      = render "layouts/dashboard/account_dropdown"
 
     #sidebar-menu.collapse.navbar-collapse
       %ul.navbar-nav.pt-lg-3

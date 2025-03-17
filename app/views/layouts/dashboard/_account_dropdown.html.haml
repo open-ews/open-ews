@@ -1,0 +1,17 @@
+.nav-item.dropdown
+  %a.nav-link.d-flex.lh-1.p-0.px-2{"aria-label" => "Open user menu", "data-bs-toggle" => "dropdown", :href => "#"}
+    %span.avatar.avatar-sm{:style => "background-image: url('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')"}
+    .d-none.d-xl-block.ps-2
+      %div John Doe
+      .mt-1.small.text-secondary PIN Laos
+  .dropdown-menu.dropdown-menu-end.dropdown-menu-arrow
+    = link_to edit_user_registration_path, class: "dropdown-item" do
+      %i.icon.ti.ti-user
+      Profile
+    .dropdown-divider
+    = link_to dashboard_settings_root_path, class: "dropdown-item" do
+      %i.icon.ti.ti-settings
+      Settings
+    = button_to(destroy_user_session_path, class: "dropdown-item", method: :delete, form: { data: { turbo: false } }) do
+      %i.icon.ti.ti-logout
+      = translate(:"titles.user_sessions.destroy")
