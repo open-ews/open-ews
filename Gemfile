@@ -10,6 +10,10 @@ gem "jsbundling-rails"
 gem "stimulus-rails"
 gem "turbo-rails"
 
+# NOTE: date-select helper to support other locales other than `en`
+# https://github.com/heartcombo/simple_form/issues/1148
+gem "rails-i18n", "~> 8.0.0"
+
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 # gem "solid_cache"
 # gem "solid_queue"

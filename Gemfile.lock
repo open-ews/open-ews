@@ -637,6 +637,7 @@ DEPENDENCIES
   pumi
   rails (~> 8.0.1)
   rails-controller-testing
+  rails-i18n (~> 8.0.0)
   record_tag_helper!
   responders
   rspec-rails
