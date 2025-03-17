@@ -7,6 +7,8 @@ class User < ApplicationRecord
 
   AVAILABLE_LOCALES = %w[en km].freeze
 
+  attr_accessor :name
+
   belongs_to :account
 
   validates_inclusion_of :locale, in: AVAILABLE_LOCALES

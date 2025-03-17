@@ -8,7 +8,7 @@ class Users::InvitationsController < Devise::InvitationsController
   end
 
   def after_invite_path_for(_inviter, _invitee = nil)
-    dashboard_users_path
+    dashboard_settings_users_path
   end
 
   def resolve_layout

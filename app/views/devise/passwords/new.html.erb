@@ -3,23 +3,21 @@
 <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, data: { turbo: false } }) do |f| %>
   <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :email,
-            required: true,
-            autofocus: true,
-            input_html: {
-              autocomplete: "email",
-            } %>
-  </div>
+  <%= f.input :email,
+          required: true,
+          autofocus: true,
+          input_html: {
+            autocomplete: "email",
+          } %>
 
   <div class="form-footer">
     <div class="row">
       <div class="col">
-        <%= f.button :submit, translate(:"titles.user_passwords.create") %>
+        <%= render "devise/shared/links" %>
       </div>
 
       <div class="col text-end">
-        <%= render "devise/shared/links" %>
+        <%= f.button :submit, translate(:"titles.user_passwords.create") %>
       </div>
     </div>
   </div>
