@@ -3,6 +3,10 @@ require "rails_helper"
 RSpec.resource "Accounts"  do
   get "/v1/account" do
     example "Fetch account settings" do
+      explanation <<~HEREDOC
+        This endpoint can be used to return account settings for the authorized account.
+      HEREDOC
+
       account = create(:account)
 
       set_authorization_header_for(account)
