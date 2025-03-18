@@ -72,6 +72,7 @@ Rails.application.routes.draw do
 
   namespace :v1, module: "api/v1", as: "api_v1", defaults: { format: "json" } do
     resources :broadcasts, only: [ :index, :show, :create, :update ] do
+      resource :audio_file, controller: "broadcasts/audio_files", only: :show
       resources :alerts, controller: "broadcasts/alerts", only: [ :index, :show ] do
         get "stats" => "broadcasts/alerts/stats#index", on: :collection
       end
