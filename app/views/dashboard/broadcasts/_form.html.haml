@@ -2,7 +2,7 @@
   = simple_form_for([:dashboard, resource]) do |f|
     .card-body
       = f.input :channel
-      = f.input :audio_file, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
-      = f.input :audio_url
+      = f.input :audio_file, as: :file, required: resource.new_record?,
+        input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
     .card-footer.text-end
       = f.button :submit, class: 'btn btn-primary'

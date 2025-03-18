@@ -12,7 +12,6 @@ module Dashboard
       params.fetch(:broadcast, {}).permit(
         :call_flow_logic,
         :audio_file,
-        :audio_url,
         settings_fields_attributes: KEY_VALUE_FIELD_ATTRIBUTES,
         **METADATA_FIELDS_ATTRIBUTES
       )
