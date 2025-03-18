@@ -22,11 +22,7 @@ en:
     alerts:
       index: Alerts
       show: Alert %{id}
-    app_name: Somleng SCFM
-    batch_operations:
-      index: Callout Populations
-      queue: Start
-      show: Callout Population %{id}
+    app_name: OpenEWS
     beneficiaries:
       create: New Beneficiary
       edit: Edit Beneficiary
@@ -35,34 +31,22 @@ en:
       show: Beneficiary %{id}
       update: Edit Beneficiary
     broadcasts:
-      create: New Callout
-      edit: Edit Callout
+      create: New Broadcast
+      edit: Edit Broadcast
       index: Broadcasts
-      new: New Callout
+      new: New Broadcast
       pause: Pause
       resume: Resume
-      show: Callout %{id}
+      show: Broadcast %{id}
       start: Start
       stop: Stop
-      summary: Callout Summary
-      update: Edit Callout
-    callout_populations:
-      create: New Callout Population
-      edit: Edit Callout Population
-      new: New Callout Population
-      show: Callout Population %{id}
-      update: Edit Callout Population
+      summary: Broadcast Summary
+      update: Edit Broadcast
     delivery_attempts:
-      index: Phone Calls
+      index: Delivery Attempts
       queue: Send
       queue_remote_fetch: Fetch Remote Status
-      show: Phone Call %{id}
-    recordings:
-      index: Recordings
-      show: Recording %{id}
-    remote_phone_call_events:
-      index: Phone Call Events
-      show: Phone Call Event %{id}
+      show: Delivery Attempt %{id}
     user_invitations:
       create: Invite User
       edit: Set your password

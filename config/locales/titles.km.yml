@@ -22,11 +22,7 @@ km:
     alerts:
       index: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
       show: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស %{id}
-    app_name: សំឡេង SCFM
-    batch_operations:
-      index: Callout Populations
-      queue: ចាប់ផ្ដើម
-      show: Callout Population %{id}
+    app_name: OpenEWS
     beneficiaries:
       create: បង្កើត សមាជិកទំនាក់ទំនង
       edit: កែប្រែ សមាជិកទំនាក់ទំនង
@@ -46,23 +42,11 @@ km:
       stop: បញ្ឈប់
       summary: Callout Summary
       update: កែប្រែ សេចក្ដីប្រកាស
-    callout_populations:
-      create: New Callout Population
-      edit: កែប្រែ Callout Population
-      new: New Callout Population
-      show: Callout Population %{id}
-      update: កែប្រែ Callout Population
     delivery_attempts:
       index: កំណត់ត្រាការហៅចេញ
       queue: Send
       queue_remote_fetch: Fetch Remote Status
       show: កំណត់ត្រាការហៅចេញ %{id}
-    recordings:
-      index: Recordings
-      show: Recording %{id}
-    remote_phone_call_events:
-      index: ព្រឹត្តិការណ៍ការហៅចេញ
-      show: ព្រឹត្តិការណ៍ការហៅចេញ %{id}
     user_invitations:
       create: អញ្ជើញ អ្នកប្រីប្រាស
       edit: Set your password
