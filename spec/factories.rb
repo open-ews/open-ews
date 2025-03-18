@@ -30,7 +30,7 @@ FactoryBot.define do
   end
 
   sequence :auth_token do
-    SecureRandom.uuid
+    SecureRandom.alphanumeric(43)
   end
 
   sequence :somleng_account_sid do
@@ -160,9 +160,7 @@ FactoryBot.define do
   end
 
   factory :account do
-    trait :with_default_provider do
-      with_twilio_provider
-    end
+    with_somleng_provider
 
     trait :with_twilio_provider do
       platform_provider_name { "twilio" }

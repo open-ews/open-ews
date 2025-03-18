@@ -73,6 +73,8 @@ Rails.application.routes.draw do
       get "stats" => "beneficiaries/stats#index", on: :collection
       resources :addresses, only: [ :index, :create, :show, :destroy ]
     end
+
+    resource :account, only: :show
   end
 
   namespace "api", defaults: { format: "json" } do
