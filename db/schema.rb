@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_28_073428) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_18_104101) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -30,6 +30,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_073428) do
     t.string "platform_provider_name"
     t.string "somleng_api_host"
     t.string "somleng_api_base_url"
+    t.string "name"
     t.index ["somleng_account_sid"], name: "index_accounts_on_somleng_account_sid", unique: true
     t.index ["twilio_account_sid"], name: "index_accounts_on_twilio_account_sid", unique: true
   end
@@ -305,6 +306,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_073428) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.string "locale", default: "en", null: false
+    t.string "name"
     t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true

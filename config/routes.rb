@@ -26,9 +26,9 @@ Rails.application.routes.draw do
     resource :account, only: %i[edit update]
 
     namespace :settings do
-      root to: "account#show"
+      root to: "accounts#show"
 
-      resource :account, only: :show
+      resource :account, only: [ :show, :update ]
       resources :users, only: :index
       resources :developers, only: :index
     end
