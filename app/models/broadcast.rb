@@ -9,6 +9,7 @@ class Broadcast < ApplicationRecord
     attr_accessor :cache_audio_file_from_audio_url
 
     def audio_file=(attachable)
+      return unless not_yet_started?
       @audio_file_blob_was = audio_file.blob if audio_file.attached?
       @audio_file_will_change = true
       super(attachable)
@@ -136,10 +137,6 @@ class Broadcast < ApplicationRecord
     result = super(except: [ "channel", "beneficiary_filter" ])
     result["status"] = "initialized" if result["status"] == "pending"
     result
-  end
-
-  def updatable?
-    status == "pending"
   end
 
   def mark_as_errored!(message)

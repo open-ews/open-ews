@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.describe Broadcast do
   let(:factory) { :broadcast }
+
   include_examples "has_metadata"
   include_examples "has_call_flow_logic"
 
@@ -13,7 +14,7 @@ RSpec.describe Broadcast do
   describe "validations" do
     it { is_expected.to validate_presence_of(:status) }
 
-    context "#audio_file" do
+    describe "#audio_file" do
       it "validates the content type" do
         broadcast = build(:broadcast, audio_file: file_fixture("image.jpg"))
 
@@ -44,6 +45,13 @@ RSpec.describe Broadcast do
   end
 
   describe "audio_file=" do
+    it "ignores audio file if the broadcast has been started" do
+      broadcast = create(:broadcast, status: :running, audio_file: file_fixture("test.mp3"))
+      broadcast.audio_file = fixture_file_upload("test.mp3", "audio/mp3")
+
+      expect(broadcast.audio_file_blob_changed?).to eq(false)
+    end
+
     it "tracks changes when attaching a new audio file" do
       broadcast = described_class.new
       broadcast.audio_file = fixture_file_upload("test.mp3", "audio/mp3")
@@ -87,7 +95,7 @@ RSpec.describe Broadcast do
     end
 
     def assert_transitions!
-      is_expected.to transition_from(current_status).to(asserted_new_status).on_event(event)
+      expect(subject).to transition_from(current_status).to(asserted_new_status).on_event(event)
     end
 
     describe "#start!" do

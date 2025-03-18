@@ -1,5 +1,9 @@
 ---
 km:
+  flash:
+    broadcasts:
+      not_allowed_to_edit: មិនអនុញ្ញាតការកែប្រែសេចក្ដីប្រកាសដែលបានចាប់ផ្ដើមរួចហើយ
+
   activerecord:
     errors:
       models:

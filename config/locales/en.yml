@@ -1,5 +1,9 @@
 ---
 en:
+  flash:
+    broadcasts:
+      not_allowed_to_edit: Cannot edit broadcast has already been started
+
   activerecord:
     errors:
       models:

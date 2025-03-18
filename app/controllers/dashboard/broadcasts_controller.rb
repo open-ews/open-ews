@@ -31,6 +31,17 @@ module Dashboard
       resource.created_by ||= current_user
     end
 
+    def prepare_resource_for_edit
+      unless resource.not_yet_started?
+        redirect_to(
+          dashboard_broadcast_path(resource),
+          alert: I18n.t("flash.broadcasts.not_allowed_to_edit")
+        )
+      end
+
+      super
+    end
+
     def broadcast_summary
       @broadcast_summary ||= BroadcastSummary.new(resource)
     end
