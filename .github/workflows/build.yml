@@ -2,7 +2,8 @@ on: push
 name: Build
 
 env:
-  APP_REPOSITORY_NAME: scfm
+  ECR_REPOSITORY_NAME: scfm
+  GHCR_PACKAGE_NAME: open-ews
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -194,7 +195,7 @@ jobs:
                     run: |
                       aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
                       export DOCKER_BUILDKIT=1
-                      docker build --cache-from ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --tag ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --push .
+                      docker build --cache-from ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --tag ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --push .
 
   build-manifest:
     name: Build Manifest
@@ -230,13 +231,16 @@ jobs:
         run: |
           declare -a platforms=("amd64" "arm64")
 
-          source_images=$(printf "${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
-          docker buildx imagetools create -t ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }} -t ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.image_tag }} $source_images
+          source_images=$(printf "${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
+          docker buildx imagetools create -t ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }} -t ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }} $source_images
 
   # Do this step in Github Actions because pushing to Github from AWS CodeBuild is slow
   publish_images:
     name: Publish Images
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     needs:
       - build
@@ -277,14 +281,14 @@ jobs:
 
           for platform in "${platforms[@]}"
           do
-            docker image pull ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-$platform
-            docker tag ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-$platform ${{ secrets.GHCR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-$platform
-            docker push ${{ secrets.GHCR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-$platform
+            docker image pull ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-$platform
+            docker tag ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-$platform ${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }}-$platform
+            docker push ${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }}-$platform
 
           done
 
-          source_images=$(printf "${{ secrets.GHCR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
-          docker buildx imagetools create -t ${{ secrets.GHCR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }} $source_images
+          source_images=$(printf "${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
+          docker buildx imagetools create -t ${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }} $source_images
 
   deploy:
     name: Deploy
@@ -318,7 +322,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: app
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.image_tag }}
+          image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
       - name: Get current worker task definition
         run: |
@@ -330,7 +334,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: worker
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.image_tag }}
+          image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
       - name: Get current worker (Fargate) task definition
         run: |
@@ -342,7 +346,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: worker
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.APP_REPOSITORY_NAME }}:${{ matrix.image_tag }}
+          image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
       - name: Register Fargate task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
@@ -383,3 +387,4 @@ jobs:
           SENTRY_PROJECT: open-ews
         with:
           environment: ${{ matrix.environment }}
+          ignore_missing: true
