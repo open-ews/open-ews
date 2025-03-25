@@ -2,6 +2,8 @@ require "application_responder"
 
 module Dashboard
   class BaseController < ::BaseController
+    include DarkMode
+
     layout "dashboard"
 
     KEY_VALUE_FIELD_ATTRIBUTES = %i[key value].freeze
@@ -14,7 +16,6 @@ module Dashboard
     respond_to :html
 
     before_action :authenticate_user!, :set_locale
-    before_action :set_theme
     helper_method :resource, :resources, :show_location, :resources_path,
                   :current_account
 
@@ -90,10 +91,6 @@ module Dashboard
 
     def set_locale
       I18n.locale = current_user.locale
-    end
-
-    def set_theme
-      cookies[:theme] = params.fetch(:theme) { cookies[:theme] || "light" }
     end
 
     def _prepare_for_render; end

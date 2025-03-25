@@ -1,14 +1,15 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_permitted_parameters
+  before_action :set_locale
 
   helper_method :current_account
   layout :resolve_layout
 
+  protected
+
   def current_account
     current_user.account if user_signed_in?
   end
-
-  private
 
   def resolve_layout
     user_signed_in? ? "dashboard" : "devise"
@@ -27,5 +28,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def after_update_path_for(_resource)
     user_signed_in? ? edit_user_registration_path : new_user_session_path
+  end
+
+  def set_locale
+    I18n.locale = current_user.locale if user_signed_in?
   end
 end

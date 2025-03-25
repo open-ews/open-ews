@@ -1,7 +1,16 @@
 class Users::InvitationsController < Devise::InvitationsController
+  include DarkMode
+
+  helper_method :current_account
   layout :resolve_layout
 
+  before_action :set_locale
+
   protected
+
+  def current_account
+    current_user.account if user_signed_in?
+  end
 
   def invite_params
     super.merge(account_id: current_inviter.account_id)
@@ -13,5 +22,9 @@ class Users::InvitationsController < Devise::InvitationsController
 
   def resolve_layout
     user_signed_in? ? "dashboard" : "devise"
+  end
+
+  def set_locale
+    I18n.locale = current_user.locale if user_signed_in?
   end
 end
