@@ -1,4 +1,9 @@
 module ApplicationHelper
+  def user_profile_image_url(user)
+    user_email = Digest::MD5.hexdigest(user.email)
+    "https://www.gravatar.com/avatar/#{user_email}?size=200"
+  end
+
   def flash_class(level)
     case level.to_sym
     when :notice then "alert alert-info"
