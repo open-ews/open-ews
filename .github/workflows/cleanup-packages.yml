@@ -12,9 +12,9 @@ jobs:
       packages: write
 
     steps:
-      - name: Delete Untagged 'somleng' Packages
+      - name: Delete Untagged Packages
         uses: actions/delete-package-versions@v5
         with:
-          package-name: "scfm"
+          package-name: "open-ews"
           package-type: "container"
           delete-only-untagged-versions: "true"
