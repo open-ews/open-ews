@@ -386,3 +386,4 @@ jobs:
           SENTRY_PROJECT: open-ews
         with:
           environment: ${{ matrix.environment }}
+          ignore_missing: true
