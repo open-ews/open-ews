@@ -18,6 +18,8 @@
     "autoprefixer": "^10.4.20",
     "autosize": "^6.0.1",
     "imask": "^7.6.1",
+    "inspire-tree": "^7.0.15",
+    "inspire-tree-dom": "^4.0.6",
     "moment": "^2.30.1",
     "nodemon": "^3.1.9",
     "postcss": "^8.5.3",

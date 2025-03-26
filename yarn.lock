@@ -933,6 +933,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eventemitter2@npm:^6.4.9":
+  version: 6.4.9
+  resolution: "eventemitter2@npm:6.4.9"
+  checksum: b2adf7d9f1544aa2d95ee271b0621acaf1e309d85ebcef1244fb0ebc7ab0afa6ffd5e371535d0981bc46195ad67fd6ff57a8d1db030584dee69aa5e371a27ea7
+  languageName: node
+  linkType: hard
+
 "exponential-backoff@npm:^3.1.1":
   version: 3.1.1
   resolution: "exponential-backoff@npm:3.1.1"
@@ -1183,6 +1190,53 @@ __metadata:
   languageName: node
   linkType: hard
 
+"inferno-shared@npm:5.6.3":
+  version: 5.6.3
+  resolution: "inferno-shared@npm:5.6.3"
+  checksum: 78866eb90fc3aefd0d9ed5f27e6d6b5265e045a332ef9949aafd2006e1ad11ad6805d42046bd0ce1621d7625c7e13841eccb08234795fcb9ac149f4659492af2
+  languageName: node
+  linkType: hard
+
+"inferno-vnode-flags@npm:5.6.3":
+  version: 5.6.3
+  resolution: "inferno-vnode-flags@npm:5.6.3"
+  checksum: 875e92afa02161852c00963e43c0c2555436e7fbf08673b0a29ded39a48eb72320e8afa3cc2d6fd7867a7e1728f1d51623641d8e351e2b03f64e7bc0596828f3
+  languageName: node
+  linkType: hard
+
+"inferno@npm:^5.3.0":
+  version: 5.6.3
+  resolution: "inferno@npm:5.6.3"
+  dependencies:
+    inferno-shared: "npm:5.6.3"
+    inferno-vnode-flags: "npm:5.6.3"
+    opencollective-postinstall: "npm:^2.0.3"
+  checksum: 57fd91fab1ac6e16541651bc3eb0210b2fa4e51e2e7f97b15efc78ec8deffd89c5b0e8efc24971e93656d0f64feaa6101a63d528f291f5ba82acbf624bef7a2a
+  languageName: node
+  linkType: hard
+
+"inspire-tree-dom@npm:^4.0.6":
+  version: 4.0.6
+  resolution: "inspire-tree-dom@npm:4.0.6"
+  dependencies:
+    inferno: "npm:^5.3.0"
+  peerDependencies:
+    inspire-tree: ^4.2.1
+  checksum: 157feb56d020231638d2a3cc7ec4c7f83fef293884dd2ee963393a7d0c29d050ffc7a27e282d1398dbd3e36aa7d06c03075b6f6ce1a05e6c41e51231764730fc
+  languageName: node
+  linkType: hard
+
+"inspire-tree@npm:^7.0.15":
+  version: 7.0.15
+  resolution: "inspire-tree@npm:7.0.15"
+  dependencies:
+    eventemitter2: "npm:^6.4.9"
+    lodash: "npm:^4.17.5"
+    uuid: "npm:^9.0.0"
+  checksum: d4f8062e89c9cc935a821782870c921f434bcce6ecabb4cf6d2650430674cd5edabc7d04f888bec549a940477d4d7f6d88ed075d5ab3f5e620ff4cbc35a51f44
+  languageName: node
+  linkType: hard
+
 "ip-address@npm:^9.0.5":
   version: 9.0.5
   resolution: "ip-address@npm:9.0.5"
@@ -1290,6 +1344,13 @@ __metadata:
   version: 3.1.2
   resolution: "lilconfig@npm:3.1.2"
   checksum: f059630b1a9bddaeba83059db00c672b64dc14074e9f232adce32b38ca1b5686ab737eb665c5ba3c32f147f0002b4bee7311ad0386a9b98547b5623e87071fbe
+  languageName: node
+  linkType: hard
+
+"lodash@npm:^4.17.5":
+  version: 4.17.21
+  resolution: "lodash@npm:4.17.21"
+  checksum: d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
   languageName: node
   linkType: hard
 
@@ -1573,6 +1634,8 @@ __metadata:
     autosize: "npm:^6.0.1"
     esbuild: "npm:^0.25.0"
     imask: "npm:^7.6.1"
+    inspire-tree: "npm:^7.0.15"
+    inspire-tree-dom: "npm:^4.0.6"
     moment: "npm:^2.30.1"
     nodemon: "npm:^3.1.9"
     postcss: "npm:^8.5.3"
@@ -1580,6 +1643,15 @@ __metadata:
     sass: "npm:^1.85.1"
   languageName: unknown
   linkType: soft
+
+"opencollective-postinstall@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "opencollective-postinstall@npm:2.0.3"
+  bin:
+    opencollective-postinstall: index.js
+  checksum: 8a0104a218bc1afaae943f0af378461eeb2836f9848bad872bbd067ec5d1d9791636f307454ab77d0746f10341366f295384656a340ebdb87a2585058e8567e5
+  languageName: node
+  linkType: hard
 
 "p-map@npm:^4.0.0":
   version: 4.0.0
@@ -2085,6 +2157,15 @@ __metadata:
   bin:
     update-browserslist-db: cli.js
   checksum: 536a2979adda2b4be81b07e311bd2f3ad5e978690987956bc5f514130ad50cac87cd22c710b686d79731e00fbee8ef43efe5fcd72baa241045209195d43dcc80
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^9.0.0":
+  version: 9.0.1
+  resolution: "uuid@npm:9.0.1"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 1607dd32ac7fc22f2d8f77051e6a64845c9bce5cd3dd8aa0070c074ec73e666a1f63c7b4e0f4bf2bc8b9d59dc85a15e17807446d9d2b17c8485fbc2147b27f9b
   languageName: node
   linkType: hard
 
