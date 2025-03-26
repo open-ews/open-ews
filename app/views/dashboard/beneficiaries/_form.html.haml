@@ -20,7 +20,13 @@
       .row
         .col{style: "max-height: 300px; overflow: auto;"}
           = f.input :addresses do
-            #tree-view{"data-controller": "treeview", "data-treeview-data-value": BeneficiaryAddress.address_data("kh").to_json}
+            #tree-view{
+              data: {
+                controller: "treeview",
+                "treeview-field-name-value": "addresses",
+                "treeview-data-value": BeneficiaryAddress.address_data("kh").to_json
+              }
+            }
 
     .card-footer.text-end
       = f.button :submit, class: 'btn btn-primary'

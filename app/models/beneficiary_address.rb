@@ -24,11 +24,11 @@ class BeneficiaryAddress < ApplicationRecord
         text: province.name_latin,
         children: Pumi::District.where(province_id: province.id).map do |district|
           {
-            id: district.iso3166_2,
+            id: district.id,
             text: district.name_latin,
             children: Pumi::Commune.where(district_id: district.id).map do |commune|
               {
-                id: commune.iso3166_2,
+                id: commune.id,
                 text: commune.name_latin
               }
             end

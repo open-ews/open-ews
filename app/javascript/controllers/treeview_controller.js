@@ -4,6 +4,7 @@ import InspireTreeDOM from "inspire-tree-dom";
 
 export default class extends Controller {
   static values = {
+    fieldName: String,
     data: Array,
   };
 
@@ -16,8 +17,18 @@ export default class extends Controller {
     });
 
     new InspireTreeDOM(tree, {
-      showCheckboxes: true,
       target: this.element,
     });
+
+    tree
+      .deepest()
+      .available()
+      .each((n) => {
+        const node = n.itree.ref;
+        const checkbox = node.querySelector('input[type="checkbox"]');
+
+        checkbox.setAttribute("name", `${this.attributeNameValue}[]`);
+        checkbox.setAttribute("value", node.getAttribute("data-uid"));
+      });
   }
 }
