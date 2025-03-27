@@ -70,7 +70,7 @@ resource "aws_route53_record" "scfm_cdn" {
   }
 }
 
-resource "aws_route53_record" "audio" {
+resource "aws_route53_record" "audio_public" {
   zone_id = var.scfm_route53_zone.zone_id
   name    = var.audio_subdomain
   type    = "A"

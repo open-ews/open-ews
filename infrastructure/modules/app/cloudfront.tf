@@ -51,8 +51,8 @@ resource "aws_cloudfront_distribution" "dashboard" {
 
 resource "aws_cloudfront_distribution" "audio" {
   origin {
-    domain_name = aws_s3_bucket_website_configuration.audio.website_endpoint
-    origin_id   = aws_s3_bucket_website_configuration.audio.website_endpoint
+    domain_name = aws_s3_bucket_website_configuration.audio_public.website_endpoint
+    origin_id   = aws_s3_bucket_website_configuration.audio_public.website_endpoint
 
     custom_origin_config {
       http_port              = "80"
@@ -70,7 +70,7 @@ resource "aws_cloudfront_distribution" "audio" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = aws_s3_bucket_website_configuration.audio.website_endpoint
+    target_origin_id = aws_s3_bucket_website_configuration.audio_public.website_endpoint
 
     viewer_protocol_policy   = "redirect-to-https"
     cache_policy_id          = data.aws_cloudfront_cache_policy.caching_optimized.id

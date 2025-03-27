@@ -80,7 +80,7 @@ locals {
     },
     {
       name  = "AUDIO_BUCKET",
-      value = aws_s3_bucket.audio.id
+      value = aws_s3_bucket.audio_public.id
     }
   ]
 

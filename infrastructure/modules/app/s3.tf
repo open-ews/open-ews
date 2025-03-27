@@ -28,28 +28,28 @@ resource "aws_s3_bucket_cors_configuration" "uploads" {
   }
 }
 
-resource "aws_s3_bucket" "audio" {
+resource "aws_s3_bucket" "audio_public" {
   bucket = var.audio_bucket
 }
 
-resource "aws_s3_bucket_website_configuration" "audio" {
-  bucket = aws_s3_bucket.audio.id
+resource "aws_s3_bucket_website_configuration" "audio_public" {
+  bucket = aws_s3_bucket.audio_public.id
 
   index_document {
     suffix = "index.html"
   }
 }
 
-resource "aws_s3_bucket_ownership_controls" "audio" {
-  bucket = aws_s3_bucket.audio.id
+resource "aws_s3_bucket_ownership_controls" "audio_public" {
+  bucket = aws_s3_bucket.audio_public.id
 
   rule {
     object_ownership = "BucketOwnerPreferred"
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "audio" {
-  bucket = aws_s3_bucket.audio.id
+resource "aws_s3_bucket_public_access_block" "audio_public" {
+  bucket = aws_s3_bucket.audio_public.id
 
   block_public_acls       = false
   block_public_policy     = false
@@ -57,26 +57,26 @@ resource "aws_s3_bucket_public_access_block" "audio" {
   restrict_public_buckets = false
 }
 
-resource "aws_s3_bucket_acl" "audio" {
+resource "aws_s3_bucket_acl" "audio_public" {
   depends_on = [
-    aws_s3_bucket_ownership_controls.audio,
-    aws_s3_bucket_public_access_block.audio,
+    aws_s3_bucket_ownership_controls.audio_public,
+    aws_s3_bucket_public_access_block.audio_public,
   ]
 
-  bucket = aws_s3_bucket.audio.id
+  bucket = aws_s3_bucket.audio_public.id
   acl    = "public-read"
 }
 
-resource "aws_s3_bucket_versioning" "audio" {
-  bucket = aws_s3_bucket.audio.id
+resource "aws_s3_bucket_versioning" "audio_public" {
+  bucket = aws_s3_bucket.audio_public.id
 
   versioning_configuration {
     status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_policy" "audio" {
-  bucket = aws_s3_bucket.audio.id
+resource "aws_s3_bucket_policy" "audio_public" {
+  bucket = aws_s3_bucket.audio_public.id
 
   policy = jsonencode(
     {
@@ -89,7 +89,7 @@ resource "aws_s3_bucket_policy" "audio" {
             "s3:GetObject"
           ],
           "Resource" : [
-            "${aws_s3_bucket.audio.arn}/*"
+            "${aws_s3_bucket.audio_public.arn}/*"
           ]
         }
       ]

@@ -1,5 +1,5 @@
-module "scfm" {
-  source = "../modules/scfm"
+module "app" {
+  source = "../modules/app"
 
   api_subdomain         = "api-staging"
   app_subdomain         = "app-staging"

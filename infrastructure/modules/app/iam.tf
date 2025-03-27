@@ -32,7 +32,7 @@ resource "aws_iam_policy" "ecs_task_policy" {
       ],
       "Resource": [
         "${aws_s3_bucket.uploads.arn}",
-        "${aws_s3_bucket.audio.arn}"
+        "${aws_s3_bucket.audio_public.arn}"
       ]
     },
     {
@@ -44,7 +44,7 @@ resource "aws_iam_policy" "ecs_task_policy" {
       ],
       "Resource": [
         "${aws_s3_bucket.uploads.arn}/*",
-        "${aws_s3_bucket.audio.arn}/*"
+        "${aws_s3_bucket.audio_public.arn}/*"
       ]
     },
     {
