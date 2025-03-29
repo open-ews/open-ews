@@ -3,9 +3,6 @@ variable "app_environment" {}
 variable "app_image" {}
 variable "aws_region" {}
 variable "uploads_bucket" {}
-variable "audio_bucket" {}
-variable "audio_bucket_cname" {}
-variable "audio_subdomain" {}
 variable "cdn_subdomain" {}
 variable "scfm_subdomain" {}
 variable "scfm_cdn_subdomain" {}
@@ -15,7 +12,6 @@ variable "cdn_certificate" {}
 variable "region" {}
 variable "global_accelerator" {}
 variable "rds_cluster" {}
-
 variable "api_subdomain" {}
 variable "app_subdomain" {}
 variable "route53_zone" {}

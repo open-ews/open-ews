@@ -181,7 +181,7 @@ module CallFlowLogic
     end
 
     def play(filename, response, language_code: "lao")
-      key = [ "ews_laos_registration/#{filename}", language_code ].compact.join("-")
+      key = [ "ews_1939_laos/#{filename}", language_code ].compact.join("-")
       response.play(url: AudioURL.new(key: "#{key}.mp3").url)
     end
 

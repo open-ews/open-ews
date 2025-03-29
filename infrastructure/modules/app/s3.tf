@@ -23,76 +23,44 @@ resource "aws_s3_bucket_cors_configuration" "uploads" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["GET", "POST", "PUT"]
-    allowed_origins = ["https://*.somleng.org"]
+    allowed_origins = ["https://*.open-ews.org"]
     max_age_seconds = 3000
   }
 }
 
-resource "aws_s3_bucket" "audio_public" {
-  bucket = var.audio_bucket
+resource "aws_s3_bucket_policy" "uploads" {
+  bucket = aws_s3_bucket.uploads.id
+  policy = data.aws_iam_policy_document.uploads.json
 }
 
-resource "aws_s3_bucket_website_configuration" "audio_public" {
-  bucket = aws_s3_bucket.audio_public.id
+data "aws_iam_policy_document" "uploads" {
+  statement {
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
 
-  index_document {
-    suffix = "index.html"
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      aws_s3_bucket.uploads.arn,
+      "${aws_s3_bucket.uploads.arn}/*",
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceVpce"
+      values   = [var.region.vpc_endpoints[0].endpoints.s3.id]
+    }
   }
 }
 
-resource "aws_s3_bucket_ownership_controls" "audio_public" {
-  bucket = aws_s3_bucket.audio_public.id
-
-  rule {
-    object_ownership = "BucketOwnerPreferred"
-  }
-}
-
-resource "aws_s3_bucket_public_access_block" "audio_public" {
-  bucket = aws_s3_bucket.audio_public.id
-
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
-}
-
-resource "aws_s3_bucket_acl" "audio_public" {
-  depends_on = [
-    aws_s3_bucket_ownership_controls.audio_public,
-    aws_s3_bucket_public_access_block.audio_public,
-  ]
-
-  bucket = aws_s3_bucket.audio_public.id
-  acl    = "public-read"
-}
-
-resource "aws_s3_bucket_versioning" "audio_public" {
-  bucket = aws_s3_bucket.audio_public.id
+resource "aws_s3_bucket_versioning" "uploads" {
+  bucket = aws_s3_bucket.uploads.id
 
   versioning_configuration {
     status = "Enabled"
   }
-}
-
-resource "aws_s3_bucket_policy" "audio_public" {
-  bucket = aws_s3_bucket.audio_public.id
-
-  policy = jsonencode(
-    {
-      "Version" : "2012-10-17",
-      "Statement" : [
-        {
-          "Effect" : "Allow",
-          "Principal" : "*",
-          "Action" : [
-            "s3:GetObject"
-          ],
-          "Resource" : [
-            "${aws_s3_bucket.audio_public.arn}/*"
-          ]
-        }
-      ]
-    }
-  )
 }

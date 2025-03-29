@@ -31,8 +31,7 @@ resource "aws_iam_policy" "ecs_task_policy" {
         "s3:ListBucket"
       ],
       "Resource": [
-        "${aws_s3_bucket.uploads.arn}",
-        "${aws_s3_bucket.audio_public.arn}"
+        "${aws_s3_bucket.uploads.arn}"
       ]
     },
     {
@@ -43,8 +42,7 @@ resource "aws_iam_policy" "ecs_task_policy" {
         "s3:GetObject"
       ],
       "Resource": [
-        "${aws_s3_bucket.uploads.arn}/*",
-        "${aws_s3_bucket.audio_public.arn}/*"
+        "${aws_s3_bucket.uploads.arn}/*"
       ]
     },
     {

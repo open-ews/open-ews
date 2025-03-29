@@ -189,13 +189,13 @@ module CallFlowLogic
       expect(response.keys.size).to eq(1)
       expect(response.fetch("Gather")).to eq(
         "actionOnEmptyResult" => "true",
-        "Play" => "https://s3.ap-southeast-1.amazonaws.com/audio.somleng.org/ews_laos_registration/#{filename}"
+        "Play" => "https://uploads.open-ews.org/ews_1939_laos/#{filename}"
       )
     end
 
     def assert_play(filename, response)
       expect(response).to eq(
-        "Play" => "https://s3.ap-southeast-1.amazonaws.com/audio.somleng.org/ews_laos_registration/#{filename}",
+        "Play" => "https://uploads.open-ews.org/ews_1939_laos/#{filename}",
         "Redirect" => "https://scfm.somleng.org/twilio_webhooks/phone_call_events"
       )
     end
