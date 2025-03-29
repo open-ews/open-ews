@@ -54,7 +54,7 @@ RSpec.describe CallFlowLogic::EWSRegistration do
 
     response = parse_response(call_flow_logic.to_xml)
     expect(response).to include(
-      "Play" => "https://s3.ap-southeast-1.amazonaws.com/audio.somleng.org/ews_registration/record_feedback_instructions-khm.mp3",
+      "Play" => "https://uploads.open-ews.org/ews_1294_cambodia/record_feedback_instructions-khm.mp3",
       "Record" => {
         "recordingStatusCallback" => "https://scfm.somleng.org/twilio_webhooks/recording_status_callbacks"
       }
@@ -391,13 +391,13 @@ RSpec.describe CallFlowLogic::EWSRegistration do
     expect(response.keys.size).to eq(1)
     expect(response.fetch("Gather")).to eq(
       "actionOnEmptyResult" => "true",
-      "Play" => "https://s3.ap-southeast-1.amazonaws.com/audio.somleng.org/ews_registration/#{filename}"
+      "Play" => "https://uploads.open-ews.org/ews_1294_cambodia/#{filename}"
     )
   end
 
   def assert_play(filename, response)
     expect(response).to eq(
-      "Play" => "https://s3.ap-southeast-1.amazonaws.com/audio.somleng.org/ews_registration/#{filename}",
+      "Play" => "https://uploads.open-ews.org/ews_1294_cambodia/#{filename}",
       "Redirect" => "https://scfm.somleng.org/twilio_webhooks/phone_call_events"
     )
   end

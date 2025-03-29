@@ -79,8 +79,8 @@ locals {
       value = aws_s3_bucket.uploads.id
     },
     {
-      name  = "AUDIO_BUCKET",
-      value = aws_s3_bucket.audio.id
+      name  = "AUDIO_HOST",
+      value = "https://${aws_s3_bucket.uploads.id}"
     }
   ]
 

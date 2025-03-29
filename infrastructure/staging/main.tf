@@ -1,5 +1,5 @@
-module "scfm" {
-  source = "../modules/scfm"
+module "app" {
+  source = "../modules/app"
 
   api_subdomain         = "api-staging"
   app_subdomain         = "app-staging"
@@ -12,7 +12,6 @@ module "scfm" {
   scfm_cdn_subdomain         = "cdn-scfm-staging"
   scfm_route53_zone          = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_somleng_org
   scfm_internal_route53_zone = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_internal_somleng_org
-  audio_subdomain            = "audio-staging"
   app_environment            = "staging"
   global_accelerator         = data.terraform_remote_state.core_infrastructure.outputs.global_accelerator
   region                     = data.terraform_remote_state.core_infrastructure.outputs.hydrogen_region
@@ -21,8 +20,6 @@ module "scfm" {
   aws_region                 = var.aws_region
   cdn_certificate            = data.terraform_remote_state.core_infrastructure.outputs.cdn_certificate
   uploads_bucket             = "uploads-staging.open-ews.org"
-  audio_bucket               = "audio-staging.open-ews.org"
-  audio_bucket_cname         = "audio-staging.somleng.org"
   db_name                    = "open_ews_staging"
   webserver_min_tasks        = 0
   webserver_max_tasks        = 0

@@ -57,7 +57,7 @@ RSpec.describe "Callouts", :aggregate_failures do
       }
     )
 
-    expect { click_on("Create Callout") }.not_to have_enqueued_job(AudioFileProcessorJob)
+    click_on("Create Callout")
 
     expect(page).to have_content("Callout was successfully created.")
     expect(page).to have_content(
@@ -80,7 +80,7 @@ RSpec.describe "Callouts", :aggregate_failures do
 
     attach_file("Audio file", Rails.root + file_fixture("test.mp3"))
     choose("Hello World")
-    expect { click_on("Create Callout") }.to have_enqueued_job(AudioFileProcessorJob)
+    click_on("Create Callout")
 
     expect(page).to have_content("Callout was successfully created.")
   end

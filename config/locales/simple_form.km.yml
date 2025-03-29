@@ -45,7 +45,6 @@ km:
           CallFlowLogic::EWSLaosRegistration: Laos Early Warning System Registration
           CallFlowLogic::EWSRegistration: Cambodian Early Warning System Registration
           CallFlowLogic::HelloWorld: Hello World
-          CallFlowLogic::MamaInfoRegistration: Mama Info Registration
           CallFlowLogic::PlayMessage: Play Message
           CallFlowLogic::PlayMessageStartRapidproFlow: Play Message and Start RapidPro Flow
     required:

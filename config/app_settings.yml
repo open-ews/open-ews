@@ -8,8 +8,8 @@ default: &default
   aws_sqs_scheduler_queue_name: <%= ENV.fetch("AWS_SQS_SCHEDULER_QUEUE_NAME", "scheduler") %>
   aws_ses_region: <%= ENV.fetch("AWS_SES_REGION", "ap-southeast-1") %>
   aws_region: <%= ENV.fetch("AWS_DEFAULT_REGION", "ap-southeast-1") %>
-  uploads_bucket: <%= ENV.fetch("UPLOADS_BUCKET", "uploads.somleng.org") %>
-  audio_bucket: <%= ENV.fetch("AUDIO_BUCKET", "audio.somleng.org") %>
+  uploads_bucket: <%= ENV.fetch("UPLOADS_BUCKET", "uploads.open-ews.org") %>
+  audio_host: <%= ENV.fetch("AUDIO_HOST", "https://uploads.open-ews.org") %>
   admin_username: "admin"
   admin_password: "password"
 

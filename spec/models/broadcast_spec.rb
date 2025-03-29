@@ -43,42 +43,6 @@ RSpec.describe Broadcast do
     end
   end
 
-  describe "audio_file=" do
-    it "tracks changes when attaching a new audio file" do
-      broadcast = described_class.new
-      broadcast.audio_file = fixture_file_upload("test.mp3", "audio/mp3")
-
-      expect(broadcast.audio_file_blob_changed?).to eq(true)
-      expect(broadcast.audio_file_blob_was).to eq(nil)
-    end
-
-    it "tracks changes when updating the audio file" do
-      broadcast = build(:broadcast, audio_file: file_fixture("test.mp3"))
-      original_blob = broadcast.audio_file.blob
-      broadcast.audio_file = fixture_file_upload("big_file.mp3", "audio/mp3")
-
-      expect(broadcast.audio_file_blob_changed?).to eq(true)
-      expect(broadcast.audio_file_blob_was).to eq(original_blob)
-    end
-
-    it "tracks changes when not updating the audio file" do
-      broadcast = create(:broadcast, audio_file: file_fixture("test.mp3"))
-      broadcast = Broadcast.find(broadcast.id)
-
-      expect(broadcast.audio_file_blob_changed?).to eq(false)
-    end
-
-    it "enqueues a job to process the audio file" do
-      broadcast = create(:broadcast)
-
-      broadcast.audio_file = fixture_file_upload("test.mp3", "audio/mp3")
-      result = broadcast.save
-
-      expect(result).to eq(true)
-      expect(AudioFileProcessorJob).to have_been_enqueued.with(broadcast)
-    end
-  end
-
   describe "state_machine" do
     subject { create(factory, factory_attributes) }
 

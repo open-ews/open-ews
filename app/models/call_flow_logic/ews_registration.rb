@@ -265,7 +265,7 @@ module CallFlowLogic
     end
 
     def play(filename, response, language_code: nil, file_extension: "wav")
-      key = [ "ews_registration/#{filename}", language_code ].compact.join("-")
+      key = [ "ews_1294_cambodia/#{filename}", language_code ].compact.join("-")
       response.play(url: AudioURL.new(key: "#{key}.#{file_extension}").url)
     end
 

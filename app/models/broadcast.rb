@@ -4,28 +4,9 @@ class Broadcast < ApplicationRecord
   AUDIO_CONTENT_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/x-wav].freeze
   CHANNELS = %i[voice].freeze
 
-  module ActiveStorageDirty
-    attr_reader :audio_file_blob_was, :audio_file_will_change
-    attr_accessor :cache_audio_file_from_audio_url
-
-    def audio_file=(attachable)
-      @audio_file_blob_was = audio_file.blob if audio_file.attached?
-      @audio_file_will_change = true
-      super(attachable)
-    end
-
-    def audio_file_blob_changed?
-      return false unless audio_file.attached?
-      return false unless audio_file_will_change
-
-      audio_file.blob != audio_file_blob_was
-    end
-  end
-
   include MetadataHelpers
   include HasCallFlowLogic
   include AASM
-  prepend ActiveStorageDirty
 
   store_accessor :settings
   accepts_nested_key_value_fields_for :settings
@@ -71,7 +52,6 @@ class Broadcast < ApplicationRecord
            allow_nil: true
 
   before_validation :set_call_flow_logic, on: :create
-  after_commit      :process_audio_file
 
   aasm column: :status, whiny_transitions: false do
     state :pending, initial: true
@@ -157,13 +137,5 @@ class Broadcast < ApplicationRecord
     return if call_flow_logic.present?
 
     self.call_flow_logic = account_call_flow_logic
-  end
-
-  def process_audio_file
-    return unless audio_file.attached?
-    return unless audio_file_blob_changed?
-    return if cache_audio_file_from_audio_url
-
-    AudioFileProcessorJob.perform_later(self)
   end
 end
