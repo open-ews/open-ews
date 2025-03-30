@@ -30,21 +30,6 @@ resource "aws_lb_target_group" "internal_webserver" {
   }
 }
 
-resource "aws_lb_target_group" "uploads" {
-  name        = "${var.app_identifier}-uploads"
-  port        = 443
-  protocol    = "HTTPS"
-  vpc_id      = var.region.vpc.vpc_id
-  target_type = "ip"
-
-  health_check {
-    protocol = "HTTP"
-    path     = "/"
-    port     = 80
-    matcher  = "307,405"
-  }
-}
-
 resource "aws_lb_listener_rule" "webserver" {
   priority = var.app_environment == "production" ? 10 : 110
 
@@ -101,7 +86,7 @@ resource "aws_lb_listener_rule" "uploads_internal" {
 
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.uploads.id
+    target_group_arn = var.region.s3_target_group.arn
   }
 
   condition {
@@ -115,14 +100,4 @@ resource "aws_lb_listener_rule" "uploads_internal" {
   lifecycle {
     ignore_changes = [action]
   }
-}
-
-resource "aws_lb_target_group_attachment" "uploads" {
-  for_each = {
-    for subnet in var.region.vpc_endpoints[0].endpoints.s3.subnet_configuration :
-    subnet.ipv4 => subnet
-  }
-  target_group_arn = aws_lb_target_group.uploads.arn
-  target_id        = each.value.ipv4
-  port             = 443
 }
