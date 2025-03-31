@@ -47,7 +47,7 @@ RSpec.resource "Callouts" do
 
     example "Create a Callout" do
       request_body = {
-        call_flow_logic: CallFlowLogic::HelloWorld.to_s,
+        call_flow_logic: CallFlowLogic::PlayMessage.to_s,
         audio_url: "https://www.example.com/sample.mp3",
         metadata: {
           "foo" => "bar"

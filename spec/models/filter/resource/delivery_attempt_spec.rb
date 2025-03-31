@@ -18,7 +18,7 @@ module Filter
         include_examples(
           "string_attribute_filter",
           "status" => ::DeliveryAttempt::STATE_COMPLETED,
-          :call_flow_logic => CallFlowLogic::HelloWorld.to_s,
+          :call_flow_logic => CallFlowLogic::PlayMessage.to_s,
           :remote_call_id => SecureRandom.uuid,
           :remote_status => ::DeliveryAttempt::TWILIO_CALL_STATUSES[:not_answered],
           :remote_direction => ::DeliveryAttempt::TWILIO_DIRECTIONS[:inbound],

@@ -36,10 +36,9 @@ RSpec.describe Filter::Resource::Broadcast do
   end
 
   it "filters by call_flow_logic" do
-    broadcast = create(:broadcast, call_flow_logic: "CallFlowLogic::HelloWorld")
+    broadcast = create(:broadcast, call_flow_logic: "CallFlowLogic::PlayMessage")
 
-    expect(build_filter(call_flow_logic: "CallFlowLogic::HelloWorld").resources).to match_array([ broadcast ])
-    expect(build_filter(call_flow_logic: "CallFlowLogic::PlayMessage").resources).to be_empty
+    expect(build_filter(call_flow_logic: "CallFlowLogic::PlayMessage").resources).to match_array([ broadcast ])
   end
 
   def build_filter(filter_attributes)

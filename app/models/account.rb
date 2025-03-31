@@ -3,7 +3,7 @@ class Account < ApplicationRecord
   TWILIO_ACCOUNT_SID_PREFIX = "AC".freeze
   DEFAULT_PLATFORM_PROVIDER = "twilio".freeze
   PLATFORM_PROVIDERS = [ DEFAULT_PLATFORM_PROVIDER, "somleng" ].freeze
-  DEFAULT_CALL_FLOW_LOGIC = "CallFlowLogic::HelloWorld".freeze
+  DEFAULT_CALL_FLOW_LOGIC = "CallFlowLogic::PlayMessage".freeze
 
   include MetadataHelpers
   include HasCallFlowLogic

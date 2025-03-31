@@ -46,7 +46,7 @@ RSpec.describe HandlePhoneCallEvent do
     delivery_attempt = create_delivery_attempt(
       :remotely_queued,
       account: account,
-      call_flow_logic: CallFlowLogic::HelloWorld,
+      call_flow_logic: CallFlowLogic::PlayMessage,
       remote_status: "queued"
     )
     event_details = generate_event_details(
@@ -58,7 +58,7 @@ RSpec.describe HandlePhoneCallEvent do
 
     result = HandlePhoneCallEvent.call(url, event_details)
 
-    expect(result).to be_a(CallFlowLogic::HelloWorld)
+    expect(result).to be_a(CallFlowLogic::PlayMessage)
 
     event = result.event
     expect(event.delivery_attempt).to eq(delivery_attempt)

@@ -55,5 +55,4 @@ module CallFlowLogic
   end
 end
 
-require_relative "hello_world"
 require_relative "play_message"
