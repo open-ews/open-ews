@@ -9,7 +9,7 @@ RSpec.describe Filter::Resource::RemotePhoneCallEvent do
     include_examples("timestamp_attribute_filter")
     include_examples(
       "string_attribute_filter",
-      call_flow_logic: CallFlowLogic::HelloWorld.to_s,
+      call_flow_logic: CallFlowLogic::PlayMessage.to_s,
       remote_call_id: SecureRandom.uuid,
       remote_direction: DeliveryAttempt::TWILIO_DIRECTIONS[:inbound]
     )

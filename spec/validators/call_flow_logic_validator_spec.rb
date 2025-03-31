@@ -14,6 +14,6 @@ RSpec.describe CallFlowLogicValidator do
 
     expect(validatable_klass.new(nil).valid?).to eq(true)
     expect(validatable_klass.new("Callout").valid?).to eq(false)
-    expect(validatable_klass.new("CallFlowLogic::HelloWorld").valid?).to eq(true)
+    expect(validatable_klass.new("CallFlowLogic::PlayMessage").valid?).to eq(true)
   end
 end

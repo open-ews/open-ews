@@ -4,7 +4,6 @@ RSpec.describe CallFlowLogic::Base do
   describe ".registered" do
     it "returns registered call flow logic" do
       call_flow_logic = [
-        CallFlowLogic::HelloWorld,
         CallFlowLogic::PlayMessage
       ].map(&:to_s)
 

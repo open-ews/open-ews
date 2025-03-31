@@ -6,7 +6,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     broadcast       = create(
       :broadcast,
       :pending,
-      call_flow_logic: CallFlowLogic::HelloWorld,
+      call_flow_logic: CallFlowLogic::PlayMessage,
       account: user.account
     )
     other_broadcast = create(:broadcast)
@@ -28,7 +28,7 @@ RSpec.describe "Callouts", :aggregate_failures do
         broadcast.id.to_s,
         href: dashboard_broadcast_path(broadcast)
       )
-      expect(page).to have_content("Hello World")
+      expect(page).to have_content("Play Message")
     end
   end
 
@@ -41,7 +41,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     expect(page).to have_title("New Callout")
 
     fill_in("Audio URL", with: "https://www.example.com/sample.mp3")
-    choose("Hello World")
+    choose("Play Message")
 
     fill_in_key_values_for(
       :metadata,
@@ -79,7 +79,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     visit new_dashboard_broadcast_path
 
     attach_file("Audio file", Rails.root + file_fixture("test.mp3"))
-    choose("Hello World")
+    choose("Play Message")
     click_on("Create Callout")
 
     expect(page).to have_content("Callout was successfully created.")
@@ -99,7 +99,7 @@ RSpec.describe "Callouts", :aggregate_failures do
 
     expect(page).to have_title("Edit Callout")
 
-    choose("Hello World")
+    choose("Play Message")
     remove_key_value_for(:metadata)
     remove_key_value_for(:metadata)
     remove_key_value_for(:settings)
@@ -108,7 +108,7 @@ RSpec.describe "Callouts", :aggregate_failures do
     expect(page).to have_text("Callout was successfully updated.")
     expect(broadcast.reload.metadata).to eq({})
     expect(broadcast.reload.settings).to eq({})
-    expect(broadcast.call_flow_logic).to eq(CallFlowLogic::HelloWorld.to_s)
+    expect(broadcast.call_flow_logic).to eq(CallFlowLogic::PlayMessage.to_s)
   end
 
   it "can delete a broadcast" do
@@ -130,7 +130,7 @@ RSpec.describe "Callouts", :aggregate_failures do
       :broadcast,
       :pending,
       account: user.account,
-      call_flow_logic: CallFlowLogic::HelloWorld,
+      call_flow_logic: CallFlowLogic::PlayMessage,
       created_by: user,
       audio_file: file_fixture("test.mp3"),
       audio_url: "https://example.com/audio.mp3",

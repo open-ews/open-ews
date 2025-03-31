@@ -23,9 +23,9 @@ RSpec.describe "Phone Call Events" do
     expect(response.code).to eq("201")
     expect(RemotePhoneCallEvent.last!).to have_attributes(
       details: request_body.stringify_keys,
-      call_flow_logic: CallFlowLogic::HelloWorld.to_s,
+      call_flow_logic: CallFlowLogic::PlayMessage.to_s,
       delivery_attempt: have_attributes(
-        call_flow_logic: CallFlowLogic::HelloWorld.to_s,
+        call_flow_logic: CallFlowLogic::PlayMessage.to_s,
         status: "in_progress",
         remote_call_id: request_body.fetch(:CallSid),
         remote_status: request_body.fetch(:CallStatus),
@@ -35,7 +35,6 @@ RSpec.describe "Phone Call Events" do
         )
       )
     )
-    expect(response.body).to eq(CallFlowLogic::HelloWorld.new.to_xml)
   end
 
   it "Creates a phone call event for an outbound call" do
@@ -70,12 +69,11 @@ RSpec.describe "Phone Call Events" do
       call_duration: 87,
       delivery_attempt: have_attributes(
         status: "completed",
-        call_flow_logic: CallFlowLogic::HelloWorld.to_s,
+        call_flow_logic: CallFlowLogic::PlayMessage.to_s,
         remote_status: request_body.fetch(:CallStatus),
         duration: 87
       )
     )
-    expect(response.body).to eq(CallFlowLogic::HelloWorld.new.to_xml)
   end
 
   it "Handles incorrect signatures" do

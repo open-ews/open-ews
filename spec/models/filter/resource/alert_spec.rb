@@ -10,7 +10,7 @@ RSpec.describe Filter::Resource::Alert do
     include_examples "timestamp_attribute_filter"
     include_examples(
       "string_attribute_filter",
-      call_flow_logic: CallFlowLogic::HelloWorld.to_s
+      call_flow_logic: CallFlowLogic::PlayMessage.to_s
     )
 
     it "filters by callout_id" do
