@@ -22,9 +22,9 @@
           = f.input :addresses do
             #tree-view{
               data: {
-                controller: "treeview",
-                "treeview-field-name-value": "addresses",
-                "treeview-data-value": BeneficiaryAddress.address_data("kh").to_json
+                controller: "address-treeview",
+                "address-treeview-field-name-value": "addresses[administrative_division_codes]",
+                "address-treeview-data-value": BeneficiaryAddress.address_data("kh").to_json
               }
             }
 

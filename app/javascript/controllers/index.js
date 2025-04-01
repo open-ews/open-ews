@@ -4,5 +4,5 @@
 
 import { application } from "./application"
 
-import TreeviewController from "./treeview_controller"
-application.register("treeview", TreeviewController)
+import AddressTreeviewController from "./address_treeview_controller"
+application.register("address-treeview", AddressTreeviewController)
