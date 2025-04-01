@@ -13,16 +13,10 @@ module Filter
           "timestamp_attribute_filter",
           :created_at,
           :updated_at,
-          :remotely_queued_at
         )
         include_examples(
           "string_attribute_filter",
           "status" => ::DeliveryAttempt::STATE_COMPLETED,
-          :call_flow_logic => CallFlowLogic::PlayMessage.to_s,
-          :remote_call_id => SecureRandom.uuid,
-          :remote_status => ::DeliveryAttempt::TWILIO_CALL_STATUSES[:not_answered],
-          :remote_direction => ::DeliveryAttempt::TWILIO_DIRECTIONS[:inbound],
-          :remote_error_message => "Some Error"
         )
 
         context "filtering by remote_response" do

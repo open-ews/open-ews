@@ -25,40 +25,13 @@ Rails.application.routes.draw do
     resources :access_tokens
     resource :account, only: %i[edit update]
 
-    namespace :batch_operation do
-      resources :callout_populations, only: %i[edit update]
-    end
-
-    resources :batch_operations, only: %i[index show destroy] do
-      resources :batch_operation_events, only: :create
-    end
-
-    resources :beneficiaries, only: %i[index show destroy] do
-      resources :alerts, only: :index
-      resources :delivery_attempts, only: :index
-    end
+    resources :beneficiaries, only: %i[index show destroy]
 
     resources :broadcasts do
-      namespace :batch_operation do
-        resources :callout_populations, only: %i[new create]
-      end
-      resources :batch_operations, only: %i[index destroy]
-      resources :callout_events, only: :create
-      resources :alerts, only: :index
-      resources :delivery_attempts, only: :index
+      resources :alerts, only: %i[index show]
     end
 
-    resources :alerts, only: %i[index show destroy] do
-      resources :delivery_attempts, only: :index
-    end
-
-    resources :delivery_attempts, only: %i[index show] do
-      resources :remote_phone_call_events, only: :index
-    end
-
-    resources :remote_phone_call_events, only: %i[index show]
     resources :users, except: %i[new create]
-    resources :recordings, only: %i[index show]
     resource :locale, only: :update
   end
 
@@ -81,20 +54,17 @@ Rails.application.routes.draw do
     resources :callouts, except: %i[new edit] do
       resources :callout_events, only: :create
       resources :callout_participations, only: %i[index]
-      resources :phone_calls, only: :index
       resources :batch_operations, only: %i[create index]
     end
 
     resources :batch_operations, except: %i[new edit] do
       resources :batch_operation_events, only: :create
     end
-
-    resources :phone_calls, only: %i[index show]
-    resources :recordings, only: %i[index show]
   end
 
-  namespace :twilio_webhooks, defaults: { format: :xml } do
-    resources :recording_status_callbacks, only: :create
-    resources :phone_call_events, only: :create
+  namespace :somleng_webhooks do
+    resources :delivery_attempts, only: [] do
+      resources :call_status_callbacks, only: :create
+    end
   end
 end

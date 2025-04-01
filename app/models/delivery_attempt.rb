@@ -1,7 +1,6 @@
 class DeliveryAttempt < ApplicationRecord
   TWILIO_CALL_STATUSES = {
     queued: "queued",
-    ringing: "ringing",
     in_progress: "in-progress",
     canceled: "canceled",
     completed: "completed",
@@ -12,129 +11,63 @@ class DeliveryAttempt < ApplicationRecord
 
   IN_PROGRESS_STATUSES = %i[remotely_queued in_progress].freeze
 
-  # https://www.twilio.com/docs/api/voice/call#resource-properties
-  TWILIO_DIRECTIONS = {
-    inbound: "inbound"
-  }.freeze
-
   attribute :phone_number, :phone_number
 
-  belongs_to :alert, optional: true, counter_cache: true
-  belongs_to :beneficiary, validate: true
-  belongs_to :account
-  belongs_to :broadcast, optional: true
-  has_many   :remote_phone_call_events, dependent: :restrict_with_error
+  belongs_to :alert, counter_cache: true
+  belongs_to :beneficiary
+  belongs_to :broadcast
+
+  delegate :account, to: :broadcast
 
   include MetadataHelpers
-  include HasCallFlowLogic
-  include AASM
 
-  delegate :call_flow_logic, to: :alert, prefix: true, allow_nil: true
-  delegate :call_flow_logic, to: :beneficiary, prefix: true, allow_nil: true
+  delegate :initiated?, to: :state_machine
 
-  delegate :beneficiary,
-           :phone_number,
-           to: :alert,
-           prefix: true,
-           allow_nil: true
-
-  delegate :platform_provider, to: :account
-
-  before_validation :set_defaults, on: :create
   before_destroy    :validate_destroy
-  validates :phone_number, presence: true
 
-  accepts_nested_key_value_fields_for :remote_response
-  accepts_nested_key_value_fields_for :remote_queue_response
+  class StateMachine
+    class InvalidStateTransitionError < StandardError; end
 
-  aasm column: :status, whiny_transitions: false do
-    state :created, initial: true
-    state :queued
-    state :remotely_queued
-    state :errored
-    state :failed
-    state :in_progress
-    state :busy
-    state :not_answered
-    state :canceled
-    state :completed
-    state :expired
+    attr_reader :current_state
 
-    event :queue do
-      transitions(
-        from: :created,
-        to: :queued
-      )
+    State = Data.define(:name, :transitions_to)
+
+    STATES = [
+      State.new(name: :created, transitions_to: [ :queued ]),
+      State.new(name: :queued, transitions_to: [ :initiated, :errored ]),
+      State.new(name: :initiated, transitions_to: [ :failed, :busy, :not_answered, :canceled, :completed, :expired ]),
+      State.new(name: :errored, transitions_to: []),
+      State.new(name: :failed, transitions_to: []),
+      State.new(name: :busy, transitions_to: []),
+      State.new(name: :not_answered, transitions_to: []),
+      State.new(name: :canceled, transitions_to: []),
+      State.new(name: :completed, transitions_to: []),
+      State.new(name: :expired, transitions_to: [])
+    ]
+
+    def initialize(current_state)
+      @current_state = self.class.find(current_state)
     end
 
-    event :queue_remote, after_commit: :touch_remotely_queued_at do
-      transitions(
-        from: :queued,
-        to: :remotely_queued,
-        if: :remote_call_id?
-      )
-
-      transitions(
-        from: :queued,
-        to: :errored
-      )
+    def transition_to(new_state)
+      may_transition_to?(new_state) ? new_state : current_state.name
     end
 
-    event :complete do
-      transitions from: %i[created remotely_queued expired],
-                  to: :in_progress,
-                  if: :remote_status_in_progress?
-
-      transitions from: %i[created remotely_queued in_progress expired],
-                  to: :busy,
-                  if: :remote_status_busy?
-
-      transitions from: %i[created remotely_queued in_progress expired],
-                  to: :failed,
-                  if: :remote_status_failed?
-
-      transitions from: %i[created remotely_queued in_progress expired],
-                  to: :not_answered,
-                  if: :remote_status_not_answered?
-
-      transitions from: %i[created remotely_queued in_progress expired],
-                  to: :canceled,
-                  if: :remote_status_canceled?
-
-      transitions from: %i[created remotely_queued in_progress],
-                  to: :expired,
-                  if: :remote_call_expired?
-
-      transitions from: %i[created remotely_queued in_progress expired],
-                  to: :completed,
-                  after: :mark_alert_answered!,
-                  if: :remote_status_completed?
+    def transition_to!(new_state)
+      may_transition_to?(new_state) ? transition_to(new_state) : raise(InvalidStateTransitionError.new("Cannot transition from #{current_state.name} to #{new_state}"))
     end
-  end
 
-  def self.to_fetch_remote_status
-    where(status: IN_PROGRESS_STATUSES, remotely_queued_at: ..10.minutes.ago)
-      .merge(
-        where(remote_status_fetch_queued_at: nil).or(where(remote_status_fetch_queued_at: ..15.minutes.ago))
-      )
-  end
+    def may_transition_to?(new_state)
+      current_state.transitions_to.include?(new_state.to_s.to_sym)
+    end
 
-  def inbound?
-    remote_direction == TWILIO_DIRECTIONS[:inbound]
-  end
+    STATES.each do |state|
+      define_method("#{state.name}?", -> { current_state.name == state.name })
+    end
 
-  def direction
-    inbound? ? :inbound : :outbound
-  end
-
-  def set_call_flow_logic
-    return if call_flow_logic.present?
-
-    self.call_flow_logic = alert_call_flow_logic || beneficiary_call_flow_logic
-  end
-
-  def remote_call_expired?
-    remote_status == "queued" && remotely_queued_at < 1.hour.ago
+    def self.find(state)
+      STATES.find(-> { raise ArgumentError, "Unknown state #{state}" }) { _1.name == state.to_s.to_sym }
+    end
   end
 
   # NOTE: This is for backward compatibility until we moved to the new API
@@ -145,10 +78,26 @@ class DeliveryAttempt < ApplicationRecord
     result
   end
 
+  def transition_to(new_state)
+    self.status = state_machine.transition_to(new_state)
+  end
+
+  def transition_to!(new_state)
+    transaction do
+      self.status = state_machine.transition_to!(new_state)
+      save!
+      touch("#{new_state}_at") if has_attribute?("#{new_state}_at")
+    end
+  end
+
+  def may_transition_to?(new_state)
+    state_machine.may_transition_to?(new_state)
+  end
+
   private
 
-  def touch_remotely_queued_at
-    touch(:remotely_queued_at)
+  def state_machine
+    @state_machine ||= StateMachine.new(status)
   end
 
   def remote_status_in_progress?
@@ -158,29 +107,10 @@ class DeliveryAttempt < ApplicationRecord
     ].include?(remote_status)
   end
 
-  %i[busy failed not_answered canceled completed].each do |status|
-    define_method("remote_status_#{status}?") do
-      remote_status == TWILIO_CALL_STATUSES.fetch(status)
-    end
-  end
-
-  def set_defaults
-    self.beneficiary ||= alert_beneficiary
-    self.phone_number  ||= alert_phone_number
-    self.account ||= beneficiary&.account
-    set_call_flow_logic
-  end
-
   def validate_destroy
     return true if created?
 
     errors.add(:base, :restrict_destroy_status, status: status)
     throw(:abort)
-  end
-
-  def mark_alert_answered!
-    return true if alert.blank?
-
-    alert.complete!
   end
 end

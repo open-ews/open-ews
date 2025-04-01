@@ -58,7 +58,6 @@ module BatchOperation
           phone_number: beneficiary.phone_number,
           broadcast_id: broadcast.id,
           callout_population_id: id,
-          call_flow_logic: broadcast.call_flow_logic,
           status: :queued
         }
       end
@@ -70,10 +69,8 @@ module BatchOperation
         next if alert.delivery_attempts.any?
 
         {
-          account_id: broadcast.account_id,
           broadcast_id:,
           beneficiary_id: alert.beneficiary_id,
-          call_flow_logic: alert.call_flow_logic,
           alert_id: alert.id,
           phone_number: alert.phone_number,
           status: :created

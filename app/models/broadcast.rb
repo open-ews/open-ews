@@ -5,7 +5,6 @@ class Broadcast < ApplicationRecord
   CHANNELS = %i[voice].freeze
 
   include MetadataHelpers
-  include HasCallFlowLogic
   include AASM
 
   store_accessor :settings
@@ -35,7 +34,6 @@ class Broadcast < ApplicationRecord
   has_one_attached :audio_file
 
   validates :channel, :status, presence: true
-  validates :call_flow_logic, :status, presence: true
 
   validates :audio_file,
             file_size: {
@@ -50,8 +48,6 @@ class Broadcast < ApplicationRecord
            to: :account,
            prefix: true,
            allow_nil: true
-
-  before_validation :set_call_flow_logic, on: :create
 
   aasm column: :status, whiny_transitions: false do
     state :pending, initial: true
@@ -129,13 +125,5 @@ class Broadcast < ApplicationRecord
 
   def not_yet_started?
     pending? || queued? || errored?
-  end
-
-  private
-
-  def set_call_flow_logic
-    return if call_flow_logic.present?
-
-    self.call_flow_logic = account_call_flow_logic
   end
 end

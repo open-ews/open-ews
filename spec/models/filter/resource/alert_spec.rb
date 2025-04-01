@@ -8,10 +8,6 @@ RSpec.describe Filter::Resource::Alert do
     include_examples "metadata_attribute_filter"
     include_examples "msisdn_attribute_filter"
     include_examples "timestamp_attribute_filter"
-    include_examples(
-      "string_attribute_filter",
-      call_flow_logic: CallFlowLogic::PlayMessage.to_s
-    )
 
     it "filters by callout_id" do
       _non_matching_callout_participation = create(:alert)

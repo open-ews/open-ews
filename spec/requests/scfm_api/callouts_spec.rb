@@ -47,7 +47,6 @@ RSpec.resource "Callouts" do
 
     example "Create a Callout" do
       request_body = {
-        call_flow_logic: CallFlowLogic::PlayMessage.to_s,
         audio_url: "https://www.example.com/sample.mp3",
         metadata: {
           "foo" => "bar"
@@ -67,7 +66,6 @@ RSpec.resource "Callouts" do
       created_broadcast = account.broadcasts.find(parsed_response.fetch("id"))
       expect(created_broadcast.metadata).to eq(request_body.fetch(:metadata))
       expect(created_broadcast.settings).to eq(request_body.fetch(:settings))
-      expect(created_broadcast.call_flow_logic).to eq(request_body.fetch(:call_flow_logic))
       expect(created_broadcast.audio_url).to eq(request_body.fetch(:audio_url))
       expect(parsed_response.fetch("status")).to eq("initialized")
     end

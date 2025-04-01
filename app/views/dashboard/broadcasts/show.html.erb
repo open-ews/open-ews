@@ -48,11 +48,6 @@
         <%= link_to(resource.audio_url, resource.audio_url) %>
       <% end %>
     <% end %>
-    <%= f.attribute :call_flow_logic,
-                value:
-                  translate(
-                    "simple_form.options.defaults.call_flow_logic.#{resource.call_flow_logic}",
-                  ) %>
     <%= f.attribute :created_at, value: local_time(resource.created_at) %>
     <%= f.attribute :created_by do %>
       <% if resource.created_by_id.present? %>

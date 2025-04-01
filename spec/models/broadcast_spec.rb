@@ -3,7 +3,6 @@ require "rails_helper"
 RSpec.describe Broadcast do
   let(:factory) { :broadcast }
   include_examples "has_metadata"
-  include_examples "has_call_flow_logic"
 
   describe "associations" do
     it { is_expected.to have_many(:alerts).dependent(:restrict_with_error) }

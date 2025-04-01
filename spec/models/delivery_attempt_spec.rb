@@ -4,7 +4,6 @@ RSpec.describe DeliveryAttempt do
   let(:factory) { :delivery_attempt }
 
   include_examples "has_metadata"
-  include_examples "has_call_flow_logic"
 
   describe "locking" do
     it "prevents stale delivery attempts from being updated" do

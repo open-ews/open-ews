@@ -1,6 +1,5 @@
 class Alert < ApplicationRecord
   include MetadataHelpers
-  include HasCallFlowLogic
   include AASM
 
   attribute :phone_number, :phone_number
@@ -19,7 +18,6 @@ class Alert < ApplicationRecord
   delegate :account, to: :broadcast
 
   before_validation :set_phone_number_from_beneficiary,
-                    :set_call_flow_logic,
                     on: :create
 
   validates :phone_number, presence: true
@@ -62,11 +60,5 @@ class Alert < ApplicationRecord
 
   def set_phone_number_from_beneficiary
     self.phone_number ||= beneficiary&.phone_number
-  end
-
-  def set_call_flow_logic
-    return if call_flow_logic.present?
-
-    self.call_flow_logic = broadcast_call_flow_logic
   end
 end

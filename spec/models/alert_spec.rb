@@ -4,7 +4,6 @@ RSpec.describe Alert do
   let(:factory) { :alert }
 
   include_examples "has_metadata"
-  include_examples "has_call_flow_logic"
 
   describe "associations" do
     it { is_expected.to have_many(:delivery_attempts).dependent(:restrict_with_error) }

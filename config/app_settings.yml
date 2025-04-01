@@ -31,4 +31,4 @@ development: &development
 
 test:
   <<: *development
-  default_url_host: https://scfm.somleng.org
+  default_url_host: "https://app.open-ews.org"

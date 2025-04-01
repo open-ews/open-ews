@@ -40,10 +40,6 @@ km:
         platform_provider_name:
           somleng: Somleng
           twilio: Twilio
-      defaults:
-        call_flow_logic:
-          CallFlowLogic::EWSLaosRegistration: Laos Early Warning System Registration
-          CallFlowLogic::PlayMessage: Play Message
     required:
       mark: "*"
       text: required

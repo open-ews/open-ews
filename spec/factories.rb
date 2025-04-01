@@ -41,17 +41,8 @@ FactoryBot.define do
     account
     channel { "voice" }
 
-    transient do
-      audio_file { nil }
-    end
-
-    after(:build) do |broadcast, evaluator|
-      if evaluator.audio_file.present?
-        broadcast.audio_file = Rack::Test::UploadedFile.new(
-          evaluator.audio_file,
-          "audio/mp3"
-        )
-      end
+    trait :with_attached_audio do
+      association :audio_file, factory: :active_storage_attachment, filename: "test.mp3"
     end
 
     trait :pending do
@@ -103,81 +94,29 @@ FactoryBot.define do
 
   factory :alert do
     broadcast
-    beneficiary
+    beneficiary { association :beneficiary, account: broadcast.account }
   end
 
   factory :delivery_attempt do
-    outbound
-    remote_call_id { SecureRandom.uuid }
-
-    trait :outbound do
-      alert
-      broadcast { alert&.broadcast }
-    end
-
-    trait :inbound do
-      alert { nil }
-      phone_number { generate(:phone_number) }
-      remote_direction { DeliveryAttempt::TWILIO_DIRECTIONS[:inbound] }
-    end
+    alert
+    broadcast { alert.broadcast }
+    beneficiary { alert.beneficiary }
+    phone_number { beneficiary.phone_number }
 
     traits_for_enum :status, %i[
       created
+      queued
+      initiated
       completed
       failed
       in_progress
       expired
+      canceled
       in_progress
-      remotely_queued
     ]
-
-    trait :queued do
-      status { :queued }
-      remote_call_id { nil }
-    end
   end
 
-  factory :remote_phone_call_event do
-    transient do
-      build_delivery_attempt { true }
-    end
-
-    details { generate(:twilio_remote_call_event_details) }
-    remote_call_id { details[:CallSid] }
-    remote_direction { details[:Direction] }
-    call_flow_logic { Account::DEFAULT_CALL_FLOW_LOGIC }
-
-    after(:build) do |remote_phone_call_event, evaluator|
-      if evaluator.build_delivery_attempt
-        remote_phone_call_event.delivery_attempt ||= create(
-          :delivery_attempt,
-          phone_number: remote_phone_call_event.details[:From],
-          remote_call_id: remote_phone_call_event.remote_call_id,
-          remote_direction: remote_phone_call_event.remote_direction
-        )
-      end
-    end
-  end
-
-  factory :account do
-    with_somleng_provider
-
-    trait :with_twilio_provider do
-      platform_provider_name { "twilio" }
-      twilio_account_sid
-      twilio_auth_token { generate(:auth_token) }
-    end
-
-    trait :with_somleng_provider do
-      platform_provider_name { "somleng" }
-      somleng_account_sid
-      somleng_auth_token { generate(:auth_token) }
-    end
-
-    trait :super_admin do
-      permissions { [ :super_admin ] }
-    end
-  end
+  factory :account
 
   factory :user do
     account
@@ -205,17 +144,6 @@ FactoryBot.define do
         filename:
       )
     end
-  end
-
-  factory :recording do
-    delivery_attempt
-    account { delivery_attempt.account }
-    beneficiary { delivery_attempt.beneficiary }
-    external_recording_id { SecureRandom.uuid }
-    external_recording_url { "https://api.somleng.org/2010-04-01/Accounts/#{SecureRandom.uuid}/Calls/#{SecureRandom.uuid}/Recordings/#{external_recording_id}" }
-    duration { 15 }
-
-    association :audio_file, factory: :active_storage_attachment, filename: "test.mp3"
   end
 
   factory :beneficiary_address do

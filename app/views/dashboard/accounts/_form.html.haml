@@ -7,7 +7,6 @@
     = f.input :somleng_api_base_url
     = f.input :twilio_account_sid
     = f.input :twilio_auth_token
-    = f.input :call_flow_logic, collection: CallFlowLogic::Base.registered.map(&:to_sym), as: :radio_buttons
     = render("shared/key_value_fields", attribute: :settings, f: f)
     .form-group.actions
       = f.button :submit, class: 'btn btn-primary'

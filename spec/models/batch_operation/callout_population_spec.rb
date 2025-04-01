@@ -28,8 +28,6 @@ module BatchOperation
           phone_number: beneficiary.phone_number,
           alert:,
           broadcast: callout_population.broadcast,
-          call_flow_logic: alert.call_flow_logic,
-          account: callout_population.account,
           status: "created"
         )
       end
