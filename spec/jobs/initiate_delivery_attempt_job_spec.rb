@@ -60,7 +60,7 @@ RSpec.describe InitiateDeliveryAttemptJob do
 
       InitiateDeliveryAttemptJob.perform_now(delivery_attempt)
 
-      expect(delivery_attempt.reload).to have_attributes(
+      expect(delivery_attempt).to have_attributes(
         status: "errored",
         initiated_at: nil,
         metadata: {

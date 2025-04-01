@@ -82,11 +82,14 @@ class DeliveryAttempt < ApplicationRecord
     self.status = state_machine.transition_to(new_state)
   end
 
-  def transition_to!(new_state)
+  def transition_to!(new_state, **options)
     transaction do
       self.status = state_machine.transition_to!(new_state)
       save!
-      touch("#{new_state}_at") if has_attribute?("#{new_state}_at")
+      timestamp_attribute = options.fetch(:touch) if options.key?(:touch)
+      raise(ArgumentError, "Unknown timestamp attribute #{timestamp_attribute}") if timestamp_attribute.present? && !has_attribute?(timestamp_attribute)
+      timestamp_attribute ||= "#{new_state}_at"
+      touch(timestamp_attribute) if has_attribute?(timestamp_attribute)
     end
   end
 

@@ -102,18 +102,24 @@ FactoryBot.define do
     broadcast { alert.broadcast }
     beneficiary { alert.beneficiary }
     phone_number { beneficiary.phone_number }
+  end
 
-    traits_for_enum :status, %i[
-      created
-      queued
-      initiated
-      completed
-      failed
-      in_progress
-      expired
-      canceled
-      in_progress
-    ]
+  trait :queued do
+    queued_at { Time.current }
+    status { :queued }
+  end
+
+  trait :initiated do
+    queued_at { Time.current }
+    initiated_at { Time.current }
+    status { :initiated }
+  end
+
+  trait :completed do
+    queued_at { Time.current }
+    initiated_at { Time.current }
+    completed_at { Time.current }
+    status { :completed }
   end
 
   factory :account
