@@ -4,6 +4,7 @@ class Beneficiary < ApplicationRecord
   include MetadataHelpers
 
   attribute :phone_number, :phone_number
+  attribute :address_administrative_division_codes, :string, array: true
 
   enumerize :status, in: [ :active, :disabled ], scope: :shallow
   enumerize :gender, in: [ "M", "F" ]
@@ -12,7 +13,7 @@ class Beneficiary < ApplicationRecord
 
   belongs_to :account
 
-  has_many :addresses, class_name: "BeneficiaryAddress", foreign_key: :beneficiary_id
+  has_many :addresses, class_name: "BeneficiaryAddress"
   has_many :alerts
   has_many :callouts, through: :alerts
   has_many :delivery_attempts
@@ -24,6 +25,8 @@ class Beneficiary < ApplicationRecord
   delegate :call_flow_logic,
            to: :account,
            allow_nil: true
+
+  accepts_nested_attributes_for :addresses, allow_destroy: true, reject_if: :all_blank
 
   def self.jsonapi_serializer_class
     BeneficiarySerializer

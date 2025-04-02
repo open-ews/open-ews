@@ -17,16 +17,37 @@
         .col
           = f.input :iso_country_code
 
-      .row
-        .col{style: "max-height: 300px; overflow: auto;"}
-          = f.input :addresses do
-            #tree-view{
-              data: {
-                controller: "address-treeview",
-                "address-treeview-field-name-value": "addresses[administrative_division_codes]",
-                "address-treeview-data-value": BeneficiaryAddress.address_data("kh").to_json
-              }
-            }
+      .addresses
+        .hr-text Addresses
+
+        = f.simple_fields_for :addresses do |addresses_form|
+          .card
+            .ribbon.ribbon-top.bg-red
+              %i.icon.ti.ti-trash
+            .card-body
+              .row
+                .col-md-6
+                  = addresses_form.input :iso_region_code
+              .row
+                .col
+                  = addresses_form.input :administrative_division_level_2_code
+                .col
+                  = addresses_form.input :administrative_division_level_2_name
+              .row
+                .col
+                  = addresses_form.input :administrative_division_level_3_code
+                .col
+                  = addresses_form.input :administrative_division_level_3_name
+              .row
+                .col
+                  = addresses_form.input :administrative_division_level_4_code
+                .col
+                  = addresses_form.input :administrative_division_level_4_name
+
+        .text-center.pt-3
+          = link_to("#", class: "btn btn-outline-primary", title: "Add Address") do
+            <i class="icon ti ti-plus"></i>
+            Add Address
 
     .card-footer.text-end
       = f.button :submit, class: 'btn btn-primary'
