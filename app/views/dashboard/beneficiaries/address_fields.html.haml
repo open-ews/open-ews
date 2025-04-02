@@ -1,0 +1,23 @@
+.card
+  .ribbon.ribbon-top.bg-red
+    %i.icon.ti.ti-trash
+
+  .card-body
+    .row
+      .col-md-6
+        = form.input :iso_region_code
+    .row
+      .col
+        = form.input :administrative_division_level_2_code
+      .col
+        = form.input :administrative_division_level_2_name
+    .row
+      .col
+        = form.input :administrative_division_level_3_code
+      .col
+        = form.input :administrative_division_level_3_name
+    .row
+      .col
+        = form.input :administrative_division_level_4_code
+      .col
+        = form.input :administrative_division_level_4_name

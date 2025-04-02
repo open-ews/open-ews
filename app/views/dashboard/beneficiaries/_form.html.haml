@@ -17,32 +17,32 @@
         .col
           = f.input :iso_country_code
 
-      .addresses
         .hr-text Addresses
 
-        = f.simple_fields_for :addresses do |addresses_form|
-          .card
-            .ribbon.ribbon-top.bg-red
-              %i.icon.ti.ti-trash
-            .card-body
-              .row
-                .col-md-6
-                  = addresses_form.input :iso_region_code
-              .row
-                .col
-                  = addresses_form.input :administrative_division_level_2_code
-                .col
-                  = addresses_form.input :administrative_division_level_2_name
-              .row
-                .col
-                  = addresses_form.input :administrative_division_level_3_code
-                .col
-                  = addresses_form.input :administrative_division_level_3_name
-              .row
-                .col
-                  = addresses_form.input :administrative_division_level_4_code
-                .col
-                  = addresses_form.input :administrative_division_level_4_name
+        .addresses
+          = f.simple_fields_for :addresses do |addresses_form|
+            .card
+              .ribbon.ribbon-top.bg-red
+                %i.icon.ti.ti-trash
+              .card-body
+                .row
+                  .col-md-6
+                    = addresses_form.input :iso_region_code
+                .row
+                  .col
+                    = addresses_form.input :administrative_division_level_2_code
+                  .col
+                    = addresses_form.input :administrative_division_level_2_name
+                .row
+                  .col
+                    = addresses_form.input :administrative_division_level_3_code
+                  .col
+                    = addresses_form.input :administrative_division_level_3_name
+                .row
+                  .col
+                    = addresses_form.input :administrative_division_level_4_code
+                  .col
+                    = addresses_form.input :administrative_division_level_4_name
 
         .text-center.pt-3
           = link_to("#", class: "btn btn-outline-primary", title: "Add Address") do
