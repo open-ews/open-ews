@@ -1,3 +1,0 @@
-= turbo_stream.append "addresses" do
-  = fields_for 'beneficiary[addresses_attributes][]', BeneficiaryAddress.new, index: Time.current.to_i do |form|
-    = render "address_fields", form: form %>

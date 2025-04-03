@@ -1,8 +1,10 @@
-.card
-  .ribbon.ribbon-top.bg-red
-    %i.icon.ti.ti-trash
+.card.mb-3{data: { controller: "remove-nested-form", "remove-nested-form-target": "element" }}
+  .ribbon.ribbon-top.bg-red{"data-bs-toggle" => "tooltip", "data-bs-placement" => "top", title: "Remove address"}
+    %i.icon.ti.ti-trash.cursor-pointer{"data-action": "click->remove-nested-form#remove"}
 
   .card-body
+    = form.input :_destroy, as: :hidden, input_html: { data: { "remove-nested-form-target": "destroyElement" } }
+
     .row
       .col-md-6
         = form.input :iso_region_code

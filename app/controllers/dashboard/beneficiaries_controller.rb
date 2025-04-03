@@ -1,11 +1,5 @@
 module Dashboard
   class BeneficiariesController < Dashboard::BaseController
-    def new
-      super
-
-      @resource.addresses.build
-    end
-
     private
 
     def association_chain

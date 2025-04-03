@@ -6,3 +6,6 @@ import { application } from "./application"
 
 import AddressTreeviewController from "./address_treeview_controller"
 application.register("address-treeview", AddressTreeviewController)
+
+import RemoveNestedFormController from "./remove_nested_form_controller"
+application.register("remove-nested-form", RemoveNestedFormController)

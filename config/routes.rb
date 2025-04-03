@@ -42,11 +42,11 @@ Rails.application.routes.draw do
     end
 
     resources :beneficiaries do
-      get "addresses/new" => "dashboard/beneficiaries#new_address", on: :member, as: :new_beneficiary_addresses
-
       resources :alerts, only: :index
       resources :delivery_attempts, only: :index
     end
+
+    resources :beneficiary_addresses, only: :new
 
     resources :broadcasts do
       namespace :batch_operation do
