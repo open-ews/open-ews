@@ -29,9 +29,7 @@
         - if resource.audio_file.attached?
           = audio_tag(resource.audio_file, controls: true)
 
-      = f.attribute :created_by do
-        - if resource.created_by_id.present?
-          = link_to(resource.created_by.name, dashboard_user_path(resource.created_by_id))
+      = f.attribute :created_by, value: resource.created_by&.name
 
       = f.attribute :created_at, value: local_time(resource.created_at)
       = f.attribute :updated_at, value: local_time(resource.updated_at)

@@ -21,14 +21,14 @@ en:
       update: Edit
     alerts:
       index: Alerts
-      show: Alert %{id}
+      show: Alert
     app_name: OpenEWS
     beneficiaries:
       create: New Beneficiary
       edit: Edit Beneficiary
       index: Beneficiaries
       new: New Beneficiary
-      show: Beneficiary %{id}
+      show: Beneficiary
       update: Edit Beneficiary
     broadcasts:
       create: New Broadcast
@@ -37,7 +37,7 @@ en:
       new: New Broadcast
       pause: Pause
       resume: Resume
-      show: Broadcast %{id}
+      show: Broadcast
       start: Start
       stop: Stop
       summary: Broadcast Summary
@@ -46,7 +46,7 @@ en:
       index: Delivery Attempts
       queue: Send
       queue_remote_fetch: Fetch Remote Status
-      show: Delivery Attempt %{id}
+      show: Delivery Attempt
     user_invitations:
       create: Invite User
       edit: Set your password
@@ -67,7 +67,7 @@ en:
     users:
       edit: Edit User
       index: Settings
-      show: User %{id}
+      show: User
       update: Edit User
     account:
       show: Settings

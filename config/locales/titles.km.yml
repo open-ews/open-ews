@@ -21,14 +21,14 @@ km:
       update: កែប្រែ
     alerts:
       index: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-      show: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស %{id}
+      show: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
     app_name: OpenEWS
     beneficiaries:
       create: បង្កើត សមាជិកទំនាក់ទំនង
       edit: កែប្រែ សមាជិកទំនាក់ទំនង
       index: សមាជិកទំនាក់ទំនង
       new: បង្កើត សមាជិកទំនាក់ទំនង
-      show: សមាជិកទំនាក់ទំនង %{id}
+      show: សមាជិកទំនាក់ទំនង
       update: កែប្រែ សមាជិកទំនាក់ទំនង
     broadcasts:
       create: បង្កើត សេចក្ដីប្រកាស
@@ -37,7 +37,7 @@ km:
       new: បង្កើត សេចក្ដីប្រកាស
       pause: ផ្អាក
       resume: បន្តរដំណើរការ
-      show: សេចក្ដីប្រកាស %{id}
+      show: សេចក្ដីប្រកាស
       start: ចាប់ផ្ដើម
       stop: បញ្ឈប់
       summary: Callout Summary
@@ -46,7 +46,7 @@ km:
       index: កំណត់ត្រាការហៅចេញ
       queue: Send
       queue_remote_fetch: Fetch Remote Status
-      show: កំណត់ត្រាការហៅចេញ %{id}
+      show: កំណត់ត្រាការហៅចេញ
     user_invitations:
       create: អញ្ជើញ អ្នកប្រីប្រាស
       edit: Set your password
@@ -67,5 +67,5 @@ km:
     users:
       edit: កែប្រែ អ្នកប្រីប្រាស់
       index: អ្នកប្រីប្រាស់
-      show: អ្នកប្រីប្រាស់ %{id}
+      show: អ្នកប្រីប្រាស់
       update: កែប្រែ អ្នកប្រីប្រាស់
