@@ -266,7 +266,7 @@ GEM
       mime-types (>= 1.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (4.29.3)
+    google-protobuf (4.30.2)
       bigdecimal
       rake (>= 13)
     haml (6.3.0)
@@ -377,7 +377,7 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.9)
-    pg_query (6.0.0)
+    pg_query (6.1.0)
       google-protobuf (>= 3.25.3)
     pghero (3.6.2)
       activerecord (>= 6.1)
