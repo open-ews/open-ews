@@ -37,6 +37,7 @@ gem "aws-actionmailer-ses"
 gem "bitmask_attributes", github: "numerex/bitmask_attributes"
 gem "bootsnap", require: false
 gem "countries"
+gem "country_select"
 gem "cursor_paginator"
 gem "devise"
 gem "devise-async"

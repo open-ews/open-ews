@@ -1,0 +1,6 @@
+km:
+  enumerize:
+    defaults:
+      gender:
+        M: "ប្រុស"
+        F: "ស្រី"
