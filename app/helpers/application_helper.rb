@@ -4,6 +4,13 @@ module ApplicationHelper
     "https://www.gravatar.com/avatar/#{user_email}?size=200"
   end
 
+  def country_name(iso_country_code)
+    return if iso_country_code.blank?
+
+    country = ISO3166::Country[iso_country_code]
+    country.translations[I18n.locale.to_s] || country.common_name || country.iso_short_name
+  end
+
   def flash_class(level)
     case level.to_sym
     when :notice then "alert alert-info"
