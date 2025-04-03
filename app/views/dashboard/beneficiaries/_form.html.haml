@@ -17,16 +17,16 @@
         .col
           = f.input :disability_status
 
-        .hr-text Addresses
+      .hr-text Addresses
 
-        #addresses
-          = f.simple_fields_for :addresses do |addresses_form|
-            = render "dashboard/beneficiary_addresses/fields", form: addresses_form
+      #addresses
+        = f.simple_fields_for :addresses do |addresses_form|
+          = render "dashboard/beneficiary_addresses/fields", form: addresses_form
 
-        .text-center
-          = link_to(new_dashboard_beneficiary_address_path, class: "btn btn-outline-primary", title: "Add Address", data: { turbo_stream: true }) do
-            <i class="icon ti ti-plus"></i>
-            Add Address
+      .text-center
+        = link_to(new_dashboard_beneficiary_address_path, class: "btn btn-outline-primary", title: "Add Address", data: { turbo_stream: true }) do
+          <i class="icon ti ti-plus"></i>
+          Add Address
 
     .card-footer.text-end
       = f.button :submit, class: 'btn btn-primary'

@@ -1,8 +1,66 @@
 .card.col-md-6
   = simple_form_for([:dashboard, resource]) do |f|
     .card-body
-      = f.input :channel
-      = f.input :audio_file, as: :file, required: resource.new_record?,
-        input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
+      .row
+        .col
+          = f.input :channel
+        .col
+          = f.input :audio_file, as: :file, required: resource.new_record?,
+            input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
+
+      .hr-text Beneficiary Filters
+
+      .row
+        .col
+          %label.form-label Fields
+          .input-group.mb-2
+            %span.input-group-text
+              %input.form-check-input.m-0{type: "checkbox", checked: true}
+            %input.form-control{type: "text", value: "Gender", readonly: true}
+        .col
+          = f.input "beneficiary_filter", label: "Operator", as: :select
+        .col
+          = f.input "beneficiary_filter", label: "Value", as: :select
+
+      .row
+        .col
+          .input-group.mb-2
+            %span.input-group-text
+              %input.form-check-input.m-0{type: "checkbox", checked: false}
+            %input.form-control{type: "text", value: "Disability Status", readonly: true, disabled: true}
+        .col
+          = f.input "beneficiary_filter", label: false, as: :select, disabled: true
+        .col
+          = f.input "beneficiary_filter", label: false, as: :select, disabled: true
+
+      .row
+        .col
+          .input-group.mb-2
+            %span.input-group-text
+              %input.form-check-input.m-0{type: "checkbox", checked: false}
+            %input.form-control{type: "text", value: "Date of Birth", readonly: true, disabled: true}
+        .col
+          = f.input "beneficiary_filter", label: false, as: :select, disabled: true
+        .col
+          = f.input "beneficiary_filter", label: false, as: :string, disabled: true
+
+      .row
+        .col
+          .input-group.mb-2
+            %span.input-group-text
+              %input.form-check-input.m-0{type: "checkbox", checked: false}
+            %input.form-control{type: "text", value: "Language Code", readonly: true, disabled: true}
+        .col
+          = f.input "beneficiary_filter", label: false, as: :select, disabled: true
+        .col
+          = f.input "beneficiary_filter", label: false, as: :string, disabled: true
+
+      .input-group.mb-2
+        %span.input-group-text
+          %input.form-check-input.m-0{type: "checkbox", checked: false, "data-bs-toggle": "collapse", "data-bs-target": "#addresses"}
+        %input.form-control{type: "text", value: "Addresses", readonly: true}
+
+      #addresses.collapse.overflow-auto{style: "max-height: 200px", data: { controller: "address-treeview", "address-treeview-data-value": BeneficiaryAddress.address_data("kh").to_json,  "address-treeview-field-name-value": "commune_codes" }}
+
     .card-footer.text-end
       = f.button :submit, class: 'btn btn-primary'
