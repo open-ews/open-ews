@@ -1,22 +1,35 @@
 class UpdateDeliveryAttemptStatusJob < ApplicationJob
   queue_as Rails.configuration.app_settings.fetch(:aws_sqs_low_priority_queue_name)
 
-  def perform(delivery_attempt)
-    return unless delivery_attempt.status.to_sym.in?(DeliveryAttempt::IN_PROGRESS_STATUSES)
+  class Handler
+    attr_reader :delivery_attempt, :somleng_client
 
-    response = Somleng::Client.new(
-      provider: delivery_attempt.platform_provider
-    ).api.account.calls(delivery_attempt.remote_call_id).fetch
+    def initialize(delivery_attempt, **options)
+      @delivery_attempt = delivery_attempt
+      @somleng_client = options.fetch(:somleng_client) do
+        Somleng::Client.new(
+          account_sid: delivery_attempt.account.somleng_account_sid,
+          auth_token: delivery_attempt.account.somleng_auth_token
+        )
+      end
+    end
 
-    attributes = {
-      remote_response: response.instance_variable_get(:@properties).compact,
-      remote_status: response.status,
-      duration: response.duration
-    }.compact
+    def perform
+      return unless delivery_attempt.initiated?
 
-    delivery_attempt.update!(remote_status_fetch_queued_at: nil, **attributes)
+      response = somleng_client.fetch_call(delivery_attempt.metadata.fetch("somleng_call_sid"))
 
-    event = RemotePhoneCallEvent.new(delivery_attempt:)
-    delivery_attempt.call_flow_logic.constantize.new(event:).run!
+      delivery_attempt.transaction do
+        UpdateDeliveryAttemptStatus.call(delivery_attempt, status: response.status)
+        delivery_attempt.metadata["somleng_status"] = response.status
+        delivery_attempt.metadata["call_duration"] = response.duration.to_i if response.duration.present?
+        delivery_attempt.status_update_queued_at = nil
+        delivery_attempt.save!
+      end
+    end
+  end
+
+  def perform(...)
+    Handler.new(...).perform
   end
 end

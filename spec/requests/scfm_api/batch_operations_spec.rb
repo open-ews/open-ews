@@ -3,32 +3,6 @@ require "rails_helper"
 RSpec.resource "Batch Operations" do
   header("Content-Type", "application/json")
 
-  get "/api/batch_operations" do
-    example "List all Batch Operations" do
-      broadcast = create(:broadcast, account:)
-
-      callout_population = create(
-        :callout_population,
-        account:,
-        broadcast:
-      )
-      create(:batch_operation, account:)
-      create(:batch_operation)
-
-      set_authorization_header_for(account)
-      do_request(
-        q: {
-          callout_id: broadcast.id
-        }
-      )
-
-      expect(response_status).to eq(200)
-      parsed_body = JSON.parse(response_body)
-      expect(parsed_body.size).to eq(1)
-      expect(parsed_body.dig(0, "id")).to eq(callout_population.id)
-    end
-  end
-
   post "/api/batch_operations" do
     parameter(
       :type,
@@ -111,18 +85,6 @@ RSpec.resource "Batch Operations" do
     end
   end
 
-  get "/api/batch_operations/:id" do
-    example "Retrieve a Batch Operation" do
-      batch_operation = create(:batch_operation, account:)
-
-      set_authorization_header_for(account)
-      do_request(id: batch_operation.id)
-
-      expect(response_status).to eq(200)
-      expect(response_body).to eq(batch_operation.to_json)
-    end
-  end
-
   patch "/api/batch_operations/:id" do
     example "Update a Batch Operation" do
       batch_operation = create(
@@ -151,28 +113,6 @@ RSpec.resource "Batch Operations" do
       batch_operation.reload
       expect(batch_operation.metadata).to eq(body.fetch(:metadata))
       expect(batch_operation.parameters).to eq(body.fetch(:parameters))
-    end
-  end
-
-  delete "/api/batch_operations/:id" do
-    example "Delete a Batch Operation" do
-      batch_operation = create(:batch_operation, account:)
-
-      set_authorization_header_for(account)
-      do_request(id: batch_operation.id)
-
-      expect(response_status).to eq(204)
-      expect(BatchOperation::Base.find_by_id(batch_operation.id)).to eq(nil)
-    end
-
-    example "Delete a callout population with callout participations", document: false do
-      callout_population = create(:callout_population, account:)
-      create(:alert, callout_population:)
-
-      set_authorization_header_for(account)
-      do_request(id: callout_population.id)
-
-      expect(response_status).to eq(422)
     end
   end
 

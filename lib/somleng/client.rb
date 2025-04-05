@@ -13,5 +13,9 @@ module Somleng
     rescue Twilio::REST::RestError => e
       raise RestError.new(e.message)
     end
+
+    def fetch_call(call_sid)
+      rest_client.calls(call_sid).fetch
+    end
   end
 end

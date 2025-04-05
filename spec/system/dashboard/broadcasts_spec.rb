@@ -140,22 +140,6 @@ RSpec.describe "Callouts", :aggregate_failures do
       expect(page).to have_link("Edit", href: edit_dashboard_broadcast_path(broadcast))
     end
 
-    within("#related_links") do
-      expect(page).to have_link(
-        "Callout Populations",
-        href: dashboard_broadcast_batch_operations_path(broadcast)
-      )
-
-      expect(page).to have_link(
-        "Callout Participations",
-        href: dashboard_broadcast_alerts_path(broadcast)
-      )
-      expect(page).to have_link(
-        "Phone Calls",
-        href: dashboard_broadcast_delivery_attempts_path(broadcast)
-      )
-    end
-
     within(".broadcast") do
       expect(page).to have_content(broadcast.id)
       expect(page).to have_link(broadcast.audio_url, href: broadcast.audio_url)
@@ -171,35 +155,8 @@ RSpec.describe "Callouts", :aggregate_failures do
       expect(page).to have_content("Participants")
       expect(page).to have_content("Participants still to be called")
       expect(page).to have_content("Completed calls")
-      expect(page).to have_content("Busy calls")
-      expect(page).to have_content("Not answered calls")
       expect(page).to have_content("Failed calls")
       expect(page).to have_content("Errored calls")
     end
-  end
-
-  it "can perform actions on broadcasts", :js do
-    user = create(:user)
-    broadcast = create(:broadcast, :pending, account: user.account)
-
-    sign_in(user)
-    visit dashboard_broadcast_path(broadcast)
-
-    click_on("Start")
-
-    expect(page).to have_content("Event was successfully created.")
-    expect(page).not_to have_selector(:link_or_button, "Start")
-    expect(page).to have_selector(:link_or_button, "Stop")
-
-    click_on("Stop")
-
-    expect(page).to have_content("Event was successfully created.")
-    expect(page).not_to have_selector(:link_or_button, "Stop")
-    expect(page).to have_selector(:link_or_button, "Resume")
-
-    click_on("Resume")
-
-    expect(page).not_to have_selector(:link_or_button, "Resume")
-    expect(page).to have_selector(:link_or_button, "Stop")
   end
 end

@@ -119,10 +119,8 @@ RSpec.resource "Callouts" do
     end
 
     example "Delete a Callout with callout participations", document: false do
-      broadcast = create(:broadcast, account: account)
-      _alert = create_alert(
-        account: account, broadcast: broadcast
-      )
+      broadcast = create(:broadcast, account:)
+      _alert = create(:alert, broadcast:)
 
       set_authorization_header_for(account)
       do_request(id: broadcast.id)
@@ -166,22 +164,6 @@ RSpec.resource "Callouts" do
       do_request(callout_id: broadcast.id, event: "start")
 
       expect(response_status).to eq(422)
-    end
-  end
-
-  get "/api/callouts/:callout_id/batch_operations" do
-    example "List all Callout Batch Operations", document: false do
-      broadcast = create(:broadcast, account: account)
-      callout_population = create(:callout_population, broadcast: broadcast, account: account)
-
-      set_authorization_header_for(account)
-      do_request(callout_id: broadcast.id)
-
-      expect(response_status).to eq(200)
-      parsed_response = JSON.parse(response_body)
-      expect(
-        account.batch_operations.find(parsed_response.first.fetch("id"))
-      ).to eq(callout_population)
     end
   end
 

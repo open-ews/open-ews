@@ -12,6 +12,7 @@ class RemoveColumnsFromDeliveryAttempts < ActiveRecord::Migration[8.0]
     remove_column :delivery_attempts, :remote_queue_response, :jsonb, default: {}, null: false
     remove_column :delivery_attempts, :remote_status, :string
     remove_column :delivery_attempts, :remote_error_message, :text
+    remove_column :delivery_attempts, :duration, :integer, default: 0, null: false
     remove_reference :delivery_attempts, :account, foreign_key: true
     remove_column :delivery_attempts, :remote_call_id, :string
     rename_column :delivery_attempts, :remotely_queued_at, :initiated_at
@@ -20,5 +21,6 @@ class RemoveColumnsFromDeliveryAttempts < ActiveRecord::Migration[8.0]
     change_column_null :delivery_attempts, :broadcast_id, false
     add_column(:delivery_attempts, :queued_at, :datetime)
     add_column(:delivery_attempts, :completed_at, :datetime)
+    add_column(:delivery_attempts, :errored_at, :datetime)
   end
 end

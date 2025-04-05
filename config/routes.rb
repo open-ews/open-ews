@@ -22,7 +22,7 @@ Rails.application.routes.draw do
 
   namespace "dashboard" do
     root to: "broadcasts#index"
-    resources :access_tokens
+    resources :access_tokens, only: :index
     resource :account, only: %i[edit update]
 
     resources :beneficiaries, only: %i[index show destroy]
@@ -52,12 +52,11 @@ Rails.application.routes.draw do
 
   namespace "api", defaults: { format: "json" } do
     resources :callouts, except: %i[new edit] do
+      resources :callout_participations, only: :index
       resources :callout_events, only: :create
-      resources :callout_participations, only: %i[index]
-      resources :batch_operations, only: %i[create index]
     end
 
-    resources :batch_operations, except: %i[new edit] do
+    resources :batch_operations, only: [ :create, :update ] do
       resources :batch_operation_events, only: :create
     end
   end

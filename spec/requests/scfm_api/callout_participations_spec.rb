@@ -6,11 +6,10 @@ RSpec.resource "Callout Participations" do
   get "/api/callouts/:callout_id/callout_participations" do
     example "List all Callout Participations for a callout", document: false do
       account = create(:account)
-      broadcast = create(:broadcast, account: account)
-      failed_alert = create_alert(account:, broadcast:, status: :queued)
-      completed_alert = create_alert(account:, broadcast:, status: :completed)
-      _other_alert = create_alert(account: account)
-
+      broadcast = create(:broadcast, account:)
+      failed_alert = create(:alert, broadcast:, status: :failed)
+      completed_alert = create(:alert, broadcast:, status: :completed)
+      _other_alert = create(:alert, broadcast: create(:broadcast, account:))
       set_authorization_header_for(account)
       do_request(callout_id: broadcast.id)
 

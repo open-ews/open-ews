@@ -39,7 +39,7 @@ module BatchOperation
         alert = create(
           :alert, beneficiary:, broadcast:, callout_population:
         )
-        create(:delivery_attempt, :completed, alert:)
+        create(:delivery_attempt, :succeeded, alert:)
 
         callout_population.run!
         callout_population.run!

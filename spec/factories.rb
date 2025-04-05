@@ -25,10 +25,6 @@ FactoryBot.define do
     "user#{n}@example.com"
   end
 
-  sequence :twilio_account_sid do |n|
-    "#{Account::TWILIO_ACCOUNT_SID_PREFIX}#{n}"
-  end
-
   sequence :auth_token do
     SecureRandom.alphanumeric(43)
   end
@@ -102,24 +98,37 @@ FactoryBot.define do
     broadcast { alert.broadcast }
     beneficiary { alert.beneficiary }
     phone_number { beneficiary.phone_number }
-  end
+    status { :created }
 
-  trait :queued do
-    queued_at { Time.current }
-    status { :queued }
-  end
+    trait :queued do
+      queued_at { Time.current }
+      status { :queued }
+    end
 
-  trait :initiated do
-    queued_at { Time.current }
-    initiated_at { Time.current }
-    status { :initiated }
-  end
+    trait :errored do
+      queued_at { Time.current }
+      status { :errored }
+    end
 
-  trait :completed do
-    queued_at { Time.current }
-    initiated_at { Time.current }
-    completed_at { Time.current }
-    status { :completed }
+    trait :initiated do
+      queued_at { Time.current }
+      initiated_at { Time.current }
+      status { :initiated }
+    end
+
+    trait :succeeded do
+      queued_at { Time.current }
+      initiated_at { Time.current }
+      completed_at { Time.current }
+      status { :succeeded }
+    end
+
+    trait :failed do
+      queued_at { Time.current }
+      initiated_at { Time.current }
+      completed_at { Time.current }
+      status { :failed }
+    end
   end
 
   factory :account
@@ -134,9 +143,6 @@ FactoryBot.define do
   factory :access_token do
     association :resource_owner, factory: :account
     created_by { resource_owner }
-
-    # FIXME: We will get rid of concept of permissions on API level.
-    permissions { AccessToken::PERMISSIONS }
   end
 
   factory :active_storage_attachment, class: "ActiveStorage::Blob" do

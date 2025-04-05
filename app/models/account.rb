@@ -29,10 +29,6 @@ class Account < ApplicationRecord
 
   strip_attributes
 
-  def write_batch_operation_access_token
-    access_tokens.with_permissions(:batch_operations_write).last
-  end
-
   def delivery_attempt_queue_limit
     [ settings.fetch("phone_call_queue_limit").to_i, 1000 ].max
   end

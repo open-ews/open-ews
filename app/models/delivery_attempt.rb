@@ -1,16 +1,4 @@
 class DeliveryAttempt < ApplicationRecord
-  TWILIO_CALL_STATUSES = {
-    queued: "queued",
-    in_progress: "in-progress",
-    canceled: "canceled",
-    completed: "completed",
-    busy: "busy",
-    failed: "failed",
-    not_answered: "no-answer"
-  }.freeze
-
-  IN_PROGRESS_STATUSES = %i[remotely_queued in_progress].freeze
-
   attribute :phone_number, :phone_number
 
   belongs_to :alert, counter_cache: true
@@ -23,8 +11,6 @@ class DeliveryAttempt < ApplicationRecord
 
   delegate :initiated?, to: :state_machine
 
-  before_destroy    :validate_destroy
-
   class StateMachine
     class InvalidStateTransitionError < StandardError; end
 
@@ -35,14 +21,10 @@ class DeliveryAttempt < ApplicationRecord
     STATES = [
       State.new(name: :created, transitions_to: [ :queued ]),
       State.new(name: :queued, transitions_to: [ :initiated, :errored ]),
-      State.new(name: :initiated, transitions_to: [ :failed, :busy, :not_answered, :canceled, :completed, :expired ]),
+      State.new(name: :initiated, transitions_to: [ :failed, :succeeded ]),
       State.new(name: :errored, transitions_to: []),
       State.new(name: :failed, transitions_to: []),
-      State.new(name: :busy, transitions_to: []),
-      State.new(name: :not_answered, transitions_to: []),
-      State.new(name: :canceled, transitions_to: []),
-      State.new(name: :completed, transitions_to: []),
-      State.new(name: :expired, transitions_to: [])
+      State.new(name: :succeeded, transitions_to: [])
     ]
 
     def initialize(current_state)
@@ -101,19 +83,5 @@ class DeliveryAttempt < ApplicationRecord
 
   def state_machine
     @state_machine ||= StateMachine.new(status)
-  end
-
-  def remote_status_in_progress?
-    [
-      TWILIO_CALL_STATUSES.fetch(:in_progress),
-      TWILIO_CALL_STATUSES.fetch(:ringing)
-    ].include?(remote_status)
-  end
-
-  def validate_destroy
-    return true if created?
-
-    errors.add(:base, :restrict_destroy_status, status: status)
-    throw(:abort)
   end
 end

@@ -63,6 +63,7 @@ RSpec.describe InitiateDeliveryAttemptJob do
       expect(delivery_attempt).to have_attributes(
         status: "errored",
         initiated_at: nil,
+        errored_at: be_present,
         metadata: {
           "somleng_error_message" => be_present
         }

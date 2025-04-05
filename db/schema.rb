@@ -152,13 +152,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_123606) do
     t.datetime "initiated_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.integer "duration", default: 0, null: false
     t.integer "lock_version", default: 0, null: false
     t.datetime "status_update_queued_at", precision: nil
     t.bigint "broadcast_id", null: false
     t.jsonb "metadata", default: {}, null: false
     t.datetime "queued_at"
     t.datetime "completed_at"
+    t.datetime "errored_at"
     t.index ["alert_id"], name: "index_delivery_attempts_on_alert_id"
     t.index ["beneficiary_id"], name: "index_delivery_attempts_on_beneficiary_id"
     t.index ["broadcast_id", "status"], name: "index_delivery_attempts_on_broadcast_id_and_status"
