@@ -4,11 +4,6 @@ RSpec.describe Broadcast do
   let(:factory) { :broadcast }
   include_examples "has_metadata"
 
-  describe "associations" do
-    it { is_expected.to have_many(:alerts).dependent(:restrict_with_error) }
-    it { is_expected.to have_many(:batch_operations).dependent(:restrict_with_error) }
-  end
-
   describe "validations" do
     it { is_expected.to validate_presence_of(:status) }
 

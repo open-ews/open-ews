@@ -2,10 +2,13 @@ require "rails_helper"
 
 RSpec.describe "Call Status Callbacks" do
   it "Handles call status callbacks" do
-    delivery_attempt = create(:delivery_attempt, :initiated)
+    account = create(:account, somleng_account_sid: "account-sid", somleng_auth_token: "auth-token")
+    broadcast = create(:broadcast, account:)
+    alert = create(:alert, :queued, broadcast:)
+    delivery_attempt = create(:delivery_attempt, :initiated, alert:)
 
     request_body = build_request_body(
-      account_sid: delivery_attempt.alert.broadcast.account.twilio_account_sid,
+      account_sid: account.somleng_account_sid,
       direction: "outbound-api",
       call_status: "completed",
       from: "1294",
@@ -15,25 +18,24 @@ RSpec.describe "Call Status Callbacks" do
 
     perform_enqueued_jobs do
       post(
-        twilio_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt),
+        somleng_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt, protocol: :https, subdomain: :api),
         params: request_body,
-        headers: build_twilio_signature(
-          auth_token: account.twilio_auth_token,
-          url: twilio_webhooks_phone_call_events_url,
-          request_body: request_body
-        )
+        headers: {
+          "X-Twilio-Signature" => build_somleng_signature(
+            auth_token: account.somleng_auth_token,
+            url: somleng_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt, protocol: :https, subdomain: :api),
+            params: request_body
+          )
+        }
       )
     end
 
-    expect(response.code).to eq("201")
-    created_event = RemotePhoneCallEvent.last!
-    expect(created_event).to have_attributes(
-      call_duration: 87,
-      delivery_attempt: have_attributes(
-        status: "completed",
-        call_flow_logic: CallFlowLogic::PlayMessage.to_s,
-        remote_status: request_body.fetch(:CallStatus),
-        duration: 87
+    expect(response.code).to eq("204")
+    expect(delivery_attempt).to have_attributes(
+      status: "succeeded",
+      metadata: hash_including(
+        "call_duration" => 87,
+        "somleng_status" => "completed"
       )
     )
   end
@@ -66,13 +68,7 @@ RSpec.describe "Call Status Callbacks" do
     }.compact
   end
 
-  def build_twilio_signature(auth_token:, url:, request_body:)
-    {
-      "X-Twilio-Signature" => Twilio::Security::RequestValidator.new(
-        auth_token
-      ).build_signature_for(
-        url, request_body
-      )
-    }
+  def build_somleng_signature(...)
+    Somleng::RequestValidator.new.build_signature_for(...)
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_01_123606) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_05_073033) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -57,17 +57,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_123606) do
   create_table "alerts", force: :cascade do |t|
     t.bigint "broadcast_id", null: false
     t.bigint "beneficiary_id"
-    t.bigint "callout_population_id"
     t.jsonb "metadata", default: {}, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "delivery_attempts_count", default: 0, null: false
     t.string "phone_number", null: false
     t.string "status", null: false
+    t.datetime "completed_at"
     t.index ["beneficiary_id"], name: "index_alerts_on_beneficiary_id"
     t.index ["broadcast_id", "beneficiary_id"], name: "index_alerts_on_broadcast_id_and_beneficiary_id", unique: true
     t.index ["broadcast_id"], name: "index_alerts_on_broadcast_id"
-    t.index ["callout_population_id"], name: "index_alerts_on_callout_population_id"
     t.index ["status"], name: "index_alerts_on_status"
   end
 
@@ -149,13 +148,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_123606) do
     t.bigint "beneficiary_id"
     t.string "status", null: false
     t.string "phone_number", null: false
+    t.jsonb "metadata", default: {}, null: false
     t.datetime "initiated_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "lock_version", default: 0, null: false
     t.datetime "status_update_queued_at", precision: nil
     t.bigint "broadcast_id", null: false
-    t.jsonb "metadata", default: {}, null: false
     t.datetime "queued_at"
     t.datetime "completed_at"
     t.datetime "errored_at"
@@ -269,7 +268,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_123606) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "alerts", "batch_operations", column: "callout_population_id"
   add_foreign_key "alerts", "beneficiaries", on_delete: :nullify
   add_foreign_key "alerts", "broadcasts"
   add_foreign_key "batch_operations", "accounts"

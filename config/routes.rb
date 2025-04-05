@@ -50,6 +50,12 @@ Rails.application.routes.draw do
     resource :account, only: :show
   end
 
+  namespace :somleng_webhooks do
+    resources :delivery_attempts, only: [] do
+      resources :call_status_callbacks, only: :create
+    end
+  end
+
   namespace "api", defaults: { format: "json" } do
     resources :callouts, except: %i[new edit] do
       resources :callout_participations, only: :index
@@ -58,12 +64,6 @@ Rails.application.routes.draw do
 
     resources :batch_operations, only: [ :create, :update ] do
       resources :batch_operation_events, only: :create
-    end
-  end
-
-  namespace :somleng_webhooks do
-    resources :delivery_attempts, only: [] do
-      resources :call_status_callbacks, only: :create
     end
   end
 end

@@ -4,9 +4,6 @@ module BatchOperation
 
     belongs_to :broadcast
 
-    has_many :alerts, foreign_key: :callout_population_id, dependent: :restrict_with_error
-    has_many :beneficiaries, through: :alerts
-
     store_accessor :parameters,
                    :contact_filter_params,
                    :remote_request_params
@@ -57,7 +54,6 @@ module BatchOperation
           beneficiary_id: beneficiary.id,
           phone_number: beneficiary.phone_number,
           broadcast_id: broadcast.id,
-          callout_population_id: id,
           status: :queued
         }
       end
@@ -65,7 +61,7 @@ module BatchOperation
     end
 
     def create_delivery_attempts
-      delivery_attempts = alerts.includes(:delivery_attempts).find_each.map do |alert|
+      delivery_attempts = Alert.where(broadcast:).includes(:delivery_attempts).find_each.map do |alert|
         next if alert.delivery_attempts.any?
 
         {

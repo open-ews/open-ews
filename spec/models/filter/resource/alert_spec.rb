@@ -28,16 +28,6 @@ RSpec.describe Filter::Resource::Alert do
 
       expect(filter.resources).to match_array([ alert ])
     end
-
-    it "filters by callout_population_id" do
-      _non_matching_callout_participation = create(:alert)
-      callout_population = create(:callout_population)
-      alert = create(:alert, callout_population: callout_population)
-
-      filter = build_filter(callout_population_id: callout_population.id)
-
-      expect(filter.resources).to match_array([ alert ])
-    end
   end
 
   def build_filter(filter_params = {})

@@ -23,8 +23,7 @@ RSpec.describe "Alerts" do
     callout_population = create(:callout_population, account: user.account)
     alert = create(
       :alert,
-      broadcast: callout_population.broadcast,
-      callout_population:
+      broadcast: callout_population.broadcast
     )
 
     sign_in(user)

@@ -22,10 +22,10 @@ RSpec.describe BroadcastSummary do
         }
       )
       broadcast = create(:broadcast, account: account)
-      create(:alert, broadcast:, status: :completed)
-      create(:alert, broadcast:, status: :failed, delivery_attempts_count: 3)
-      create(:alert, broadcast:, status: :failed, delivery_attempts_count: 1)
-      create(:alert, broadcast:, status: :queued, delivery_attempts_count: 0)
+      create(:alert, :succeeded, broadcast:)
+      create(:alert, :failed, broadcast:, delivery_attempts_count: 3)
+      create(:alert, :failed, broadcast:, delivery_attempts_count: 1)
+      create(:alert, :queued, broadcast:, delivery_attempts_count: 0)
 
       broadcast_summary = BroadcastSummary.new(broadcast)
 

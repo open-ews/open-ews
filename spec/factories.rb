@@ -91,6 +91,21 @@ FactoryBot.define do
   factory :alert do
     broadcast
     beneficiary { association :beneficiary, account: broadcast.account }
+    queued
+
+    trait :queued do
+      status { :queued }
+    end
+
+    trait :succeeded do
+      completed_at { Time.current }
+      status { :succeeded }
+    end
+
+    trait :failed do
+      completed_at { Time.current }
+      status { :failed }
+    end
   end
 
   factory :delivery_attempt do

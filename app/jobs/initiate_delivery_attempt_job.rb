@@ -40,7 +40,7 @@ class InitiateDeliveryAttemptJob < ApplicationJob
         to: delivery_attempt.phone_number,
         from: delivery_attempt.account.from_phone_number,
         twiml: build_twiml,
-        status_callback: somleng_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt, protocol: :https),
+        status_callback: somleng_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt, protocol: :https, subdomain: :api),
       )
     end
 
