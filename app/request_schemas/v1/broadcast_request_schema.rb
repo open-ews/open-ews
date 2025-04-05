@@ -14,12 +14,5 @@ module V1
 
     attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
     attribute_rule(:audio_url).validate(:url_format)
-
-    def output
-      result = super
-      # TODO: remove this after we removed call_flow from callouts
-      result[:call_flow_logic] = CallFlowLogic::PlayMessage.name
-      result
-    end
   end
 end

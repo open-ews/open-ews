@@ -4,7 +4,7 @@ class AddPermissionsToAccessTokens < ActiveRecord::Migration[5.2]
       :oauth_access_tokens,
       :permissions,
       :bigint,
-      default: AccessToken::DEFAULT_PERMISSIONS_BITMASK,
+      default: 0,
       null: false
     )
   end

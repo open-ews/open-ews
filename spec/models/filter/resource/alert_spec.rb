@@ -8,10 +8,6 @@ RSpec.describe Filter::Resource::Alert do
     include_examples "metadata_attribute_filter"
     include_examples "msisdn_attribute_filter"
     include_examples "timestamp_attribute_filter"
-    include_examples(
-      "string_attribute_filter",
-      call_flow_logic: CallFlowLogic::PlayMessage.to_s
-    )
 
     it "filters by callout_id" do
       _non_matching_callout_participation = create(:alert)
@@ -29,16 +25,6 @@ RSpec.describe Filter::Resource::Alert do
       alert = create(:alert, beneficiary: beneficiary)
 
       filter = build_filter(beneficiary_id: beneficiary.id)
-
-      expect(filter.resources).to match_array([ alert ])
-    end
-
-    it "filters by callout_population_id" do
-      _non_matching_callout_participation = create(:alert)
-      callout_population = create(:callout_population)
-      alert = create(:alert, callout_population: callout_population)
-
-      filter = build_filter(callout_population_id: callout_population.id)
 
       expect(filter.resources).to match_array([ alert ])
     end

@@ -4,9 +4,6 @@ module BatchOperation
 
     belongs_to :broadcast
 
-    has_many :alerts, foreign_key: :callout_population_id, dependent: :restrict_with_error
-    has_many :beneficiaries, through: :alerts
-
     store_accessor :parameters,
                    :contact_filter_params,
                    :remote_request_params
@@ -35,12 +32,12 @@ module BatchOperation
       self.contact_filter_params = { "metadata" => attributes }
     end
 
-  # NOTE: This is for backward compatibility until we moved to the new API
-  def as_json(*)
-    result = super
-    result["callout_id"] = result.delete("broadcast_id")
-    result
-  end
+    # NOTE: This is for backward compatibility until we moved to the new API
+    def as_json(*)
+      result = super
+      result["callout_id"] = result.delete("broadcast_id")
+      result
+    end
 
     private
 
@@ -57,8 +54,6 @@ module BatchOperation
           beneficiary_id: beneficiary.id,
           phone_number: beneficiary.phone_number,
           broadcast_id: broadcast.id,
-          callout_population_id: id,
-          call_flow_logic: broadcast.call_flow_logic,
           status: :queued
         }
       end
@@ -66,14 +61,12 @@ module BatchOperation
     end
 
     def create_delivery_attempts
-      delivery_attempts = alerts.includes(:delivery_attempts).find_each.map do |alert|
+      delivery_attempts = Alert.where(broadcast:).includes(:delivery_attempts).find_each.map do |alert|
         next if alert.delivery_attempts.any?
 
         {
-          account_id: broadcast.account_id,
           broadcast_id:,
           beneficiary_id: alert.beneficiary_id,
-          call_flow_logic: alert.call_flow_logic,
           alert_id: alert.id,
           phone_number: alert.phone_number,
           status: :created

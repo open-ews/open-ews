@@ -11,13 +11,7 @@ module Dashboard
     end
 
     def parent_resource
-      if broadcast_id
-        broadcast
-      elsif callout_population_id
-        callout_population
-      elsif beneficiary_id
-        beneficiary
-      end
+      broadcast
     end
 
     def broadcast_id
@@ -42,6 +36,10 @@ module Dashboard
 
     def beneficiary
       @beneficiary ||= current_account.beneficiaries.find(beneficiary_id)
+    end
+
+    def show_location(resource)
+      dashboard_broadcast_alert_path(resource.broadcast, resource)
     end
 
     def filter_class

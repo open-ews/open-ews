@@ -35,12 +35,6 @@ RSpec.describe Filter::Resource::Broadcast do
     expect(build_filter(status: :created).resources).to be_empty
   end
 
-  it "filters by call_flow_logic" do
-    broadcast = create(:broadcast, call_flow_logic: "CallFlowLogic::PlayMessage")
-
-    expect(build_filter(call_flow_logic: "CallFlowLogic::PlayMessage").resources).to match_array([ broadcast ])
-  end
-
   def build_filter(filter_attributes)
     Filter::Resource::Broadcast.new(
       { association_chain: Broadcast.all },

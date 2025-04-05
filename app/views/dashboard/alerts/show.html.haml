@@ -1,8 +1,4 @@
-= page_title(title: title) do
-  = render("shared/destroy_resource_page_action", path: dashboard_alert_path(resource))
-
-  = render "shared/resource_related_links" do
-    = related_link_to t(:"titles.delivery_attempts.index"), dashboard_alert_delivery_attempts_path(resource)
+= page_title(title: title)
 
 .card-body
   = show_for(resource) do |f|
@@ -11,9 +7,5 @@
       = link_to(resource.broadcast_id, dashboard_broadcast_path(resource.broadcast_id))
     = f.attribute :beneficiary do
       = link_to(resource.beneficiary_id, dashboard_beneficiary_path(resource.beneficiary_id))
-    = f.attribute :callout_population do
-      - if resource.callout_population_id.present?
-        = link_to(resource.callout_population_id, dashboard_batch_operation_path(resource.callout_population_id))
-    = f.attribute :call_flow_logic, value: translate("simple_form.options.defaults.call_flow_logic.#{resource.call_flow_logic}")
     = f.attribute :created_at, value: local_time(resource.created_at)
     = f.attribute :metadata, value: json_attribute_value(resource.metadata)

@@ -25,10 +25,6 @@ FactoryBot.define do
     "user#{n}@example.com"
   end
 
-  sequence :twilio_account_sid do |n|
-    "#{Account::TWILIO_ACCOUNT_SID_PREFIX}#{n}"
-  end
-
   sequence :auth_token do
     SecureRandom.alphanumeric(43)
   end
@@ -41,17 +37,8 @@ FactoryBot.define do
     account
     channel { "voice" }
 
-    transient do
-      audio_file { nil }
-    end
-
-    after(:build) do |broadcast, evaluator|
-      if evaluator.audio_file.present?
-        broadcast.audio_file = Rack::Test::UploadedFile.new(
-          evaluator.audio_file,
-          "audio/mp3"
-        )
-      end
+    trait :with_attached_audio do
+      association :audio_file, factory: :active_storage_attachment, filename: "test.mp3"
     end
 
     trait :pending do
@@ -103,81 +90,63 @@ FactoryBot.define do
 
   factory :alert do
     broadcast
-    beneficiary
-  end
-
-  factory :delivery_attempt do
-    outbound
-    remote_call_id { SecureRandom.uuid }
-
-    trait :outbound do
-      alert
-      broadcast { alert&.broadcast }
-    end
-
-    trait :inbound do
-      alert { nil }
-      phone_number { generate(:phone_number) }
-      remote_direction { DeliveryAttempt::TWILIO_DIRECTIONS[:inbound] }
-    end
-
-    traits_for_enum :status, %i[
-      created
-      completed
-      failed
-      in_progress
-      expired
-      in_progress
-      remotely_queued
-    ]
+    beneficiary { association :beneficiary, account: broadcast.account }
+    queued
 
     trait :queued do
       status { :queued }
-      remote_call_id { nil }
+    end
+
+    trait :succeeded do
+      completed_at { Time.current }
+      status { :succeeded }
+    end
+
+    trait :failed do
+      completed_at { Time.current }
+      status { :failed }
     end
   end
 
-  factory :remote_phone_call_event do
-    transient do
-      build_delivery_attempt { true }
+  factory :delivery_attempt do
+    alert
+    broadcast { alert.broadcast }
+    beneficiary { alert.beneficiary }
+    phone_number { beneficiary.phone_number }
+    status { :created }
+
+    trait :queued do
+      queued_at { Time.current }
+      status { :queued }
     end
 
-    details { generate(:twilio_remote_call_event_details) }
-    remote_call_id { details[:CallSid] }
-    remote_direction { details[:Direction] }
-    call_flow_logic { Account::DEFAULT_CALL_FLOW_LOGIC }
-
-    after(:build) do |remote_phone_call_event, evaluator|
-      if evaluator.build_delivery_attempt
-        remote_phone_call_event.delivery_attempt ||= create(
-          :delivery_attempt,
-          phone_number: remote_phone_call_event.details[:From],
-          remote_call_id: remote_phone_call_event.remote_call_id,
-          remote_direction: remote_phone_call_event.remote_direction
-        )
-      end
-    end
-  end
-
-  factory :account do
-    with_somleng_provider
-
-    trait :with_twilio_provider do
-      platform_provider_name { "twilio" }
-      twilio_account_sid
-      twilio_auth_token { generate(:auth_token) }
+    trait :errored do
+      queued_at { Time.current }
+      status { :errored }
     end
 
-    trait :with_somleng_provider do
-      platform_provider_name { "somleng" }
-      somleng_account_sid
-      somleng_auth_token { generate(:auth_token) }
+    trait :initiated do
+      queued_at { Time.current }
+      initiated_at { Time.current }
+      status { :initiated }
     end
 
-    trait :super_admin do
-      permissions { [ :super_admin ] }
+    trait :succeeded do
+      queued_at { Time.current }
+      initiated_at { Time.current }
+      completed_at { Time.current }
+      status { :succeeded }
+    end
+
+    trait :failed do
+      queued_at { Time.current }
+      initiated_at { Time.current }
+      completed_at { Time.current }
+      status { :failed }
     end
   end
+
+  factory :account
 
   factory :user do
     account
@@ -189,9 +158,6 @@ FactoryBot.define do
   factory :access_token do
     association :resource_owner, factory: :account
     created_by { resource_owner }
-
-    # FIXME: We will get rid of concept of permissions on API level.
-    permissions { AccessToken::PERMISSIONS }
   end
 
   factory :active_storage_attachment, class: "ActiveStorage::Blob" do
@@ -205,17 +171,6 @@ FactoryBot.define do
         filename:
       )
     end
-  end
-
-  factory :recording do
-    delivery_attempt
-    account { delivery_attempt.account }
-    beneficiary { delivery_attempt.beneficiary }
-    external_recording_id { SecureRandom.uuid }
-    external_recording_url { "https://api.somleng.org/2010-04-01/Accounts/#{SecureRandom.uuid}/Calls/#{SecureRandom.uuid}/Recordings/#{external_recording_id}" }
-    duration { 15 }
-
-    association :audio_file, factory: :active_storage_attachment, filename: "test.mp3"
   end
 
   factory :beneficiary_address do

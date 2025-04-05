@@ -18,23 +18,15 @@ class BroadcastSummary
   end
 
   def completed_calls
-    delivery_attempts.completed.count
-  end
-
-  def not_answered_calls
-    delivery_attempts.not_answered.count
-  end
-
-  def busy_calls
-    delivery_attempts.busy.count
+    delivery_attempts.where(status: :succeeded).count
   end
 
   def failed_calls
-    delivery_attempts.failed.count
+    delivery_attempts.where(status: :failed).count
   end
 
   def errored_calls
-    delivery_attempts.errored.count
+    delivery_attempts.where(status: :errored).count
   end
 
   private

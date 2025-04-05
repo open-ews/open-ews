@@ -9,7 +9,7 @@ class CreateAccounts < ActiveRecord::Migration[5.1]
       t.string(:somleng_auth_token)
       t.index(:twilio_account_sid, unique: true)
       t.index(:somleng_account_sid, unique: true)
-      t.integer(:permissions, default: Account::DEFAULT_PERMISSIONS_BITMASK, null: false)
+      t.integer(:permissions, default: 0, null: false)
       t.timestamps
     end
   end

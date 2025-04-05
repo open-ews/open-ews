@@ -14,13 +14,11 @@ require "action_cable/engine"
 # require "action_text/engine"
 # require "rails/test_unit/railtie"
 
-require_relative "../app/middleware/rack/somleng_webhook_authentication"
-
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module SomlengScfm
+module OpenEWS
   class Application < Rails::Application
     # Use the responders controller from the responders gem
     config.app_generators.scaffold_controller :responders_controller
@@ -47,19 +45,6 @@ module SomlengScfm
 
     config.app_settings = config_for(:app_settings)
     config.active_job.default_queue_name = config.app_settings.fetch(:aws_sqs_default_queue_name)
-    Rails.application.routes.default_url_options[:host] =
-      config.app_settings.fetch(:default_url_host)
-
-    config.middleware.use(
-      Rack::SomlengWebhookAuthentication,
-      nil,
-      "/twilio_webhooks",
-      methods: :post
-    ) do |account_sid|
-      account = Account.find_by_platform_account_sid(account_sid)
-      account&.platform_auth_token(account_sid)
-    end
+    Rails.application.routes.default_url_options[:host] = config.app_settings.fetch(:default_url_host)
   end
 end
-
-require "api_pagination_with_preloaded_total_count"

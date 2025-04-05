@@ -47,7 +47,6 @@ RSpec.resource "Callouts" do
 
     example "Create a Callout" do
       request_body = {
-        call_flow_logic: CallFlowLogic::PlayMessage.to_s,
         audio_url: "https://www.example.com/sample.mp3",
         metadata: {
           "foo" => "bar"
@@ -67,7 +66,6 @@ RSpec.resource "Callouts" do
       created_broadcast = account.broadcasts.find(parsed_response.fetch("id"))
       expect(created_broadcast.metadata).to eq(request_body.fetch(:metadata))
       expect(created_broadcast.settings).to eq(request_body.fetch(:settings))
-      expect(created_broadcast.call_flow_logic).to eq(request_body.fetch(:call_flow_logic))
       expect(created_broadcast.audio_url).to eq(request_body.fetch(:audio_url))
       expect(parsed_response.fetch("status")).to eq("initialized")
     end
@@ -121,10 +119,8 @@ RSpec.resource "Callouts" do
     end
 
     example "Delete a Callout with callout participations", document: false do
-      broadcast = create(:broadcast, account: account)
-      _alert = create_alert(
-        account: account, broadcast: broadcast
-      )
+      broadcast = create(:broadcast, account:)
+      _alert = create(:alert, broadcast:)
 
       set_authorization_header_for(account)
       do_request(id: broadcast.id)
@@ -168,22 +164,6 @@ RSpec.resource "Callouts" do
       do_request(callout_id: broadcast.id, event: "start")
 
       expect(response_status).to eq(422)
-    end
-  end
-
-  get "/api/callouts/:callout_id/batch_operations" do
-    example "List all Callout Batch Operations", document: false do
-      broadcast = create(:broadcast, account: account)
-      callout_population = create(:callout_population, broadcast: broadcast, account: account)
-
-      set_authorization_header_for(account)
-      do_request(callout_id: broadcast.id)
-
-      expect(response_status).to eq(200)
-      parsed_response = JSON.parse(response_body)
-      expect(
-        account.batch_operations.find(parsed_response.first.fetch("id"))
-      ).to eq(callout_population)
     end
   end
 

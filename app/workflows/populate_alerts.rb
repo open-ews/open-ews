@@ -39,7 +39,6 @@ class PopulateAlerts < ApplicationWorkflow
         broadcast_id: broadcast.id,
         beneficiary_id: beneficiary.id,
         phone_number: beneficiary.phone_number,
-        call_flow_logic: broadcast.call_flow_logic,
         delivery_attempts_count: 1,
         status: :queued
       }
@@ -51,10 +50,8 @@ class PopulateAlerts < ApplicationWorkflow
   def create_delivery_attempts
     delivery_attempts = broadcast.alerts.find_each.map do |alert|
       {
-        account_id: account.id,
         broadcast_id: broadcast.id,
         beneficiary_id: alert.beneficiary_id,
-        call_flow_logic: alert.call_flow_logic,
         alert_id: alert.id,
         phone_number: alert.phone_number,
         status: :created
