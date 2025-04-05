@@ -9,7 +9,7 @@ module Somleng
           direction: payload.fetch("Direction"),
           account_sid: payload.fetch("AccountSid"),
           call_status: payload.fetch("CallStatus"),
-          call_duration: payload.fetch("CallDuration")
+          call_duration: payload.fetch("CallDuration").to_i
         )
       end
     end

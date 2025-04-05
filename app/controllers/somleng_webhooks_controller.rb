@@ -3,6 +3,8 @@ class SomlengWebhooksController < ApplicationController
 
   before_action :verify_signature
 
+  rescue_from Somleng::RequestValidator::InvalidSignatureError, with: :invalid_signature
+
   private
 
   def verify_signature
@@ -24,5 +26,9 @@ class SomlengWebhooksController < ApplicationController
 
   def request_validator
     @request_validator ||= Somleng::RequestValidator.new
+  end
+
+  def invalid_signature
+    head :forbidden
   end
 end
