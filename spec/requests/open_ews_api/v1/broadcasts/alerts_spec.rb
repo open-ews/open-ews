@@ -26,7 +26,7 @@ RSpec.resource "Alerts"  do
       account = create(:account)
       broadcast = create(:broadcast, account:)
       succeeded_alerts = create_list(:alert, 2, :succeeded, broadcast: broadcast)
-      _queued_alerts = create(:alert, :queued, broadcast:)
+      _pending_alerts = create(:alert, :pending, broadcast:)
       _other_alert = create(:alert, broadcast: create(:broadcast, account:))
 
       set_authorization_header_for(account)

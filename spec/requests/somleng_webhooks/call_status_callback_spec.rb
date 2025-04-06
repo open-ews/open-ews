@@ -4,7 +4,7 @@ RSpec.describe "Call Status Callbacks" do
   it "Handles call status callbacks" do
     account = create(:account, somleng_account_sid: "account-sid", somleng_auth_token: "auth-token")
     broadcast = create(:broadcast, account:)
-    alert = create(:alert, :queued, broadcast:)
+    alert = create(:alert, :pending, broadcast:)
     delivery_attempt = create(:delivery_attempt, :initiated, alert:)
 
     request_body = build_request_body(
@@ -39,13 +39,18 @@ RSpec.describe "Call Status Callbacks" do
       ),
       completed_at: be_present
     )
+    expect(alert.reload).to have_attributes(
+      status: "succeeded",
+      completed_at: be_present
+    )
   end
 
   it "Handles incorrect signatures" do
-    delivery_attempt = create(:delivery_attempt, :initiated)
-    request_body = build_request_body
-
-    binding.pry
+    account = create(:account, somleng_account_sid: "account-sid", somleng_auth_token: "auth-token")
+    delivery_attempt = create(:delivery_attempt, :initiated, alert: create(:alert, :pending, broadcast: create(:broadcast, account:)))
+    request_body = build_request_body(
+      account_sid: account.somleng_account_sid
+    )
 
     post(
       somleng_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt, protocol: :https, subdomain: :api),

@@ -10,7 +10,7 @@ class HandleCallStatusCallback < ApplicationWorkflow
 
   def call
     delivery_attempt.transaction do
-      UpdateDeliveryAttemptStatus.call(delivery_attempt, status: call_status_callback.call_status)
+      HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: call_status_callback.call_status)
       delivery_attempt.metadata["somleng_status"] = call_status_callback.call_status
       delivery_attempt.metadata["call_duration"] = call_status_callback.call_duration
       delivery_attempt.save!

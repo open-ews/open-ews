@@ -14,7 +14,7 @@ class BroadcastSummary
   end
 
   def alerts_still_to_be_called
-    alerts.still_trying(broadcast.account.max_delivery_attempts_for_alert).count
+    alerts.where(status: :pending).count
   end
 
   def completed_calls

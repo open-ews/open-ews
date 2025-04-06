@@ -29,6 +29,6 @@ class SomlengWebhooksController < ApplicationController
   end
 
   def invalid_signature
-    head :forbidden
+    head(:forbidden)
   end
 end

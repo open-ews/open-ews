@@ -38,7 +38,7 @@ class Account < ApplicationRecord
   end
 
   def max_delivery_attempts_for_alert
-    settings.fetch("max_phone_calls_for_callout_participation").to_i
+    settings.fetch("max_phone_calls_for_callout_participation", 3).to_i
   end
 
   private

@@ -20,9 +20,9 @@ class UpdateDeliveryAttemptStatusJob < ApplicationJob
       response = somleng_client.fetch_call(delivery_attempt.metadata.fetch("somleng_call_sid"))
 
       delivery_attempt.transaction do
-        UpdateDeliveryAttemptStatus.call(delivery_attempt, status: response.status)
+        HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: response.status)
         delivery_attempt.metadata["somleng_status"] = response.status
-        delivery_attempt.metadata["call_duration"] = response.duration.to_i if response.duration.present?
+      delivery_attempt.metadata["call_duration"] = response.duration.to_i if response.duration.present?
         delivery_attempt.status_update_queued_at = nil
         delivery_attempt.save!
       end

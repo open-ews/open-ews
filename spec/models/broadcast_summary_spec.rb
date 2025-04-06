@@ -15,17 +15,11 @@ RSpec.describe BroadcastSummary do
 
   describe "#alerts_still_to_be_called" do
     it "returns the number of alerts still to be called" do
-      account = create(
-        :account,
-        settings: {
-          max_phone_calls_for_callout_participation: 3
-        }
-      )
-      broadcast = create(:broadcast, account: account)
+      broadcast = create(:broadcast)
       create(:alert, :succeeded, broadcast:)
       create(:alert, :failed, broadcast:, delivery_attempts_count: 3)
       create(:alert, :failed, broadcast:, delivery_attempts_count: 1)
-      create(:alert, :queued, broadcast:, delivery_attempts_count: 0)
+      create(:alert, :pending, broadcast:, delivery_attempts_count: 0)
 
       broadcast_summary = BroadcastSummary.new(broadcast)
 

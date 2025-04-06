@@ -91,10 +91,10 @@ FactoryBot.define do
   factory :alert do
     broadcast
     beneficiary { association :beneficiary, account: broadcast.account }
-    queued
+    pending
 
-    trait :queued do
-      status { :queued }
+    trait :pending do
+      status { :pending }
     end
 
     trait :succeeded do
