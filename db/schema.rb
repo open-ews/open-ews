@@ -23,6 +23,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_05_073033) do
     t.string "somleng_auth_token"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.string "name", null: false
     t.index ["somleng_account_sid"], name: "index_accounts_on_somleng_account_sid", unique: true
   end
 
@@ -67,6 +68,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_05_073033) do
     t.index ["beneficiary_id"], name: "index_alerts_on_beneficiary_id"
     t.index ["broadcast_id", "beneficiary_id"], name: "index_alerts_on_broadcast_id_and_beneficiary_id", unique: true
     t.index ["broadcast_id"], name: "index_alerts_on_broadcast_id"
+    t.index ["completed_at"], name: "index_alerts_on_completed_at"
     t.index ["status"], name: "index_alerts_on_status"
   end
 

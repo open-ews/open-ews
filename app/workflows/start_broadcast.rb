@@ -1,7 +1,7 @@
-class PopulateAlerts < ApplicationWorkflow
+class StartBroadcast < ApplicationWorkflow
   attr_reader :broadcast
 
-  class BroadcastStartedError < StandardError; end
+  class Error < StandardError; end
 
   delegate :account, :beneficiary_filter, to: :broadcast, private: true
 
@@ -20,7 +20,7 @@ class PopulateAlerts < ApplicationWorkflow
       broadcast.error_message = nil
       broadcast.start!
     end
-  rescue BroadcastStartedError => e
+  rescue Error => e
     broadcast.mark_as_errored!(e.message)
   end
 
@@ -32,7 +32,8 @@ class PopulateAlerts < ApplicationWorkflow
 
   def create_alerts
     beneficiaries = beneficiaries_scope
-    raise BroadcastStartedError, "No beneficiaries match the filters" if beneficiaries.none?
+    raise Error, "Account not configured" unless broadcast.account.configured_for_broadcasts?(channel: broadcast.channel)
+    raise Error, "No beneficiaries match the filters" if beneficiaries.none?
 
     alerts = beneficiaries.find_each.map do |beneficiary|
       {

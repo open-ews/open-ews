@@ -2,8 +2,19 @@ class RemoveColumnsFromDeliveryAttempts < ActiveRecord::Migration[8.0]
   def change
     reversible do |dir|
       dir.up do
-        DeliveryAttempt.where(remote_direction: :inbound).delete_all
-        DeliveryAttempt.update_all("metadata = jsonb_set(metadata, '{somleng_call_sid}', to_json(remote_call_id)::jsonb)")
+        DeliveryAttempt.where(alert_id: nil).delete_all
+
+        say_with_time "Migrating delivery attempts" do
+          execute <<-SQL
+          UPDATE delivery_attempts
+          SET metadata = jsonb_set(
+            metadata,
+            '{somleng_call_sid}',
+            to_jsonb(remote_call_id)
+          )
+          WHERE remote_call_id IS NOT NULL;
+          SQL
+        end
       end
     end
 

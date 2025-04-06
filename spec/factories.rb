@@ -146,7 +146,9 @@ FactoryBot.define do
     end
   end
 
-  factory :account
+  factory :account do
+    name { "PIN 1294" }
+  end
 
   factory :user do
     account

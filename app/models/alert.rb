@@ -6,7 +6,7 @@ class Alert < ApplicationRecord
   belongs_to :broadcast
   belongs_to :beneficiary
 
-  has_many :delivery_attempts, counter_cache: true
+  has_many :delivery_attempts
 
   delegate :account, to: :broadcast
   delegate :transition_to!, to: :state_machine
@@ -24,7 +24,7 @@ class Alert < ApplicationRecord
   end
 
   def max_delivery_attempts_reached?
-    delivery_attempts_count >= account.settings.max_delivery_attempts_for_alert
+    delivery_attempts_count >= account.max_delivery_attempts_for_alert
   end
 
   # NOTE: This is for backward compatibility until we moved to the new API

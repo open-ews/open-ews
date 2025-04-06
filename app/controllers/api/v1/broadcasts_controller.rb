@@ -30,7 +30,7 @@ module API
             broadcast.update!(permitted_params)
 
             if broadcast.queued?
-              ExecuteWorkflowJob.perform_later(PopulateAlerts.to_s, broadcast)
+              ExecuteWorkflowJob.perform_later(StartBroadcast.to_s, broadcast)
             end
 
             broadcast

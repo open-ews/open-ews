@@ -5,7 +5,15 @@ class Broadcast < ApplicationRecord
   CHANNELS = %i[voice].freeze
 
   include MetadataHelpers
-  include AASM
+
+  class StateMachine < StateMachine::ActiveRecord
+    state :pending, initial: true, transitions_to: [ :errored, :queued ]
+    state :errored, transitions_to: [ :running ]
+    state :queued, transitions_to: [ :running ]
+    state :running, transitions_to: [ :stopped, :completed ]
+    state :stopped, transitions_to: [ :running, :completed ]
+    state :completed
+  end
 
   store_accessor :settings
   accepts_nested_key_value_fields_for :settings
@@ -125,5 +133,11 @@ class Broadcast < ApplicationRecord
 
   def not_yet_started?
     pending? || queued? || errored?
+  end
+
+  private
+
+  def state_machine
+    @state_machine ||= StateMachine.new(self)
   end
 end

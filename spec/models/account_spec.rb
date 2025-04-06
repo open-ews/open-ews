@@ -1,12 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Account do
-  let(:factory) { :account }
-
-  include_examples "has_metadata"
-
   it "sets the defaults" do
-    account = Account.new
+    account = build(:account)
 
     account.save!
 
@@ -14,7 +10,7 @@ RSpec.describe Account do
       {
         "from_phone_number" => "1234",
         "phone_call_queue_limit" => 200,
-        "max_phone_calls_for_callout_participation" => 3
+        "max_delivery_attempts_for_alert" => 3
       }
     )
   end

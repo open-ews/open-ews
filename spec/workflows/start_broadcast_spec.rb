@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe PopulateAlerts do
+RSpec.describe StartBroadcast do
   it "populates alerts" do
     account = create(:account)
     _male_beneficiary = create(:beneficiary, account:, gender: "M")
@@ -23,7 +23,7 @@ RSpec.describe PopulateAlerts do
       }
     )
 
-    PopulateAlerts.new(broadcast).call
+    StartBroadcast.call(broadcast)
 
     expect(broadcast.status).to eq("running")
     expect(broadcast.error_message).to be_blank
@@ -50,7 +50,7 @@ RSpec.describe PopulateAlerts do
 
     stub_request(:get, "https://example.com/not-found.mp3").to_return(status: 404)
 
-    PopulateAlerts.new(broadcast).call
+    StartBroadcast.call(broadcast)
 
     expect(broadcast.status).to eq("errored")
     expect(broadcast.error_message).to eq("Unable to download audio file")
@@ -69,7 +69,7 @@ RSpec.describe PopulateAlerts do
       }
     )
 
-    PopulateAlerts.new(broadcast).call
+    StartBroadcast.call(broadcast)
 
     expect(broadcast.status).to eq("errored")
     expect(broadcast.error_message).to eq("No beneficiaries match the filters")
