@@ -10,57 +10,59 @@
 
       .hr-text Beneficiary Filters
 
-      .row
+      .row{data: { controller: "beneficiary-filter-field" }}
         .col
-          %label.form-label Fields
+          %label.form-label Field
           .input-group.mb-2
             %span.input-group-text
-              %input.form-check-input.m-0{type: "checkbox", checked: true}
-            %input.form-control{type: "text", value: "Gender", readonly: true}
+              %input.form-check-input.m-0{type: "checkbox", checked: true, data: { "beneficiary-filter-field-target": "toggleElement", action:  "beneficiary-filter-field#toggle" }}
+            %input.form-control{type: "text", value: "Gender", readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
         .col
-          = f.input "beneficiary_filter", label: "Operator", as: :select
+          = f.input "beneficiary_filter", label: "Operator", as: :select, collection: ["Equals", "Not Equals", "Is NULL"], input_html: { data: { "beneficiary-filter-field-target": "operator" } }
         .col
-          = f.input "beneficiary_filter", label: "Value", as: :select
+          = f.input "beneficiary_filter", label: "Value", as: :select, collection: ["Male", "Female"], input_html: { data: { "beneficiary-filter-field-target": "value" } }
 
-      .row
-        .col
-          .input-group.mb-2
-            %span.input-group-text
-              %input.form-check-input.m-0{type: "checkbox", checked: false}
-            %input.form-control{type: "text", value: "Disability Status", readonly: true, disabled: true}
-        .col
-          = f.input "beneficiary_filter", label: false, as: :select, disabled: true
-        .col
-          = f.input "beneficiary_filter", label: false, as: :select, disabled: true
-
-      .row
+      .row{data: { controller: "beneficiary-filter-field" }}
         .col
           .input-group.mb-2
             %span.input-group-text
-              %input.form-check-input.m-0{type: "checkbox", checked: false}
-            %input.form-control{type: "text", value: "Date of Birth", readonly: true, disabled: true}
+              %input.form-check-input.m-0{type: "checkbox", checked: false, data: { "beneficiary-filter-field-target": "toggleElement", action:  "beneficiary-filter-field#toggle" }}
+            %input.form-control{type: "text", value: "Disability Status", readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
         .col
-          = f.input "beneficiary_filter", label: false, as: :select, disabled: true
+          = f.input "beneficiary_filter", label: false, as: :select, collection: ["Equals", "Not Equals", "Is NULL"], input_html: { data: { "beneficiary-filter-field-target": "operator" } }
         .col
-          = f.input "beneficiary_filter", label: false, as: :string, disabled: true
+          = f.input "beneficiary_filter", label: false, as: :select, collection: ["Active", "Disabled"], input_html: { data: { "beneficiary-filter-field-target": "value" } }
 
-      .row
+      .row{data: { controller: "beneficiary-filter-field" }}
         .col
           .input-group.mb-2
             %span.input-group-text
-              %input.form-check-input.m-0{type: "checkbox", checked: false}
-            %input.form-control{type: "text", value: "Language Code", readonly: true, disabled: true}
+              %input.form-check-input.m-0{type: "checkbox", checked: false, data: { "beneficiary-filter-field-target": "toggleElement", action:  "beneficiary-filter-field#toggle" }}
+            %input.form-control{type: "text", value: "Date of Birth", readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
         .col
-          = f.input "beneficiary_filter", label: false, as: :select, disabled: true
+          = f.input "beneficiary_filter", label: false, as: :select, collection: ["Equals", "Not Equals", "Greater Than", "Greater Than or Equals to", "Less Than", "Less Than or Equals to", "Is NULL"], input_html: { data: { "beneficiary-filter-field-target": "operator" } }
         .col
-          = f.input "beneficiary_filter", label: false, as: :string, disabled: true
+          = f.input "beneficiary_filter", label: false, as: :date, input_html: { data: { "beneficiary-filter-field-target": "value" } }
 
-      .input-group.mb-2
-        %span.input-group-text
-          %input.form-check-input.m-0{type: "checkbox", checked: false, "data-bs-toggle": "collapse", "data-bs-target": "#addresses"}
-        %input.form-control{type: "text", value: "Addresses", readonly: true}
+      .row{data: { controller: "beneficiary-filter-field" }}
+        .col
+          .input-group.mb-2
+            %span.input-group-text
+              %input.form-check-input.m-0{type: "checkbox", checked: false, data: { "beneficiary-filter-field-target": "toggleElement", action:  "beneficiary-filter-field#toggle" }}
+            %input.form-control{type: "text", value: "Language Code", readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
+        .col
+          = f.input "beneficiary_filter", label: false, as: :select, collection: ["Equals", "Not Equals", "Contains", "Not Contains", "Starts With", "Is NULL"], input_html: { data: { "beneficiary-filter-field-target": "operator" } }
+        .col
+          = f.input "beneficiary_filter", label: false, as: :string, input_html: { data: { "beneficiary-filter-field-target": "value" } }
 
-      #addresses.collapse.overflow-auto{style: "max-height: 200px", data: { controller: "address-treeview", "address-treeview-data-value": BeneficiaryAddress.address_data("kh").to_json,  "address-treeview-field-name-value": "commune_codes" }}
+      .row{data: { controller: "beneficiary-addresses-filter-field" }}
+        .col
+          .input-group.mb-2
+            %span.input-group-text
+              %input.form-check-input.m-0{type: "checkbox", checked: false, data: { "beneficiary-addresses-filter-field-target": "toggleElement", action:  "beneficiary-addresses-filter-field#toggle", "bs-toggle": "collapse", "bs-target": "#addresses" }}
+            %input.form-control{type: "text", value: "Addresses", readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
+
+          #addresses.collapse.overflow-auto{style: "max-height: 200px", data: { controller: "address-treeview", "address-treeview-data-value": BeneficiaryAddress.address_data("kh").to_json,  "address-treeview-field-name-value": "commune_codes" }}
 
     .card-footer.text-end
       = f.button :submit, class: 'btn btn-primary'

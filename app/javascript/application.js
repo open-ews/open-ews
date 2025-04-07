@@ -1,6 +1,4 @@
 import "@hotwired/turbo-rails";
-import * as tabler from "@tabler/core";
-import moment from "moment";
 require("@rails/activestorage").start();
 
 import "./controllers";
