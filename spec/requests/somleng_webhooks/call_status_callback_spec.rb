@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Call Status Callbacks" do
   it "Handles call status callbacks" do
     account = create(:account, somleng_account_sid: "account-sid", somleng_auth_token: "auth-token")
-    broadcast = create(:broadcast, account:)
+    broadcast = create(:broadcast, :running, account:)
     alert = create(:alert, :pending, broadcast:)
     delivery_attempt = create(:delivery_attempt, :initiated, alert:)
 

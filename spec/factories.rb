@@ -28,6 +28,13 @@ FactoryBot.define do
 
     trait :running do
       status { :running }
+      started_at { Time.current }
+    end
+
+    trait :completed do
+      status { :completed }
+      started_at { Time.current }
+      completed_at { Time.current }
     end
   end
 

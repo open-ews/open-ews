@@ -39,10 +39,6 @@ class Broadcast < ApplicationRecord
 
   before_create :set_default_status
 
-  def self.jsonapi_serializer_class
-    BroadcastSerializer
-  end
-
   # TODO: Remove this after we removed the old API
   def as_json(*)
     result = super(except: [ "channel", "beneficiary_filter" ])

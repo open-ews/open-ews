@@ -4,18 +4,18 @@ RSpec.describe UpdateDeliveryAttemptStatusJob do
   describe "#perform" do
     it "updates the status of a delivery attempt" do
       account = create(:account, somleng_account_sid: "account-sid", somleng_auth_token: "auth-token")
-      broadcast = create(:broadcast, account:)
+      broadcast = create(:broadcast, :running, account:)
       alert = create(:alert, broadcast:)
       delivery_attempt = create(
         :delivery_attempt,
         :initiated,
         alert:,
-        initiated_at: Time.current,
         metadata: {
           "somleng_call_sid" => "call-sid"
         }
       )
       stub_somleng_request(response: { body: { "status" => "completed", "duration" => "87" }.to_json })
+
       UpdateDeliveryAttemptStatusJob.perform_now(delivery_attempt)
 
       expect(delivery_attempt).to have_attributes(

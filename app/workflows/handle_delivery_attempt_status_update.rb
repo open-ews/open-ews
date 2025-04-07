@@ -12,10 +12,12 @@ class HandleDeliveryAttemptStatusUpdate < ApplicationWorkflow
       when "completed"
         delivery_attempt.transition_to!(:succeeded, touch: :completed_at)
         alert.transition_to!(:succeeded, touch: :completed_at)
+        complete_broadcast!
       when "busy", "no-answer", "failed", "canceled"
         delivery_attempt.transition_to!(:failed, touch: :completed_at)
         if alert.max_delivery_attempts_reached?
           alert.transition_to!(:failed, touch: :completed_at)
+          complete_broadcast!
         else
           RetryAlertJob.set(wait: 15.minutes).perform_later(alert)
         end
@@ -27,5 +29,13 @@ class HandleDeliveryAttemptStatusUpdate < ApplicationWorkflow
 
   def alert
     delivery_attempt.alert
+  end
+
+  def broadcast
+    delivery_attempt.broadcast
+  end
+
+  def complete_broadcast!
+    broadcast.transition_to!(:completed, touch: :completed_at) if broadcast.alerts.where(status: :pending).none?
   end
 end
