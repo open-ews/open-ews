@@ -49,7 +49,6 @@ RSpec.resource "Batch Operations" do
       do_request(broadcast_id: broadcast.id, **body)
 
       assert_batch_operation_created!(account:, request_body: body)
-      expect(broadcast.reload.callout_populations.count).to eq(1)
     end
 
     example "Create a batch operation with an invalid type", document: false do

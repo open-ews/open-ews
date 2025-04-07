@@ -5,9 +5,7 @@ RSpec.describe InitiateDeliveryAttemptJob do
     it "initiates the delivery attempt" do
       account = create(
         :account,
-        settings: {
-          from_phone_number: "1294"
-        },
+        alert_phone_number: "1294",
         somleng_account_sid: "account-sid",
         somleng_auth_token: "auth-token"
       )

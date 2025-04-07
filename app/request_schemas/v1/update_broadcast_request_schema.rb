@@ -1,6 +1,6 @@
 module V1
   class UpdateBroadcastRequestSchema < JSONAPIRequestSchema
-    STATES = Broadcast.aasm.states.map { _1.name.to_s } - [ "queued", "errored" ]
+    STATES = Broadcast::StateMachine.state_definitions.map { _1.name.to_s } - [ "queued", "errored" ]
 
     params do
       required(:data).value(:hash).schema do
@@ -36,9 +36,8 @@ module V1
       next unless key?
 
       next if resource.status == value
-      next if value == "running" && (resource.may_start? || resource.may_resume?)
-      next if value == "stopped" && resource.may_stop?
-      next if value == "completed" && resource.may_complete?
+      next if value == "running" && (resource.may_transition_to?(:queued) || resource.may_transition_to?(:running))
+      next if value == "stopped" && resource.may_transition_to?(:stopped)
 
       key.failure("cannot transition from #{resource.status} to #{value}")
     end
@@ -46,7 +45,7 @@ module V1
     def output
       result = super
 
-      if result[:status] == "running" && (resource.pending? || resource.errored?)
+      if result[:status] == "running" && resource.may_transition_to?(:queued)
         result[:status] = "queued"
       end
 

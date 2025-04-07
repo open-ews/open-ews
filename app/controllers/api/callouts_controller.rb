@@ -24,6 +24,11 @@ module API
       )
     end
 
+    def prepare_resource_for_create
+      resource.status = "queued"
+      resource.channel = "voice"
+    end
+
     def show_location(resource)
       api_callout_path(resource)
     end

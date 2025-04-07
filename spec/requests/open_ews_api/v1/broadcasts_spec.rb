@@ -167,7 +167,7 @@ RSpec.resource "Broadcasts"  do
     end
 
     example "Update a broadcast" do
-      account = create(:account)
+      account = create(:account, :configured_for_broadcasts)
       _male_beneficiary = create(:beneficiary, account:, gender: "M")
       female_beneficiary = create(:beneficiary, account:, gender: "F")
       broadcast = create(

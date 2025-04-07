@@ -12,22 +12,21 @@ class StartBroadcast < ApplicationWorkflow
   def call
     ApplicationRecord.transaction do
       download_audio_file unless broadcast.audio_file.attached?
-      return if broadcast.errored?
 
       create_alerts
       create_delivery_attempts
 
       broadcast.error_message = nil
-      broadcast.start!
+      broadcast.transition_to!(:running, touch: :started_at)
     end
-  rescue Error => e
+  rescue DownloadBroadcastAudioFile::Error, Error => e
     broadcast.mark_as_errored!(e.message)
   end
 
   private
 
   def download_audio_file
-    DownloadAudioFile.call(broadcast)
+    DownloadBroadcastAudioFile.call(broadcast)
   end
 
   def create_alerts

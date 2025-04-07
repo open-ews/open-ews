@@ -19,7 +19,7 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
 
   it "retries the alert after failed events" do
     travel_to(Time.current) do
-      account = create(:account, settings: { max_delivery_attempts_for_alert: 3 })
+      account = create(:account, max_delivery_attempts_for_alert: 3)
       alert = create(:alert, :pending, broadcast: create(:broadcast, account:))
       delivery_attempt = create(:delivery_attempt, :initiated, alert:)
 
@@ -39,7 +39,7 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
   end
 
   it "marks the alert as failed after max retries" do
-    account = create(:account, settings: { max_delivery_attempts_for_alert: 1 })
+    account = create(:account, max_delivery_attempts_for_alert: 1)
     alert = create(:alert, :pending, broadcast: create(:broadcast, account:))
     delivery_attempt = create(:delivery_attempt, :initiated, alert:)
 

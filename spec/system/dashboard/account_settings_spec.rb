@@ -14,12 +14,6 @@ RSpec.describe "Account Settings" do
 
     fill_in("Somleng account sid", with: somleng_account_sid)
     fill_in("Somleng auth token", with: somleng_auth_token)
-    fill_in_key_values_for(
-      :settings,
-      with: {
-        "from_phone_number" => "1234"
-      }
-    )
 
     click_on("Save")
 
@@ -28,6 +22,5 @@ RSpec.describe "Account Settings" do
     user.account.reload
     expect(user.account.somleng_account_sid).to eq(somleng_account_sid)
     expect(user.account.somleng_auth_token).to eq(somleng_auth_token)
-    expect(user.account.settings).to include("from_phone_number" => "1234")
   end
 end

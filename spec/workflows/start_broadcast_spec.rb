@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe StartBroadcast do
   it "populates alerts" do
-    account = create(:account)
+    account = create(:account, :configured_for_broadcasts)
     _male_beneficiary = create(:beneficiary, account:, gender: "M")
     female_beneficiary = create(:beneficiary, account:, gender: "F")
     create(:beneficiary_address, beneficiary: female_beneficiary, iso_region_code: "KH-12")
@@ -14,7 +14,7 @@ RSpec.describe StartBroadcast do
     broadcast = create(
       :broadcast,
       audio_url: "https://example.com/cowbell.mp3",
-      status: :pending,
+      status: :queued,
       account:,
       error_message: "existing error message",
       beneficiary_filter: {
@@ -25,8 +25,12 @@ RSpec.describe StartBroadcast do
 
     StartBroadcast.call(broadcast)
 
-    expect(broadcast.status).to eq("running")
-    expect(broadcast.error_message).to be_blank
+    expect(broadcast).to have_attributes(
+      status: "running",
+      error_message: be_blank,
+      started_at: be_present,
+      audio_file: be_attached
+    )
     expect(broadcast.beneficiaries.count).to eq(1)
     expect(broadcast.alerts.first).to have_attributes(
       beneficiary: female_beneficiary,
@@ -42,8 +46,10 @@ RSpec.describe StartBroadcast do
   end
 
   it "marks errored when the audio file can't be downloaded" do
+    account = create(:account, :configured_for_broadcasts)
     broadcast = create(
       :broadcast,
+      account:,
       status: :queued,
       audio_url: "https://example.com/not-found.mp3",
     )
@@ -57,11 +63,12 @@ RSpec.describe StartBroadcast do
   end
 
   it "marks errored when there are no beneficiaries that match the filters" do
-    account = create(:account)
+    account = create(:account, :configured_for_broadcasts)
     _male_beneficiary = create(:beneficiary, account:, gender: "M")
 
     broadcast = create(
       :broadcast,
+      account:,
       audio_file: file_fixture("test.mp3"),
       status: :queued,
       beneficiary_filter: {
@@ -73,5 +80,24 @@ RSpec.describe StartBroadcast do
 
     expect(broadcast.status).to eq("errored")
     expect(broadcast.error_message).to eq("No beneficiaries match the filters")
+  end
+
+  it "marks errored when the account is not yet configured for sending broadcasts" do
+    account = create(:account)
+
+    broadcast = create(
+      :broadcast,
+      account:,
+      audio_file: file_fixture("test.mp3"),
+      status: :queued,
+      beneficiary_filter: {
+        gender: { eq: "F" }
+      }
+    )
+
+    StartBroadcast.call(broadcast)
+
+    expect(broadcast.status).to eq("errored")
+    expect(broadcast.error_message).to eq("Account not configured")
   end
 end

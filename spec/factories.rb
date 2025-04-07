@@ -1,26 +1,6 @@
 FactoryBot.define do
   sequence(:phone_number, "855972345678")
 
-  sequence :twilio_request_params do
-    params = Twilio::REST::Client.new.api.account.calls.method(:create).parameters.map do |param|
-      [ param[1].to_s, param[1].to_s ]
-    end
-
-    Hash[params]
-  end
-
-  sequence :twilio_remote_call_event_details do
-    {
-      CallSid: SecureRandom.uuid,
-      From: FactoryBot.generate(:phone_number),
-      To: "345",
-      CallStatus: "completed",
-      Direction: "inbound",
-      AccountSid: SecureRandom.uuid,
-      ApiVersion: "2010-04-01"
-    }
-  end
-
   sequence :email do |n|
     "user#{n}@example.com"
   end
@@ -36,32 +16,18 @@ FactoryBot.define do
   factory :broadcast do
     account
     channel { "voice" }
+    pending
 
     trait :with_attached_audio do
       association :audio_file, factory: :active_storage_attachment, filename: "test.mp3"
     end
 
     trait :pending do
-      status { Broadcast::STATE_PENDING }
-    end
-
-    trait :can_start do
-    end
-
-    trait :can_stop do
-      status { "running" }
-    end
-
-    trait :can_pause do
-      can_stop
-    end
-
-    trait :can_resume do
-      status { "paused" }
+      status { :pending }
     end
 
     trait :running do
-      status { Broadcast::STATE_RUNNING }
+      status { :running }
     end
   end
 
@@ -148,6 +114,12 @@ FactoryBot.define do
 
   factory :account do
     name { "PIN 1294" }
+
+    trait :configured_for_broadcasts do
+      somleng_account_sid { generate(:somleng_account_sid) }
+      somleng_auth_token { generate(:auth_token) }
+      alert_phone_number { "1294" }
+    end
   end
 
   factory :user do

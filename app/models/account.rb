@@ -4,11 +4,13 @@ class Account < ApplicationRecord
   has_many :beneficiaries
   has_many :broadcasts
 
+  has_many :batch_operations, class_name: "BatchOperation::CalloutPopulation"
+
   before_create :set_default_settings
 
   strip_attributes
 
-  def configured_for_broadcasts?(_channel:)
+  def configured_for_broadcasts?(**)
     somleng_account_sid.present? && somleng_auth_token.present? && alert_phone_number.present?
   end
 

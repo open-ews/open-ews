@@ -1,4 +1,6 @@
-class DownloadAudioFile < ApplicationWorkflow
+class DownloadBroadcastAudioFile < ApplicationWorkflow
+  class Error < StandardError; end
+
   attr_reader :broadcast
 
   def initialize(broadcast)
@@ -12,6 +14,6 @@ class DownloadAudioFile < ApplicationWorkflow
       filename: File.basename(uri)
     )
   rescue OpenURI::HTTPError, URI::InvalidURIError
-    broadcast.mark_as_errored!("Unable to download audio file")
+    raise(Error, "Unable to download audio file")
   end
 end

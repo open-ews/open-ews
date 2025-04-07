@@ -28,7 +28,7 @@ RSpec.describe RetryAlertJob do
   end
 
   it "does not retry an alert that has reached max retries" do
-    account = create(:account, settings: { max_delivery_attempts_for_alert: 1 })
+    account = create(:account, max_delivery_attempts_for_alert: 1)
     alert = create(:alert, :pending, broadcast: create(:broadcast, account:))
     delivery_attempt = create(:delivery_attempt, :failed, alert:)
 

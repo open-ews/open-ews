@@ -57,7 +57,7 @@ Rails.application.routes.draw do
   end
 
   namespace "api", defaults: { format: "json" } do
-    resources :callouts, except: %i[new edit] do
+    resources :callouts, only: [ :show, :index, :create, :update ] do
       resources :callout_participations, only: :index
       resources :callout_events, only: :create
     end

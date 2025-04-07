@@ -68,16 +68,8 @@ module V1
       ).to have_valid_field(:data, :attributes, :status)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { status: "completed" } } }, options: { resource: running_broadcast })
-      ).to have_valid_field(:data, :attributes, :status)
-
-      expect(
         validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: stopped_broadcast })
       ).to have_valid_field(:data, :attributes, :status)
-
-      expect(
-        validate_schema(input_params: { data: { attributes: { status: "completed" } } }, options: { resource: stopped_broadcast })
-      ).not_to have_valid_field(:data, :attributes, :status)
 
       expect(
         validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: completed_broadcast })
@@ -101,10 +93,6 @@ module V1
 
       expect(
         validate_schema(input_params: { data: { attributes: { status: "queued" } } }, options: { resource: errored_broadcast })
-      ).not_to have_valid_field(:data, :attributes, :status)
-
-      expect(
-        validate_schema(input_params: { data: { attributes: { status: "completed" } } }, options: { resource: errored_broadcast })
       ).not_to have_valid_field(:data, :attributes, :status)
     end
 

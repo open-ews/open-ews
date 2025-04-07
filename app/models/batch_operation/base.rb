@@ -17,8 +17,6 @@ module BatchOperation
     validates :type, presence: true
     validates :parameters, json: true
 
-    before_validation :set_default_parameters, on: :create
-
     def self.from_type_param(type)
       PERMITTED_API_TYPES.include?(type) ? type.constantize : where(type: PERMITTED_API_TYPES)
     end
@@ -62,14 +60,5 @@ module BatchOperation
     def run_later
       RunBatchOperationJob.perform_later(self)
     end
-
-    def set_default_parameters
-      return if account.blank?
-
-      default_parameters = account.settings.fetch(batch_operation_account_settings_param, {})
-      self.parameters = default_parameters.deep_merge(parameters)
-    end
-
-    def batch_operation_account_settings_param; end
   end
 end
