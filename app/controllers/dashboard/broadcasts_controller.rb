@@ -9,12 +9,13 @@ module Dashboard
     end
 
     def permitted_params
-      params.fetch(:broadcast, {}).permit(
-        :call_flow_logic,
-        :audio_file,
-        settings_fields_attributes: KEY_VALUE_FIELD_ATTRIBUTES,
-        **METADATA_FIELDS_ATTRIBUTES
-      )
+      permitted = params.fetch(:broadcast, {}).permit(:audio_file, :channel)
+
+      if params.dig(:broadcast, :beneficiary_filter).present?
+        permitted[:beneficiary_filter] = params.dig(:broadcast, :beneficiary_filter).permit!
+      end
+
+      permitted
     end
 
     def before_update_attributes

@@ -12,10 +12,12 @@ export default class extends Controller {
 
     this.fieldNameTarget.disabled = !enabled
     this.operatorTarget.disabled = !enabled
+    this.operatorTarget.value = null
 
-    // NOTE: handle multiple value inputs (date select)
+    // NOTE: handle multiple value inputs (eg. date select)
     this.valueTargets.forEach((e) => {
       e.disabled = !enabled
+      e.value = null
     })
   }
 }
