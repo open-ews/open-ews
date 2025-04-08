@@ -8,6 +8,5 @@ class RemoveColumnsFromDeliveryAttempts < ActiveRecord::Migration[8.0]
     rename_column :delivery_attempts, :remote_status_fetch_queued_at, :status_update_queued_at
     add_column(:delivery_attempts, :queued_at, :datetime)
     add_column(:delivery_attempts, :completed_at, :datetime)
-    add_column(:delivery_attempts, :errored_at, :datetime)
   end
 end

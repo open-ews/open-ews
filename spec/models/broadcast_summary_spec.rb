@@ -57,18 +57,4 @@ RSpec.describe BroadcastSummary do
       expect(result).to eq(1)
     end
   end
-
-  describe "#errored_calls" do
-    it "returns the number of calls" do
-      broadcast = create(:broadcast)
-      alert = create(:alert, broadcast:)
-      delivery_attempt = create(:delivery_attempt, :errored, alert:)
-      delivery_attempt = create(:delivery_attempt, :initiated, alert:)
-      broadcast_summary = BroadcastSummary.new(broadcast)
-
-      result = broadcast_summary.errored_calls
-
-      expect(result).to eq(1)
-    end
-  end
 end

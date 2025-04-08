@@ -35,14 +35,14 @@ class MigrateDeliveryAttempts
       WHERE remote_error_message IS NOT NULL;
     SQL
 
+    puts "#{Time.current} Updating errored delivery attempts"
+    DeliveryAttempt.where(status: :errored).where.not(initiated_at: nil).update_all(initiated_at: nil)
     puts "#{Time.current} Updating failed delivery attempts"
-    DeliveryAttempt.where(status: [ :busy, :canceled, :failed, :not_answered, :expired ]).update_all("queued_at = created_at, completed_at = updated_at, status = 'failed'")
+    DeliveryAttempt.where(status: [ :errored, :busy, :canceled, :failed, :not_answered, :expired ]).update_all("queued_at = created_at, completed_at = updated_at, status = 'failed'")
     puts "#{Time.current} Updating completed delivery attempts"
     DeliveryAttempt.where(status: :completed).update_all("queued_at = created_at, completed_at = updated_at, status = 'succeeded'")
     puts "#{Time.current} Updating queued delivery attempts"
     DeliveryAttempt.where(status: :queued).where(queued_at: nil).update_all("queued_at = updated_at")
-    puts "#{Time.current} Updating errored delivery attempts"
-    DeliveryAttempt.where(status: :errored).where(errored_at: nil).update_all("queued_at = updated_at, errored_at = updated_at")
 
     puts "#{Time.current} Updating queued alerts"
     Alert.where(status: :queued).update_all(status: :pending)
@@ -56,6 +56,7 @@ class MigrateDeliveryAttempts
       FROM (
         SELECT DISTINCT ON (alert_id) alert_id, completed_at
         FROM delivery_attempts
+        WHERE status IN ('succeeded', 'failed')
         ORDER BY alert_id, completed_at DESC
       ) AS latest_delivery_attempts
       WHERE alerts.id = latest_delivery_attempts.alert_id AND "alerts"."status" IN ('succeeded', 'failed');
@@ -69,7 +70,9 @@ class MigrateDeliveryAttempts
     Alert.where(status: :pending).joins(:broadcast).where(broadcasts: { status: :pending }).delete_all
 
     puts "#{Time.current} Deleting broadcasts with no audio url"
-    Broadcast.where(audio_url: nil).delete_all
+    broadcasts_with_no_audio = Broadcast.where(audio_url: nil)
+    BatchOperation::Base.where(broadcast_id: broadcasts_with_no_audio.select(:id)).delete_all
+    broadcasts_with_no_audio.delete_all
 
     puts "#{Time.current} Attaching audio to and marking broadcasts as complete"
     Broadcast.find_each do |broadcast|

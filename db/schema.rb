@@ -163,7 +163,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_041312) do
     t.bigint "broadcast_id"
     t.datetime "queued_at"
     t.datetime "completed_at"
-    t.datetime "errored_at"
     t.index ["alert_id"], name: "index_delivery_attempts_on_alert_id"
     t.index ["beneficiary_id"], name: "index_delivery_attempts_on_beneficiary_id"
     t.index ["broadcast_id", "status"], name: "index_delivery_attempts_on_broadcast_id_and_status"

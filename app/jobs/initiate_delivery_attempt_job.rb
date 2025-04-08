@@ -28,9 +28,11 @@ class InitiateDeliveryAttemptJob < ApplicationJob
         delivery_attempt.save!
       end
     rescue Somleng::Client::RestError => e
-      delivery_attempt.transition_to!(:errored)
-      delivery_attempt.metadata["somleng_error_message"] = e.message
-      delivery_attempt.save!
+      delivery_attempt.transaction do
+        HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
+        delivery_attempt.metadata["somleng_error_message"] = e.message
+        delivery_attempt.save!
+      end
     end
 
     private

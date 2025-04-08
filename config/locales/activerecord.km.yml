@@ -7,7 +7,6 @@ km:
         alerts_still_to_be_called: Participants still to be called
         busy_calls: Busy calls
         completed_calls: Completed calls
-        errored_calls: Errored calls
         failed_calls: Failed calls
         not_answered_calls: Not answered calls
       key_value_field:

@@ -120,7 +120,6 @@ RSpec.describe "Callouts", :aggregate_failures do
       expect(page).to have_content("Participants still to be called")
       expect(page).to have_content("Completed calls")
       expect(page).to have_content("Failed calls")
-      expect(page).to have_content("Errored calls")
     end
   end
 end

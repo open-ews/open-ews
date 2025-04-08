@@ -13,9 +13,8 @@ class DeliveryAttempt < ApplicationRecord
 
   class StateMachine < StateMachine::ActiveRecord
     state :created, initial: true, transitions_to: :queued
-    state :queued, transitions_to: [ :initiated, :errored ]
+    state :queued, transitions_to: [ :initiated, :failed ]
     state :initiated, transitions_to: [ :failed, :succeeded ]
-    state :errored
     state :failed
     state :succeeded
   end

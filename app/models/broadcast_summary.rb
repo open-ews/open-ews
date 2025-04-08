@@ -25,10 +25,6 @@ class BroadcastSummary
     delivery_attempts.where(status: :failed).count
   end
 
-  def errored_calls
-    delivery_attempts.where(status: :errored).count
-  end
-
   private
 
   def alerts

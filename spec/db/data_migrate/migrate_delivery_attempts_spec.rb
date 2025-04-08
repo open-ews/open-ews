@@ -29,7 +29,7 @@ RSpec.describe MigrateDeliveryAttempts do
     )
     errored_delivery_attempt = create(
       :delivery_attempt, alert: create(:alert, broadcast: running_broadcast),
-      status: :errored, remote_error_message: "Error message"
+      status: :errored, remote_error_message: "Error message", initiated_at: Time.current
     )
     delivery_attempts_to_be_failed = [ :busy, :canceled, :failed, :not_answered, :expired ].map do |status|
       create(
@@ -74,8 +74,10 @@ RSpec.describe MigrateDeliveryAttempts do
       metadata: {
         "somleng_error_message" => "Error message"
       },
-      errored_at: be_present,
-      queued_at: be_present
+      queued_at: be_present,
+      status: "failed",
+      completed_at: be_present,
+      initiated_at: nil
     )
     delivery_attempts_to_be_failed.each do |delivery_attempt|
       expect(delivery_attempt.reload).to have_attributes(
