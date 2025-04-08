@@ -25,9 +25,7 @@ module API
         ) do |permitted_params|
           broadcast.update!(permitted_params)
 
-          if broadcast.queued?
-            ExecuteWorkflowJob.perform_later(StartBroadcast.to_s, broadcast)
-          end
+          ExecuteWorkflowJob.perform_later(StartBroadcast.to_s, broadcast) if broadcast.queued?
 
           broadcast
         end

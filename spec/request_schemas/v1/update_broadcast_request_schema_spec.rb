@@ -46,6 +46,7 @@ module V1
       running_broadcast = create(:broadcast, status: :running)
       stopped_broadcast = create(:broadcast, status: :stopped)
       completed_broadcast = create(:broadcast, status: :completed)
+      queued_broadcast = create(:broadcast, status: :queued)
 
       expect(
         validate_schema(input_params: { data: { attributes: { status: "foobar" } } }, options: { resource: pending_broadcast })
@@ -53,10 +54,6 @@ module V1
 
       expect(
         validate_schema(input_params: { data: { attributes: {} } }, options: { resource: pending_broadcast })
-      ).to have_valid_field(:data, :attributes, :status)
-
-      expect(
-        validate_schema(input_params: { data: { attributes: { status: "pending" } } }, options: { resource: pending_broadcast })
       ).to have_valid_field(:data, :attributes, :status)
 
       expect(
@@ -94,6 +91,10 @@ module V1
       expect(
         validate_schema(input_params: { data: { attributes: { status: "queued" } } }, options: { resource: errored_broadcast })
       ).not_to have_valid_field(:data, :attributes, :status)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: queued_broadcast })
+      ).not_to have_valid_field(:data, :attributes, :status)
     end
 
     it "handles post processing" do
@@ -114,7 +115,7 @@ module V1
       ).output
 
       expect(result).to include(
-        status: "queued",
+        status: :queued,
         audio_url: "http://example.com/sample.mp3"
       )
 
@@ -132,7 +133,7 @@ module V1
       ).output
 
       expect(result).to include(
-        status: "queued",
+        status: :queued,
         audio_url: "http://example.com/sample.mp3"
       )
     end

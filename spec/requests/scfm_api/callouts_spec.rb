@@ -90,7 +90,24 @@ RSpec.resource "Callouts" do
     example "Create a Callout Event" do
       broadcast = create(
         :broadcast,
-        status: :queued,
+        :running,
+        account: account
+      )
+
+      set_authorization_header_for(account)
+      do_request(callout_id: broadcast.id, event: "stop")
+
+      expect(response_status).to eq(201)
+      expect(response_headers["Location"]).to eq(api_callout_path(broadcast))
+      parsed_body = JSON.parse(response_body)
+      expect(parsed_body.fetch("status")).to eq("stopped")
+      expect(broadcast.reload.status).to eq("stopped")
+    end
+
+    example "Create a callout event with an invalid state transition", document: false do
+      broadcast = create(
+        :broadcast,
+        :running,
         account: account
       )
 

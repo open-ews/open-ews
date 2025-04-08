@@ -5,6 +5,7 @@ module StateMachine
     attr_reader :current_state
 
     StateDefinition = Data.define(:name, :transitions_to, :initial)
+    Transition = Data.define(:name, :as)
 
     class << self
       def find(state)
@@ -12,7 +13,13 @@ module StateMachine
       end
 
       def state(name, **options)
-        state_definitions << StateDefinition.new(name:, transitions_to: Array(options.fetch(:transitions_to, [])), initial: options.fetch(:initial, false))
+        state_definitions << StateDefinition.new(
+          name:,
+          transitions_to: Array(options.fetch(:transitions_to, [])).map do |(name, options)|
+            Transition.new(name:, as: (options || {}).fetch(:as, nil))
+          end,
+          initial: options.fetch(:initial, false)
+        )
         define_method("#{name}?", -> { current_state.name == name })
       end
 
@@ -26,7 +33,12 @@ module StateMachine
     end
 
     def transition_to(new_state)
-      @current_state = may_transition_to?(new_state) ? self.class.find(new_state) : current_state
+      @current_state = if may_transition_to?(new_state)
+        transition = find_transition(new_state)
+        self.class.find(transition.as || transition.name)
+      else
+        current_state
+      end
     end
 
     def transition_to!(new_state)
@@ -34,7 +46,13 @@ module StateMachine
     end
 
     def may_transition_to?(new_state)
-      current_state.transitions_to.include?(new_state.to_s.to_sym)
+      find_transition(new_state).present?
+    end
+
+    private
+
+    def find_transition(new_state)
+      current_state.transitions_to.find { _1.name == new_state.to_s.to_sym }
     end
   end
 end

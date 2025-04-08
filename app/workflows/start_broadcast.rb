@@ -44,7 +44,7 @@ class StartBroadcast < ApplicationWorkflow
       }
     end
 
-    Alert.upsert_all(alerts) if alerts.any?
+    Alert.upsert_all(alerts)
   end
 
   def create_delivery_attempts
@@ -58,7 +58,7 @@ class StartBroadcast < ApplicationWorkflow
       }
     end
 
-    DeliveryAttempt.upsert_all(delivery_attempts) if delivery_attempts.any?
+    DeliveryAttempt.upsert_all(delivery_attempts)
   end
 
   def beneficiaries_scope

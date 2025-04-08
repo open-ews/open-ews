@@ -6,7 +6,7 @@ class ApplicationRequestSchema < Dry::Validation::Contract
   option :resource, optional: true
   option :account, optional: true
 
-  delegate :success?, :errors, to: :result
+  delegate :success?, :context, :errors, to: :result
 
   register_macro(:phone_number_format) do
     key.failure(text: "is invalid") if key? && !Phony.plausible?(value)

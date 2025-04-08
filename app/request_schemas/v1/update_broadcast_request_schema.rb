@@ -1,6 +1,8 @@
 module V1
   class UpdateBroadcastRequestSchema < JSONAPIRequestSchema
-    STATES = Broadcast::StateMachine.state_definitions.map { _1.name.to_s } - [ "queued", "errored" ]
+    VALID_STATES = [ "running", "stopped" ].freeze
+
+    option :broadcast_status_validator, default: -> { BroadcastStatusValidator.new(resource) }
 
     params do
       required(:data).value(:hash).schema do
@@ -9,7 +11,7 @@ module V1
         required(:attributes).value(:hash).schema do
           optional(:audio_url).filled(:string)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
-          optional(:status).filled(included_in?: STATES)
+          optional(:status).filled(included_in?: VALID_STATES)
           optional(:metadata).value(:hash)
         end
       end
@@ -32,23 +34,19 @@ module V1
       key.failure("cannot be updated after broadcast started")
     end
 
-    attribute_rule(:status) do
+    attribute_rule(:status) do |context:|
       next unless key?
 
-      next if resource.status == value
-      next if value == "running" && (resource.may_transition_to?(:queued) || resource.may_transition_to?(:running))
-      next if value == "stopped" && resource.may_transition_to?(:stopped)
-
-      key.failure("cannot transition from #{resource.status} to #{value}")
+      if broadcast_status_validator.may_transition_to?(value)
+        context[:desired_status] = broadcast_status_validator.transition_to!(value).name
+      else
+        key.failure("cannot transition from #{resource.status} to #{value}")
+      end
     end
 
     def output
       result = super
-
-      if result[:status] == "running" && resource.may_transition_to?(:queued)
-        result[:status] = "queued"
-      end
-
+      result[:status] = context.fetch(:desired_status) if context.key?(:desired_status)
       result
     end
   end
