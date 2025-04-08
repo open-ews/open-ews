@@ -50,7 +50,7 @@ RSpec.describe InitiateDeliveryAttemptJob do
     end
 
     it "handles errors" do
-      account = create(:account)
+      account = create(:account, alert_phone_number: "1294")
       broadcast = create(:broadcast, :with_attached_audio, account:)
       alert = create(:alert, broadcast:)
       delivery_attempt = create(:delivery_attempt, :queued, alert:)
@@ -63,7 +63,8 @@ RSpec.describe InitiateDeliveryAttemptJob do
         initiated_at: nil,
         completed_at: be_present,
         metadata: {
-          "somleng_error_message" => be_present
+          "somleng_error_message" => be_present,
+          "alert_phone_number" => "1294"
         }
       )
       expect(RetryAlertJob).to have_been_enqueued.with(alert)
