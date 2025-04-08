@@ -66,6 +66,7 @@ RSpec.describe InitiateDeliveryAttemptJob do
           "somleng_error_message" => be_present
         }
       )
+      expect(RetryAlertJob).to have_been_enqueued.with(alert)
     end
 
     def stub_somleng_request(response:)
