@@ -100,16 +100,16 @@ RSpec.describe MigrateDeliveryAttempts do
     )
     expect(completed_alert.reload).to have_attributes(
       status: "succeeded",
-      completed_at: last_delivery_attempt_for_completed_alert.updated_at,
-      updated_at: last_delivery_attempt_for_completed_alert.updated_at
+      completed_at: last_delivery_attempt_for_completed_alert.reload.updated_at,
+      updated_at: last_delivery_attempt_for_completed_alert.reload.updated_at
     )
     expect(last_delivery_attempt_for_completed_alert.reload).to have_attributes(
       status: "succeeded"
     )
     expect(failed_alert.reload).to have_attributes(
       status: "failed",
-      completed_at: last_delivery_attempt_for_failed_alert.updated_at,
-      updated_at: last_delivery_attempt_for_failed_alert.updated_at
+      completed_at: last_delivery_attempt_for_failed_alert.reload.updated_at,
+      updated_at: last_delivery_attempt_for_failed_alert.reload.updated_at
     )
     expect(last_delivery_attempt_for_failed_alert.reload).to have_attributes(
       status: "failed"
