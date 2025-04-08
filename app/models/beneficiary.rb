@@ -20,10 +20,6 @@ class Beneficiary < ApplicationRecord
 
   validates :phone_number, presence: true
 
-  delegate :call_flow_logic,
-           to: :account,
-           allow_nil: true
-
   def self.jsonapi_serializer_class
     BeneficiarySerializer
   end

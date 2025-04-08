@@ -1,6 +1,9 @@
 class MigrateDeliveryAttempts
   def call
+    puts "#{Time.current}: Deleting delivery attempts without an alert"
     DeliveryAttempt.where(alert_id: nil).delete_all
+
+    puts "#{Time.current} Updating delivery attempts for where there is a remote call id"
 
     ActiveRecord::Base.connection.execute <<~SQL
       UPDATE delivery_attempts
@@ -20,6 +23,8 @@ class MigrateDeliveryAttempts
       WHERE remote_call_id IS NOT NULL;
     SQL
 
+    puts "#{Time.current} Updating delivery attempts for where there is an error message"
+
     ActiveRecord::Base.connection.execute <<~SQL
       UPDATE delivery_attempts
       SET metadata = jsonb_set(
@@ -30,14 +35,21 @@ class MigrateDeliveryAttempts
       WHERE remote_error_message IS NOT NULL;
     SQL
 
+    puts "#{Time.current} Updating failed delivery attempts"
     DeliveryAttempt.where(status: [ :busy, :canceled, :failed, :not_answered, :expired ]).update_all("queued_at = created_at, completed_at = updated_at, status = 'failed'")
+    puts "#{Time.current} Updating completed delivery attempts"
     DeliveryAttempt.where(status: :completed).update_all("queued_at = created_at, completed_at = updated_at, status = 'succeeded'")
+    puts "#{Time.current} Updating queued delivery attempts"
     DeliveryAttempt.where(status: :queued).where(queued_at: nil).update_all("queued_at = updated_at")
+    puts "#{Time.current} Updating errored delivery attempts"
     DeliveryAttempt.where(status: :errored).where(errored_at: nil).update_all("queued_at = updated_at, errored_at = updated_at")
 
+    puts "#{Time.current} Updating queued alerts"
     Alert.where(status: :queued).update_all(status: :pending)
+    puts "#{Time.current} Updating completed alerts"
     Alert.where(status: :completed).update_all(status: :succeeded)
 
+    puts "#{Time.current} Setting completed_at for completed alerts"
     ActiveRecord::Base.connection.execute <<~SQL
       UPDATE alerts
       SET completed_at = latest_delivery_attempts.completed_at, updated_at = latest_delivery_attempts.completed_at
@@ -49,14 +61,19 @@ class MigrateDeliveryAttempts
       WHERE alerts.id = latest_delivery_attempts.alert_id AND "alerts"."status" IN ('succeeded', 'failed');
     SQL
 
+    puts "#{Time.current} Setting started_at on running or stopped broadcasts"
     Broadcast.where(status: [ :running, :stopped ]).update_all("started_at = created_at")
+    puts "#{Time.current} Deleting delivery attempts from pending broadcasts"
     DeliveryAttempt.joins(:alert).joins(:broadcast).where(broadcasts: { status: :pending }, alerts: { status: :pending }).delete_all
+    puts "#{Time.current} Deleting alerts from pending broadcasts"
     Alert.where(status: :pending).joins(:broadcast).where(broadcasts: { status: :pending }).delete_all
 
+    puts "#{Time.current} Deleting broadcasts with no audio url"
+    Broadcast.where(audio_url: nil).delete_all
+
+    puts "#{Time.current} Attaching audio to and marking broadcasts as complete"
     Broadcast.find_each do |broadcast|
-      if broadcast.audio_url.present? && !broadcast.audio_file.attached?
-        attach_audio(broadcast)
-      end
+      attach_audio(broadcast) unless broadcast.audio_file.attached?
 
       if [ "running", "stopped" ].include?(broadcast.status)
         if broadcast.alerts.none?

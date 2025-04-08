@@ -3,12 +3,13 @@ require Rails.root.join("db/data_migrate/migrate_delivery_attempts")
 
 RSpec.describe MigrateDeliveryAttempts do
   it "migrates delivery attempts" do
-    running_broadcast = create(:broadcast, status: :running)
-    pending_broadcast = create(:broadcast, status: :pending)
-    running_broadcast_with_no_alerts = create(:broadcast, status: :running)
-    stopped_broadcast_with_no_alerts = create(:broadcast, status: :stopped)
-    running_broadcast_with_only_completed_alerts = create(:broadcast, status: :running)
-    stopped_broadcast_with_only_completed_alerts = create(:broadcast, status: :stopped)
+    broadcast_without_audio = create(:broadcast)
+    running_broadcast = create(:broadcast, audio_url: "https://example.com/test.mp3", status: :running)
+    pending_broadcast = create(:broadcast, audio_url: "https://example.com/test.mp3", status: :pending)
+    running_broadcast_with_no_alerts = create(:broadcast, audio_url: "https://example.com/test.mp3", status: :running)
+    stopped_broadcast_with_no_alerts = create(:broadcast, audio_url: "https://example.com/test.mp3", status: :stopped)
+    running_broadcast_with_only_completed_alerts = create(:broadcast, audio_url: "https://example.com/test.mp3", status: :running)
+    stopped_broadcast_with_only_completed_alerts = create(:broadcast, audio_url: "https://example.com/test.mp3", status: :stopped)
     failed_delivery_attempt_from_running_broadcast = create(
       :delivery_attempt, alert: create(:alert, broadcast: running_broadcast_with_only_completed_alerts, status: :failed),
       status: "not_answered"
@@ -46,7 +47,7 @@ RSpec.describe MigrateDeliveryAttempts do
     create(:delivery_attempt, alert: completed_alert, status: :busy)
     create(:delivery_attempt, alert: completed_alert, status: :failed)
     last_delivery_attempt_for_completed_alert = create(:delivery_attempt, alert: completed_alert, status: :completed)
-    failed_alert = create(:alert, status: :failed)
+    failed_alert = create(:alert, broadcast: running_broadcast, status: :failed)
     create(:delivery_attempt, alert: failed_alert, status: :failed)
     last_delivery_attempt_for_failed_alert = create(:delivery_attempt, alert: failed_alert, status: :not_answered)
 
@@ -58,6 +59,7 @@ RSpec.describe MigrateDeliveryAttempts do
 
     MigrateDeliveryAttempts.new.call
 
+    expect(Broadcast.find_by(id: broadcast_without_audio.id)).to be_nil
     expect(completed_delivery_attempt.reload).to have_attributes(
       metadata: {
         "somleng_call_sid" => "call-sid",

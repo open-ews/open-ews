@@ -16,7 +16,6 @@ module API
 
     def permitted_params
       params.permit(
-        :call_flow_logic,
         :audio_url,
         :metadata_merge_mode,
         metadata: {},
@@ -27,6 +26,14 @@ module API
     def prepare_resource_for_create
       resource.status = "queued"
       resource.channel = "voice"
+    end
+
+    def create_resource
+      if resource.audio_url.present?
+        save_resource
+      else
+        resource.errors.add(:audio_url, :blank)
+      end
     end
 
     def show_location(resource)

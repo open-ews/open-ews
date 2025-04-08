@@ -76,7 +76,6 @@ en:
     beneficiary_id: Contact
     broadcast: Callout
     broadcast_id: Callout
-    call_flow_logic: Call flow
     created_at: Created at
     delivery_attempt: Phone call
     delivery_attempt_id: Phone call
