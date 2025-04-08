@@ -1,6 +1,6 @@
 class MigrateDeliveryAttempts
   def call
-    puts "#{Time.current}: Deleting delivery attempts without an alert"
+    puts "#{Time.current} Deleting delivery attempts without an alert"
     DeliveryAttempt.where(alert_id: nil).delete_all
 
     puts "#{Time.current} Updating delivery attempts for where there is a remote call id"
@@ -35,8 +35,10 @@ class MigrateDeliveryAttempts
       WHERE remote_error_message IS NOT NULL;
     SQL
 
-    puts "#{Time.current} Updating errored delivery attempts"
-    DeliveryAttempt.where(status: :errored).where.not(initiated_at: nil).update_all(initiated_at: nil)
+    puts "#{Time.current} Setting initiated_at for delivery attempts with a remote call id"
+    DeliveryAttempt.where(initiated_at: nil).where.not(remote_call_id: nil).update_all("initiated_at = created_at")
+    puts "#{Time.current} Clearing initiated_at for delivery attempts with a remote call id"
+    DeliveryAttempt.where.not(initiated_at: nil).where(remote_call_id: nil).update_all(initiated_at: nil)
     puts "#{Time.current} Updating failed delivery attempts"
     DeliveryAttempt.where(status: [ :errored, :busy, :canceled, :failed, :not_answered, :expired ]).update_all("queued_at = created_at, completed_at = updated_at, status = 'failed'")
     puts "#{Time.current} Updating completed delivery attempts"
