@@ -1,6 +1,6 @@
 module Somleng
   module REST
-    class Api < Twilio::REST::Api
+    class API < Twilio::REST::Api
       def initialize(...)
         super
         @base_url = "https://api.somleng.org"
