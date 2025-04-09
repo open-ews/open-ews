@@ -96,8 +96,8 @@ RSpec.resource "Batch Operations" do
       account = create(:account, :configured_for_broadcasts)
       broadcast = create(
         :broadcast,
+        :pending,
         audio_url: "https://www.example.com/test.mp3",
-        status: :queued,
         account:
       )
       beneficiary = create(:beneficiary, account:, metadata: { "gender" => "f" })

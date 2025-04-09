@@ -2,7 +2,7 @@ module V1
   class UpdateBroadcastRequestSchema < JSONAPIRequestSchema
     VALID_STATES = [ "running", "stopped" ].freeze
 
-    option :broadcast_status_validator, default: -> { BroadcastStatusValidator.new(resource) }
+    option :broadcast_status_validator, default: -> { BroadcastStatusValidator.new(resource.status) }
 
     params do
       required(:data).value(:hash).schema do
@@ -46,7 +46,8 @@ module V1
 
     def output
       result = super
-      result[:status] = context.fetch(:desired_status) if context.key?(:desired_status)
+      result.delete(:status)
+      result[:desired_status] = context.fetch(:desired_status) if context.key?(:desired_status)
       result
     end
   end

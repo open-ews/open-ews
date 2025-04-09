@@ -12,7 +12,7 @@ module API
 
       def create
         validate_request_schema(with: ::V1::BroadcastRequestSchema) do |permitted_params|
-          broadcasts_scope.create!(permitted_params)
+          CreateBroadcast.call(broadcasts_scope, **permitted_params)
         end
       end
 
@@ -23,11 +23,7 @@ module API
           with: ::V1::UpdateBroadcastRequestSchema,
           schema_options: { resource: broadcast },
         ) do |permitted_params|
-          broadcast.update!(permitted_params)
-
-          ExecuteWorkflowJob.perform_later(StartBroadcast.to_s, broadcast) if broadcast.queued?
-
-          broadcast
+          UpdateBroadcast.call(broadcast, **permitted_params)
         end
       end
 

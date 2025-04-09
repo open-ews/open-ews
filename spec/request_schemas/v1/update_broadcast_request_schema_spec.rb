@@ -115,7 +115,7 @@ module V1
       ).output
 
       expect(result).to include(
-        status: :queued,
+        desired_status: :queued,
         audio_url: "http://example.com/sample.mp3"
       )
 
@@ -133,7 +133,7 @@ module V1
       ).output
 
       expect(result).to include(
-        status: :queued,
+        desired_status: :queued,
         audio_url: "http://example.com/sample.mp3"
       )
     end

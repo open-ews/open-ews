@@ -1,10 +1,10 @@
 class BroadcastStatusValidator
-  attr_reader :broadcast
+  attr_reader :current_status
 
   delegate :may_transition_to?, :transition_to!, to: :state_machine
 
   class StateMachine < StateMachine::Machine
-    state :pending, transitions_to: { running: { as: :queued } }
+    state :pending, initial: true, transitions_to: { running: { as: :queued } }
     state :queued
     state :errored, transitions_to: { running: { as: :queued } }
     state :running, transitions_to: :stopped
@@ -12,13 +12,13 @@ class BroadcastStatusValidator
     state :completed
   end
 
-  def initialize(broadcast)
-    @broadcast = broadcast
+  def initialize(current_status = nil)
+    @current_status = current_status
   end
 
   private
 
   def state_machine
-    @state_machine ||= StateMachine.new(broadcast.status)
+    @state_machine ||= StateMachine.new(current_status)
   end
 end
