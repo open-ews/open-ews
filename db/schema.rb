@@ -147,7 +147,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_09_101850) do
 
   create_table "delivery_attempts", force: :cascade do |t|
     t.bigint "alert_id", null: false
-    t.bigint "beneficiary_id", null: false
+    t.bigint "beneficiary_id"
     t.string "status", null: false
     t.string "phone_number", null: false
     t.jsonb "metadata", default: {}, null: false
