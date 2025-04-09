@@ -22,14 +22,14 @@ module V1
 
     attribute_rule(:beneficiary_filter) do
       next unless key?
-      next if resource.not_yet_started?
+      next if broadcast_status_validator.may_transition_to?(:running)
 
       key.failure("cannot be updated after broadcast started")
     end
 
     attribute_rule(:audio_url) do
       next unless key?
-      next if resource.not_yet_started?
+      next if broadcast_status_validator.may_transition_to?(:running)
 
       key.failure("cannot be updated after broadcast started")
     end
