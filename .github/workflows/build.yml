@@ -69,44 +69,44 @@ jobs:
           echo "matrixLength=$(echo $matrix | jq length)" >> $GITHUB_OUTPUT
           echo "packageMatrix={\"platform\":[{\"arch\":\"amd64\",\"runner\":\"ubuntu-latest\"},{\"arch\":\"arm64\",\"runner\":\"ubuntu-24.04-arm\"}],\"include\":$(echo $matrix)}" >> $GITHUB_OUTPUT
 
-      - name: Checkout
-        uses: actions/checkout@v4
+      # - name: Checkout
+      #   uses: actions/checkout@v4
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
+      # - name: Setup Ruby
+      #   uses: ruby/setup-ruby@v1
+      #   with:
+      #     bundler-cache: true
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ".tool-versions"
-          cache: "yarn"
+      # - name: Setup Node
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version-file: ".tool-versions"
+      #     cache: "yarn"
 
-      - name: Setup DB
-        run: bundle exec rails db:create db:schema:load
+      # - name: Setup DB
+      #   run: bundle exec rails db:create db:schema:load
 
-      - name: Run Specs
-        run: |
-          bundle exec rails spec:prepare
-          bundle exec rspec --format RspecApiDocumentation::ApiFormatter
+      # - name: Run Specs
+      #   run: |
+      #     bundle exec rails spec:prepare
+      #     bundle exec rspec --format RspecApiDocumentation::ApiFormatter
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v5
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Prepare Documentation Source
-        if: steps.set-deployment-matrix.outputs.matrixLength > 0
-        run: |
-          cp app/assets/images/open-ews_landscape_logo.png doc/logo.png
+      # - name: Prepare Documentation Source
+      #   if: steps.set-deployment-matrix.outputs.matrixLength > 0
+      #   run: |
+      #     cp app/assets/images/open-ews_landscape_logo.png doc/logo.png
 
-      - name: Upload Documentation Source
-        if: steps.set-deployment-matrix.outputs.matrixLength > 0
-        uses: actions/upload-artifact@v4
-        with:
-          name: documentation_source
-          path: doc/
+      # - name: Upload Documentation Source
+      #   if: steps.set-deployment-matrix.outputs.matrixLength > 0
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: documentation_source
+      #     path: doc/
 
   build_documentation:
     name: Build Documentation
@@ -164,7 +164,7 @@ jobs:
       - name: Invalidate Cache
         run: aws cloudfront create-invalidation --distribution-id E3962XCJFZ0KB1 --paths /${{ matrix.docs_path }}/\*
 
-  build-packages-test:
+  build-packages:
     name: Build Packages
     if: needs.build.outputs.matrixLength > 0
 
@@ -207,194 +207,194 @@ jobs:
       #                 export DOCKER_BUILDKIT=1
       #                 docker build --cache-from ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --tag ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform }} --push .
 
-  build-manifest:
-    name: Build Manifest
-    runs-on: ubuntu-latest
+  # build-manifest:
+  #   name: Build Manifest
+  #   runs-on: ubuntu-latest
 
-    needs:
-      - build
-      - build-packages
+  #   needs:
+  #     - build
+  #     - build-packages
 
-    strategy:
-      matrix: ${{fromJSON(needs.build.outputs.matrix)}}
+  #   strategy:
+  #     matrix: ${{fromJSON(needs.build.outputs.matrix)}}
 
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          role-skip-session-tagging: true
-          role-duration-seconds: 3600
-          aws-region: ap-southeast-1
+  #   steps:
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+  #         role-skip-session-tagging: true
+  #         role-duration-seconds: 3600
+  #         aws-region: ap-southeast-1
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
 
-      - name: Login to ECR
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.ECR_REGISTRY }}
+  #     - name: Login to ECR
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ${{ secrets.ECR_REGISTRY }}
 
-      - name: Build Manifest
-        run: |
-          declare -a platforms=("amd64" "arm64")
+  #     - name: Build Manifest
+  #       run: |
+  #         declare -a platforms=("amd64" "arm64")
 
-          source_images=$(printf "${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
-          docker buildx imagetools create -t ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }} -t ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }} $source_images
+  #         source_images=$(printf "${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
+  #         docker buildx imagetools create -t ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }} -t ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }} $source_images
 
-  # Do this step in Github Actions because pushing to Github from AWS CodeBuild is slow
-  publish_images:
-    name: Publish Images
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
+  # # Do this step in Github Actions because pushing to Github from AWS CodeBuild is slow
+  # publish_images:
+  #   name: Publish Images
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: write
 
-    needs:
-      - build
-      - build-packages
+  #   needs:
+  #     - build
+  #     - build-packages
 
-    strategy:
-      matrix: ${{fromJSON(needs.build.outputs.matrix)}}
+  #   strategy:
+  #     matrix: ${{fromJSON(needs.build.outputs.matrix)}}
 
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          role-skip-session-tagging: true
-          role-duration-seconds: 3600
-          aws-region: ap-southeast-1
+  #   steps:
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+  #         role-skip-session-tagging: true
+  #         role-duration-seconds: 3600
+  #         aws-region: ap-southeast-1
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Login to GitHub Container Registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.repository_owner }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Login to ECR
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.ECR_REGISTRY }}
+  #     - name: Login to ECR
+  #       uses: docker/login-action@v3
+  #       with:
+  #         registry: ${{ secrets.ECR_REGISTRY }}
 
-      - name: Publish Images
-        run: |
-          declare -a platforms=("amd64" "arm64")
+  #     - name: Publish Images
+  #       run: |
+  #         declare -a platforms=("amd64" "arm64")
 
-          for platform in "${platforms[@]}"
-          do
-            docker image pull ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-$platform
-            docker tag ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-$platform ${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }}-$platform
-            docker push ${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }}-$platform
+  #         for platform in "${platforms[@]}"
+  #         do
+  #           docker image pull ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-$platform
+  #           docker tag ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-$platform ${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }}-$platform
+  #           docker push ${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }}-$platform
 
-          done
+  #         done
 
-          source_images=$(printf "${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
-          docker buildx imagetools create -t ${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }} $source_images
+  #         source_images=$(printf "${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
+  #         docker buildx imagetools create -t ${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }} $source_images
 
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
+  # deploy:
+  #   name: Deploy
+  #   runs-on: ubuntu-latest
 
-    needs:
-      - build
-      - build-manifest
+  #   needs:
+  #     - build
+  #     - build-manifest
 
-    strategy:
-      matrix: ${{fromJSON(needs.build.outputs.matrix)}}
+  #   strategy:
+  #     matrix: ${{fromJSON(needs.build.outputs.matrix)}}
 
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          role-skip-session-tagging: true
-          role-duration-seconds: 3600
-          aws-region: ap-southeast-1
+  #   steps:
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+  #         role-skip-session-tagging: true
+  #         role-duration-seconds: 3600
+  #         aws-region: ap-southeast-1
 
-      - name: Get current webserver task definition
-        run: |
-          aws ecs describe-task-definition --task-definition ${{ matrix.identifier }}-webserver --query 'taskDefinition' > task-definition.json
+  #     - name: Get current webserver task definition
+  #       run: |
+  #         aws ecs describe-task-definition --task-definition ${{ matrix.identifier }}-webserver --query 'taskDefinition' > task-definition.json
 
-      - name: Inject new APP image into webserver task definition
-        id: render-webserver-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: app
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
+  #     - name: Inject new APP image into webserver task definition
+  #       id: render-webserver-task-def
+  #       uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #       with:
+  #         task-definition: task-definition.json
+  #         container-name: app
+  #         image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
-      - name: Get current worker task definition
-        run: |
-          aws ecs describe-task-definition --task-definition ${{ matrix.identifier }}-worker --query 'taskDefinition' > task-definition.json
+  #     - name: Get current worker task definition
+  #       run: |
+  #         aws ecs describe-task-definition --task-definition ${{ matrix.identifier }}-worker --query 'taskDefinition' > task-definition.json
 
-      - name: Inject new APP image into worker task definition
-        id: render-worker-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: worker
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
+  #     - name: Inject new APP image into worker task definition
+  #       id: render-worker-task-def
+  #       uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #       with:
+  #         task-definition: task-definition.json
+  #         container-name: worker
+  #         image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
-      - name: Get current worker (Fargate) task definition
-        run: |
-          aws ecs describe-task-definition --task-definition ${{ matrix.identifier }}-worker-fargate --query 'taskDefinition' > task-definition.json
+  #     - name: Get current worker (Fargate) task definition
+  #       run: |
+  #         aws ecs describe-task-definition --task-definition ${{ matrix.identifier }}-worker-fargate --query 'taskDefinition' > task-definition.json
 
-      - name: Inject new APP image into Fargate worker task definition
-        id: render-fargate-worker-task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: worker
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
+  #     - name: Inject new APP image into Fargate worker task definition
+  #       id: render-fargate-worker-task-def
+  #       uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #       with:
+  #         task-definition: task-definition.json
+  #         container-name: worker
+  #         image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
-      - name: Register Fargate task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: ${{ steps.render-fargate-worker-task-def.outputs.task-definition }}
+  #     - name: Register Fargate task definition
+  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+  #       with:
+  #         task-definition: ${{ steps.render-fargate-worker-task-def.outputs.task-definition }}
 
-      - name: Run DB Migrate using Fargate
-        run: |
-          network_configuration=$(aws ecs describe-services --cluster ${{ matrix.ecs_cluster }} --service ${{ matrix.identifier }}-worker --query 'services[0]' | jq 'with_entries(select([.key] | inside(["networkConfiguration"])))')
-          run_task_params=$(echo $network_configuration | jq '.startedBy = "db_migrate_ci" | .cluster = "${{ matrix.ecs_cluster }}" | .launchType = "FARGATE" | .taskDefinition = "${{ matrix.identifier }}-worker-fargate" | .overrides.containerOverrides[0].name = "worker" | .overrides.containerOverrides[0].command = ["bundle", "exec", "rails", "db:migrate"]' | jq -r tostring)
-          aws ecs run-task --cli-input-json $run_task_params
+  #     - name: Run DB Migrate using Fargate
+  #       run: |
+  #         network_configuration=$(aws ecs describe-services --cluster ${{ matrix.ecs_cluster }} --service ${{ matrix.identifier }}-worker --query 'services[0]' | jq 'with_entries(select([.key] | inside(["networkConfiguration"])))')
+  #         run_task_params=$(echo $network_configuration | jq '.startedBy = "db_migrate_ci" | .cluster = "${{ matrix.ecs_cluster }}" | .launchType = "FARGATE" | .taskDefinition = "${{ matrix.identifier }}-worker-fargate" | .overrides.containerOverrides[0].name = "worker" | .overrides.containerOverrides[0].command = ["bundle", "exec", "rails", "db:migrate"]' | jq -r tostring)
+  #         aws ecs run-task --cli-input-json $run_task_params
 
-      - name: Deploy Webserver
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: ${{ steps.render-webserver-task-def.outputs.task-definition }}
-          service: ${{ matrix.identifier }}-webserver
-          cluster: ${{ matrix.ecs_cluster }}
-          wait-for-service-stability: true
+  #     - name: Deploy Webserver
+  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+  #       with:
+  #         task-definition: ${{ steps.render-webserver-task-def.outputs.task-definition }}
+  #         service: ${{ matrix.identifier }}-webserver
+  #         cluster: ${{ matrix.ecs_cluster }}
+  #         wait-for-service-stability: true
 
-      - name: Deploy Worker
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: ${{ steps.render-worker-task-def.outputs.task-definition }}
-          service: ${{ matrix.identifier }}-worker
-          cluster: ${{ matrix.ecs_cluster }}
-          wait-for-service-stability: true
+  #     - name: Deploy Worker
+  #       uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+  #       with:
+  #         task-definition: ${{ steps.render-worker-task-def.outputs.task-definition }}
+  #         service: ${{ matrix.identifier }}-worker
+  #         cluster: ${{ matrix.ecs_cluster }}
+  #         wait-for-service-stability: true
 
-      # Need this step for creating Sentry release
-      - name: Checkout
-        uses: actions/checkout@v4
+  #     # Need this step for creating Sentry release
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      - name: Create Sentry release
-        uses: getsentry/action-release@v3
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: somleng
-          SENTRY_PROJECT: open-ews
-        with:
-          environment: ${{ matrix.environment }}
-          ignore_missing: true
+  #     - name: Create Sentry release
+  #       uses: getsentry/action-release@v3
+  #       env:
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #         SENTRY_ORG: somleng
+  #         SENTRY_PROJECT: open-ews
+  #       with:
+  #         environment: ${{ matrix.environment }}
+  #         ignore_missing: true
