@@ -72,6 +72,32 @@ module DataMigrate
       puts "#{Time.current} Deleting alerts from pending broadcasts"
       Alert.where(status: :pending).joins(:broadcast).where(broadcasts: { status: :pending }).delete_all
 
+      DeliveryAttempt.where(status: :queued, created_at: ..1.day.ago).update_all("status = 'failed', completed_at = updated_at")
+
+      puts "#{Time.current} Update alerts to failed for errored delivery attempts"
+      ActiveRecord::Base.connection.execute <<~SQL
+        UPDATE alerts
+        SET status = 'failed', completed_at = errored_delivery_attempts.completed_at, updated_at = errored_delivery_attempts.completed_at
+        FROM (
+          SELECT last_delivery_attempts.*
+          FROM (SELECT DISTINCT ON (alert_id) * FROM \"delivery_attempts\" ORDER BY alert_id, id DESC) last_delivery_attempts
+          WHERE (last_delivery_attempts.initiated_at IS NULL AND last_delivery_attempts.status = 'failed')
+        ) AS errored_delivery_attempts
+        WHERE alerts.id = errored_delivery_attempts.alert_id AND "alerts"."status" = 'pending';
+      SQL
+
+      puts "#{Time.current} Update alerts to failed for failed delivery attempts long ago"
+      ActiveRecord::Base.connection.execute <<~SQL
+        UPDATE alerts
+        SET status = 'failed', completed_at = failed_delivery_attempts.completed_at, updated_at = failed_delivery_attempts.completed_at
+        FROM (
+          SELECT last_delivery_attempts.*
+          FROM (SELECT DISTINCT ON (alert_id) * FROM \"delivery_attempts\" ORDER BY alert_id, id DESC) last_delivery_attempts
+          WHERE ("last_delivery_attempts"."completed_at" <= '2025-04-08 08:29:45.595090' AND last_delivery_attempts.status IN ('failed'))
+        ) AS failed_delivery_attempts
+        WHERE alerts.id = failed_delivery_attempts.alert_id AND "alerts"."status" = 'pending';
+      SQL
+
       puts "#{Time.current} Marking broadcasts with no alerts as pending"
       Broadcast.where(status: [ :running, :stopped ]).left_joins(:alerts).where(alerts: { id: nil }).update_all(status: :pending, started_at: nil)
 

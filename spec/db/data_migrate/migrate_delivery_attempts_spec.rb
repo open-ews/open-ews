@@ -28,7 +28,7 @@ module DataMigrate
         status: :completed, duration: 5, remote_status: "completed", remote_call_id: "call-sid"
       )
       errored_delivery_attempt = create(
-        :delivery_attempt, alert: create(:alert, broadcast: running_broadcast),
+        :delivery_attempt, alert: create(:alert, status: :queued, broadcast: running_broadcast),
         status: :errored, remote_error_message: "Error message", initiated_at: Time.current
       )
       delivery_attempts_to_be_failed = [ :busy, :canceled, :failed, :not_answered, :expired ].map do |status|
@@ -74,7 +74,11 @@ module DataMigrate
         queued_at: be_present,
         status: "failed",
         completed_at: be_present,
-        initiated_at: nil
+        initiated_at: nil,
+        alert: have_attributes(
+          status: "failed",
+          completed_at: errored_delivery_attempt.reload.completed_at
+        )
       )
       delivery_attempts_to_be_failed.each do |delivery_attempt|
         expect(delivery_attempt.reload).to have_attributes(
@@ -116,6 +120,7 @@ module DataMigrate
         started_at: running_broadcast.created_at
       )
       expect(DeliveryAttempt.find_by(id: delivery_attempt_from_pending_broadcast.id)).to be_nil
+
       expect(Alert.find_by(id: alert_from_pending_broadcast.id)).to be_nil
       expect(running_broadcast_with_no_alerts.reload).to have_attributes(
         status: "pending",
