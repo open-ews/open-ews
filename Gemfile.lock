@@ -546,8 +546,10 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
+    simplecov-cobertura (2.1.0)
+      rexml
+      simplecov (~> 0.19)
     simplecov-html (0.13.1)
-    simplecov-lcov (0.8.0)
     simplecov_json_formatter (0.1.4)
     skylight (6.0.4)
       activesupport (>= 5.2.0)
@@ -661,7 +663,7 @@ DEPENDENCIES
   show_for
   simple_form
   simplecov
-  simplecov-lcov
+  simplecov-cobertura
   skylight
   stimulus-rails
   strip_attributes
