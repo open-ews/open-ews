@@ -5,9 +5,10 @@
 </h1>
 
 ![Build](https://github.com/somleng/open-ews/workflows/Build/badge.svg)
+[![codecov](https://codecov.io/gh/open-ews/open-ews/graph/badge.svg?token=f9n8FQJUcK)](https://codecov.io/gh/open-ews/open-ews)
 [![View performance data on Skylight](https://badges.skylight.io/status/YxPzpqwXsqPx.svg)](https://oss.skylight.io/app/applications/YxPzpqwXsqPx)
 
-The world's first Open Source Emergency Warning System Dissemination Dashboard.
+The world's first Open Source Emergency Warning System Dissemination Platform.
 
 ![somleng-ews-dissemination-dashboard-drawing](https://github.com/user-attachments/assets/cfcb0480-dbaa-48b4-91c1-3b24af3ca985)
 
