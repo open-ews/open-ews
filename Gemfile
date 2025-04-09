@@ -89,7 +89,7 @@ group :test do
   gem "rails-controller-testing"
   gem "selenium-webdriver"
   gem "shoulda-matchers"
-  gem "simplecov", require: false
-  gem "simplecov-lcov", require: false
+  gem "simplecov"
+  gem "simplecov-cobertura"
   gem "webmock"
 end
