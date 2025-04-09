@@ -13,7 +13,7 @@ class DownloadBroadcastAudioFile < ApplicationWorkflow
       io: URI.open(uri),
       filename: File.basename(uri)
     )
-  rescue OpenURI::HTTPError, URI::InvalidURIError, Errno::ECONNREFUSED, Socket::ResolutionError
+  rescue OpenURI::HTTPError, URI::InvalidURIError, Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Socket::ResolutionError
     raise(Error, "Unable to download audio file")
   end
 end

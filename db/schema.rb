@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_07_041312) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_09_101850) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -146,21 +146,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_041312) do
   end
 
   create_table "delivery_attempts", force: :cascade do |t|
-    t.bigint "alert_id"
+    t.bigint "alert_id", null: false
     t.bigint "beneficiary_id"
     t.string "status", null: false
     t.string "phone_number", null: false
-    t.string "remote_call_id"
-    t.string "remote_status"
-    t.text "remote_error_message"
     t.jsonb "metadata", default: {}, null: false
     t.datetime "initiated_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.integer "duration", default: 0, null: false
     t.integer "lock_version", default: 0, null: false
     t.datetime "status_update_queued_at", precision: nil
-    t.bigint "broadcast_id"
+    t.bigint "broadcast_id", null: false
     t.datetime "queued_at"
     t.datetime "completed_at"
     t.index ["alert_id"], name: "index_delivery_attempts_on_alert_id"
@@ -170,7 +166,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_07_041312) do
     t.index ["created_at"], name: "index_delivery_attempts_on_created_at"
     t.index ["initiated_at"], name: "index_delivery_attempts_on_initiated_at"
     t.index ["phone_number"], name: "index_delivery_attempts_on_phone_number"
-    t.index ["remote_call_id"], name: "index_delivery_attempts_on_remote_call_id", unique: true
     t.index ["status"], name: "index_delivery_attempts_on_status"
     t.index ["status_update_queued_at"], name: "index_delivery_attempts_on_status_update_queued_at"
   end

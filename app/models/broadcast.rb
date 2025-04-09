@@ -57,10 +57,6 @@ class Broadcast < ApplicationRecord
     end
   end
 
-  def not_yet_started?
-    pending? || queued? || errored?
-  end
-
   private
 
   def state_machine
