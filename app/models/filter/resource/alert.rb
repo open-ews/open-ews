@@ -9,7 +9,6 @@ module Filter
 
       def filter_params
         result = params.slice(
-          :call_flow_logic,
           :callout_id,
           :broadcast_id,
           :beneficiary_id,

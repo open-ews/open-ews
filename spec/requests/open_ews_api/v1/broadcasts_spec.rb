@@ -64,14 +64,22 @@ RSpec.resource "Broadcasts"  do
     with_options scope: %i[data attributes] do
       parameter(
         :channel, "Must be one of #{Broadcast.channel.values.map { |t| "`#{t}`" }.join(", ")}.",
-        required: true
+        required: true,
+        method: :_disabled
       )
       parameter(
         :audio_url, "A publicly available URL which contains the broadcast message.",
-        required: true
+        required: true,
+        method: :_disabled
       )
       parameter(
-        :metadata, "Set of key-value pairs that you can attach to the broadcast. This can be useful for storing additional information about the broadcast in a structured format."
+        :status,
+        "If supplied, must be `running`. This will create the broadcast and start it immediately.",
+        method: :_disabled
+      )
+      parameter(
+        :metadata, "Set of key-value pairs that you can attach to the broadcast. This can be useful for storing additional information about the broadcast in a structured format.",
+        method: :_disabled
       )
     end
 
@@ -81,30 +89,35 @@ RSpec.resource "Broadcasts"  do
       end
     end
 
-    example "Create a broadcast" do
+    example "Create and start a broadcast" do
       account = create(:account)
 
+      stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
       set_authorization_header_for(account)
-      do_request(
-        data: {
-          type: :broadcast,
-          attributes: {
-            channel: "voice",
-            audio_url: "https://www.example.com/sample.mp3",
-            beneficiary_filter: {
-              gender: { eq: "M" },
-              "address.iso_region_code" => { eq: "KH-1" }
+
+      perform_enqueued_jobs do
+        do_request(
+          data: {
+            type: :broadcast,
+            attributes: {
+              channel: "voice",
+              audio_url: "https://www.example.com/test.mp3",
+              status: :running,
+              beneficiary_filter: {
+                gender: { eq: "M" },
+                "address.iso_region_code" => { eq: "KH-1" }
+              }
             }
           }
-        }
-      )
+        )
+      end
 
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
         "channel" => "voice",
-        "status" => "pending",
-        "audio_url" => "https://www.example.com/sample.mp3",
+        "status" => "queued",
+        "audio_url" => "https://www.example.com/test.mp3",
         "beneficiary_filter" => {
           "gender" => { "eq" => "M" },
           "address.iso_region_code" => { "eq" => "KH-1" }
@@ -152,7 +165,7 @@ RSpec.resource "Broadcasts"  do
       )
       parameter(
         :status,
-        "Update the status of a broadcast. Must be one of #{V1::UpdateBroadcastRequestSchema::STATES.map { "`#{_1}`" }.join(", ")}.",
+        "Update the status of a broadcast. Must be one of #{V1::UpdateBroadcastRequestSchema::VALID_STATES.map { "`#{_1}`" }.join(", ")}.",
         method: :_disabled
       )
       parameter(
@@ -167,7 +180,7 @@ RSpec.resource "Broadcasts"  do
     end
 
     example "Update a broadcast" do
-      account = create(:account)
+      account = create(:account, :configured_for_broadcasts)
       _male_beneficiary = create(:beneficiary, account:, gender: "M")
       female_beneficiary = create(:beneficiary, account:, gender: "F")
       broadcast = create(

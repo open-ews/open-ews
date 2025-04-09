@@ -1,19 +1,21 @@
 module Somleng
   class Client
-    attr_reader :provider, :somleng_rest_client
+    class RestError < StandardError; end
 
-    delegate :api, to: :somleng_rest_client
+    attr_reader :rest_client
 
-    def initialize(provider:, somleng_rest_client: nil)
-      @provider = provider
-      @somleng_rest_client = somleng_rest_client || default_rest_client
+    def initialize(**options)
+      @rest_client = options.fetch(:rest_client) { Somleng::REST::Client.new(options.fetch(:account_sid), options.fetch(:auth_token)) }
     end
 
-    def default_rest_client
-      client = Somleng::REST::Client.new(provider.account_sid, provider.auth_token)
-      client.api_host = provider.api_host
-      client.api_base_url = provider.api_base_url
-      client
+    def create_call(...)
+      rest_client.calls.create(...)
+    rescue Twilio::REST::RestError => e
+      raise RestError.new(e.message)
+    end
+
+    def fetch_call(call_sid)
+      rest_client.calls(call_sid).fetch
     end
   end
 end

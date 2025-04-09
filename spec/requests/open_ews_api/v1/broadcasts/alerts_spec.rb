@@ -11,7 +11,7 @@ RSpec.resource "Alerts"  do
     example "List all alerts for a broadcast" do
       account = create(:account)
       broadcast = create(:broadcast, account:)
-      alerts = create_list(:alert, 3, broadcast: broadcast)
+      alerts = create_list(:alert, 3, broadcast:)
       _other_alert = create(:alert)
 
       set_authorization_header_for(account)
@@ -22,20 +22,19 @@ RSpec.resource "Alerts"  do
       expect(json_response.fetch("data").pluck("id")).to match_array(alerts.map(&:id).map(&:to_s))
     end
 
-
     example "List all alerts for a broadcast with filters", document: false do
       account = create(:account)
       broadcast = create(:broadcast, account:)
-      completed_alerts = create_list(:alert, 2, status: :completed, broadcast: broadcast)
-      _queued_alerts = create(:alert, status: :queued, broadcast: broadcast)
-      _other_alert = create(:alert)
+      succeeded_alerts = create_list(:alert, 2, :succeeded, broadcast: broadcast)
+      _pending_alerts = create(:alert, :pending, broadcast:)
+      _other_alert = create(:alert, broadcast: create(:broadcast, account:))
 
       set_authorization_header_for(account)
-      do_request(broadcast_id: broadcast.id, filter: { status: { eq: "completed" } })
+      do_request(broadcast_id: broadcast.id, filter: { status: { eq: "succeeded" } })
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("alert")
-      expect(json_response.fetch("data").pluck("id")).to match_array(completed_alerts.map(&:id).map(&:to_s))
+      expect(json_response.fetch("data").pluck("id")).to match_array(succeeded_alerts.map(&:id).map(&:to_s))
     end
 
     example "List all alerts for a broadcast with beneficiary filters", document: false do
@@ -145,16 +144,16 @@ RSpec.resource "Alerts"  do
       male3_beneficiary = create(:beneficiary, account:, gender: "M")
       female1_beneficiary = create(:beneficiary, account:, gender: "F")
       female2_beneficiary = create(:beneficiary, account:, gender: "F")
-      create(:alert, broadcast:, status: :completed, beneficiary: male1_beneficiary)
-      create(:alert, broadcast:, status: :completed, beneficiary: male2_beneficiary)
-      create(:alert, broadcast:, status: :failed, beneficiary: male3_beneficiary)
-      create(:alert, broadcast:, status: :completed, beneficiary: female1_beneficiary)
-      create(:alert, broadcast:, status: :completed, beneficiary: female2_beneficiary)
+      create(:alert, :succeeded, broadcast:, beneficiary: male1_beneficiary)
+      create(:alert, :succeeded, broadcast:, beneficiary: male2_beneficiary)
+      create(:alert, :failed, broadcast:, beneficiary: male3_beneficiary)
+      create(:alert, :succeeded, broadcast:, beneficiary: female1_beneficiary)
+      create(:alert, :succeeded, broadcast:, beneficiary: female2_beneficiary)
 
       set_authorization_header_for(account)
       do_request(
         broadcast_id: broadcast.id,
-        filter: { "status": { eq: "completed" } },
+        filter: { "status": { eq: "succeeded" } },
         group_by: [
           "beneficiary.gender"
         ]

@@ -46,6 +46,7 @@ module V1
       running_broadcast = create(:broadcast, status: :running)
       stopped_broadcast = create(:broadcast, status: :stopped)
       completed_broadcast = create(:broadcast, status: :completed)
+      queued_broadcast = create(:broadcast, status: :queued)
 
       expect(
         validate_schema(input_params: { data: { attributes: { status: "foobar" } } }, options: { resource: pending_broadcast })
@@ -53,10 +54,6 @@ module V1
 
       expect(
         validate_schema(input_params: { data: { attributes: {} } }, options: { resource: pending_broadcast })
-      ).to have_valid_field(:data, :attributes, :status)
-
-      expect(
-        validate_schema(input_params: { data: { attributes: { status: "pending" } } }, options: { resource: pending_broadcast })
       ).to have_valid_field(:data, :attributes, :status)
 
       expect(
@@ -68,16 +65,8 @@ module V1
       ).to have_valid_field(:data, :attributes, :status)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { status: "completed" } } }, options: { resource: running_broadcast })
-      ).to have_valid_field(:data, :attributes, :status)
-
-      expect(
         validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: stopped_broadcast })
       ).to have_valid_field(:data, :attributes, :status)
-
-      expect(
-        validate_schema(input_params: { data: { attributes: { status: "completed" } } }, options: { resource: stopped_broadcast })
-      ).not_to have_valid_field(:data, :attributes, :status)
 
       expect(
         validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: completed_broadcast })
@@ -104,7 +93,7 @@ module V1
       ).not_to have_valid_field(:data, :attributes, :status)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { status: "completed" } } }, options: { resource: errored_broadcast })
+        validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: queued_broadcast })
       ).not_to have_valid_field(:data, :attributes, :status)
     end
 
@@ -126,7 +115,7 @@ module V1
       ).output
 
       expect(result).to include(
-        status: "queued",
+        desired_status: :queued,
         audio_url: "http://example.com/sample.mp3"
       )
 
@@ -144,7 +133,7 @@ module V1
       ).output
 
       expect(result).to include(
-        status: "queued",
+        desired_status: :queued,
         audio_url: "http://example.com/sample.mp3"
       )
     end

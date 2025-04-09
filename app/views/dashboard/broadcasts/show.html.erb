@@ -8,29 +8,9 @@
     path: dashboard_broadcast_path(resource),
   ) %>
 
-  <% if resource.may_start? %>
-    <%= button_to(dashboard_broadcast_callout_events_path(resource, event: :start), class: "btn btn-outline-success", form_class: "d-inline", form: { data: { turbo_confim: translate(:"titles.actions.data_confirm")}}) do %>
-      <%= translate(:"titles.broadcasts.start") %>
-    <% end %>
-  <% end %>
-  <% if resource.may_stop? %>
-    <%= button_to(dashboard_broadcast_callout_events_path(resource, event: :stop), class: "btn btn-outline-danger", form_class: "d-inline", form: { data: { turbo_confim: translate(:"titles.actions.data_confirm")}}) do %>
-      <%= translate(:"titles.broadcasts.stop") %>
-    <% end %>
-  <% end %>
-  <% if resource.may_resume? %>
-    <%= button_to(dashboard_broadcast_callout_events_path(resource, event: :resume), class: "btn btn-outline-success", form_class: "d-inline", form: { data: { turbo_confim: translate(:"titles.actions.data_confirm")}}) do %>
-      <%= translate(:"titles.broadcasts.resume") %>
-    <% end %>
-  <% end %>
-
   <%= render "shared/resource_related_links" do %>
-    <%= related_link_to t(:"titles.batch_operations.index"),
-    dashboard_broadcast_batch_operations_path(resource) %>
     <%= related_link_to t(:"titles.alerts.index"),
     dashboard_broadcast_alerts_path(resource) %>
-    <%= related_link_to t(:"titles.delivery_attempts.index"),
-    dashboard_broadcast_delivery_attempts_path(resource) %>
   <% end %>
 <% end %>
 
@@ -48,18 +28,7 @@
         <%= link_to(resource.audio_url, resource.audio_url) %>
       <% end %>
     <% end %>
-    <%= f.attribute :call_flow_logic,
-                value:
-                  translate(
-                    "simple_form.options.defaults.call_flow_logic.#{resource.call_flow_logic}",
-                  ) %>
     <%= f.attribute :created_at, value: local_time(resource.created_at) %>
-    <%= f.attribute :created_by do %>
-      <% if resource.created_by_id.present? %>
-        <%= link_to(resource.created_by_id, dashboard_user_path(resource.created_by_id)) %>
-      <% end %>
-    <% end %>
-    <%= f.attribute :settings, value: json_attribute_value(resource.settings) %>
     <%= f.attribute :metadata, value: json_attribute_value(resource.metadata) %>
   <% end %>
 

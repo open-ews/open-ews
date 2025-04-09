@@ -7,7 +7,6 @@ km:
         alerts_still_to_be_called: Participants still to be called
         busy_calls: Busy calls
         completed_calls: Completed calls
-        errored_calls: Errored calls
         failed_calls: Failed calls
         not_answered_calls: Not answered calls
       key_value_field:
@@ -76,7 +75,6 @@ km:
     beneficiary_id: សមាជិកទំនាក់ទំនង
     broadcast: សេចក្ដីប្រកាស
     broadcast_id: សេចក្ដីប្រកាស
-    call_flow_logic: វិធីសាស្រ្តការហៅចេញ
     created_at: បង្កើតនៅពេល
     delivery_attempt: កំណត់ត្រាការហៅចេញ
     delivery_attempt_id: កំណត់ត្រាការហៅចេញ

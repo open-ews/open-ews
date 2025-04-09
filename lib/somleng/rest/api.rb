@@ -1,11 +1,10 @@
 module Somleng
   module REST
     class API < Twilio::REST::Api
-      def initialize(twilio)
+      def initialize(...)
         super
-
-        @host = twilio.api_host if twilio.api_host
-        @base_url = twilio.api_base_url if twilio.api_base_url
+        @base_url = "https://api.somleng.org"
+        @host = "api.somleng.org"
       end
     end
   end

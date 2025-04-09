@@ -2,10 +2,9 @@ module BatchOperation
   class CalloutPopulation < Base
     include CustomRoutesHelper["batch_operations"]
 
-    belongs_to :broadcast
+    class Error < StandardError; end
 
-    has_many :alerts, foreign_key: :callout_population_id, dependent: :restrict_with_error
-    has_many :beneficiaries, through: :alerts
+    belongs_to :broadcast
 
     store_accessor :parameters,
                    :contact_filter_params,
@@ -22,7 +21,22 @@ module BatchOperation
       transaction do
         create_alerts
         create_delivery_attempts
+        start_broadcast
       end
+    end
+
+    def run!
+      ApplicationRecord.transaction do
+        download_audio_file unless broadcast.audio_file.attached?
+
+        create_alerts
+        create_delivery_attempts
+
+        broadcast.error_message = nil
+        broadcast.transition_to!(:running, touch: :started_at)
+      end
+    rescue DownloadBroadcastAudioFile::Error, Error => e
+      broadcast.mark_as_errored!(e.message)
     end
 
     def contact_filter_metadata
@@ -35,14 +49,18 @@ module BatchOperation
       self.contact_filter_params = { "metadata" => attributes }
     end
 
-  # NOTE: This is for backward compatibility until we moved to the new API
-  def as_json(*)
-    result = super
-    result["callout_id"] = result.delete("broadcast_id")
-    result
-  end
+    # NOTE: This is for backward compatibility until we moved to the new API
+    def as_json(*)
+      result = super
+      result["callout_id"] = result.delete("broadcast_id")
+      result
+    end
 
     private
+
+    def download_audio_file
+      DownloadBroadcastAudioFile.call(broadcast)
+    end
 
     def beneficiaries_scope
       Filter::Resource::Beneficiary.new(
@@ -52,38 +70,35 @@ module BatchOperation
     end
 
     def create_alerts
-      alerts = beneficiaries_scope.find_each.map do |beneficiary|
+      beneficiaries = beneficiaries_scope
+      raise Error, "Account not configured" unless broadcast.account.configured_for_broadcasts?(channel: broadcast.channel)
+      raise Error, "No beneficiaries match the filters" if beneficiaries.none?
+
+      alerts = beneficiaries.find_each.map do |beneficiary|
         {
+          broadcast_id: broadcast.id,
           beneficiary_id: beneficiary.id,
           phone_number: beneficiary.phone_number,
-          broadcast_id: broadcast.id,
-          callout_population_id: id,
-          call_flow_logic: broadcast.call_flow_logic,
+          delivery_attempts_count: 1,
           status: :queued
         }
       end
-      Alert.upsert_all(alerts) if alerts.any?
+
+      Alert.upsert_all(alerts)
     end
 
     def create_delivery_attempts
-      delivery_attempts = alerts.includes(:delivery_attempts).find_each.map do |alert|
-        next if alert.delivery_attempts.any?
-
+      delivery_attempts = broadcast.alerts.find_each.map do |alert|
         {
-          account_id: broadcast.account_id,
-          broadcast_id:,
+          broadcast_id: broadcast.id,
           beneficiary_id: alert.beneficiary_id,
-          call_flow_logic: alert.call_flow_logic,
           alert_id: alert.id,
           phone_number: alert.phone_number,
           status: :created
         }
       end
 
-      if delivery_attempts.any?
-        DeliveryAttempt.upsert_all(delivery_attempts)
-        Alert.where(id: delivery_attempts.pluck(:alert_id)).update_all(delivery_attempts_count: 1)
-      end
+      DeliveryAttempt.upsert_all(delivery_attempts)
     end
 
     def batch_operation_account_settings_param

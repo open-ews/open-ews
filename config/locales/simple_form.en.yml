@@ -11,9 +11,6 @@ en:
   simple_form:
     error_notification:
       default_message: 'Please review the problems below:'
-    labels:
-      account:
-        call_flow_logic: Default call flow logic
     'no': 'No'
     options:
       access_token:
@@ -40,10 +37,6 @@ en:
         platform_provider_name:
           somleng: Somleng
           twilio: Twilio
-      defaults:
-        call_flow_logic:
-          CallFlowLogic::EWSLaosRegistration: Laos Early Warning System Registration
-          CallFlowLogic::PlayMessage: Play Message
     required:
       mark: "*"
       text: required

@@ -10,28 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_28_073428) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_07_041312) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pg_stat_statements"
 
   create_table "accounts", force: :cascade do |t|
-    t.jsonb "metadata", default: {}, null: false
-    t.jsonb "settings", default: {}, null: false
-    t.citext "twilio_account_sid"
     t.citext "somleng_account_sid"
-    t.string "twilio_auth_token"
     t.string "somleng_auth_token"
-    t.integer "permissions", default: 0, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.string "call_flow_logic", null: false
-    t.string "platform_provider_name"
-    t.string "somleng_api_host"
-    t.string "somleng_api_base_url"
+    t.string "name", null: false
+    t.integer "delivery_attempt_queue_limit", null: false
+    t.string "alert_phone_number"
+    t.integer "max_delivery_attempts_for_alert", null: false
     t.index ["somleng_account_sid"], name: "index_accounts_on_somleng_account_sid", unique: true
-    t.index ["twilio_account_sid"], name: "index_accounts_on_twilio_account_sid", unique: true
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -65,18 +59,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_073428) do
   create_table "alerts", force: :cascade do |t|
     t.bigint "broadcast_id", null: false
     t.bigint "beneficiary_id"
-    t.bigint "callout_population_id"
-    t.string "call_flow_logic", null: false
     t.jsonb "metadata", default: {}, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "delivery_attempts_count", default: 0, null: false
     t.string "phone_number", null: false
     t.string "status", null: false
+    t.datetime "completed_at"
     t.index ["beneficiary_id"], name: "index_alerts_on_beneficiary_id"
     t.index ["broadcast_id", "beneficiary_id"], name: "index_alerts_on_broadcast_id_and_beneficiary_id", unique: true
     t.index ["broadcast_id"], name: "index_alerts_on_broadcast_id"
-    t.index ["callout_population_id"], name: "index_alerts_on_callout_population_id"
+    t.index ["completed_at"], name: "index_alerts_on_completed_at"
     t.index ["status"], name: "index_alerts_on_status"
   end
 
@@ -138,19 +131,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_073428) do
 
   create_table "broadcasts", force: :cascade do |t|
     t.string "status", null: false
-    t.string "call_flow_logic", null: false
     t.jsonb "metadata", default: {}, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "account_id", null: false
     t.string "audio_url"
-    t.jsonb "settings", default: {}, null: false
-    t.bigint "created_by_id"
     t.string "channel", null: false
     t.jsonb "beneficiary_filter", default: {}, null: false
     t.string "error_message"
+    t.datetime "started_at"
+    t.datetime "completed_at"
     t.index ["account_id"], name: "index_broadcasts_on_account_id"
-    t.index ["created_by_id"], name: "index_broadcasts_on_created_by_id"
     t.index ["status"], name: "index_broadcasts_on_status"
   end
 
@@ -161,31 +152,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_073428) do
     t.string "phone_number", null: false
     t.string "remote_call_id"
     t.string "remote_status"
-    t.string "remote_direction"
     t.text "remote_error_message"
     t.jsonb "metadata", default: {}, null: false
-    t.jsonb "remote_response", default: {}, null: false
-    t.jsonb "remote_queue_response", default: {}, null: false
-    t.string "call_flow_logic", null: false
-    t.datetime "remotely_queued_at", precision: nil
+    t.datetime "initiated_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "duration", default: 0, null: false
     t.integer "lock_version", default: 0, null: false
-    t.bigint "account_id", null: false
-    t.datetime "remote_status_fetch_queued_at", precision: nil
+    t.datetime "status_update_queued_at", precision: nil
     t.bigint "broadcast_id"
-    t.index ["account_id"], name: "index_delivery_attempts_on_account_id"
+    t.datetime "queued_at"
+    t.datetime "completed_at"
     t.index ["alert_id"], name: "index_delivery_attempts_on_alert_id"
     t.index ["beneficiary_id"], name: "index_delivery_attempts_on_beneficiary_id"
     t.index ["broadcast_id", "status"], name: "index_delivery_attempts_on_broadcast_id_and_status"
     t.index ["broadcast_id"], name: "index_delivery_attempts_on_broadcast_id"
     t.index ["created_at"], name: "index_delivery_attempts_on_created_at"
+    t.index ["initiated_at"], name: "index_delivery_attempts_on_initiated_at"
     t.index ["phone_number"], name: "index_delivery_attempts_on_phone_number"
     t.index ["remote_call_id"], name: "index_delivery_attempts_on_remote_call_id", unique: true
-    t.index ["remote_status_fetch_queued_at"], name: "index_delivery_attempts_on_remote_status_fetch_queued_at"
-    t.index ["remotely_queued_at"], name: "index_delivery_attempts_on_remotely_queued_at"
     t.index ["status"], name: "index_delivery_attempts_on_status"
+    t.index ["status_update_queued_at"], name: "index_delivery_attempts_on_status_update_queued_at"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -247,34 +234,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_073428) do
     t.index ["database", "captured_at"], name: "index_pghero_query_stats_on_database_and_captured_at"
   end
 
-  create_table "recordings", force: :cascade do |t|
-    t.bigint "delivery_attempt_id", null: false
-    t.bigint "account_id", null: false
-    t.bigint "beneficiary_id", null: false
-    t.string "external_recording_id", null: false
-    t.string "external_recording_url", null: false
-    t.integer "duration", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_recordings_on_account_id"
-    t.index ["beneficiary_id"], name: "index_recordings_on_beneficiary_id"
-    t.index ["created_at"], name: "index_recordings_on_created_at"
-    t.index ["delivery_attempt_id"], name: "index_recordings_on_delivery_attempt_id"
-  end
-
-  create_table "remote_phone_call_events", force: :cascade do |t|
-    t.bigint "delivery_attempt_id", null: false
-    t.jsonb "details", default: {}, null: false
-    t.jsonb "metadata", default: {}, null: false
-    t.string "remote_call_id", null: false
-    t.string "remote_direction", null: false
-    t.string "call_flow_logic", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.integer "call_duration", default: 0, null: false
-    t.index ["delivery_attempt_id"], name: "index_remote_phone_call_events_on_delivery_attempt_id"
-  end
-
   create_table "users", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.jsonb "metadata", default: {}, null: false
@@ -315,7 +274,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_073428) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "alerts", "batch_operations", column: "callout_population_id"
   add_foreign_key "alerts", "beneficiaries", on_delete: :nullify
   add_foreign_key "alerts", "broadcasts"
   add_foreign_key "batch_operations", "accounts"
@@ -323,8 +281,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_073428) do
   add_foreign_key "beneficiaries", "accounts"
   add_foreign_key "beneficiary_addresses", "beneficiaries", on_delete: :cascade
   add_foreign_key "broadcasts", "accounts"
-  add_foreign_key "broadcasts", "users", column: "created_by_id"
-  add_foreign_key "delivery_attempts", "accounts"
   add_foreign_key "delivery_attempts", "alerts"
   add_foreign_key "delivery_attempts", "beneficiaries", on_delete: :nullify
   add_foreign_key "delivery_attempts", "broadcasts"
@@ -334,10 +290,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_28_073428) do
   add_foreign_key "oauth_access_tokens", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_applications", "accounts", column: "owner_id"
-  add_foreign_key "recordings", "accounts"
-  add_foreign_key "recordings", "beneficiaries"
-  add_foreign_key "recordings", "delivery_attempts"
-  add_foreign_key "remote_phone_call_events", "delivery_attempts"
   add_foreign_key "users", "accounts"
   add_foreign_key "users", "users", column: "invited_by_id"
 end
