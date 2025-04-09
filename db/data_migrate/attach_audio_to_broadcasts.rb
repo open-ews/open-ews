@@ -1,7 +1,8 @@
 module DataMigrate
   class AttachAudioToBroadcasts
     def call
-      Broadcast.where.not(audio_url: nil).where.not(audio_url: "").find_each do |broadcast|
+      Broadcast.where(audio_url: "").update_all(audio_url: nil)
+      Broadcast.where.not(audio_url: nil).find_each do |broadcast|
         puts "#{Time.current} attaching #{broadcast.audio_url} to #{broadcast.id} from #{broadcast.created_at}"
         if broadcast.audio_file.attached?
           puts "Skipping, already attached"
