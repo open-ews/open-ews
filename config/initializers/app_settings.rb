@@ -4,10 +4,6 @@ class AppSettings
       config.fetch(...)
     end
 
-    def dig(...)
-      config.dig(...)
-    end
-
     def [](...)
       config.[](...)
     end
