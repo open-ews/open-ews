@@ -16,7 +16,7 @@ The [EWS4All](https://www.un.org/en/climatechange/early-warnings-for-all) initia
 
 > Every person on Earth to be protected by early warning systems within by 2027.
 
-We will help to achieve this goal building and [certifying](https://www.digitalpublicgoods.net/submission-guide) OpenEWS - the world's first Open Source Emergency Warning System Dissemination Dashboard.
+We will help to achieve this goal building and [certifying](https://www.digitalpublicgoods.net/submission-guide) OpenEWS - the world's first Open Source Emergency Warning System Dissemination Platform.
 
 OpenEWS is intended to be used by Governments and/or NGOs acting on behalf of Governments to disseminate warning messages to beneficiaries in case of a natural disaster or other public health emergency.
 
