@@ -5,7 +5,7 @@ module API
     private
 
     def create_resource
-      if resource.broadcast.pending?
+      if resource.broadcast&.pending?
         save_resource
       else
         resource.errors.add(:broadcast, "is not initialized")
