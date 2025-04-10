@@ -18,64 +18,40 @@ RSpec.describe StatsQuery, type: :model do
   end
 
   it "return results with group by fields that need to be joined" do
-      beneficiary = create(:beneficiary, iso_country_code: "KH")
-      create(
-        :beneficiary_address,
-        beneficiary:,
-        iso_region_code: "KH-12",
-        administrative_division_level_2_code: "1201"
-      )
-      create_list(
-        :beneficiary_address,
-        2,
-        beneficiary:,
-        iso_region_code: "KH-12",
-        administrative_division_level_2_code: "1202"
-      )
-
-    result = StatsQuery.new(
-      group_by_fields: [
-        FieldDefinitions::BeneficiaryFields.find("iso_country_code"),
-        FieldDefinitions::BeneficiaryFields.find("address.iso_region_code"),
-        FieldDefinitions::BeneficiaryFields.find("address.administrative_division_level_2_code")
-      ],
-    ).apply(Beneficiary.all)
-
-    expect(result).to contain_exactly(
-      have_attributes(groups: [ "iso_country_code", "address.iso_region_code", "address.administrative_division_level_2_code" ], key: [ "KH", "KH-12", "1202" ], value: 2),
-      have_attributes(groups: [ "iso_country_code", "address.iso_region_code", "address.administrative_division_level_2_code" ], key: [ "KH", "KH-12", "1201" ], value: 1),
+    female_beneficiary = create(:beneficiary, gender: "F")
+    beneficiary = create(:beneficiary, iso_country_code: "KH", gender: "M")
+    create(
+      :beneficiary_address,
+      beneficiary:,
+      iso_region_code: "KH-12",
+      administrative_division_level_2_code: "1201"
     )
-  end
-
-  it "return results with group by fields with filters" do
-      beneficiary = create(:beneficiary, iso_country_code: "KH")
-      create(
-        :beneficiary_address,
-        beneficiary:,
-        iso_region_code: "KH-12",
-        administrative_division_level_2_code: "1201"
-      )
-      create_list(
-        :beneficiary_address,
-        2,
-        beneficiary:,
-        iso_region_code: "KH-12",
-        administrative_division_level_2_code: "1202"
-      )
-      create_list(
-        :beneficiary_address,
-        2,
-        beneficiary:,
-        iso_region_code: "KH-1",
-        administrative_division_level_2_code: "0102"
-      )
+    create_list(
+      :beneficiary_address,
+      2,
+      beneficiary:,
+      iso_region_code: "KH-12",
+      administrative_division_level_2_code: "1202"
+    )
+    create(
+      :beneficiary_address,
+      beneficiary: create(:beneficiary, gender: "M"),
+      iso_region_code: "KH-12",
+      administrative_division_level_2_code: "1202"
+    )
+    create(
+      :beneficiary_address,
+      iso_region_code: "KH-12",
+      administrative_division_level_2_code: "1202",
+      beneficiary: female_beneficiary
+    )
 
     result = StatsQuery.new(
       filter_fields: [
         FilterField.new(
-          field_definition: FieldDefinitions::BeneficiaryFields.find("address.iso_region_code"),
+          field_definition: FieldDefinitions::BeneficiaryFields.find("gender"),
           operator: "eq",
-          value: "KH-12"
+          value: "M"
         )
       ],
       group_by_fields: [

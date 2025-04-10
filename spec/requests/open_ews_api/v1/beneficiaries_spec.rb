@@ -10,17 +10,21 @@ RSpec.resource "Beneficiaries"  do
 
     example "List all active beneficiaries" do
       account = create(:account)
-      account_beneficiary = create(:beneficiary, account:)
+      beneficiary = create(:beneficiary, account:)
       _account_disabled_beneficiary = create(:beneficiary, :disabled, account:)
       _other_account_beneficiary = create(:beneficiary)
 
       set_authorization_header_for(account)
-      do_request(filter: { status: { eq: "active" } })
+      do_request(
+        filter: {
+          status: { eq: "active" }
+        }
+      )
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
-      expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-        account_beneficiary.id.to_s
+      expect(json_response.fetch("data").pluck("id")).to match_array(
+        beneficiary.id.to_s
       )
     end
 
@@ -330,6 +334,12 @@ RSpec.resource "Beneficiaries"  do
         iso_region_code: "KH-12",
         administrative_division_level_2_code: "1202"
       )
+      create(
+        :beneficiary_address,
+        beneficiary: create(:beneficiary, account:, gender: "M"),
+        iso_region_code: "KH-12",
+        administrative_division_level_2_code: "1202"
+      )
       create_list(
         :beneficiary_address,
         2,
@@ -380,13 +390,16 @@ RSpec.resource "Beneficiaries"  do
       expect(response_body).to match_jsonapi_resource_collection_schema("stat", pagination: false)
       results = json_response.fetch("data").map { |data| data.dig("attributes", "result") }
 
-      expect(results).to contain_exactly({
-            "gender" => "M",
-            "value" => 2
-          }, {
-            "gender" => "F",
-            "value" => 1
-          })
+      expect(results).to contain_exactly(
+        {
+          "gender" => "M",
+          "value" => 2
+        },
+        {
+          "gender" => "F",
+          "value" => 1
+        }
+      )
     end
 
     example "Handles invalid requests", document: false do

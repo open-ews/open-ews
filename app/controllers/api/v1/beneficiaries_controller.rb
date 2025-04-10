@@ -1,8 +1,10 @@
 module API
   module V1
     class BeneficiariesController < BaseController
+      SUPPORTED_RELATIONSHIPS = [ :addresses ].freeze
+
       def index
-        apply_filters(beneficiaries_scope, with: BeneficiaryFilter)
+        apply_filters(apply_includes(beneficiaries_scope), with: BeneficiaryFilter)
       end
 
       def show
@@ -42,6 +44,14 @@ module API
       end
 
       private
+
+      def apply_includes(scope)
+        scope.includes(includes_params)
+      end
+
+      def includes_params
+        request.query_parameters.fetch(:include, "").split(",").select { SUPPORTED_RELATIONSHIPS.include?(_1.to_sym) }
+      end
 
       def beneficiaries_scope
         current_account.beneficiaries
