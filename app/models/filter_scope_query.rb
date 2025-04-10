@@ -7,7 +7,7 @@ class FilterScopeQuery
   end
 
   def apply
-    scope.joins(joins_with).where(conditions)
+    scope.left_joins(joins_with).where(conditions).distinct
   end
 
   private
