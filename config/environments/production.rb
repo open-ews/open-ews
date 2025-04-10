@@ -100,11 +100,8 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-  Rails.application.routes.default_url_options[:host] =
-    Rails.configuration.app_settings.fetch(:default_url_host)
-
   config.action_mailer.default_url_options = {
-    host: Rails.configuration.app_settings.fetch(:default_url_host),
+    host: Rails.configuration.app_settings.fetch(:app_url_host),
     protocol: "https"
   }
 

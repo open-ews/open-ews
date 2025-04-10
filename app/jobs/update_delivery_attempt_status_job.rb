@@ -1,5 +1,5 @@
 class UpdateDeliveryAttemptStatusJob < ApplicationJob
-  queue_as Rails.configuration.app_settings.fetch(:aws_sqs_low_priority_queue_name)
+  queue_as AppSettings.fetch(:aws_sqs_low_priority_queue_name)
 
   class Handler
     attr_reader :delivery_attempt, :somleng_client

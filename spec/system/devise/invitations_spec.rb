@@ -14,9 +14,7 @@ RSpec.describe "User Invitations" do
     end
 
     expect(page).to have_text("An invitation email has been sent to bopha@somleng.com.")
-    expect(last_email_sent.from).to match_array(
-      [Rails.configuration.app_settings.fetch(:mailer_sender)]
-    )
+    expect(last_email_sent.from).to contain_exactly("no-reply@somleng.org")
     expect(current_path).to eq(dashboard_users_path)
   end
 

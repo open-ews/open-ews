@@ -3,7 +3,7 @@ class AudioURL
 
   def initialize(options)
     @key = options.fetch(:key)
-    @host = options.fetch(:host) { Rails.configuration.app_settings.fetch(:audio_host) }
+    @host = options.fetch(:host) { AppSettings.fetch(:audio_host) }
   end
 
   def url
