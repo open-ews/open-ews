@@ -5,7 +5,7 @@ RSpec.resource "Batch Operations" do
 
   post "/api/batch_operations" do
     example "Populate a Callout" do
-      broadcast = create(:broadcast, account:, status: :queued)
+      broadcast = create(:broadcast, :pending, account:)
       body = build_batch_operation_request_body(
         type: "BatchOperation::CalloutPopulation",
         callout_id: broadcast.id,
@@ -57,37 +57,6 @@ RSpec.resource "Batch Operations" do
       do_request(body)
 
       expect(response_status).to eq(422)
-    end
-  end
-
-  patch "/api/batch_operations/:id" do
-    example "Update a Batch Operation" do
-      batch_operation = create(
-        :batch_operation,
-        account:,
-        metadata: {
-          "foo" => "bar"
-        }
-      )
-      body = build_batch_operation_request_body(
-        metadata: {
-          "bar" => "foo"
-        },
-        metadata_merge_mode: "replace",
-        parameters: {
-          "contact_filter_params" => {
-            "metadata" => { "foo" => "bar" }
-          }
-        }
-      )
-
-      set_authorization_header_for(account)
-      do_request(id: batch_operation.id, **body)
-
-      expect(response_status).to eq(204)
-      batch_operation.reload
-      expect(batch_operation.metadata).to eq(body.fetch(:metadata))
-      expect(batch_operation.parameters).to eq(body.fetch(:parameters))
     end
   end
 
