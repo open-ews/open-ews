@@ -4,6 +4,14 @@ module API
 
     private
 
+    def create_resource
+      if resource.broadcast.pending?
+        save_resource
+      else
+        resource.errors.add(:broadcast, "is not initialized")
+      end
+    end
+
     def filter_class
       Filter::Resource::BatchOperation
     end

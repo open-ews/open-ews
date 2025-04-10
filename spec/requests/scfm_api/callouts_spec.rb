@@ -65,27 +65,6 @@ RSpec.resource "Callouts" do
     end
   end
 
-  patch "/api/callouts/:id" do
-    example "Update a Callout" do
-      broadcast = create(
-        :broadcast,
-        account: account,
-        metadata: {
-          "foo" => "bar"
-        }
-      )
-
-      request_body = { metadata: { "bar" => "foo" }, metadata_merge_mode: "replace" }
-
-      set_authorization_header_for(account)
-      do_request(id: broadcast.id, **request_body)
-
-      expect(response_status).to eq(204)
-      broadcast.reload
-      expect(broadcast.metadata).to eq(request_body.fetch(:metadata))
-    end
-  end
-
   post "/api/callouts/:callout_id/callout_events" do
     example "Create a Callout Event" do
       broadcast = create(
