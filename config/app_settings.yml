@@ -1,7 +1,9 @@
 default: &default
   time_zone: "UTC"
-  mailer_sender: "support@somleng.org"
-  asset_url_host: "https://cdn-scfm.somleng.org"
+  mailer_sender: <%= ENV.fetch("MAILER_SENDER", "no-reply@somleng.org") %>
+  app_url_host: <%= ENV.fetch("APP_URL_HOST", "https://app.open-ews.org") %>
+  asset_url_host: <%= ENV.fetch("ASSET_URL_HOST", "https://cdn-scfm.somleng.org") %>
+  api_subdomain: <%= ENV.fetch("API_SUBDOMAIN", "api") %>
   aws_sqs_high_priority_queue_name: <%= ENV.fetch("AWS_SQS_HIGH_PRIORITY_QUEUE_NAME", "high-priority") %>
   aws_sqs_default_queue_name: <%= ENV.fetch("AWS_SQS_DEFAULT_QUEUE_NAME", "default") %>
   aws_sqs_low_priority_queue_name: <%= ENV.fetch("AWS_SQS_LOW_PRIORITY_QUEUE_NAME", "low-priority") %>
@@ -15,20 +17,20 @@ default: &default
 
 production: &production
   <<: *default
-  default_url_host: "https://scfm.somleng.org"
   sentry_dsn: "<%= Rails.application.credentials.sentry_dsn %>"
   admin_password: "<%= ENV.fetch("ADMIN_PASSWORD") { Rails.application.credentials.admin_password } %>"
   appsignal_push_api_key: "<%= Rails.application.credentials.appsignal_push_api_key %>"
 
 staging:
   <<: *production
-  default_url_host: "https://scfm-staging.somleng.org"
+  app_url_host: "https://app-staging.open-ews.org"
   asset_url_host: "https://cdn-scfm-staging.somleng.org"
+  api_subdomain: "api-staging"
 
 development: &development
   <<: *default
-  default_url_host: "http://localhost:3000"
+  app_url_host: "http://localhost:3000"
 
 test:
   <<: *development
-  default_url_host: "https://app.open-ews.org"
+  app_url_host: "https://app.open-ews.org"

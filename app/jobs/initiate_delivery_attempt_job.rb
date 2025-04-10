@@ -2,9 +2,7 @@ class InitiateDeliveryAttemptJob < ApplicationJob
   class Handler
     class AudioNotAttachedError < StandardError; end
 
-    include Rails.application.routes.url_helpers
-
-    attr_reader :delivery_attempt, :somleng_client, :twiml_builder
+    attr_reader :delivery_attempt, :somleng_client, :twiml_builder, :status_callback_url
 
     def initialize(delivery_attempt, **options)
       @delivery_attempt = delivery_attempt
@@ -15,6 +13,12 @@ class InitiateDeliveryAttemptJob < ApplicationJob
         )
       end
       @twiml_builder = options.fetch(:twiml_builder) { TwiMLBuilder.new }
+      @status_callback_url = options.fetch(:status_callback_url) do
+        Rails.application.routes.url_helpers.somleng_webhooks_delivery_attempt_call_status_callbacks_url(
+          delivery_attempt,
+          subdomain: AppSettings.fetch(:api_subdomain)
+        )
+      end
     end
 
     def perform
@@ -46,7 +50,7 @@ class InitiateDeliveryAttemptJob < ApplicationJob
         to: delivery_attempt.phone_number,
         from: alert_phone_number,
         twiml: build_twiml,
-        status_callback: somleng_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt, protocol: :https, subdomain: :api),
+        status_callback: status_callback_url
       )
     end
 
