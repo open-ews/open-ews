@@ -22,6 +22,7 @@ module V1
             optional(:administrative_division_level_4_name).maybe(:string, max_size?: 255)
           end
         end
+
         optional(:relationships).value(:hash).schema do
           optional(:group).value(:hash).schema do
             required(:data).value(:hash).schema do

@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.resource "JSONAPI", document: false  do
   get "/v1/beneficiaries/:id" do
-    it "supports include related resources" do
+    it "supports include for related resources" do
       beneficiary = create(:beneficiary)
       create(:beneficiary_address, beneficiary:)
 
