@@ -31,7 +31,7 @@ RSpec.resource "Beneficiaries"  do
     example "Filter beneficiaries by phone number", document: false do
       account = create(:account)
       beneficiary = create(:beneficiary, account:, phone_number: "855715100888")
-      other_beneficiary = create(:beneficiary, account:)
+      create(:beneficiary, account:)
 
       set_authorization_header_for(account)
       do_request(filter: { phone_number: { eq: "+855 715 100 888" } })
@@ -41,6 +41,21 @@ RSpec.resource "Beneficiaries"  do
       expect(json_response.fetch("data").pluck("id")).to contain_exactly(
         beneficiary.id.to_s
       )
+    end
+
+    example "Includes relationships", document: false do
+      account = create(:account)
+      beneficiary = create(:beneficiary, account:)
+      create(:beneficiary_address, beneficiary:)
+      create(:beneficiary_group_membership, beneficiary:, beneficiary_group: create(:beneficiary_group, account:))
+
+      set_authorization_header_for(account)
+      do_request(include: "addresses, groups")
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
+      expect(json_response.dig("included", 0).to_json).to match_api_response_schema("beneficiary_address")
+      expect(json_response.dig("included", 1).to_json).to match_api_response_schema("beneficiary_group")
     end
   end
 

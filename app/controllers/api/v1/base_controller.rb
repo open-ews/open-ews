@@ -8,14 +8,14 @@ module API
       before_action :doorkeeper_authorize!
 
       rescue_from StatsQuery::TooManyResultsError do
-        render json: { "errors": [ { "title":  "Too many results" } ] }, status: :bad_request
+        render json: { errors: [ { title:  "Too many results" } ] }, status: :bad_request
       end
 
       rescue_from JSONAPI::Serializer::UnsupportedIncludeError do |exception|
         render json: {
-          "errors": [
+          errors: [
             {
-              "title":  "`#{exception.include_item}` is not in the list of supported relationships",
+              title:  "`#{exception.include_item}` is not in the list of supported relationships",
               source: { pointer: "/include" }
             }
           ]
@@ -32,10 +32,10 @@ module API
         respond_with(:api, :v1, resource, **options)
       end
 
-      def validate_request_schema(with:, **options, &block)
+      def validate_request_schema(with:, **options)
         schema_options = options.delete(:schema_options) || {}
-        schema_options[:account] = current_account
         input_params = options.delete(:input_params) || request.request_parameters
+        schema_options[:account] = current_account
 
         schema = with.new(input_params:, options: schema_options)
 
@@ -68,6 +68,10 @@ module API
 
       def respond_with_errors(object, **)
         respond_with(object, responder: InvalidRequestSchemaResponder, **)
+      end
+
+      def include_parameter(only:)
+        JSONAPI::IncludeParameterParser.new.parse(request.query_parameters).select { Array(only).include?(_1.to_sym) }
       end
     end
   end

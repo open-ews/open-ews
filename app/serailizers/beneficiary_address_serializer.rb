@@ -1,6 +1,4 @@
 class BeneficiaryAddressSerializer < ResourceSerializer
-  set_type :address
-
   attributes :iso_region_code,
     :administrative_division_level_2_code,
     :administrative_division_level_2_name,
