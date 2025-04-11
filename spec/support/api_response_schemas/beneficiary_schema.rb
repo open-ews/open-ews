@@ -13,5 +13,15 @@ module APIResponseSchema
       required(:created_at).filled(:str?)
       required(:updated_at).filled(:str?)
     end
+
+    required(:relationships).schema do
+      required(:addresses).schema do
+        required(:data).value(:array)
+      end
+
+      required(:groups).schema do
+        required(:data).value(:array)
+      end
+    end
   end
 end

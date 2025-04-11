@@ -1,7 +1,7 @@
 module APIResponseSchema
   BeneficiaryAddressSchema = Dry::Schema.JSON do
     required(:id).filled(:str?)
-    required(:type).filled(eql?: "address")
+    required(:type).filled(eql?: "beneficiary_address")
 
     required(:attributes).schema do
       required(:iso_region_code).filled(:str?)
