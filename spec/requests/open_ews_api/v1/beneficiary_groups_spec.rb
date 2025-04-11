@@ -1,6 +1,12 @@
 require "rails_helper"
 
 RSpec.resource "Beneficiary Groups"  do
+  explanation <<~HEREDOC
+    The Beneficiary Groups endpoint allows developers to programmatically organize beneficiaries into logical groups for targeted message delivery.
+    This is particularly useful when building workflows that require sending alerts to a specific group of beneficiaries, such as response teams.
+    Through the API, you can create, list, update, and delete groups, as well as manage their relationships with individual beneficiaries.
+  HEREDOC
+
   get "/v1/beneficiary_groups" do
     with_options scope: :filter do
       FieldDefinitions::BeneficiaryGroupFields.each do |field|

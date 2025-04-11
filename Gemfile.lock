@@ -12,13 +12,6 @@ GIT
     api-pagination (6.0.0)
 
 GIT
-  remote: https://github.com/numerex/bitmask_attributes.git
-  revision: 0bb0d9993aa6cb3114daa0c118c2bc70a032847c
-  specs:
-    bitmask_attributes (1.0.0)
-      activerecord (>= 3.1)
-
-GIT
   remote: https://github.com/rails/record_tag_helper.git
   revision: c7a941b4c321060ab9877e31bed139687d4018b9
   specs:
@@ -26,9 +19,8 @@ GIT
       actionview (>= 5)
 
 GIT
-  remote: https://github.com/samnang/rspec_api_documentation.git
-  revision: f5d5ab73ae25b14fde4ca96cacab8a5030237940
-  branch: fix-supporting-rack-3
+  remote: https://github.com/zipmark/rspec_api_documentation.git
+  revision: d32bf17932a379052e8bb7540fc29ce7e72712ae
   specs:
     rspec_api_documentation (6.1.0)
       activesupport (>= 3.0.0)
@@ -612,7 +604,6 @@ DEPENDENCIES
   aws-sdk-rails
   aws-sdk-s3
   aws-sdk-sqs
-  bitmask_attributes!
   bootsnap
   brakeman
   capybara

@@ -26,7 +26,6 @@ gem "aws-sdk-rails"
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sqs"
 gem "aws-actionmailer-ses"
-gem "bitmask_attributes", github: "numerex/bitmask_attributes"
 gem "bootsnap", require: false
 gem "cocoon"
 gem "cssbundling-rails"
@@ -69,8 +68,7 @@ group :development, :test do
   gem "brakeman", require: false
   gem "i18n-tasks"
   gem "pry"
-  # Support Rack 3.1 https://github.com/zipmark/rspec_api_documentation/issues/548
-  gem "rspec_api_documentation", github: "samnang/rspec_api_documentation", branch: "fix-supporting-rack-3"
+  gem "rspec_api_documentation", github: "zipmark/rspec_api_documentation"
   gem "rspec-rails"
 end
 
