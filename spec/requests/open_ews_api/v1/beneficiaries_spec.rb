@@ -63,67 +63,96 @@ RSpec.resource "Beneficiaries"  do
     with_options scope: %i[data] do
       parameter(
         :type, "Must be `beneficiary`",
-        required: true
+        required: true,
+        method: :_disabled
       )
     end
     with_options scope: %i[data attributes] do
       parameter(
         :phone_number, "Phone number in E.164 format.",
-        required: true
+        required: true,
+        method: :_disabled
       )
       parameter(
         :iso_country_code, "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the beneficiary.",
-        required: true
+        required: true,
+        method: :_disabled
       )
       parameter(
         :language_code, "The [ISO ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
-        required: false
+        required: false,
+        method: :_disabled
       )
       parameter(
         :gender, "Must be one of `M` or `F`.",
-        required: false
+        required: false,
+        method: :_disabled
       )
       parameter(
         :disability_status, "If supplied, must be one of #{Beneficiary.disability_status.values.map { |t| "`#{t}`" }.join(", ")}}.",
-        required: false
+        required: false,
+        method: :_disabled
       )
       parameter(
         :date_of_birth, "Date of birth in `YYYY-MM-DD` format.",
-        required: false
+        required: false,
+        method: :_disabled
       )
       parameter(
         :metadata, "Set of key-value pairs that you can attach to the beneficiary. This can be useful for storing additional information about the beneficiary in a structured format.",
-        required: false
+        required: false,
+        method: :_disabled
       )
     end
     with_options scope: %i[data attributes address] do
       parameter(
         :iso_region_code, "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address",
-        required: false
+        required: false,
+        method: :_disabled
+
       )
       parameter(
         :administrative_division_level_2_code, "The second-level administrative subdivision code of the address (e.g. district code)",
-        required: false
+        required: false,
+        method: :_disabled
+
       )
       parameter(
         :administrative_division_level_2_name, "The second-level administrative subdivision name of the address (e.g. district name)",
-        required: false
+        required: false,
+        method: :_disabled
       )
       parameter(
         :administrative_division_level_3_code, "The third-level administrative subdivision code of the address (e.g. commune code)",
-        required: false
+        required: false,
+        method: :_disabled
       )
       parameter(
         :administrative_division_level_3_name, "The third-level administrative subdivision name of the address (e.g. commune name)",
-        required: false
+        required: false,
+        method: :_disabled
       )
       parameter(
         :administrative_division_level_4_code, "The forth-level administrative subdivision code of the address (e.g. village code)",
-        required: false
+        required: false,
+        method: :_disabled
       )
       parameter(
         :administrative_division_level_4_name, "The forth-level administrative subdivision name of the address (e.g. village name)",
-        required: false
+        required: false,
+        method: :_disabled
+      )
+    end
+    with_options scope: %i[data relationships group data] do
+      parameter(
+        :type, "Must be `beneficiary_group`",
+        required: false,
+        method: :_disabled
+      )
+      parameter(
+        :id, "The unique ID of the beneficiary group",
+        required: false,
+        method: :_disabled
       )
     end
 
