@@ -14,7 +14,7 @@ RSpec.resource "Beneficiary Groups"  do
       end
     end
 
-    example "List all beneficiary groups" do
+    example "List all groups" do
       account = create(:account)
       group = create(:beneficiary_group, account:, name: "My Group")
       other_group = create(:beneficiary_group, account:, name: "Other Group")
@@ -31,7 +31,7 @@ RSpec.resource "Beneficiary Groups"  do
       )
     end
 
-    example "Filter a beneficiary group", document: false do
+    example "Filter groups", document: false do
       account = create(:account)
       group = create(:beneficiary_group, account:, name: "My Group")
       create(:beneficiary_group, account:, name: "Other Group")
@@ -48,7 +48,7 @@ RSpec.resource "Beneficiary Groups"  do
   end
 
   get "/v1/beneficiary_groups/:id" do
-    example "Fetch a beneficiary group" do
+    example "Fetch a group" do
       group = create(:beneficiary_group)
 
       set_authorization_header_for(group.account)
@@ -76,7 +76,7 @@ RSpec.resource "Beneficiary Groups"  do
       )
     end
 
-    example "Create a beneficiary group" do
+    example "Create a group" do
       account = create(:account)
 
       set_authorization_header_for(account)
@@ -96,7 +96,7 @@ RSpec.resource "Beneficiary Groups"  do
       )
     end
 
-    example "Fail to create a beneficiary group", document: false do
+    example "Fail to create a group", document: false do
       account = create(:account)
 
       set_authorization_header_for(account)
@@ -140,7 +140,7 @@ RSpec.resource "Beneficiary Groups"  do
       )
     end
 
-    example "Update a beneficiary group" do
+    example "Update a group" do
       group = create(:beneficiary_group)
 
       set_authorization_header_for(group.account)
@@ -164,7 +164,7 @@ RSpec.resource "Beneficiary Groups"  do
   end
 
   delete "/v1/beneficiary_groups/:id" do
-    example "Delete a beneficiary" do
+    example "Delete a group" do
       account = create(:account)
       group = create(:beneficiary_group, account:)
 
@@ -284,7 +284,7 @@ RSpec.resource "Beneficiary Groups"  do
       expect(json_response.dig("data", "id")).to eq(beneficiary.id.to_s)
     end
 
-    example "Fail to add a beneficiary to a group" do
+    example "Fail to add a beneficiary to a group", document: false do
       account = create(:account)
       group = create(:beneficiary_group, account:)
       beneficiary = create(:beneficiary)
@@ -342,7 +342,7 @@ RSpec.resource "Beneficiary Groups"  do
       required: true
     )
 
-    example "Fetch stats for a group of beneficiaries" do
+    example "Fetch stats for group members" do
       explanation <<~HEREDOC
         This endpoint provides statistical insights into the beneficiaries within the given group.
 
