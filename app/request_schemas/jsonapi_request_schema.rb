@@ -14,13 +14,13 @@ class JSONAPIRequestSchema < ApplicationRequestSchema
   end
 
   rule(:data) do
-    if resource.present?
-      resource_id = values.fetch(:data)[:id]
-      if resource_id.blank?
-        key("data.id").failure("is missing")
-      elsif resource_id != resource.id
-        key("data.id").failure("is invalid")
-      end
+    next if resource.blank?
+
+    resource_id = values.fetch(:data)[:id]
+    if resource_id.blank?
+      key("data.id").failure("is missing")
+    elsif resource_id != resource.id
+      key("data.id").failure("is invalid")
     end
   end
 

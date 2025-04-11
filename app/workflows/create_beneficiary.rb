@@ -1,9 +1,10 @@
-class CreateBeneficiaryWithAddress < ApplicationWorkflow
+class CreateBeneficiary < ApplicationWorkflow
   attr_reader :beneficiary_params, :address_params
 
-  def initialize(params)
-    @beneficiary_params = params.except(:address)
-    @address_params = params.fetch(:address, {})
+  def initialize(address: {}, **params)
+    super()
+    @address_params = address
+    @beneficiary_params = params
   end
 
   def call

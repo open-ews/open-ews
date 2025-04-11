@@ -22,6 +22,14 @@ module V1
             optional(:administrative_division_level_4_name).maybe(:string, max_size?: 255)
           end
         end
+        optional(:relationships).value(:hash).schema do
+          optional(:group).value(:hash).schema do
+            required(:data).value(:hash).schema do
+              required(:type).filled(:str?, eql?: "beneficiary_group")
+              required(:id).filled(:int?)
+            end
+          end
+        end
       end
     end
 
@@ -41,6 +49,18 @@ module V1
       validator.errors.each do |error|
         key([ :data, :attributes, :address, error.key ]).failure(text: error.message)
       end
+    end
+
+    rule(data: { relationships: { group: { data: :id } } }) do
+      key_path = [ :data, :relationships, :group, :data, :id ]
+
+      next key(key_path).failure(text: "is invalid") unless account.beneficiary_groups.exists?(id: value)
+    end
+
+    def output
+      result = super
+      result[:group_ids] = Array(result.delete(:group))
+      result
     end
   end
 end

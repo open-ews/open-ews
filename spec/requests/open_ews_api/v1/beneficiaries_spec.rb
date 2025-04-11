@@ -139,9 +139,36 @@ RSpec.resource "Beneficiaries"  do
             language_code: "khm",
             gender: "M",
             date_of_birth: "1990-01-01",
-            metadata: { "foo" => "bar" },
+            metadata: { "my_custom_property" => "my_custom_property_value" },
             iso_country_code: "KH",
-            disability_status: "normal",
+            disability_status: "normal"
+          }
+        }
+      )
+
+      expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("beneficiary")
+      expect(jsonapi_response_attributes).to include(
+        "phone_number" => "85510999999",
+        "language_code" => "khm",
+        "gender" => "M",
+        "date_of_birth" => "1990-01-01",
+        "metadata" => { "my_custom_property" => "my_custom_property_value" },
+        "iso_country_code" => "KH",
+        "disability_status" => "normal",
+      )
+    end
+
+    example "Create a beneficiary with an address" do
+      account = create(:account)
+
+      set_authorization_header_for(account)
+      do_request(
+        data: {
+          type: :beneficiary,
+          attributes: {
+            phone_number: "+85510999999",
+            iso_country_code: "KH",
             address: {
               iso_region_code: "KH-1",
               administrative_division_level_2_code: "0102",
@@ -159,12 +186,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
         "phone_number" => "85510999999",
-        "language_code" => "khm",
-        "gender" => "M",
-        "date_of_birth" => "1990-01-01",
-        "metadata" => { "foo" => "bar" },
-        "iso_country_code" => "KH",
-        "disability_status" => "normal",
+        "iso_country_code" => "KH"
       )
 
       expect(json_response.dig("included", 0).to_json).to match_api_response_schema("beneficiary_address")
@@ -177,6 +199,32 @@ RSpec.resource "Beneficiaries"  do
         "administrative_division_level_4_code" => "01020101",
         "administrative_division_level_4_name" => "Ou Thum"
       )
+    end
+
+    example "Create a beneficiary and add them to a group" do
+      account = create(:account)
+      beneficiary_group = create(:beneficiary_group, account:)
+
+      set_authorization_header_for(account)
+
+      do_request(
+        data: {
+          type: :beneficiary,
+          attributes: {
+            phone_number: "+85510999999",
+            iso_country_code: "KH"
+          },
+          relationships: {
+            group: {
+              data: { type: "beneficiary_group", id: beneficiary_group.id }
+            }
+          }
+        }
+      )
+
+      expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("beneficiary")
+      expect(json_response.dig("included", 0).to_json).to match_api_response_schema("beneficiary_group")
     end
 
     example "Fail to create a beneficiary", document: false do

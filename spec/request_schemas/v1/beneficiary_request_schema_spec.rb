@@ -134,6 +134,8 @@ module V1
       ).to have_valid_field(:data, :attributes, :metadata)
     end
 
+    xit "validates the group"
+
     def validate_schema(input_params:, options: {})
       BeneficiaryRequestSchema.new(
         input_params:,
