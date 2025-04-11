@@ -4,12 +4,11 @@ module API
       SUPPORTED_RELATIONSHIPS = [ :addresses ].freeze
 
       def index
-        apply_filters(apply_includes(beneficiaries_scope), with: BeneficiaryFilter)
+        apply_filters(apply_includes(scope), with: BeneficiaryFilter)
       end
 
       def show
-        beneficiary = beneficiaries_scope.find(params[:id])
-        respond_with_resource(beneficiary)
+        respond_with_resource(scope.find(params[:id]))
       end
 
       def create
@@ -25,7 +24,7 @@ module API
       end
 
       def update
-        beneficiary = beneficiaries_scope.find(params[:id])
+        beneficiary = scope.find(params[:id])
 
         validate_request_schema(
           with: ::V1::UpdateBeneficiaryRequestSchema,
@@ -37,7 +36,7 @@ module API
       end
 
       def destroy
-        beneficiary = beneficiaries_scope.find(params[:id])
+        beneficiary = scope.find(params[:id]).destroy!
         beneficiary.destroy!
 
         head :no_content
@@ -53,7 +52,7 @@ module API
         request.query_parameters.fetch(:include, "").split(",").select { SUPPORTED_RELATIONSHIPS.include?(_1.to_sym) }
       end
 
-      def beneficiaries_scope
+      def scope
         current_account.beneficiaries
       end
     end

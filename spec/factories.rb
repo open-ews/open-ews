@@ -48,6 +48,16 @@ FactoryBot.define do
     end
   end
 
+  factory :beneficiary_group do
+    account
+    name { "My Group" }
+  end
+
+  factory :beneficiary_group_membership do
+    beneficiary_group
+    beneficiary {  association :beneficiary, account: beneficiary_group.account }
+  end
+
   factory :batch_operation_base, class: "BatchOperation::Base" do
     account
 

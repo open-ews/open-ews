@@ -8,13 +8,13 @@ module API
             serializer_class: StatSerializer,
             **serializer_options
           ) do |permitted_params|
-              StatsQuery.new(permitted_params).apply(beneficiaries_scope)
+              StatsQuery.new(permitted_params).apply(scope)
           end
         end
 
         private
 
-        def beneficiaries_scope
+        def scope
           current_account.beneficiaries
         end
 
