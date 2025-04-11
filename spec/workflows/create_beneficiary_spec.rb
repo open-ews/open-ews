@@ -1,10 +1,25 @@
 require "rails_helper"
 
-RSpec.describe CreateBeneficiaryWithAddress do
+RSpec.describe CreateBeneficiary do
+  it "creates a beneficiary" do
+    account = create(:account)
+
+    beneficiary = CreateBeneficiary.call(
+      account:,
+      phone_number: "+85510999999",
+      iso_country_code: "KH",
+    )
+
+    expect(beneficiary).to have_attributes(
+      phone_number: "85510999999",
+      iso_country_code: "KH"
+    )
+  end
+
   it "creates a beneficiary with an address" do
     account = create(:account)
 
-    beneficiary = CreateBeneficiaryWithAddress.new(
+    beneficiary = CreateBeneficiary.call(
       account:,
       phone_number: "+85510999999",
       language_code: "km",
@@ -16,7 +31,7 @@ RSpec.describe CreateBeneficiaryWithAddress do
         iso_region_code: "KH-1",
         administrative_division_level_2_code: "0112"
       }
-    ).call
+    )
 
     expect(beneficiary).to have_attributes(
       phone_number: "85510999999",
@@ -32,18 +47,19 @@ RSpec.describe CreateBeneficiaryWithAddress do
     )
   end
 
-  it "creates a beneficiary without an address" do
+  it "creates a beneficiary and adds it to a group" do
     account = create(:account)
+    beneficiary_group = create(:beneficiary_group, account:)
 
-    beneficiary = CreateBeneficiaryWithAddress.new(
+    beneficiary = CreateBeneficiary.call(
       account:,
       phone_number: "+85510999999",
       iso_country_code: "KH",
-    ).call
+      group_ids: [ beneficiary_group.id ]
+    )
 
     expect(beneficiary).to have_attributes(
-      phone_number: "85510999999",
-      iso_country_code: "KH"
+      groups: contain_exactly(beneficiary_group)
     )
   end
 end

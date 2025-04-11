@@ -13,15 +13,9 @@ class JSONAPIRequestSchema < ApplicationRequestSchema
     JSONAPIRequestSchemaErrorsSerializer
   end
 
-  rule(:data) do
-    if resource.present?
-      resource_id = values.fetch(:data)[:id]
-      if resource_id.blank?
-        key("data.id").failure("is missing")
-      elsif resource_id != resource.id
-        key("data.id").failure("is invalid")
-      end
-    end
+  rule(data: :id) do
+    next unless key?
+    key([ :data, :id ]).failure("is invalid") if value != resource.id
   end
 
   def output

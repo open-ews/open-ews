@@ -12,13 +12,10 @@ module API
       def create
         validate_request_schema(
           with: ::V1::BeneficiaryRequestSchema,
-          serializer_options: { include: [ :addresses ] }
+          serializer_options: { include: [ :addresses, :groups ] }
         ) do |permitted_params|
-            CreateBeneficiaryWithAddress.new(
-              account: current_account,
-              **permitted_params
-            ).call
-          end
+          CreateBeneficiary.call(account: current_account, **permitted_params)
+        end
       end
 
       def update
