@@ -42,7 +42,9 @@ Rails.application.routes.draw do
     end
 
     resources :beneficiary_groups, only: [ :index, :show, :create, :update, :destroy ] do
-      resources :members, controller: "beneficiary_groups/members", only: [ :index, :show, :create, :destroy ]
+      resources :members, controller: "beneficiary_groups/members", only: [ :index, :show, :create, :destroy ] do
+        get "stats" => "beneficiary_groups/members/stats#index", on: :collection
+      end
     end
 
     resources :broadcasts, only: [ :index, :show, :create, :update ] do

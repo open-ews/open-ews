@@ -322,4 +322,66 @@ RSpec.resource "Beneficiary Groups"  do
       expect(group.members).not_to include(beneficiary)
     end
   end
+
+  get "/v1/beneficiary_groups/:beneficiary_group_id/members/stats" do
+    with_options scope: :filter do
+      FieldDefinitions::BeneficiaryFields.each do |field|
+        parameter(field.name, field.description, required: false, method: :_disabled)
+      end
+    end
+
+    parameter(
+      :group_by,
+      "An array of fields to group by. Supported fields: #{V1::BeneficiaryStatsRequestSchema::GROUPS.map { |group| "`#{group}`" }.join(", ")}.",
+      required: true
+    )
+
+    example "Fetch stats for a group of beneficiaries" do
+      explanation <<~HEREDOC
+        This endpoint provides statistical insights into the beneficiaries within the given group.
+
+        ### Functionality
+
+        This endpoint returns aggregated statistics about the beneficiaries in your group. Common use cases include:
+
+        - Counting the total number of beneficiaries within the group.
+        - Grouping beneficiaries by attributes such as location, gender, or address attributes.
+        - Identifying trends or patterns in the group.
+
+        ### Parameters
+
+        The endpoint may accept query parameters to filter or group the data. Common parameters include:
+
+        - **Filters:** Specify conditions for narrowing down the results. For example, you might filter beneficiaries by a specific region or status.
+        - **Group By:** Group the statistics by a particular attribute such as `gender`, `address`, or `disability_status`.
+      HEREDOC
+
+      account = create(:account)
+      group = create(:beneficiary_group, account:)
+      male_beneficiaries = create_list(:beneficiary, 2, account:, gender: "M")
+      male_beneficiaries.each { create(:beneficiary_group_membership, beneficiary: _1, beneficiary_group: group) }
+      create(:beneficiary_group_membership, beneficiary_group: group, beneficiary: create(:beneficiary, account:, gender: "F"))
+      create(:beneficiary, account:, gender: "F")
+
+      set_authorization_header_for(account)
+      do_request(
+        beneficiary_group_id: group.id,
+        group_by: [ "gender" ]
+      )
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("stat", pagination: false)
+      results = json_response.fetch("data").map { |data| data.dig("attributes", "result") }
+      expect(results).to contain_exactly(
+        {
+          "gender" => "F",
+          "value" => 1
+        },
+        {
+          "gender" => "M",
+          "value" => 2
+        }
+      )
+    end
+  end
 end

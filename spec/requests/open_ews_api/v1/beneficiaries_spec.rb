@@ -315,7 +315,7 @@ RSpec.resource "Beneficiaries"  do
         The endpoint may accept query parameters to filter or group the data. Common parameters include:
 
         - **Filters:** Specify conditions for narrowing down the results. For example, you might filter beneficiaries by a specific region or status.
-        - **Group By:** Group the statistics by a particular attribute such as `gender`, `address`, or disability status.
+        - **Group By:** Group the statistics by a particular attribute such as `gender`, `address`, or `disability_status`.
       HEREDOC
 
       account = create(:account)
