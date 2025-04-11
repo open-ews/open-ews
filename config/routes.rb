@@ -36,15 +36,19 @@ Rails.application.routes.draw do
   end
 
   namespace :v1, module: "api/v1", as: "api_v1", defaults: { format: "json" } do
+    resources :beneficiaries, only: [ :index, :create, :show, :update, :destroy ] do
+      get "stats" => "beneficiaries/stats#index", on: :collection
+      resources :addresses, only: [ :index, :create, :show, :destroy ]
+    end
+
+    resources :beneficiary_groups, only: [ :index, :show, :create, :update, :destroy ] do
+      resources :members, controller: "beneficiary_groups/members", only: [ :index, :show, :create, :destroy ]
+    end
+
     resources :broadcasts, only: [ :index, :show, :create, :update ] do
       resources :alerts, controller: "broadcasts/alerts", only: [ :index, :show ] do
         get "stats" => "broadcasts/alerts/stats#index", on: :collection
       end
-    end
-
-    resources :beneficiaries, only: [ :index, :create, :show, :update, :destroy ] do
-      get "stats" => "beneficiaries/stats#index", on: :collection
-      resources :addresses, only: [ :index, :create, :show, :destroy ]
     end
 
     resource :account, only: :show

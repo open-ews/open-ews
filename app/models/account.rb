@@ -2,6 +2,7 @@ class Account < ApplicationRecord
   has_many :access_tokens, foreign_key: :resource_owner_id
   has_many :users
   has_many :beneficiaries
+  has_many :beneficiary_groups
   has_many :broadcasts
 
   has_many :batch_operations, class_name: "BatchOperation::CalloutPopulation"
