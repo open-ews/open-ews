@@ -3,8 +3,15 @@ require "rails_helper"
 RSpec.resource "Beneficiary Groups"  do
   explanation <<~HEREDOC
     The Beneficiary Groups endpoint allows developers to programmatically organize beneficiaries into logical groups for targeted message delivery.
-    This is particularly useful when building workflows that require sending alerts to a specific group of beneficiaries, such as response teams.
-    Through the API, you can create, list, update, and delete groups, as well as manage their relationships with individual beneficiaries.
+    This is particularly useful when building workflows that require sending alerts to a **specific group** of beneficiaries, such as response teams *in addition to* those matched dynamically by filters.
+
+    Beneficiary Groups are *not* required for sending targeted alerts.
+    For most use cases, it's recommended to use [broadcasts with beneficiary filters](#create-and-start-a-broadcast), which dynamically match recipients based on defined criteria.
+    Beneficiary Groups, by contrast, are **static collections** of specific beneficiaries.
+    They're useful when you need to repeatedly target a fixed set of individuals such as a response team or a predefined community, *in addition to*
+    those matched dynamically by filters.
+
+    Through this API, you can create, list, update, and delete groups, as well as manage their relationships with individual beneficiaries.
   HEREDOC
 
   get "/v1/beneficiary_groups" do

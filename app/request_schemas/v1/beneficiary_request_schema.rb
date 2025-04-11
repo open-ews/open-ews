@@ -52,6 +52,7 @@ module V1
     end
 
     rule(data: { relationships: { group: { data: :id } } }) do
+      next unless key?
       key_path = [ :data, :relationships, :group, :data, :id ]
 
       next key(key_path).failure(text: "is invalid") unless account.beneficiary_groups.exists?(id: value)

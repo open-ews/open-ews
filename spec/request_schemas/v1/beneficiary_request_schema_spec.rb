@@ -134,7 +134,51 @@ module V1
       ).to have_valid_field(:data, :attributes, :metadata)
     end
 
-    xit "validates the group"
+    it "validates the beneficiary group" do
+      account = create(:account)
+      beneficiary_group = create(:beneficiary_group, account:)
+      other_beneficiary_group = create(:beneficiary_group)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              relationships: {
+                group: {
+                  data: {
+                    id: beneficiary_group.id,
+                    type: :beneficiary_group
+                  }
+                }
+              }
+            }
+          },
+          options: {
+            account:
+          }
+        )
+      ).to have_valid_field(:data, :relationships, :group, :data, :id)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              relationships: {
+                group: {
+                  data: {
+                    id: other_beneficiary_group.id,
+                    type: :beneficiary_group
+                  }
+                }
+              }
+            }
+          },
+          options: {
+            account:
+          }
+        )
+      ).not_to have_valid_field(:data, :relationships, :group, :data, :id)
+    end
 
     def validate_schema(input_params:, options: {})
       BeneficiaryRequestSchema.new(
