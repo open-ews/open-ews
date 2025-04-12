@@ -23,7 +23,7 @@ class JSONAPIRequestSchema < ApplicationRequestSchema
     result = output_data.dig(:data, :attributes) || {}
 
     output_data.fetch(:data).fetch(:relationships, {}).each do |relationship, relationship_data|
-      result[relationship] = relationship_data.dig(:data, :id)
+      result[relationship] = Array(relationship_data.fetch(:data)).pluck(:id)
     end
 
     result

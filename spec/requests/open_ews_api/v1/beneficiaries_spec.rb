@@ -143,14 +143,14 @@ RSpec.resource "Beneficiaries"  do
         method: :_disabled
       )
     end
-    with_options scope: %i[data relationships group data] do
+    with_options scope: [:data, :relationships, :groups] do
       parameter(
-        :type, "Must be `beneficiary_group`",
+        :"data.*.type", "Must be `beneficiary_group`",
         required: false,
         method: :_disabled
       )
       parameter(
-        :id, "The unique ID of the beneficiary group",
+        :"data.*.id", "The unique ID of the beneficiary group",
         required: false,
         method: :_disabled
       )
@@ -232,7 +232,7 @@ RSpec.resource "Beneficiaries"  do
 
     example "Create a beneficiary and add them to a group" do
       account = create(:account)
-      beneficiary_group = create(:beneficiary_group, account:)
+      group = create(:beneficiary_group, account:)
 
       set_authorization_header_for(account)
 
@@ -244,8 +244,10 @@ RSpec.resource "Beneficiaries"  do
             iso_country_code: "KH"
           },
           relationships: {
-            group: {
-              data: { type: "beneficiary_group", id: beneficiary_group.id }
+            groups: {
+              data: [
+                { type: "beneficiary_group", id: group.id }
+              ]
             }
           }
         }
@@ -253,7 +255,7 @@ RSpec.resource "Beneficiaries"  do
 
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
-      expect(json_response.dig("included", 0).to_json).to match_api_response_schema("beneficiary_group")
+      expect(json_response.dig("data", "relationships", "groups", "data").pluck("id")).to contain_exactly(group.id.to_s)
     end
 
     example "Fail to create a beneficiary", document: false do
