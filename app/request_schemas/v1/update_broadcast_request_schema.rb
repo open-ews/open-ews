@@ -34,7 +34,7 @@ module V1
       key.failure("cannot be updated after broadcast started")
     end
 
-    attribute_rule(:status) do |context:|
+    attribute_rule(:status) do |context:, **|
       next unless key?
 
       if broadcast_status_validator.may_transition_to?(value)

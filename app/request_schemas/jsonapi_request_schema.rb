@@ -4,8 +4,18 @@ class JSONAPIRequestSchema < ApplicationRequestSchema
   def self.attribute_rule(*args, &block)
     args = args.first if args.one?
     rule(data: { attributes: args }) do |context:|
-      attributes = values.dig(:data, :attributes)
-      instance_exec(attributes, context:, &block) if block_given?
+      attributes = values.fetch(:data).fetch(:attributes, {})
+      relationships = values.fetch(:data).fetch(:relationships, {})
+      instance_exec(attributes:, relationships:, context:, &block) if block_given?
+    end
+  end
+
+  def self.relationship_rule(relationship_name, &block)
+    rule(data: { relationships: { relationship_name => :data } }) do |context:|
+      attributes = values.fetch(:data).fetch(:attributes, {})
+      relationships = values.fetch(:data).fetch(:relationships, {})
+      relationship = relationships.dig(relationship_name, :data)
+      instance_exec(attributes:, relationships:, relationship:, context:, &block) if block_given?
     end
   end
 

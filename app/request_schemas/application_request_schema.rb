@@ -23,6 +23,13 @@ class ApplicationRequestSchema < Dry::Validation::Contract
     key.failure(text: "is invalid")
   end
 
+  register_macro(:beneficiary_groups) do
+    next unless key?
+
+    next if account.beneficiary_groups.where(id: value.pluck(:id)).count == value.pluck(:id).size
+    key.failure(text: "is invalid")
+  end
+
   # NOTE: composable contracts
   #
   # params do

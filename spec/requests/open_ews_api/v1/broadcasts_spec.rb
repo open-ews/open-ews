@@ -89,6 +89,19 @@ RSpec.resource "Broadcasts"  do
       end
     end
 
+    with_options scope: [:data, :relationships, :beneficiary_groups] do
+      parameter(
+        :"data.*.type", "Must be `beneficiary_group`",
+        required: false,
+        method: :_disabled
+      )
+      parameter(
+        :"data.*.id", "The unique ID of the beneficiary group",
+        required: false,
+        method: :_disabled
+      )
+    end
+
     example "Create and start a broadcast" do
       account = create(:account)
 
@@ -123,6 +136,41 @@ RSpec.resource "Broadcasts"  do
           "address.iso_region_code" => { "eq" => "KH-1" }
         }
       )
+    end
+
+    example "Create and start a broadcast with a beneficiary group" do
+      account = create(:account)
+      beneficiary_group = create(:beneficiary_group, account:)
+
+      stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
+      set_authorization_header_for(account)
+
+      perform_enqueued_jobs do
+        do_request(
+          data: {
+            type: :broadcast,
+            attributes: {
+              channel: "voice",
+              audio_url: "https://www.example.com/test.mp3",
+              beneficiary_filter: {
+                gender: { eq: "M" },
+                "address.iso_region_code" => { eq: "KH-1" }
+              }
+            },
+            relationships: {
+              beneficiary_groups: {
+                data: [
+                  { type: "beneficiary_group", id: beneficiary_group.id },
+                ]
+              }
+            }
+          }
+        )
+      end
+
+      expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(json_response.dig("data", "relationships", "beneficiary_groups", "data", 0, "id")).to eq(beneficiary_group.id.to_s)
     end
 
     example "Fail to create a broadcast", document: false do

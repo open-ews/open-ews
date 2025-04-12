@@ -15,7 +15,7 @@ module V1
       end
     end
 
-    attribute_rule do |attributes|
+    attribute_rule do |attributes:, **|
       validator = BeneficiaryAddressValidator.new(attributes)
       next if validator.valid?
 

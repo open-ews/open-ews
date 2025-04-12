@@ -24,6 +24,9 @@ class Broadcast < ApplicationRecord
   has_many :alerts
   has_many :beneficiaries, through: :alerts
   has_many :delivery_attempts
+  has_many :broadcast_beneficiary_groups
+  has_many :beneficiary_groups, through: :broadcast_beneficiary_groups
+
   has_one_attached :audio_file
 
   validates :audio_file,
