@@ -24,8 +24,8 @@ module V1
         end
 
         optional(:relationships).value(:hash).schema do
-          optional(:group).value(:hash).schema do
-            required(:data).value(:hash).schema do
+          optional(:groups).value(:hash).schema do
+            required(:data).array(:hash) do
               required(:type).filled(:str?, eql?: "beneficiary_group")
               required(:id).filled(:int?)
             end
@@ -52,16 +52,16 @@ module V1
       end
     end
 
-    rule(data: { relationships: { group: { data: :id } } }) do
+    rule(data: { relationships: { groups: :data }} ) do
       next unless key?
-      key_path = [ :data, :relationships, :group, :data, :id ]
 
-      next key(key_path).failure(text: "is invalid") unless account.beneficiary_groups.exists?(id: value)
+      next if account.beneficiary_groups.where(id: value.pluck(:id)).count == value.pluck(:id).size
+      key([ :data, :relationships, :groups, :data ]).failure(text: "is invalid")
     end
 
     def output
       result = super
-      result[:group_ids] = Array(result.delete(:group))
+      result[:group_ids] = Array(result.delete(:groups))
       result
     end
   end

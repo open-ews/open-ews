@@ -134,7 +134,7 @@ module V1
       ).to have_valid_field(:data, :attributes, :metadata)
     end
 
-    it "validates the beneficiary group" do
+    it "validates the beneficiary groups" do
       account = create(:account)
       beneficiary_group = create(:beneficiary_group, account:)
       other_beneficiary_group = create(:beneficiary_group)
@@ -144,11 +144,13 @@ module V1
           input_params: {
             data: {
               relationships: {
-                group: {
-                  data: {
-                    id: beneficiary_group.id,
-                    type: :beneficiary_group
-                  }
+                groups: {
+                  data: [
+                    {
+                      id: beneficiary_group.id,
+                      type: "beneficiary_group"
+                    }
+                  ]
                 }
               }
             }
@@ -157,18 +159,20 @@ module V1
             account:
           }
         )
-      ).to have_valid_field(:data, :relationships, :group, :data, :id)
+      ).to have_valid_field(:data, :relationships, :groups, :data)
 
       expect(
         validate_schema(
           input_params: {
             data: {
               relationships: {
-                group: {
-                  data: {
-                    id: other_beneficiary_group.id,
-                    type: :beneficiary_group
-                  }
+                groups: {
+                  data: [
+                    {
+                      id: other_beneficiary_group.id,
+                      type: "beneficiary_group"
+                    }
+                  ]
                 }
               }
             }
@@ -177,7 +181,7 @@ module V1
             account:
           }
         )
-      ).not_to have_valid_field(:data, :relationships, :group, :data, :id)
+      ).not_to have_valid_field(:data, :relationships, :groups, :data)
     end
 
     def validate_schema(input_params:, options: {})
