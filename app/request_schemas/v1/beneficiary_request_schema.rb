@@ -35,29 +35,24 @@ module V1
     end
 
     attribute_rule(:phone_number).validate(:phone_number_format)
-    attribute_rule(:phone_number) do |attributes|
-      next unless account.beneficiaries.where(phone_number: attributes.fetch(:phone_number)).exists?
+    attribute_rule(:phone_number) do
+     next unless account.beneficiaries.where(phone_number: value).exists?
 
-      key([ :data, :attributes, :phone_number ]).failure(text: "must be unique")
+      key.failure(text: "must be unique")
     end
 
-    attribute_rule(:address) do |attributes|
-      next if attributes[:address].blank?
+    attribute_rule(:address) do
+      next unless key?
 
-      validator = BeneficiaryAddressValidator.new(attributes[:address])
+      validator = BeneficiaryAddressValidator.new(value)
       next if validator.valid?
 
       validator.errors.each do |error|
-        key([ :data, :attributes, :address, error.key ]).failure(text: error.message)
+        key([*key.path, error.key]).failure(error.message)
       end
     end
 
-    rule(data: { relationships: { groups: :data }} ) do
-      next unless key?
-
-      next if account.beneficiary_groups.where(id: value.pluck(:id)).count == value.pluck(:id).size
-      key([ :data, :relationships, :groups, :data ]).failure(text: "is invalid")
-    end
+    relationship_rule(:groups).validate(:beneficiary_groups)
 
     def output
       result = super

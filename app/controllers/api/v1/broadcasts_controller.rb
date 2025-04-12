@@ -2,7 +2,7 @@ module API
   module V1
     class BroadcastsController < BaseController
       def index
-        apply_filters(scope, with: BroadcastFilter)
+        apply_filters(scope.includes(include_parameter(only: [ :beneficiary_groups ])), with: BroadcastFilter)
       end
 
       def show
@@ -11,7 +11,7 @@ module API
 
       def create
         validate_request_schema(with: ::V1::BroadcastRequestSchema) do |permitted_params|
-          CreateBroadcast.call(scope, **permitted_params)
+          CreateBroadcast.call(account: current_account, **permitted_params)
         end
       end
 

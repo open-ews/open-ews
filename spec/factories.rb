@@ -26,6 +26,10 @@ FactoryBot.define do
       status { :pending }
     end
 
+    trait :stopped do
+      status { :stopped }
+    end
+
     trait :running do
       status { :running }
       started_at { Time.current }

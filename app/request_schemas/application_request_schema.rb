@@ -23,6 +23,23 @@ class ApplicationRequestSchema < Dry::Validation::Contract
     key.failure(text: "is invalid")
   end
 
+  register_macro(:beneficiary_groups) do
+    next unless key?
+
+    next if account.beneficiary_groups.where(id: value.pluck(:id)).count == value.pluck(:id).size
+    key.failure(text: "is invalid")
+  end
+
+  register_macro(:broadcast_status) do |macro:|
+    next unless key?
+    channel_attribute = values.dig(:data, :attributes, :channel)
+    channel = resource.present? ? (channel_attribute || resource.channel) : channel_attribute
+    next if channel.blank?
+
+    next if account.configured_for_broadcasts?(channel:)
+    base.failure("Account not configured")
+  end
+
   # NOTE: composable contracts
   #
   # params do

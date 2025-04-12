@@ -1,59 +1,101 @@
 require "rails_helper"
 
 RSpec.describe ScheduledJob do
-  it "initializes delivery attempts per account" do
-    account = create(:account)
+  it "initializes delivery attempts" do
+    account = create(:account, delivery_attempt_queue_limit: 1)
 
-    created_delivery_attempt_from_running_broadcast = create_delivery_attempt(
-      account:,
-      status: :created,
-      broadcast_status: :running
+    low_priority_delivery_attempt = create(
+      :delivery_attempt,
+      alert: create(
+        :alert,
+        broadcast: create(:broadcast, :running, account:),
+        priority: 1
+      )
     )
-    created_delivery_attempt_from_stopped_broadcast = create_delivery_attempt(
-      account:,
-      status: :created,
-      broadcast_status: :stopped
+    high_priority_delivery_attempt = create(
+      :delivery_attempt,
+      alert: create(
+        :alert,
+        broadcast: create(:broadcast, :running, account:)
+      )
     )
-    queued_delivery_attempt = create_delivery_attempt(
-      account:,
-      status: :queued,
-      broadcast_status: :running
+    delivery_attempt_from_running_broadcast = create(
+      :delivery_attempt,
+      alert: create(
+        :alert,
+        broadcast: create(:broadcast, :running, account:)
+      )
+    )
+    delivery_attempt_from_stopped_broadcast = create(
+      :delivery_attempt,
+      alert: create(
+        :alert,
+        broadcast: create(:broadcast, :stopped, account:)
+      )
+    )
+    queued_delivery_attempt = create(
+      :delivery_attempt,
+      :queued,
+      alert: create(
+        :alert,
+        broadcast: create(:broadcast, :running, account:)
+      )
     )
 
     ScheduledJob.perform_now
 
-    expect(created_delivery_attempt_from_running_broadcast.reload.status).to eq("queued")
-    expect(created_delivery_attempt_from_stopped_broadcast.reload.status).to eq("created")
+    expect(high_priority_delivery_attempt.reload.status).to eq("queued")
+    expect(low_priority_delivery_attempt.reload.status).to eq("created")
+    expect(delivery_attempt_from_stopped_broadcast.reload.status).to eq("created")
     expect(queued_delivery_attempt.reload.status).to eq("queued")
 
     expect(InitiateDeliveryAttemptJob).to have_been_enqueued.exactly(:once)
-    expect(InitiateDeliveryAttemptJob).to have_been_enqueued.with(created_delivery_attempt_from_running_broadcast)
+    expect(InitiateDeliveryAttemptJob).to have_been_enqueued.with(high_priority_delivery_attempt)
   end
 
   it "fetches in progress call statuses" do
     account = create(:account)
 
-    in_progress_delivery_attempt = create_delivery_attempt(
-      account:,
-      status: :initiated,
-      initiated_at: 10.minutes.ago
-    )
-    _in_progress_recent_delivery_attempt = create_delivery_attempt(
-      account:,
-      status: :initiated,
-      initiated_at: Time.current
-    )
-    _in_progress_queued_for_fetch_delivery_attempt = create_delivery_attempt(
-      account:,
-      status: :initiated,
+    in_progress_delivery_attempt = create(
+      :delivery_attempt,
+      :initiated,
       initiated_at: 10.minutes.ago,
-      status_update_queued_at: Time.current
+      alert: create(
+        :alert,
+        broadcast: create(:broadcast, account:)
+      )
     )
-    in_progress_queued_for_fetch_expired_delivery_attempt = create_delivery_attempt(
-      account:,
-      status: :initiated,
+
+    in_progress_queued_for_fetch_expired_delivery_attempt = create(
+      :delivery_attempt,
+      :initiated,
       initiated_at: 10.minutes.ago,
-      status_update_queued_at: 20.minutes.ago
+      status_update_queued_at: 20.minutes.ago,
+      alert: create(
+        :alert,
+        broadcast: create(:broadcast, account:)
+      )
+    )
+
+    create(
+      :delivery_attempt,
+      :initiated,
+      initiated_at: Time.current,
+      alert: create(
+        :alert,
+        broadcast: create(:broadcast, account:)
+      )
+    )
+
+    create(
+      :delivery_attempt,
+      :initiated,
+      initiated_at: 10.minutes.ago,
+      status_update_queued_at: Time.current,
+      alert: create(
+        :alert,
+        broadcast: create(:broadcast, account:)
+      )
     )
 
     ScheduledJob.perform_now
@@ -62,12 +104,5 @@ RSpec.describe ScheduledJob do
     expect(UpdateDeliveryAttemptStatusJob).to have_been_enqueued.with(in_progress_delivery_attempt)
     expect(UpdateDeliveryAttemptStatusJob).to have_been_enqueued.with(in_progress_queued_for_fetch_expired_delivery_attempt)
     expect(in_progress_delivery_attempt.reload.status_update_queued_at).to be_present
-  end
-
-  def create_delivery_attempt(account:, broadcast_status: :running, **attributes)
-    broadcast = create(:broadcast, account:, status: broadcast_status)
-    alert = create(:alert, broadcast:)
-
-    create(:delivery_attempt, alert:, **attributes)
   end
 end

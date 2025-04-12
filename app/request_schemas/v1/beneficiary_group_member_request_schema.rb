@@ -12,9 +12,8 @@ module V1
     end
 
     attribute_rule(:beneficiary_id) do
-      key_path = [ :data, :attributes, :beneficiary_id ]
-      next key(key_path).failure(text: "is invalid") unless account.beneficiaries.exists?(id: value)
-      next key(key_path).failure(text: "already exists") if beneficiary_group.members.exists?(id: value)
+      next key.failure(text: "is invalid") unless account.beneficiaries.exists?(id: value)
+      next key.failure(text: "already exists") if beneficiary_group.members.exists?(id: value)
     end
   end
 end

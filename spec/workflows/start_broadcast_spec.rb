@@ -1,13 +1,19 @@
 require "rails_helper"
 
 RSpec.describe StartBroadcast do
-  it "populates alerts" do
+  it "starts a broadcast" do
     account = create(:account, :configured_for_broadcasts)
-    _male_beneficiary = create(:beneficiary, account:, gender: "M")
-    female_beneficiary = create(:beneficiary, account:, gender: "F")
-    create(:beneficiary_address, beneficiary: female_beneficiary, iso_region_code: "KH-12")
-    other_female_beneficiary = create(:beneficiary, account:, gender: "F")
-    create(:beneficiary_address, beneficiary: other_female_beneficiary, iso_region_code: "KH-11")
+    create(:beneficiary, account:, gender: "M")
+    female_beneficiaries = create_list(:beneficiary, 3, account:, gender: "F")
+    female_beneficiaries.first(2).each do |beneficiary|
+      create(:beneficiary_address, beneficiary:, iso_region_code: "KH-12")
+    end
+    beneficiary_group = create(:beneficiary_group, account:)
+    other_beneficiary_group = create(:beneficiary_group, account:)
+    beneficiary_in_group = create(:beneficiary, account:, gender: "M")
+    create(:beneficiary_group_membership, beneficiary_group:, beneficiary: beneficiary_in_group)
+    create(:beneficiary_group_membership, beneficiary_group: other_beneficiary_group, beneficiary: beneficiary_in_group)
+    create(:beneficiary_group_membership, beneficiary_group:, beneficiary: female_beneficiaries.first)
 
     stub_request(:get, "https://example.com/cowbell.mp3").to_return(status: 200)
 
@@ -20,7 +26,8 @@ RSpec.describe StartBroadcast do
       beneficiary_filter: {
         gender: { eq: "F" },
         "address.iso_region_code": { eq: "KH-12" }
-      }
+      },
+      beneficiary_groups: [ beneficiary_group, other_beneficiary_group ]
     )
 
     StartBroadcast.call(broadcast)
@@ -31,17 +38,47 @@ RSpec.describe StartBroadcast do
       started_at: be_present,
       audio_file: be_attached
     )
-    expect(broadcast.beneficiaries.count).to eq(1)
-    expect(broadcast.alerts.first).to have_attributes(
-      beneficiary: female_beneficiary,
-      phone_number: female_beneficiary.phone_number,
-      delivery_attempts_count: 1
-    )
-    expect(broadcast.delivery_attempts.count).to eq(1)
-    expect(broadcast.delivery_attempts.first).to have_attributes(
-      alert: broadcast.alerts.first,
-      phone_number: female_beneficiary.phone_number,
-      status: "created"
+    expect(broadcast.beneficiaries).to contain_exactly(*female_beneficiaries.first(2), beneficiary_in_group)
+    expect(broadcast.alerts).to contain_exactly(
+      have_attributes(
+        beneficiary: female_beneficiaries[0],
+        priority: 0,
+        phone_number: female_beneficiaries[0].phone_number,
+        delivery_attempts_count: 1,
+        status: "pending",
+        delivery_attempts: contain_exactly(
+          have_attributes(
+            phone_number: female_beneficiaries[0].phone_number,
+            status: "created"
+          )
+        )
+      ),
+      have_attributes(
+        beneficiary: beneficiary_in_group,
+        priority: 0,
+        phone_number: beneficiary_in_group.phone_number,
+        delivery_attempts_count: 1,
+        status: "pending",
+        delivery_attempts: contain_exactly(
+          have_attributes(
+            phone_number: beneficiary_in_group.phone_number,
+            status: "created"
+          )
+        )
+      ),
+      have_attributes(
+        beneficiary: female_beneficiaries[1],
+        priority: 1,
+        phone_number: female_beneficiaries[1].phone_number,
+        delivery_attempts_count: 1,
+        status: "pending",
+        delivery_attempts: contain_exactly(
+          have_attributes(
+            phone_number: female_beneficiaries[1].phone_number,
+            status: "created"
+          )
+        )
+      )
     )
   end
 

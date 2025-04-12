@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_10_155842) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_12_085632) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -66,10 +66,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_10_155842) do
     t.string "phone_number", null: false
     t.string "status", null: false
     t.datetime "completed_at"
+    t.integer "priority", default: 0, null: false
     t.index ["beneficiary_id"], name: "index_alerts_on_beneficiary_id"
     t.index ["broadcast_id", "beneficiary_id"], name: "index_alerts_on_broadcast_id_and_beneficiary_id", unique: true
     t.index ["broadcast_id"], name: "index_alerts_on_broadcast_id"
     t.index ["completed_at"], name: "index_alerts_on_completed_at"
+    t.index ["priority"], name: "index_alerts_on_priority"
     t.index ["status"], name: "index_alerts_on_status"
   end
 
@@ -143,6 +145,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_10_155842) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_beneficiary_groups_on_account_id"
+  end
+
+  create_table "broadcast_beneficiary_groups", force: :cascade do |t|
+    t.bigint "broadcast_id", null: false
+    t.bigint "beneficiary_group_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["broadcast_id", "beneficiary_group_id"], name: "idx_on_broadcast_id_beneficiary_group_id_2859ae2689", unique: true
   end
 
   create_table "broadcasts", force: :cascade do |t|
@@ -294,6 +304,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_10_155842) do
   add_foreign_key "beneficiary_group_memberships", "beneficiaries", on_delete: :cascade
   add_foreign_key "beneficiary_group_memberships", "beneficiary_groups", on_delete: :cascade
   add_foreign_key "beneficiary_groups", "accounts", on_delete: :cascade
+  add_foreign_key "broadcast_beneficiary_groups", "beneficiary_groups", on_delete: :cascade
+  add_foreign_key "broadcast_beneficiary_groups", "broadcasts", on_delete: :cascade
   add_foreign_key "broadcasts", "accounts"
   add_foreign_key "delivery_attempts", "alerts"
   add_foreign_key "delivery_attempts", "beneficiaries", on_delete: :nullify
