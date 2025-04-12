@@ -117,7 +117,9 @@ module V1
 
     it "validates the beneficiary groups" do
       account = create(:account)
-      broadcast = create(:broadcast, account:)
+      broadcast = create(:broadcast, :pending, account:)
+      running_broadcast = create(:broadcast, :running, account:)
+      beneficiary_group = create(:beneficiary_group, account:)
       other_beneficiary_group = create(:beneficiary_group)
 
       expect(
@@ -139,6 +141,29 @@ module V1
           options: {
             account:,
             resource: broadcast
+          }
+        )
+      ).not_to have_valid_field(:data, :relationships, :beneficiary_groups, :data)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              relationships: {
+                beneficiary_groups: {
+                  data: [
+                    {
+                      id: beneficiary_group.id,
+                      type: "beneficiary_group"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          options: {
+            account:,
+            resource: running_broadcast
           }
         )
       ).not_to have_valid_field(:data, :relationships, :beneficiary_groups, :data)

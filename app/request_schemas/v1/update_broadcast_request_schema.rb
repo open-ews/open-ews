@@ -55,6 +55,12 @@ module V1
     end
 
     relationship_rule(:beneficiary_groups).validate(:beneficiary_groups)
+    relationship_rule(:beneficiary_groups) do
+      next unless key?
+      next if broadcast_status_validator.may_transition_to?(:running)
+
+      key.failure("cannot be updated after broadcast started")
+    end
 
     def output
       result = super

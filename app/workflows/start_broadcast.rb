@@ -30,7 +30,7 @@ class StartBroadcast < ApplicationWorkflow
   end
 
   def create_alerts
-    raise Error, "Account not configured" unless broadcast.account.configured_for_broadcasts?(channel: broadcast.channel)
+    raise Error, "Account not configured" unless broadcast.account.configured_for_broadcasts?
     alerts = []
 
     group_beneficiaries.find_each do |beneficiary|

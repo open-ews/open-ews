@@ -139,7 +139,7 @@ RSpec.resource "Broadcasts"  do
 
     example "Create broadcast with a beneficiary group" do
       explanation <<~HEREDOC
-        When creating a broadcast, you can target one or more beneficiary groups in addition to or instead of using a beneficiary filter.
+        When creating a broadcast, you can target one or more beneficiary groups **in addition to** *or* **instead of** using a beneficiary filter.
         Beneficiaries included through groups will receive alerts with higher priority than those matched solely by the filter.
         This is especially useful when you need to ensure that specific groups, such as response teams, receive alerts regardless of filter criteria.
       HEREDOC
@@ -277,6 +277,34 @@ RSpec.resource "Broadcasts"  do
       expect(broadcast.delivery_attempts.first.beneficiary).to eq(beneficiary)
     end
 
+    example "Stop a broadcast" do
+      account = create(:account)
+      broadcast = create(
+        :broadcast,
+        :running,
+        :with_attached_audio,
+        account:
+      )
+
+      set_authorization_header_for(account)
+      do_request(
+        id: broadcast.id,
+        data: {
+          id: broadcast.id,
+          type: :broadcast,
+          attributes: {
+            status: "stopped"
+          }
+        }
+      )
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(json_response.dig("data", "attributes")).to include(
+        "status" => "stopped"
+      )
+    end
+
     example "Update a broadcast" do
       account = create(:account)
       beneficiary_group = create(:beneficiary_group, account:)
@@ -291,6 +319,7 @@ RSpec.resource "Broadcasts"  do
           }
         }
       )
+      create(:broadcast_beneficiary_group, beneficiary_group:, broadcast:)
 
       set_authorization_header_for(account)
       do_request(

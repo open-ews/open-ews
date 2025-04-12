@@ -27,19 +27,37 @@ FactoryBot.define do
     end
 
     trait :stopped do
+      with_beneficiary_filter
       status { :stopped }
     end
 
     trait :running do
       status { :running }
+      with_beneficiary_filter
       started_at { Time.current }
     end
 
     trait :completed do
+      with_beneficiary_filter
       status { :completed }
       started_at { Time.current }
       completed_at { Time.current }
     end
+
+    trait :with_beneficiary_filter do
+      beneficiary_filter {
+        {
+          gender: {
+            eq: "M"
+          }
+        }
+      }
+    end
+  end
+
+  factory :broadcast_beneficiary_group do
+    broadcast
+    beneficiary_group {  association :beneficiary_group, account: broadcast.account }
   end
 
   factory :beneficiary do
