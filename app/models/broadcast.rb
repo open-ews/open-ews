@@ -26,6 +26,7 @@ class Broadcast < ApplicationRecord
   has_many :delivery_attempts
   has_many :broadcast_beneficiary_groups
   has_many :beneficiary_groups, through: :broadcast_beneficiary_groups
+  has_many :group_beneficiaries, through: :beneficiary_groups, source: :members, class_name: "Beneficiary"
 
   has_one_attached :audio_file
 

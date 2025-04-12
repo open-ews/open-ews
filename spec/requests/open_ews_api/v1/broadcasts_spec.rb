@@ -103,11 +103,10 @@ RSpec.resource "Broadcasts"  do
     end
 
     example "Create and start a broadcast" do
-      account = create(:account)
-
+      account = create(:account, :configured_for_broadcasts)
       stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
-      set_authorization_header_for(account)
 
+      set_authorization_header_for(account)
       perform_enqueued_jobs do
         do_request(
           data: {
@@ -138,35 +137,27 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Create and start a broadcast with a beneficiary group" do
+    example "Create broadcast with a beneficiary group" do
       account = create(:account)
       beneficiary_group = create(:beneficiary_group, account:)
 
-      stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
       set_authorization_header_for(account)
-
-      perform_enqueued_jobs do
-        do_request(
-          data: {
-            type: :broadcast,
-            attributes: {
-              channel: "voice",
-              audio_url: "https://www.example.com/test.mp3",
-              beneficiary_filter: {
-                gender: { eq: "M" },
-                "address.iso_region_code" => { eq: "KH-1" }
-              }
-            },
-            relationships: {
-              beneficiary_groups: {
-                data: [
-                  { type: "beneficiary_group", id: beneficiary_group.id },
-                ]
-              }
+      do_request(
+        data: {
+          type: :broadcast,
+          attributes: {
+            channel: "voice",
+            audio_url: "https://www.example.com/test.mp3",
+          },
+          relationships: {
+            beneficiary_groups: {
+              data: [
+                { type: "beneficiary_group", id: beneficiary_group.id },
+              ]
             }
           }
-        )
-      end
+        }
+      )
 
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
@@ -221,26 +212,40 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
+    with_options scope: [:data, :relationships, :beneficiary_groups] do
+      parameter(
+        :"data.*.type", "Must be `beneficiary_group`",
+        required: false,
+        method: :_disabled
+      )
+      parameter(
+        :"data.*.id", "The unique ID of the beneficiary group",
+        required: false,
+        method: :_disabled
+      )
+    end
+
     with_options scope: %i[data attributes beneficiary_filter] do
       FieldDefinitions::BeneficiaryFields.each do |field|
         parameter(field.name, field.description, required: false, method: :_disabled)
       end
     end
 
-    example "Update a broadcast" do
+    example "Start a broadcast" do
       account = create(:account, :configured_for_broadcasts)
-      _male_beneficiary = create(:beneficiary, account:, gender: "M")
-      female_beneficiary = create(:beneficiary, account:, gender: "F")
+      beneficiary = create(:beneficiary, account:, gender: "F")
+      create(:beneficiary, account:, gender: "M")
       broadcast = create(
         :broadcast,
         status: :pending,
         account:,
-        audio_url: "https://www.example.com/old-sample.mp3",
+        audio_url: "https://www.example.com/test.mp3",
         beneficiary_filter: {
-          gender: "M"
+          gender: {
+            eq: "F"
+          }
         }
       )
-
       stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
 
       set_authorization_header_for(account)
@@ -251,11 +256,7 @@ RSpec.resource "Broadcasts"  do
             id: broadcast.id,
             type: :broadcast,
             attributes: {
-              status: "running",
-              audio_url: "https://www.example.com/test.mp3",
-              beneficiary_filter: {
-                gender: { eq: "F" }
-              }
+              status: "running"
             }
           }
         )
@@ -263,18 +264,68 @@ RSpec.resource "Broadcasts"  do
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
-      expect(json_response.dig("data", "attributes")).to include(
-        "status" => "queued",
-        "audio_url" => "https://www.example.com/test.mp3",
-        "beneficiary_filter" => {
-          "gender" => { "eq" => "F" }
-        }
-      )
       expect(broadcast.reload.status).to eq("running")
       expect(broadcast.audio_file).to be_attached
-      expect(broadcast.beneficiaries).to contain_exactly(female_beneficiary)
+      expect(broadcast.beneficiaries).to contain_exactly(beneficiary)
       expect(broadcast.delivery_attempts.count).to eq(1)
-      expect(broadcast.delivery_attempts.first.beneficiary).to eq(female_beneficiary)
+      expect(broadcast.delivery_attempts.first.beneficiary).to eq(beneficiary)
+    end
+
+    example "Update a broadcast" do
+      account = create(:account)
+      beneficiary_group = create(:beneficiary_group, account:)
+      broadcast = create(
+        :broadcast,
+        status: :pending,
+        account:,
+        audio_url: "https://www.example.com/old.mp3",
+        beneficiary_filter: {
+          gender: {
+            eq: "M"
+          }
+        }
+      )
+
+      set_authorization_header_for(account)
+      do_request(
+        id: broadcast.id,
+        data: {
+          id: broadcast.id,
+          type: :broadcast,
+          attributes: {
+            audio_url: "https://www.example.com/new.mp3",
+            beneficiary_filter: {
+              gender: { eq: "F" }
+            }
+          },
+          relationships: {
+            beneficiary_groups: {
+              data: [
+                { type: "beneficiary_group", id: beneficiary_group.id }
+              ]
+            }
+          }
+        }
+      )
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(json_response.dig("data")).to include(
+        "attributes" => include(
+          "status" => "pending",
+          "audio_url" => "https://www.example.com/new.mp3",
+          "beneficiary_filter" => {
+            "gender" => { "eq" => "F" }
+          }
+        ),
+        "relationships" => {
+          "beneficiary_groups" => {
+            "data" => [
+              { "type" => "beneficiary_group", "id" => beneficiary_group.id.to_s }
+            ]
+          }
+        }
+      )
     end
 
     example "Fail to update a broadcast", document: false do

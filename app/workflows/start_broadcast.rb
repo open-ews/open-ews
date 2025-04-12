@@ -30,19 +30,18 @@ class StartBroadcast < ApplicationWorkflow
   end
 
   def create_alerts
-    beneficiaries = beneficiaries_scope
     raise Error, "Account not configured" unless broadcast.account.configured_for_broadcasts?(channel: broadcast.channel)
-    raise Error, "No beneficiaries match the filters" if beneficiaries.none?
+    alerts = []
 
-    alerts = beneficiaries.find_each.map do |beneficiary|
-      {
-        broadcast_id: broadcast.id,
-        beneficiary_id: beneficiary.id,
-        phone_number: beneficiary.phone_number,
-        delivery_attempts_count: 1,
-        status: :queued
-      }
+    group_beneficiaries.find_each do |beneficiary|
+      alerts << build_alert(beneficiary, priority: 0)
     end
+
+    filtered_beneficiaries.find_each do |beneficiary|
+      alerts << build_alert(beneficiary, priority: 1)
+    end
+
+    raise Error, "No beneficiaries match the filters" if alerts.none?
 
     Alert.upsert_all(alerts)
   end
@@ -61,10 +60,25 @@ class StartBroadcast < ApplicationWorkflow
     DeliveryAttempt.upsert_all(delivery_attempts)
   end
 
-  def beneficiaries_scope
-    @beneficiaries_scope ||= FilterScopeQuery.new(
+  def filtered_beneficiaries
+    @filtered_beneficiaries ||= FilterScopeQuery.new(
       account.beneficiaries.active,
       BeneficiaryFilter.new(input_params: beneficiary_filter).output
-    ).apply
+    ).apply.where.not(id: group_beneficiaries.select(:id))
+  end
+
+  def group_beneficiaries
+    broadcast.group_beneficiaries.active
+  end
+
+  def build_alert(beneficiary, **params)
+    {
+      broadcast_id: broadcast.id,
+      beneficiary_id: beneficiary.id,
+      phone_number: beneficiary.phone_number,
+      delivery_attempts_count: 1,
+      status: :pending,
+      **params
+    }
   end
 end

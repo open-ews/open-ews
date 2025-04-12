@@ -41,12 +41,13 @@ module V1
     end
 
     it "validates the status" do
-      errored_broadcast = create(:broadcast, status: :errored)
-      pending_broadcast = create(:broadcast, status: :pending)
-      running_broadcast = create(:broadcast, status: :running)
-      stopped_broadcast = create(:broadcast, status: :stopped)
-      completed_broadcast = create(:broadcast, status: :completed)
-      queued_broadcast = create(:broadcast, status: :queued)
+      account = create(:account)
+      errored_broadcast = create(:broadcast, status: :errored, account:)
+      pending_broadcast = create(:broadcast, status: :pending, account:)
+      running_broadcast = create(:broadcast, status: :running, account:)
+      stopped_broadcast = create(:broadcast, status: :stopped, account:)
+      completed_broadcast = create(:broadcast, status: :completed, account:)
+      queued_broadcast = create(:broadcast, status: :queued, account:)
 
       expect(
         validate_schema(input_params: { data: { attributes: { status: "foobar" } } }, options: { resource: pending_broadcast })
@@ -95,6 +96,52 @@ module V1
       expect(
         validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: queued_broadcast })
       ).not_to have_valid_field(:data, :attributes, :status)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "voice",
+                status: "running"
+              }
+            }
+          },
+          options: {
+            account:,
+            resource: pending_broadcast
+          }
+        )
+      ).not_to have_valid_schema(error_message: "Account not configured")
+    end
+
+    it "validates the beneficiary groups" do
+      account = create(:account)
+      broadcast = create(:broadcast, account:)
+      other_beneficiary_group = create(:beneficiary_group)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              relationships: {
+                beneficiary_groups: {
+                  data: [
+                    {
+                      id: other_beneficiary_group.id,
+                      type: "beneficiary_group"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          options: {
+            account:,
+            resource: broadcast
+          }
+        )
+      ).not_to have_valid_field(:data, :relationships, :beneficiary_groups, :data)
     end
 
     it "handles post processing" do

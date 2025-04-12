@@ -14,6 +14,15 @@ module V1
           optional(:status).filled(included_in?: VALID_STATES)
           optional(:metadata).value(:hash)
         end
+
+        optional(:relationships).value(:hash).schema do
+          optional(:beneficiary_groups).value(:hash).schema do
+            required(:data).array(:hash) do
+              required(:type).filled(:str?, eql?: "beneficiary_group")
+              required(:id).filled(:int?)
+            end
+          end
+        end
       end
     end
 
@@ -34,6 +43,7 @@ module V1
       key.failure("cannot be updated after broadcast started")
     end
 
+    attribute_rule(:status).validate(:broadcast_status)
     attribute_rule(:status) do |context:, **|
       next unless key?
 
@@ -44,10 +54,14 @@ module V1
       end
     end
 
+    relationship_rule(:beneficiary_groups).validate(:beneficiary_groups)
+
     def output
       result = super
       result.delete(:status)
+      beneficiary_groups = result.delete(:beneficiary_groups)
       result[:desired_status] = context.fetch(:desired_status) if context.key?(:desired_status)
+      result[:beneficiary_group_ids] = beneficiary_groups if beneficiary_groups.present?
       result
     end
   end

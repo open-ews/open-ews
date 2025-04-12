@@ -24,6 +24,7 @@ module V1
       end
     end
 
+    attribute_rule(:status).validate(:broadcast_status)
     attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
     attribute_rule(:beneficiary_filter) do |relationships:, **|
       next if key? || relationships.key?(:beneficiary_groups)
