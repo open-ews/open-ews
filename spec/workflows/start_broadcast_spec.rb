@@ -9,8 +9,10 @@ RSpec.describe StartBroadcast do
       create(:beneficiary_address, beneficiary:, iso_region_code: "KH-12")
     end
     beneficiary_group = create(:beneficiary_group, account:)
+    other_beneficiary_group = create(:beneficiary_group, account:)
     beneficiary_in_group = create(:beneficiary, account:, gender: "M")
     create(:beneficiary_group_membership, beneficiary_group:, beneficiary: beneficiary_in_group)
+    create(:beneficiary_group_membership, beneficiary_group: other_beneficiary_group, beneficiary: beneficiary_in_group)
     create(:beneficiary_group_membership, beneficiary_group:, beneficiary: female_beneficiaries.first)
 
     stub_request(:get, "https://example.com/cowbell.mp3").to_return(status: 200)
@@ -25,7 +27,7 @@ RSpec.describe StartBroadcast do
         gender: { eq: "F" },
         "address.iso_region_code": { eq: "KH-12" }
       },
-      beneficiary_groups: [ beneficiary_group ]
+      beneficiary_groups: [ beneficiary_group, other_beneficiary_group ]
     )
 
     StartBroadcast.call(broadcast)

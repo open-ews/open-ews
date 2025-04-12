@@ -138,6 +138,12 @@ RSpec.resource "Broadcasts"  do
     end
 
     example "Create broadcast with a beneficiary group" do
+      explanation <<~HEREDOC
+        When creating a broadcast, you can target one or more beneficiary groups in addition to or instead of using a beneficiary filter.
+        Beneficiaries included through groups will receive alerts with higher priority than those matched solely by the filter.
+        This is especially useful when you need to ensure that specific groups, such as response teams, receive alerts regardless of filter criteria.
+      HEREDOC
+
       account = create(:account)
       beneficiary_group = create(:beneficiary_group, account:)
 
