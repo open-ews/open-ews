@@ -11,7 +11,7 @@ class Account < ApplicationRecord
 
   strip_attributes
 
-  def configured_for_broadcasts?(**)
+  def configured_for_broadcasts?
     somleng_account_sid.present? && somleng_auth_token.present? && alert_phone_number.present?
   end
 

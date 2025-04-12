@@ -71,7 +71,7 @@ module BatchOperation
 
     def create_alerts
       beneficiaries = beneficiaries_scope
-      raise Error, "Account not configured" unless broadcast.account.configured_for_broadcasts?(channel: broadcast.channel)
+      raise Error, "Account not configured" unless broadcast.account.configured_for_broadcasts?
       raise Error, "No beneficiaries match the filters" if beneficiaries.none?
 
       alerts = beneficiaries.find_each.map do |beneficiary|

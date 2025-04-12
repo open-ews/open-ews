@@ -30,13 +30,11 @@ class ApplicationRequestSchema < Dry::Validation::Contract
     key.failure(text: "is invalid")
   end
 
-  register_macro(:broadcast_status) do |macro:|
+  register_macro(:broadcast_status) do
     next unless key?
-    channel_attribute = values.dig(:data, :attributes, :channel)
-    channel = resource.present? ? (channel_attribute || resource.channel) : channel_attribute
-    next if channel.blank?
+    next unless broadcast_status_validator.may_transition_to?(:running)
+    next if account.configured_for_broadcasts?
 
-    next if account.configured_for_broadcasts?(channel:)
     base.failure("Account not configured")
   end
 
