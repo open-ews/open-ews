@@ -1,4 +1,4 @@
-module Event
+module LegacyEvent
   class Base
     include ActiveModel::Validations
     attr_accessor :eventable, :event

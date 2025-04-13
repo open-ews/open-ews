@@ -53,6 +53,10 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :events, only: [ :index, :show ] do
+      get "stats" => "events/stats#index", on: :collection
+    end
+
     resource :account, only: :show
   end
 

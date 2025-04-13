@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_12_085632) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_13_063225) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -196,6 +196,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_12_085632) do
     t.index ["status_update_queued_at"], name: "index_delivery_attempts_on_status_update_queued_at"
   end
 
+  create_table "events", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "type", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_events_on_account_id"
+    t.index ["type"], name: "index_events_on_type"
+  end
+
   create_table "oauth_access_grants", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
     t.bigint "application_id", null: false
@@ -310,6 +319,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_12_085632) do
   add_foreign_key "delivery_attempts", "alerts"
   add_foreign_key "delivery_attempts", "beneficiaries", on_delete: :nullify
   add_foreign_key "delivery_attempts", "broadcasts"
+  add_foreign_key "events", "accounts", on_delete: :cascade
   add_foreign_key "oauth_access_grants", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "accounts", column: "created_by_id"

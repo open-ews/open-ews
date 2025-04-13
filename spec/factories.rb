@@ -93,6 +93,11 @@ FactoryBot.define do
     end
   end
 
+  factory :event do
+    account
+    type { "beneficiary.created" }
+  end
+
   factory :alert do
     broadcast
     beneficiary { association :beneficiary, account: broadcast.account }

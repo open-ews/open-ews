@@ -1,5 +1,5 @@
-module Event
-  class Callout < Event::Base
+module LegacyEvent
+  class Callout < Base
     private
 
     def fire_event!

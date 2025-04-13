@@ -1,5 +1,5 @@
-module Event
-  class BatchOperation < Event::Base
+module LegacyEvent
+  class BatchOperation < Base
     private
 
     def fire_event!
