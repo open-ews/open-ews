@@ -42,7 +42,7 @@ RSpec.resource "Events"  do
       )
     end
 
-    example "Filter events by type and created_at" do
+    example "Filter events" do
       account = create(:account)
       event = create(:event, :beneficiary_deleted, account:)
       create(:event, :beneficiary_deleted, account:, created_at: 60.seconds.ago)
@@ -103,7 +103,7 @@ RSpec.resource "Events"  do
 
       set_authorization_header_for(account)
       do_request(
-        filter: { type: { eq: "beneficiary.deleted" }, created_at: { between: [4.days.ago, 1.day.ago] } },
+        filter: { type: { eq: "beneficiary.deleted" }, created_at: { between: [4.days.ago.utc.iso8601, 1.day.ago.utc.iso8601] } },
         group_by: [
           "type"
         ]
