@@ -1,3 +1,3 @@
 class EventSerializer < ResourceSerializer
-  attributes :type
+  attributes :type, :details
 end

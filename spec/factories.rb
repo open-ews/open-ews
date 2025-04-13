@@ -95,7 +95,29 @@ FactoryBot.define do
 
   factory :event do
     account
-    type { "beneficiary.created" }
+    beneficiary_created
+
+    trait :beneficiary_created do
+      transient do
+        beneficiary { create(:beneficiary, account:) }
+      end
+
+      type { "beneficiary.created" }
+      details {
+        BeneficiaryEventSerializer.new(beneficiary).serializable_hash
+      }
+    end
+
+    trait :beneficiary_deleted do
+      transient do
+        beneficiary { create(:beneficiary, account:) }
+      end
+
+      type { "beneficiary.deleted" }
+      details {
+        BeneficiaryEventSerializer.new(beneficiary).serializable_hash
+      }
+    end
   end
 
   factory :alert do

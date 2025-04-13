@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_13_063225) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_13_075804) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -201,6 +201,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_063225) do
     t.string "type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.jsonb "details", default: {}, null: false
     t.index ["account_id"], name: "index_events_on_account_id"
     t.index ["type"], name: "index_events_on_type"
   end

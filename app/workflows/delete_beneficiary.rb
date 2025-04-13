@@ -8,8 +8,18 @@ class DeleteBeneficiary < ApplicationWorkflow
 
   def call
     Beneficiary.transaction do
-      Event.create!(account: beneficiary.account, type: "beneficiary.deleted")
+      create_event
       beneficiary.destroy!
     end
+  end
+
+  private
+
+  def create_event
+    Event.create!(
+      account: beneficiary.account,
+      type: "beneficiary.deleted",
+      details: BeneficiaryEventSerializer.new(beneficiary).serializable_hash
+    )
   end
 end
