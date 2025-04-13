@@ -79,7 +79,7 @@ RSpec.resource "Beneficiaries"  do
         method: :_disabled
       )
       parameter(
-        :language_code, "The [ISO ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
+        :language_code, "The [ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
         required: false,
         method: :_disabled
       )
@@ -317,7 +317,7 @@ RSpec.resource "Beneficiaries"  do
         required: false
       )
       parameter(
-        :language_code, "The [ISO ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
+        :language_code, "The [ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
         required: false
       )
       parameter(

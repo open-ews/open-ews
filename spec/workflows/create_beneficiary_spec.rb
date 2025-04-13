@@ -14,6 +14,11 @@ RSpec.describe CreateBeneficiary do
       phone_number: "85510999999",
       iso_country_code: "KH"
     )
+    expect(account.events).to contain_exactly(
+      have_attributes(
+        type: "beneficiary.created",
+      )
+    )
   end
 
   it "creates a beneficiary with an address" do

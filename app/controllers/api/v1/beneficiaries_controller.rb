@@ -31,8 +31,7 @@ module API
       end
 
       def destroy
-        beneficiary = scope.find(params[:id]).destroy!
-        beneficiary.destroy!
+        DeleteBeneficiary.call(scope.find(params[:id]))
 
         head :no_content
       end

@@ -4,6 +4,7 @@ class Account < ApplicationRecord
   has_many :beneficiaries
   has_many :beneficiary_groups
   has_many :broadcasts
+  has_many :events
 
   has_many :batch_operations, class_name: "BatchOperation::CalloutPopulation"
 

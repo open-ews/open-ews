@@ -10,6 +10,7 @@ class CreateBeneficiary < ApplicationWorkflow
   def call
     ApplicationRecord.transaction do
       beneficiary = Beneficiary.create!(beneficiary_params)
+      event = Event.create!(account: beneficiary.account, type: "beneficiary.created")
       beneficiary.addresses.create!(address_params) if address_params.present?
       beneficiary
     end
