@@ -29,7 +29,7 @@ RSpec.resource "Events"  do
 
     example "List all events" do
       account = create(:account)
-      event = create(:event, account:)
+      event = create(:event, :beneficiary_created, account:)
       create(:event)
 
       set_authorization_header_for(account)
@@ -44,9 +44,9 @@ RSpec.resource "Events"  do
 
     example "Filter events by type and created_at" do
       account = create(:account)
-      event = create(:event, account:, type: "beneficiary.deleted")
-      create(:event, account:, type: "beneficiary.deleted", created_at: 60.seconds.ago)
-      create(:event, account:, type: "beneficiary.created")
+      event = create(:event, :beneficiary_deleted, account:)
+      create(:event, :beneficiary_deleted, account:, created_at: 60.seconds.ago)
+      create(:event, :beneficiary_created, account:)
 
       set_authorization_header_for(account)
       do_request(filter: { type: { eq: "beneficiary.deleted" }, created_at: { gt: 59.seconds.ago } })
@@ -73,6 +73,11 @@ RSpec.resource "Events"  do
   end
 
   get "/v1/events/stats" do
+    explanation <<~HEREDOC
+      Returns aggregate statistics about events in the OpenEWS system.
+      This endpoint provides insights into the volume and types of events generated over a given period.
+    HEREDOC
+
     with_options scope: :filter do
       FieldDefinitions::EventFields.each do |field|
         parameter(field.name, field.description, required: false, method: :_disabled)
@@ -85,10 +90,9 @@ RSpec.resource "Events"  do
       required: true
     )
 
-    example "Fetch number of deleted beneficiaries in a specific time" do
+    example "Fetch event stats" do
       explanation <<~HEREDOC
-        Returns aggregate statistics about events in the OpenEWS system.
-        This endpoint provides insights into the volume and types of events generated over a given period.
+        This example filters events by the type `beneficiary.deleted` and restricts the results to a specific time range. The returned data is grouped by event type
       HEREDOC
 
       account = create(:account)

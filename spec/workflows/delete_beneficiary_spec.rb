@@ -9,7 +9,13 @@ RSpec.describe DeleteBeneficiary do
 
     expect(account.events).to contain_exactly(
       have_attributes(
-        type: "beneficiary.deleted"
+        type: "beneficiary.deleted",
+        details: {
+          "data" => {
+            "id" => beneficiary.id.to_s,
+            "type" => "beneficiary"
+          }
+        }
       )
     )
     expect(account.beneficiaries.find_by(id: beneficiary.id)).to be_nil
