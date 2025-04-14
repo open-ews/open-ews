@@ -28,6 +28,22 @@ RSpec.resource "Beneficiaries"  do
       )
     end
 
+    example "Filter beneficiaries" do
+      account = create(:account)
+      beneficiary = create(:beneficiary, account:, gender: "F")
+      create(:beneficiary, account:, gender: "M")
+      create(:beneficiary, account:, created_at: 5.days.ago)
+
+      set_authorization_header_for(account)
+      do_request(filter: { created_at: { gt: 4.days.ago.utc.iso8601 }, gender: { eq: "F" } })
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
+      expect(json_response.fetch("data").pluck("id")).to contain_exactly(
+        beneficiary.id.to_s
+      )
+    end
+
     example "Filter beneficiaries by phone number", document: false do
       account = create(:account)
       beneficiary = create(:beneficiary, account:, phone_number: "855715100888")
@@ -109,13 +125,11 @@ RSpec.resource "Beneficiaries"  do
         :iso_region_code, "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address",
         required: false,
         method: :_disabled
-
       )
       parameter(
         :administrative_division_level_2_code, "The second-level administrative subdivision code of the address (e.g. district code)",
         required: false,
         method: :_disabled
-
       )
       parameter(
         :administrative_division_level_2_name, "The second-level administrative subdivision name of the address (e.g. district name)",

@@ -23,18 +23,19 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Filter a broadcast", document: false do
+    example "Filter broadcasts" do
       account = create(:account)
-      running_broadcast = create(:broadcast, account:, status: :running)
-      _stopped_broadcast = create(:broadcast, account:, status: :stopped)
+      broadcast = create(:broadcast, :running, account:)
+      create(:broadcast, :running, account:, started_at: 6.hours.ago, created_at: 6.hours.ago)
+      create(:broadcast, :stopped, account:)
 
       set_authorization_header_for(account)
-      do_request(filter: { status: { eq: "running" } })
+      do_request(filter: { status: { eq: "running" }, started_at: { gt: 5.hours.ago.utc.iso8601 } })
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("broadcast")
       expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-        running_broadcast.id.to_s
+        broadcast.id.to_s
       )
     end
   end
