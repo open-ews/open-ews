@@ -22,19 +22,20 @@ RSpec.resource "Alerts"  do
       expect(json_response.fetch("data").pluck("id")).to match_array(alerts.map(&:id).map(&:to_s))
     end
 
-    example "List all alerts for a broadcast with filters", document: false do
+    example "Filter alerts" do
       account = create(:account)
       broadcast = create(:broadcast, account:)
-      succeeded_alerts = create_list(:alert, 2, :succeeded, broadcast: broadcast)
-      _pending_alerts = create(:alert, :pending, broadcast:)
-      _other_alert = create(:alert, broadcast: create(:broadcast, account:))
+      alerts = create_list(:alert, 2, :succeeded, broadcast:)
+      create(:alert, :succeeded, broadcast:, completed_at: 1.hour.ago, created_at: 1.hour.ago)
+      create(:alert, :pending, broadcast:)
+      create(:alert, broadcast: create(:broadcast, account:))
 
       set_authorization_header_for(account)
-      do_request(broadcast_id: broadcast.id, filter: { status: { eq: "succeeded" } })
+      do_request(broadcast_id: broadcast.id, filter: { status: { eq: "succeeded" }, completed_at: { gt: 50.minutes.ago.utc.iso8601 } })
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("alert")
-      expect(json_response.fetch("data").pluck("id")).to match_array(succeeded_alerts.map(&:id).map(&:to_s))
+      expect(json_response.fetch("data").pluck("id")).to match_array(alerts.map(&:id).map(&:to_s))
     end
 
     example "List all alerts for a broadcast with beneficiary filters", document: false do
