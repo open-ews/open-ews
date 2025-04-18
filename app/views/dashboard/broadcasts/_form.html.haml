@@ -19,7 +19,7 @@
 
       = f.simple_fields_for :beneficiary_filter do |filter_form|
         - FieldDefinitions::BeneficiaryFields.each do |field|
-          - next if field.name.start_with?("address.")
+          - next if BeneficiaryAddress.country_address_data?('kh') && field.name.start_with?("address.")
           - next if BeneficiaryFilter::IGNORE_FIELDS_FOR_BROADCAST.include?(field.name)
 
           = filter_form.simple_fields_for field.name do |field_form|

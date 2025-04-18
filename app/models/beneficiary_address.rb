@@ -15,6 +15,13 @@ class BeneficiaryAddress < ApplicationRecord
     length: { maximum: 255 }
 
 
+  def self.country_address_data?(iso_country_code)
+    @country_address_data ||= YAML.load_file(Rails.root.join("config", "country_address_data.yml"))
+
+    @country_address_data[iso_country_code].present?
+  end
+
+
   def self.address_data(iso_country_code)
     @address_data ||= {}
 
