@@ -2,6 +2,18 @@ module Dashboard
   class BroadcastsController < Dashboard::BaseController
     helper_method :broadcast_summary
 
+    def edit
+      super
+
+      # TODO: Remind the form value
+      @resource.beneficiary_filter = @resource.beneficiary_filter.each_with_object({}) do |(field, options), result|
+        result[field] = {
+          operator: options.first.first,
+          value: options.first.last
+        }
+      end
+    end
+
     private
 
     def association_chain
@@ -12,7 +24,9 @@ module Dashboard
       permitted = params.fetch(:broadcast, {}).permit(:audio_file, :channel)
 
       if params.dig(:broadcast, :beneficiary_filter).present?
-        permitted[:beneficiary_filter] = params.dig(:broadcast, :beneficiary_filter).permit!
+        permitted[:beneficiary_filter] = BeneficiaryFilterFormRequestSchema.new(
+          input_params: params.dig(:broadcast, :beneficiary_filter).permit!
+        ).output
       end
 
       permitted

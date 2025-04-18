@@ -1,4 +1,5 @@
 .card.col-md-6
+  - foobar = resource
   = simple_form_for([:dashboard, resource]) do |f|
     .card-body
       .row
@@ -22,7 +23,7 @@
           - next if BeneficiaryAddress.country_address_data?('kh') && field.name.start_with?("address.")
           - next if BeneficiaryFilter::IGNORE_FIELDS_FOR_BROADCAST.include?(field.name)
 
-          = filter_form.simple_fields_for field.name do |field_form|
+          = filter_form.simple_fields_for field.name.to_sym do |field_form|
             .row{data: { controller: "beneficiary-filter-field" }}
               .col
                 .input-group.mb-2
@@ -38,7 +39,7 @@
                   - elsif field.field_type == :string
                     = field_form.input "value", label: false, as: :string, required: true, input_html: { data: { "beneficiary-filter-field-target": "value" } }
                   - elsif field.field_type == :value
-                    = field_form.input "value", label: false, as: field.schema.input_type, required: true, input_html: { data: { "beneficiary-filter-field-target": "value" } }
+                    = field_form.input "value", label: false, as: field.schema.input_type, required: true, html5: true, input_html: { data: { "beneficiary-filter-field-target": "value" } }
 
                 .is-null-value-input
                   = field_form.input "value", label: false, as: :select, required: true, input_html: { data: { "beneficiary-filter-field-target": "isNullValue" } }

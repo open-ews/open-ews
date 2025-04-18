@@ -30,10 +30,14 @@ module FieldDefinitions
     end
 
     def operator_options_for_select
-      schema.schema_definition.key_map.map do |key|
-        operator = key.name
-
+      operators.map do |operator|
         [ OPERATORS[operator.to_sym], operator ]
+      end
+    end
+
+    def operators
+      schema.schema_definition.key_map.map do |key|
+        key.name
       end
     end
 
