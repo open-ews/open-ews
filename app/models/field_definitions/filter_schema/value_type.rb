@@ -15,7 +15,7 @@ module FieldDefinitions
 
         new(
           schema_definition: schema,
-          base_type: type,
+          input_type: type,
           type: :value,
         )
       end

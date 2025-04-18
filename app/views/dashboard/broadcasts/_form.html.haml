@@ -38,7 +38,7 @@
                   - elsif field.field_type == :string
                     = field_form.input "value", label: false, as: :string, input_html: { data: { "beneficiary-filter-field-target": "value" } }
                   - elsif field.field_type == :value
-                    = field_form.input "value", label: false, as: field.schema.base_type, input_html: { data: { "beneficiary-filter-field-target": "value" } }
+                    = field_form.input "value", label: false, as: field.schema.input_type, input_html: { data: { "beneficiary-filter-field-target": "value" } }
 
                 .is-null-value-input
                   = field_form.input "value", label: false, as: :select, input_html: { data: { "beneficiary-filter-field-target": "isNullValue" } }
