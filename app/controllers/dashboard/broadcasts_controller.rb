@@ -5,7 +5,6 @@ module Dashboard
     def edit
       super
 
-      # TODO: Remind the form value
       @resource.beneficiary_filter = @resource.beneficiary_filter.each_with_object({}) do |(field, options), result|
         result[field] = {
           operator: options.first.first,

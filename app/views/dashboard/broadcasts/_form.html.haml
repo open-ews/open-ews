@@ -24,14 +24,21 @@
           - next if BeneficiaryFilter::IGNORE_FIELDS_FOR_BROADCAST.include?(field.name)
 
           = filter_form.simple_fields_for field.name.to_sym do |field_form|
-            .row{data: { controller: "beneficiary-filter-field" }}
+            .row{data: { controller: "beneficiary-filter-field-foobar" }}
               .col
                 .input-group.mb-2
                   %span.input-group-text
                     %input.form-check-input.m-0{type: "checkbox", data: { "beneficiary-filter-field-target": "toggleElement", action:  "beneficiary-filter-field#toggle" }}
                   %input.form-control{type: "text", value: field.name.titleize, readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
               .col
-                = field_form.input "operator", label: false, as: :select, collection: field.operator_options_for_select, required: true, input_html: { data: { "beneficiary-filter-field-target": "operator", action:  "beneficiary-filter-field#operatorChanged" } }
+                - puts "selected #{field.name}: #{resource.beneficiary_filter.dig(field.name, "operator")}"
+                = field_form.input "operator",
+                  label: false,
+                  as: :select,
+                  collection: field.operator_options_for_select,
+                  selected: resource.beneficiary_filter.dig(field.name, "operator"),
+                  required: true,
+                  input_html: { data: { "beneficiary-filter-field-target": "operator", action:  "beneficiary-filter-field#operatorChanged" } }
               .col
                 .value-input
                   - if field.field_type == :list
