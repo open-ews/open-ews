@@ -2,15 +2,20 @@ module Dashboard
   class BroadcastsController < Dashboard::BaseController
     helper_method :broadcast_summary
 
+    def new
+      super
+
+      @resource = BroadcastForm.new
+    end
+
     def edit
       super
 
-      @resource.beneficiary_filter = @resource.beneficiary_filter.each_with_object({}) do |(field, options), result|
-        result[field] = {
-          operator: options.first.first,
-          value: options.first.last
-        }
-      end
+      broadcast = @resource
+      @resource = BroadcastForm.initialize_with(
+        broadcast,
+        beneficiary_filter: broadcast.beneficiary_filter
+      )
     end
 
     private

@@ -10,11 +10,7 @@ export default class extends Controller {
   ]
 
   connect() {
-    const enabled = this.toggleElementTarget.checked
-
-    if (!enabled) {
-      this.toggle()
-    }
+    this.#toggleInputs()
   }
 
   toggle() {
@@ -30,6 +26,26 @@ export default class extends Controller {
 
   operatorChanged() {
     this.#toggleValueInput()
+  }
+
+  #toggleInputs() {
+    const enabled = this.toggleElementTarget.checked
+
+    this.fieldNameTarget.disabled = !enabled
+    this.operatorTarget.disabled = !enabled
+
+    const isNullSelected = this.operatorTarget.value === "is_null"
+    this.isNullValueTarget.disabled = !isNullSelected
+    this.isNullValueTarget.style.display = isNullSelected ? "unset" : "none"
+
+    // NOTE: handle multiple value inputs (eg. date select)
+    this.valueTargets.forEach((e) => {
+      e.disabled = !enabled || isNullSelected
+      // NOTE: hide the entire wrapper
+      e.closest(".value-input").style.display = isNullSelected
+        ? "none"
+        : "unset"
+    })
   }
 
   #toggleValueInput() {
