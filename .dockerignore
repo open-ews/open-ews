@@ -1,11 +1,19 @@
 .git
 .gitignore
 .github
-.circleci
-.ebextensions
 .bundle
+.dockerignore
+.rspec
+.rubocop.yml
+.yarn
+.tool-versions
+Dockerfile
+examples.txt
+LICENSE
+README.md
 coverage
 doc
+docs
 docker
 infrastructure
 log
@@ -15,10 +23,3 @@ spec
 storage
 tmp
 vendor/bundle
-
-# Ignore development files
-/.devcontainer
-
-# Ignore Docker-related files
-/.dockerignore
-/Dockerfile*

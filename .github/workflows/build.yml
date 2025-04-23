@@ -209,10 +209,11 @@ jobs:
       - name: Build and push application image
         uses: docker/build-push-action@v6
         with:
+          context: .
           push: true
           platforms: linux/${{ matrix.platform.arch }}
-          cache-from: type=gha,scope=${{ matrix.identifier }}-${{ matrix.platform.arch }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.identifier }}-${{ matrix.platform.arch }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           provenance: false
           tags: |
             ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}-${{ matrix.platform.arch }}
