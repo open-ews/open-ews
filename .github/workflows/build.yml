@@ -45,7 +45,7 @@ jobs:
           [
             {
               "identifier": "open-ews-staging",
-              "branch": "develop",
+              "branch": "fix_build",
               "environment": "staging",
               "friendly_image_tag": "beta",
               "image_tag": "stag-${{ github.sha }}",
@@ -209,6 +209,7 @@ jobs:
       - name: Build and push application image
         uses: docker/build-push-action@v6
         with:
+          context: .
           push: true
           platforms: linux/${{ matrix.platform.arch }}
           cache-from: type=gha,scope=${{ matrix.identifier }}-${{ matrix.platform.arch }}
