@@ -5,7 +5,8 @@
 .dockerignore
 .rspec
 .rubocop.yml
-.tool-version
+.yarn
+.tool-versions
 Dockerfile
 examples.txt
 LICENSE
