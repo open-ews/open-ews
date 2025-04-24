@@ -53,15 +53,19 @@
           .col
             .input-group.mb-2
               %span.input-group-text
-                %input.form-check-input.m-0{type: "checkbox", data: { "beneficiary-addresses-filter-field-target": "toggleElement", action:  "beneficiary-addresses-filter-field#toggle", "bs-toggle": "collapse", "bs-target": "#addresses" }}
+                %input.form-check-input.m-0{type: "checkbox", checked: @resource.beneficiary_filter.administrative_division_level_3_code.present?, data: { "beneficiary-addresses-filter-field-target": "toggleElement", action:  "beneficiary-addresses-filter-field#toggle", "bs-toggle": "collapse", "bs-target": "#addresses" }}
               %input.form-control{type: "text", value: "Addresses", readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
 
+              %input.form-control{name: "broadcast[beneficiary_filter][administrative_division_level_3_code][operator]", type: "hidden", value: "inArray", data: { "beneficiary-addresses-filter-field-target": "operator" } }
+
             #addresses.collapse.overflow-auto{
+              class: ("show" if @resource.beneficiary_filter.administrative_division_level_3_code.present?),
               style: "max-height: 200px",
               data: {
                 controller: "address-treeview",
                 "address-treeview-data-value": BeneficiaryAddress.address_data("kh").to_json,
-                "address-treeview-field-name-value": "commune_codes"
+                "address-treeview-selected-value": (@resource.beneficiary_filter.administrative_division_level_3_code&.value || []).to_json,
+                "address-treeview-field-name-value": "broadcast[beneficiary_filter][administrative_division_level_3_code]"
               }
             }
 
