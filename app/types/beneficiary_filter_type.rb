@@ -11,4 +11,12 @@ class BeneficiaryFilterType < ActiveRecord::Type::Value
 
     BroadcastForm::BeneficiaryFilter.new(result)
   end
+
+  def serialize(value)
+    return value unless value.is_a?(BroadcastForm::BeneficiaryFilter)
+
+    value.attributes.each_with_object({}) do |(name, filter), result|
+      result[name] = { filter.operator => filter.value } if filter.present?
+    end
+  end
 end

@@ -8,7 +8,9 @@ class BroadcastForm
 
   attribute :channel
   attribute :audio_file
-  attribute :beneficiary_filter, BeneficiaryFilterType.new, default: -> { BroadcastForm::BeneficiaryFilter.new }
+  attribute :beneficiary_filter,
+    BeneficiaryFilterType.new,
+    default: -> { BroadcastForm::BeneficiaryFilter.new }
 
   enumerize :channel, in: Broadcast::CHANNELS, default: :voice
 
@@ -25,5 +27,19 @@ class BroadcastForm
       audio_file: broadcast.audio_file,
       beneficiary_filter:
     )
+  end
+
+  def save
+    return false if invalid?
+
+    Broadcast.transaction do
+      object.channel = channel
+      object.audio_file = audio_file
+      object.beneficiary_filter = BeneficiaryFilterType.new.serialize(
+        beneficiary_filter
+      )
+
+      object.save!
+    end
   end
 end

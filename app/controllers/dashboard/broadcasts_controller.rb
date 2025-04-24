@@ -2,6 +2,8 @@ module Dashboard
   class BroadcastsController < Dashboard::BaseController
     helper_method :broadcast_summary
 
+    # before_action :not_allowed_to_edit, only: [ :edit, :update ]
+
     def new
       super
 
@@ -20,6 +22,22 @@ module Dashboard
 
     private
 
+    def prepare_resource_for_create
+      broadcast = @resource
+      @resource =  BroadcastForm.new(
+        object: broadcast,
+        **permitted_params
+      )
+    end
+
+    def prepare_resource_for_update
+      broadcast = @resource
+      @resource =  BroadcastForm.new(
+        object: broadcast,
+        **permitted_params
+      )
+    end
+
     def association_chain
       current_account.broadcasts
     end
@@ -28,38 +46,24 @@ module Dashboard
       permitted = params.fetch(:broadcast, {}).permit(:audio_file, :channel)
 
       if params.dig(:broadcast, :beneficiary_filter).present?
-        permitted[:beneficiary_filter] = BeneficiaryFilterFormRequestSchema.new(
-          input_params: params.dig(:broadcast, :beneficiary_filter).permit!
-        ).output
+        permitted[:beneficiary_filter] = BroadcastForm::BeneficiaryFilter.new(
+          params.dig(:broadcast, :beneficiary_filter).permit!
+        )
       end
 
       permitted
     end
 
-    def before_update_attributes
-      clear_metadata
-      resource.settings.clear
-    end
 
-    def build_key_value_fields
-      build_metadata_field
-      resource.build_settings_field if resource.settings_fields.empty?
-    end
-
-    def prepare_resource_for_create
-      resource.created_by ||= current_user
-    end
-
-    def prepare_resource_for_edit
-      unless resource.not_yet_started?
-        redirect_to(
-          dashboard_broadcast_path(resource),
-          alert: I18n.t("flash.broadcasts.not_allowed_to_edit")
-        )
-      end
-
-      super
-    end
+    # TODO: verify if the user can edit broadcast
+    # def not_allowed_to_edit
+    #   return if resource.not_yet_started?
+    #
+    #   redirect_to(
+    #     dashboard_broadcast_path(resource),
+    #     alert: I18n.t("flash.broadcasts.not_allowed_to_edit")
+    #   )
+    # end
 
     def broadcast_summary
       @broadcast_summary ||= BroadcastSummary.new(resource)
