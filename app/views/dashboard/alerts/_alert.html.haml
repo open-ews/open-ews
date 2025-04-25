@@ -1,9 +1,11 @@
-= content_tag_for(:tr, alert) do
+%tr{role: "row"}
   %td
     = link_to(alert.id, show_location(alert))
   %td
-    = link_to(alert.beneficiary_id, dashboard_beneficiary_path(alert.beneficiary_id))
+    = link_to(alert.phone_number, show_location(alert.beneficiary))
   %td
-    = link_to(alert.broadcast_id, dashboard_broadcast_path(alert.broadcast_id))
+    = alert.delivery_attempts_count
   %td
-    = alert.created_at
+    = alert.status.humanize
+  %td
+    = local_time(alert.created_at)
