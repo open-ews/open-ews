@@ -6,7 +6,7 @@ class ApplicationRequestSchema < Dry::Validation::Contract
   option :resource, optional: true
   option :account, optional: true
 
-  delegate :success?, :errors, to: :result
+  delegate :success?, :context, :errors, to: :result
 
   register_macro(:phone_number_format) do
     key.failure(text: "is invalid") if key? && !Phony.plausible?(value)
@@ -21,6 +21,21 @@ class ApplicationRequestSchema < Dry::Validation::Contract
     key.failure(text: "is invalid") unless isValid
   rescue URI::InvalidURIError
     key.failure(text: "is invalid")
+  end
+
+  register_macro(:beneficiary_groups) do
+    next unless key?
+
+    next if account.beneficiary_groups.where(id: value.pluck(:id)).count == value.pluck(:id).size
+    key.failure(text: "is invalid")
+  end
+
+  register_macro(:broadcast_status) do
+    next unless key?
+    next unless broadcast_status_validator.may_transition_to?(:running)
+    next if account.configured_for_broadcasts?
+
+    base.failure("Account not configured")
   end
 
   # NOTE: composable contracts

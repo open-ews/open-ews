@@ -1,13 +1,14 @@
 class AudioURL
-  attr_reader :key, :region, :bucket
+  attr_reader :key, :host
 
   def initialize(options)
     @key = options.fetch(:key)
-    @region = options.fetch(:region, Rails.configuration.app_settings.fetch(:aws_region))
-    @bucket = options.fetch(:bucket, Rails.configuration.app_settings.fetch(:audio_bucket))
+    @host = options.fetch(:host) { AppSettings.fetch(:audio_host) }
   end
 
   def url
-    "https://s3.#{region}.amazonaws.com/#{bucket}/#{key}"
+    uri = URI(host)
+    uri.path = "/#{key}"
+    uri.to_s
   end
 end

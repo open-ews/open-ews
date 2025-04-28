@@ -62,7 +62,4 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   config.time_zone = Rails.configuration.app_settings.fetch(:time_zone)
-
-  Rails.application.routes.default_url_options[:host] =
-    Rails.configuration.app_settings.fetch(:default_url_host)
 end

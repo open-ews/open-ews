@@ -1,6 +1,8 @@
 module V1
   class UpdateBroadcastRequestSchema < JSONAPIRequestSchema
-    STATES = Broadcast.aasm.states.map { _1.name.to_s } - [ "queued", "errored" ]
+    VALID_STATES = [ "running", "stopped" ].freeze
+
+    option :broadcast_status_validator, default: -> { BroadcastStatusValidator.new(resource.status) }
 
     params do
       required(:data).value(:hash).schema do
@@ -9,8 +11,17 @@ module V1
         required(:attributes).value(:hash).schema do
           optional(:audio_url).filled(:string)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
-          optional(:status).filled(included_in?: STATES)
+          optional(:status).filled(included_in?: VALID_STATES)
           optional(:metadata).value(:hash)
+        end
+
+        optional(:relationships).value(:hash).schema do
+          optional(:beneficiary_groups).value(:hash).schema do
+            required(:data).array(:hash) do
+              required(:type).filled(:str?, eql?: "beneficiary_group")
+              required(:id).filled(:int?)
+            end
+          end
         end
       end
     end
@@ -20,36 +31,43 @@ module V1
 
     attribute_rule(:beneficiary_filter) do
       next unless key?
-      next if resource.not_yet_started?
+      next if broadcast_status_validator.may_transition_to?(:running)
 
-      key.failure("does not allow to update after broadcast started")
+      key.failure("cannot be updated after broadcast started")
     end
 
     attribute_rule(:audio_url) do
       next unless key?
-      next if resource.not_yet_started?
+      next if broadcast_status_validator.may_transition_to?(:running)
 
-      key.failure("does not allow to update after broadcast started")
+      key.failure("cannot be updated after broadcast started")
     end
 
-    attribute_rule(:status) do
+    attribute_rule(:status).validate(:broadcast_status)
+    attribute_rule(:status) do |context:, **|
       next unless key?
 
-      next if resource.status == value
-      next if value == "running" && (resource.may_start? || resource.may_resume?)
-      next if value == "stopped" && resource.may_stop?
-      next if value == "completed" && resource.may_complete?
+      if broadcast_status_validator.may_transition_to?(value)
+        context[:desired_status] = broadcast_status_validator.transition_to!(value).name
+      else
+        key.failure("cannot transition from #{resource.status} to #{value}")
+      end
+    end
 
-      key.failure("does not allow to transition from #{resource.status} to #{value}")
+    relationship_rule(:beneficiary_groups).validate(:beneficiary_groups)
+    relationship_rule(:beneficiary_groups) do
+      next unless key?
+      next if broadcast_status_validator.may_transition_to?(:running)
+
+      key.failure("cannot be updated after broadcast started")
     end
 
     def output
       result = super
-
-      if result[:status] == "running" && (resource.pending? || resource.errored?)
-        result[:status] = "queued"
-      end
-
+      result.delete(:status)
+      beneficiary_groups = result.delete(:beneficiary_groups)
+      result[:desired_status] = context.fetch(:desired_status) if context.key?(:desired_status)
+      result[:beneficiary_group_ids] = beneficiary_groups if beneficiary_groups.present?
       result
     end
   end

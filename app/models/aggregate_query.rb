@@ -7,7 +7,7 @@ class AggregateQuery
   end
 
   def apply
-    scope.joins(joins_with).group(group_columns)
+    scope.left_joins(joins_with).group(group_columns)
   end
 
   private

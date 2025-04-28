@@ -13,20 +13,15 @@ class Beneficiary < ApplicationRecord
 
   belongs_to :account
 
-  has_many :addresses, class_name: "BeneficiaryAddress"
+  has_many :addresses, class_name: "BeneficiaryAddress", foreign_key: :beneficiary_id
+  has_many :group_memberships, class_name: "BeneficiaryGroupMembership"
+  has_many :groups, through: :group_memberships, source: :beneficiary_group, class_name: "BeneficiaryGroup"
   has_many :alerts
   has_many :callouts, through: :alerts
   has_many :delivery_attempts
-  has_many :remote_phone_call_events, through: :delivery_attempts
 
   validates :phone_number, presence: true, length: { minimum: 3 }
   validates :iso_country_code, presence: true
-
-  delegate :call_flow_logic,
-           to: :account,
-           allow_nil: true
-
-  accepts_nested_attributes_for :addresses, allow_destroy: true, reject_if: :all_blank
 
   def self.jsonapi_serializer_class
     BeneficiarySerializer

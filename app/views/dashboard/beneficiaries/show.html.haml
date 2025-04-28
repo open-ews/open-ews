@@ -2,7 +2,6 @@
   = render("shared/edit_resource_page_action", path: edit_dashboard_beneficiary_path(resource))
 
   = render "shared/resource_related_links" do
-    = related_link_to t(:"titles.alerts.index"), dashboard_beneficiary_alerts_path(resource)
     = render("shared/destroy_resource_page_action", path: dashboard_beneficiary_path(resource))
 
 .card

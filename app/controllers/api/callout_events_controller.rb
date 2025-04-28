@@ -15,7 +15,7 @@ module API
     end
 
     def event_class
-      Event::Callout
+      LegacyEvent::Callout
     end
 
     def access_token_write_permissions

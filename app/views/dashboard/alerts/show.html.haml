@@ -4,7 +4,7 @@
 
 .card
   .card-body
-    = show_for(resource, style: "border: none", class: "foo") do |f|
+    = show_for(resource, style: "border: none") do |f|
       = f.attribute :id
       = f.attribute :broadcast do
         = link_to(resource.broadcast_id, dashboard_broadcast_path(resource.broadcast_id))

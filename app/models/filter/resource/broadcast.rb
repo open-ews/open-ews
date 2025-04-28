@@ -4,7 +4,7 @@ module Filter
       private
 
       def filter_params
-        params.slice(:status, :call_flow_logic)
+        params.slice(:status)
       end
     end
   end

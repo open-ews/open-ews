@@ -1,29 +1,35 @@
 class ScheduledJob < ApplicationJob
-  queue_as Rails.configuration.app_settings.fetch(:aws_sqs_high_priority_queue_name)
+  queue_as AppSettings.fetch(:aws_sqs_high_priority_queue_name)
 
   def perform
     Account.find_each do |account|
       queue_delivery_attempts(account)
     end
 
-    fetch_unknown_call_statuses
+    update_delivery_attempts
   end
 
   private
 
   def queue_delivery_attempts(account)
-    delivery_attempts = DeliveryAttempt.created.where(broadcast_id: account.broadcasts.running.select(:id))
+    delivery_attempts = DeliveryAttempt.where(status: :created).where(broadcast_id: account.broadcasts.where(status: :running).select(:id))
 
-    delivery_attempts.limit(account.delivery_attempt_queue_limit).each do |delivery_attempt|
-      delivery_attempt.queue!
-      QueueRemoteCallJob.perform_later(delivery_attempt)
+    delivery_attempts.joins(:alert).order("alerts.priority").limit(account.delivery_attempt_queue_limit).each do |delivery_attempt|
+      delivery_attempt.transition_to!(:queued)
+      InitiateDeliveryAttemptJob.perform_later(delivery_attempt)
     end
   end
 
-  def fetch_unknown_call_statuses
-    DeliveryAttempt.to_fetch_remote_status.find_each do |delivery_attempt|
-      FetchRemoteCallJob.perform_later(delivery_attempt)
-      delivery_attempt.touch(:remote_status_fetch_queued_at)
+  def update_delivery_attempts
+    delivery_attempts_with_unknown_status.find_each do |delivery_attempt|
+      UpdateDeliveryAttemptStatusJob.perform_later(delivery_attempt)
+      delivery_attempt.touch(:status_update_queued_at)
     end
+  end
+
+  def delivery_attempts_with_unknown_status
+    DeliveryAttempt.where(status: :initiated, initiated_at: ..10.minutes.ago).merge(
+      DeliveryAttempt.where(status_update_queued_at: nil).or(DeliveryAttempt.where(status_update_queued_at: ..15.minutes.ago))
+    )
   end
 end

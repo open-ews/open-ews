@@ -37,6 +37,6 @@ class StatsQuery
   end
 
   def total_count(query)
-    ApplicationRecord.from(query.select("1")).count
+    ApplicationRecord.from(query.distinct(false).select("1").limit(MAX_RESULTS + 1)).count
   end
 end

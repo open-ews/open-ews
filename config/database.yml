@@ -8,11 +8,11 @@ default: &default
 
 development: &development
   <<: *default
-  database: somleng_scfm_development
+  database: open_ews_development
 
 test:
   <<: *default
-  database: somleng_scfm_test
+  database: open_ews_test
 
 production: &production
   <<: *default

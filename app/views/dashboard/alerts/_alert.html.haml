@@ -1,6 +1,6 @@
 %tr{role: "row"}
   %td
-    = link_to(alert.id, show_location(alert))
+    = link_to(alert.id, dashboard_broadcast_alert_path(alert.broadcast, alert))
   %td
     = link_to(alert.phone_number, show_location(alert.beneficiary))
   %td

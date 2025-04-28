@@ -6,9 +6,8 @@ class JSONAPIResponder < ApplicationResponder
     decorator_class = options.key?(:decorator_class) ? options.fetch(:decorator_class) : resource.decorator_class
     serializer_options = options.delete(:serializer_options) || {}
     pagination_options = options.delete(:pagination_options) || {}
-    if request.query_parameters.key?(:include)
-      serializer_options[:include] = request.query_parameters.fetch(:include).split(",")
-    end
+
+    serializer_options[:include] ||= include_parameter
 
     if resource_is_collection?(resource)
       if serializer_options.fetch(:pagination, true) != false
@@ -36,5 +35,9 @@ class JSONAPIResponder < ApplicationResponder
 
   def resource_is_collection?(resource)
     resource.respond_to?(:size) && !resource.respond_to?(:each_pair)
+  end
+
+  def include_parameter
+    JSONAPI::IncludeParameterParser.new.parse(request.query_parameters)
   end
 end

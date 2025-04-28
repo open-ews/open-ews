@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem "rails", "~> 8.0.1"
+gem "rails", "~> 8.0.2"
 
 # The modern frontend packages for Rails
 gem "propshaft"
@@ -34,7 +34,6 @@ gem "aws-sdk-rails"
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sqs"
 gem "aws-actionmailer-ses"
-gem "bitmask_attributes", github: "numerex/bitmask_attributes"
 gem "bootsnap", require: false
 gem "countries"
 gem "country_select"
@@ -73,8 +72,7 @@ group :development, :test do
   gem "brakeman", require: false
   gem "i18n-tasks"
   gem "pry"
-  # Support Rack 3.1 https://github.com/zipmark/rspec_api_documentation/issues/548
-  gem "rspec_api_documentation", github: "samnang/rspec_api_documentation", branch: "fix-supporting-rack-3"
+  gem "rspec_api_documentation", github: "zipmark/rspec_api_documentation"
   gem "rspec-rails"
 end
 
@@ -93,7 +91,7 @@ group :test do
   gem "rails-controller-testing"
   gem "selenium-webdriver"
   gem "shoulda-matchers"
-  gem "simplecov", require: false
-  gem "simplecov-lcov", require: false
+  gem "simplecov"
+  gem "simplecov-cobertura"
   gem "webmock"
 end

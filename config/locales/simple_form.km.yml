@@ -11,9 +11,6 @@ km:
   simple_form:
     error_notification:
       default_message: 'Please review the problems below:'
-    labels:
-      account:
-        call_flow_logic: Default call flow logic
     'no': 'No'
     options:
       access_token:
@@ -40,14 +37,6 @@ km:
         platform_provider_name:
           somleng: Somleng
           twilio: Twilio
-      defaults:
-        call_flow_logic:
-          CallFlowLogic::EWSLaosRegistration: Laos Early Warning System Registration
-          CallFlowLogic::EWSRegistration: Cambodian Early Warning System Registration
-          CallFlowLogic::HelloWorld: Hello World
-          CallFlowLogic::MamaInfoRegistration: Mama Info Registration
-          CallFlowLogic::PlayMessage: Play Message
-          CallFlowLogic::PlayMessageStartRapidproFlow: Play Message and Start RapidPro Flow
     required:
       mark: "*"
       text: required

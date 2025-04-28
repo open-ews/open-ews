@@ -1,5 +1,4 @@
-= page_title(title: title) do
-  = render("shared/new_resource_page_action", path: new_dashboard_access_token_path)
+= page_title(title: title)
 
 .card-body
   = render("shared/resources_table", resource_class: AccessToken, columns: [:token, :created_at], unsortable_columns: [:token, :permissions])

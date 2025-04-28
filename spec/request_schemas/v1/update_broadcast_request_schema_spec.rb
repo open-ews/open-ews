@@ -41,11 +41,13 @@ module V1
     end
 
     it "validates the status" do
-      errored_broadcast = create(:broadcast, status: :errored)
-      pending_broadcast = create(:broadcast, status: :pending)
-      running_broadcast = create(:broadcast, status: :running)
-      stopped_broadcast = create(:broadcast, status: :stopped)
-      completed_broadcast = create(:broadcast, status: :completed)
+      account = create(:account)
+      errored_broadcast = create(:broadcast, status: :errored, account:)
+      pending_broadcast = create(:broadcast, status: :pending, account:)
+      running_broadcast = create(:broadcast, status: :running, account:)
+      stopped_broadcast = create(:broadcast, status: :stopped, account:)
+      completed_broadcast = create(:broadcast, status: :completed, account:)
+      queued_broadcast = create(:broadcast, status: :queued, account:)
 
       expect(
         validate_schema(input_params: { data: { attributes: { status: "foobar" } } }, options: { resource: pending_broadcast })
@@ -53,10 +55,6 @@ module V1
 
       expect(
         validate_schema(input_params: { data: { attributes: {} } }, options: { resource: pending_broadcast })
-      ).to have_valid_field(:data, :attributes, :status)
-
-      expect(
-        validate_schema(input_params: { data: { attributes: { status: "pending" } } }, options: { resource: pending_broadcast })
       ).to have_valid_field(:data, :attributes, :status)
 
       expect(
@@ -68,16 +66,8 @@ module V1
       ).to have_valid_field(:data, :attributes, :status)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { status: "completed" } } }, options: { resource: running_broadcast })
-      ).to have_valid_field(:data, :attributes, :status)
-
-      expect(
         validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: stopped_broadcast })
       ).to have_valid_field(:data, :attributes, :status)
-
-      expect(
-        validate_schema(input_params: { data: { attributes: { status: "completed" } } }, options: { resource: stopped_broadcast })
-      ).not_to have_valid_field(:data, :attributes, :status)
 
       expect(
         validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: completed_broadcast })
@@ -104,8 +94,79 @@ module V1
       ).not_to have_valid_field(:data, :attributes, :status)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { status: "completed" } } }, options: { resource: errored_broadcast })
+        validate_schema(input_params: { data: { attributes: { status: "running" } } }, options: { resource: queued_broadcast })
       ).not_to have_valid_field(:data, :attributes, :status)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "voice",
+                status: "running"
+              }
+            }
+          },
+          options: {
+            account:,
+            resource: pending_broadcast
+          }
+        )
+      ).not_to have_valid_schema(error_message: "Account not configured")
+    end
+
+    it "validates the beneficiary groups" do
+      account = create(:account)
+      broadcast = create(:broadcast, :pending, account:)
+      running_broadcast = create(:broadcast, :running, account:)
+      beneficiary_group = create(:beneficiary_group, account:)
+      other_beneficiary_group = create(:beneficiary_group)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              relationships: {
+                beneficiary_groups: {
+                  data: [
+                    {
+                      id: other_beneficiary_group.id,
+                      type: "beneficiary_group"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          options: {
+            account:,
+            resource: broadcast
+          }
+        )
+      ).not_to have_valid_field(:data, :relationships, :beneficiary_groups, :data)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              relationships: {
+                beneficiary_groups: {
+                  data: [
+                    {
+                      id: beneficiary_group.id,
+                      type: "beneficiary_group"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          options: {
+            account:,
+            resource: running_broadcast
+          }
+        )
+      ).not_to have_valid_field(:data, :relationships, :beneficiary_groups, :data)
     end
 
     it "handles post processing" do
@@ -126,7 +187,7 @@ module V1
       ).output
 
       expect(result).to include(
-        status: "queued",
+        desired_status: :queued,
         audio_url: "http://example.com/sample.mp3"
       )
 
@@ -144,7 +205,7 @@ module V1
       ).output
 
       expect(result).to include(
-        status: "queued",
+        desired_status: :queued,
         audio_url: "http://example.com/sample.mp3"
       )
     end

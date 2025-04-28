@@ -3,7 +3,7 @@ require "rails_helper"
 
 RSpec.resource "JSONAPI", document: false  do
   get "/v1/beneficiaries/:id" do
-    it "supports include related resources" do
+    it "supports include for related resources" do
       beneficiary = create(:beneficiary)
       create(:beneficiary_address, beneficiary:)
 
@@ -12,7 +12,7 @@ RSpec.resource "JSONAPI", document: false  do
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
-      expect(json_response.dig("included", 0).to_json).to match_api_response_schema("address")
+      expect(json_response.dig("included", 0).to_json).to match_api_response_schema("beneficiary_address")
     end
 
     it "handles passing an invalid related resource" do

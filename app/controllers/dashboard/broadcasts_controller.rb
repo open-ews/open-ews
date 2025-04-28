@@ -2,8 +2,6 @@ module Dashboard
   class BroadcastsController < Dashboard::BaseController
     helper_method :broadcast_summary
 
-    # before_action :not_allowed_to_edit, only: [ :edit, :update ]
-
     def new
       super
 
@@ -53,17 +51,6 @@ module Dashboard
 
       permitted
     end
-
-
-    # TODO: verify if the user can edit broadcast
-    # def not_allowed_to_edit
-    #   return if resource.not_yet_started?
-    #
-    #   redirect_to(
-    #     dashboard_broadcast_path(resource),
-    #     alert: I18n.t("flash.broadcasts.not_allowed_to_edit")
-    #   )
-    # end
 
     def broadcast_summary
       @broadcast_summary ||= BroadcastSummary.new(resource)

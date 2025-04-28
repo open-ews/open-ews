@@ -15,7 +15,7 @@ module API
     end
 
     def event_class
-      Event::BatchOperation
+      LegacyEvent::BatchOperation
     end
 
     def access_token_write_permissions

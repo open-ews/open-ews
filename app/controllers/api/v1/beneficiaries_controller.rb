@@ -2,30 +2,24 @@ module API
   module V1
     class BeneficiariesController < BaseController
       def index
-        apply_filters(beneficiaries_scope, with: BeneficiaryFilter)
+        apply_filters(scope.includes(include_parameter(only: [ :addresses, :groups ])), with: BeneficiaryFilter)
       end
 
       def show
-        beneficiary = beneficiaries_scope.find(params[:id])
-        respond_with_resource(beneficiary)
+        respond_with_resource(scope.find(params[:id]))
       end
 
       def create
         validate_request_schema(
           with: ::V1::BeneficiaryRequestSchema,
-          serializer_options: { include: [ :addresses ] },
-          # TODO: can remove this once after we rename the model to beneficiary
-          location: ->(resource) { api_v1_beneficiary_path(resource) }
+          serializer_options: { include: [ :addresses ] }
         ) do |permitted_params|
-            CreateBeneficiaryWithAddress.new(
-              account: current_account,
-              **permitted_params
-            ).call
-          end
+          CreateBeneficiary.call(account: current_account, **permitted_params)
+        end
       end
 
       def update
-        beneficiary = beneficiaries_scope.find(params[:id])
+        beneficiary = scope.find(params[:id])
 
         validate_request_schema(
           with: ::V1::UpdateBeneficiaryRequestSchema,
@@ -37,15 +31,14 @@ module API
       end
 
       def destroy
-        beneficiary = beneficiaries_scope.find(params[:id])
-        beneficiary.destroy!
+        DeleteBeneficiary.call(scope.find(params[:id]))
 
         head :no_content
       end
 
       private
 
-      def beneficiaries_scope
+      def scope
         current_account.beneficiaries
       end
     end

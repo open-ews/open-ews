@@ -1,140 +1,22 @@
 class DeliveryAttempt < ApplicationRecord
-  TWILIO_CALL_STATUSES = {
-    queued: "queued",
-    ringing: "ringing",
-    in_progress: "in-progress",
-    canceled: "canceled",
-    completed: "completed",
-    busy: "busy",
-    failed: "failed",
-    not_answered: "no-answer"
-  }.freeze
-
-  IN_PROGRESS_STATUSES = %i[remotely_queued in_progress].freeze
-
-  # https://www.twilio.com/docs/api/voice/call#resource-properties
-  TWILIO_DIRECTIONS = {
-    inbound: "inbound"
-  }.freeze
-
   attribute :phone_number, :phone_number
 
-  belongs_to :alert, optional: true, counter_cache: true
-  belongs_to :beneficiary, validate: true
-  belongs_to :account
-  belongs_to :broadcast, optional: true
-  has_many   :remote_phone_call_events, dependent: :restrict_with_error
+  belongs_to :alert, counter_cache: true
+  belongs_to :beneficiary
+  belongs_to :broadcast
+
+  delegate :account, to: :broadcast
 
   include MetadataHelpers
-  include HasCallFlowLogic
-  include AASM
 
-  delegate :call_flow_logic, to: :alert, prefix: true, allow_nil: true
-  delegate :call_flow_logic, to: :beneficiary, prefix: true, allow_nil: true
+  delegate :initiated?, :transition_to!, :may_transition_to?, to: :state_machine
 
-  delegate :beneficiary,
-           :phone_number,
-           to: :alert,
-           prefix: true,
-           allow_nil: true
-
-  delegate :platform_provider, to: :account
-
-  before_validation :set_defaults, on: :create
-  before_destroy    :validate_destroy
-  validates :phone_number, presence: true
-
-  accepts_nested_key_value_fields_for :remote_response
-  accepts_nested_key_value_fields_for :remote_queue_response
-
-  aasm column: :status, whiny_transitions: false do
-    state :created, initial: true
-    state :queued
-    state :remotely_queued
-    state :errored
+  class StateMachine < StateMachine::ActiveRecord
+    state :created, initial: true, transitions_to: :queued
+    state :queued, transitions_to: [ :initiated, :failed ]
+    state :initiated, transitions_to: [ :failed, :succeeded ]
     state :failed
-    state :in_progress
-    state :busy
-    state :not_answered
-    state :canceled
-    state :completed
-    state :expired
-
-    event :queue do
-      transitions(
-        from: :created,
-        to: :queued
-      )
-    end
-
-    event :queue_remote, after_commit: :touch_remotely_queued_at do
-      transitions(
-        from: :queued,
-        to: :remotely_queued,
-        if: :remote_call_id?
-      )
-
-      transitions(
-        from: :queued,
-        to: :errored
-      )
-    end
-
-    event :complete do
-      transitions from: %i[created remotely_queued expired],
-                  to: :in_progress,
-                  if: :remote_status_in_progress?
-
-      transitions from: %i[created remotely_queued in_progress expired],
-                  to: :busy,
-                  if: :remote_status_busy?
-
-      transitions from: %i[created remotely_queued in_progress expired],
-                  to: :failed,
-                  if: :remote_status_failed?
-
-      transitions from: %i[created remotely_queued in_progress expired],
-                  to: :not_answered,
-                  if: :remote_status_not_answered?
-
-      transitions from: %i[created remotely_queued in_progress expired],
-                  to: :canceled,
-                  if: :remote_status_canceled?
-
-      transitions from: %i[created remotely_queued in_progress],
-                  to: :expired,
-                  if: :remote_call_expired?
-
-      transitions from: %i[created remotely_queued in_progress expired],
-                  to: :completed,
-                  after: :mark_alert_answered!,
-                  if: :remote_status_completed?
-    end
-  end
-
-  def self.to_fetch_remote_status
-    where(status: IN_PROGRESS_STATUSES, remotely_queued_at: ..10.minutes.ago)
-      .merge(
-        where(remote_status_fetch_queued_at: nil).or(where(remote_status_fetch_queued_at: ..15.minutes.ago))
-      )
-  end
-
-  def inbound?
-    remote_direction == TWILIO_DIRECTIONS[:inbound]
-  end
-
-  def direction
-    inbound? ? :inbound : :outbound
-  end
-
-  def set_call_flow_logic
-    return if call_flow_logic.present?
-
-    self.call_flow_logic = alert_call_flow_logic || beneficiary_call_flow_logic
-  end
-
-  def remote_call_expired?
-    remote_status == "queued" && remotely_queued_at < 1.hour.ago
+    state :succeeded
   end
 
   # NOTE: This is for backward compatibility until we moved to the new API
@@ -147,40 +29,7 @@ class DeliveryAttempt < ApplicationRecord
 
   private
 
-  def touch_remotely_queued_at
-    touch(:remotely_queued_at)
-  end
-
-  def remote_status_in_progress?
-    [
-      TWILIO_CALL_STATUSES.fetch(:in_progress),
-      TWILIO_CALL_STATUSES.fetch(:ringing)
-    ].include?(remote_status)
-  end
-
-  %i[busy failed not_answered canceled completed].each do |status|
-    define_method("remote_status_#{status}?") do
-      remote_status == TWILIO_CALL_STATUSES.fetch(status)
-    end
-  end
-
-  def set_defaults
-    self.beneficiary ||= alert_beneficiary
-    self.phone_number  ||= alert_phone_number
-    self.account ||= beneficiary&.account
-    set_call_flow_logic
-  end
-
-  def validate_destroy
-    return true if created?
-
-    errors.add(:base, :restrict_destroy_status, status: status)
-    throw(:abort)
-  end
-
-  def mark_alert_answered!
-    return true if alert.blank?
-
-    alert.complete!
+  def state_machine
+    @state_machine ||= StateMachine.new(self)
   end
 end

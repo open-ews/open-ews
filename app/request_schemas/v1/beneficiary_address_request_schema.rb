@@ -2,7 +2,7 @@ module V1
   class BeneficiaryAddressRequestSchema < JSONAPIRequestSchema
     params do
       required(:data).value(:hash).schema do
-        required(:type).filled(:str?, eql?: "address")
+        required(:type).filled(:str?, eql?: "beneficiary_address")
         required(:attributes).value(:hash).schema do
           required(:iso_region_code).filled(:string, max_size?: 255)
           optional(:administrative_division_level_2_code).maybe(:string, max_size?: 255)
@@ -15,7 +15,7 @@ module V1
       end
     end
 
-    attribute_rule do |attributes|
+    attribute_rule do |attributes:, **|
       validator = BeneficiaryAddressValidator.new(attributes)
       next if validator.valid?
 

@@ -17,11 +17,11 @@ module V1
     end
 
     attribute_rule(:phone_number).validate(:phone_number_format)
-    attribute_rule(:phone_number) do |attributes|
-      next unless attributes.key?(:phone_number)
-      next unless account.beneficiaries.where(phone_number: attributes.fetch(:phone_number)).where.not(id: resource.id).exists?
+    attribute_rule(:phone_number) do
+      next unless key?
+      next unless account.beneficiaries.where(phone_number: value).where.not(id: resource.id).exists?
 
-      key([ :data, :attributes, :phone_number ]).failure(text: "must be unique")
+      key.failure("must be unique")
     end
   end
 end

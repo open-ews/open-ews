@@ -22,25 +22,42 @@ module V1
             optional(:administrative_division_level_4_name).maybe(:string, max_size?: 255)
           end
         end
+
+        optional(:relationships).value(:hash).schema do
+          optional(:groups).value(:hash).schema do
+            required(:data).array(:hash) do
+              required(:type).filled(:str?, eql?: "beneficiary_group")
+              required(:id).filled(:int?)
+            end
+          end
+        end
       end
     end
 
     attribute_rule(:phone_number).validate(:phone_number_format)
-    attribute_rule(:phone_number) do |attributes|
-      next unless account.beneficiaries.where(phone_number: attributes.fetch(:phone_number)).exists?
+    attribute_rule(:phone_number) do
+     next unless account.beneficiaries.where(phone_number: value).exists?
 
-      key([ :data, :attributes, :phone_number ]).failure(text: "must be unique")
+      key.failure(text: "must be unique")
     end
 
-    attribute_rule(:address) do |attributes|
-      next if attributes[:address].blank?
+    attribute_rule(:address) do
+      next unless key?
 
-      validator = BeneficiaryAddressValidator.new(attributes[:address])
+      validator = BeneficiaryAddressValidator.new(value)
       next if validator.valid?
 
       validator.errors.each do |error|
-        key([ :data, :attributes, :address, error.key ]).failure(text: error.message)
+        key([*key.path, error.key]).failure(error.message)
       end
+    end
+
+    relationship_rule(:groups).validate(:beneficiary_groups)
+
+    def output
+      result = super
+      result[:group_ids] = Array(result.delete(:groups))
+      result
     end
   end
 end

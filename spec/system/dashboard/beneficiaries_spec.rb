@@ -60,18 +60,6 @@ RSpec.describe "Beneficiaries", :aggregate_failures do
     #   expect(page).to have_link("Edit", href: edit_dashboard_beneficiary_path(beneficiary))
     # end
 
-    within("#related_links") do
-      expect(page).to have_link(
-        "Callout Participations",
-        href: dashboard_beneficiary_alerts_path(beneficiary)
-      )
-
-      expect(page).to have_link(
-        "Phone Calls",
-        href: dashboard_beneficiary_delivery_attempts_path(beneficiary)
-      )
-    end
-
     within(".beneficiary") do
       expect(page).to have_content(beneficiary.id)
       expect(page).to have_content("Cambodia")

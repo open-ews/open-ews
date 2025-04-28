@@ -2,7 +2,7 @@ class SchedulerJob
   include Shoryuken::Worker
 
   shoryuken_options(
-    queue: Rails.configuration.app_settings.fetch(:aws_sqs_scheduler_queue_name),
+    queue: AppSettings.fetch(:aws_sqs_scheduler_queue_name),
     auto_delete: true,
     body_parser: :json
   )

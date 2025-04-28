@@ -1,8 +1,7 @@
 = content_tag_for(:tr, access_token) do
   %td
-    = link_to(access_token.id, dashboard_access_token_path(access_token))
-  %td
     %code
       = access_token.token
   %td
-    = local_time(access_token.created_at)
+    %code
+      = local_time(access_token.created_at)

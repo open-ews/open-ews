@@ -2,21 +2,20 @@ require "rails_helper"
 
 RSpec.describe RunBatchOperationJob do
   it "runs the batch operation" do
-    batch_operation = create(:batch_operation, :queued)
-    job = described_class.new
+    account = create(:account, :configured_for_broadcasts)
+    broadcast = create(:broadcast, status: :queued, account:)
+    callout_population = create(:callout_population, :queued, broadcast:)
 
-    RunBatchOperationJob.perform_now(batch_operation)
+    RunBatchOperationJob.perform_now(callout_population)
 
-    expect(batch_operation.reload).to be_finished
+    expect(callout_population.reload).to be_finished
   end
 
-  # https://www.pivotaltracker.com/story/show/161878803
   it "does not run the batch operation if it's already finished" do
-    batch_operation = create(:batch_operation, :finished)
-    job = described_class.new
+    callout_population = create(:callout_population, :finished)
 
-    RunBatchOperationJob.perform_now(batch_operation)
+    RunBatchOperationJob.perform_now(callout_population)
 
-    expect(batch_operation).to be_finished
+    expect(callout_population).to be_finished
   end
 end
