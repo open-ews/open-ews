@@ -31,7 +31,7 @@ Rails.application.routes.draw do
       resources :developers, only: :index
     end
 
-    resources :beneficiaries, only: %i[index show new destroy]
+    resources :beneficiaries
     resources :beneficiary_addresses, only: :new
 
     resources :broadcasts do

@@ -1,6 +1,17 @@
 module Dashboard
   class BeneficiariesController < Dashboard::BaseController
+    def create
+      @resource = scope.new(permitted_params)
+      @resource.save
+
+      respond_with(:dashboard, @resource)
+    end
+
     private
+
+    def scope
+      current_account.beneficiaries
+    end
 
     def association_chain
       current_account.beneficiaries
@@ -18,7 +29,6 @@ module Dashboard
         :disability_status,
         :language_code,
         :iso_country_code,
-        address_administrative_division_codes: [],
         addresses_attributes: [
           :id,
           :iso_region_code,

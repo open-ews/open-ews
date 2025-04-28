@@ -2,7 +2,7 @@ module V1
   class UpdateBroadcastRequestSchema < JSONAPIRequestSchema
     VALID_STATES = [ "running", "stopped" ].freeze
 
-    option :broadcast_status_validator, default: -> { BroadcastStatusValidator.new(resource.status) }
+    option :broadcast_status_validator, default: -> { BroadcastStateMachine.new(resource.status) }
 
     params do
       required(:data).value(:hash).schema do

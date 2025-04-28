@@ -21,7 +21,7 @@ module LegacyEvent
     end
 
     def broadcast_status_validator
-      @broadcast_status_validator ||= BroadcastStatusValidator.new(eventable.status)
+      @broadcast_status_validator ||= BroadcastStateMachine.new(eventable.status)
     end
   end
 end

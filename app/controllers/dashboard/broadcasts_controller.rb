@@ -18,6 +18,22 @@ module Dashboard
       )
     end
 
+    def update
+      broadcast = scope.find(params[:id])
+      @resource =  BroadcastForm.new(
+        object: broadcast,
+        **permitted_params
+      )
+
+      @resource.save
+
+      respond_with(:dashboard, @resource)
+
+      # UpdateBroadcast.call()
+    rescue UpdateBroadcast::InvalidStateTransitionError
+      redirect_to action: :show, error: "Invalid state transition"
+    end
+
     private
 
     def prepare_resource_for_create
@@ -36,12 +52,16 @@ module Dashboard
       )
     end
 
+    def scope
+      current_account.broadcasts
+    end
+
     def association_chain
       current_account.broadcasts
     end
 
     def permitted_params
-      permitted = params.fetch(:broadcast, {}).permit(:audio_file, :channel)
+      permitted = params.fetch(:broadcast, {}).permit(:audio_file, :channel, :desired_status)
 
       if params.dig(:broadcast, :beneficiary_filter).present?
         permitted[:beneficiary_filter] = BroadcastForm::BeneficiaryFilter.new(

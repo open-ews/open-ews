@@ -1,24 +1,16 @@
 = content_for(:page_actions) do
-  - if resource.may_start?
-    = button_to(dashboard_broadcast_callout_events_path(resource, event: :start), class: "btn btn-outline-success", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
+  - state_machine = BroadcastStateMachine.new(resource.status)
+  - if state_machine.may_transition_to?(:running)
+    = button_to(dashboard_broadcast_path(resource), params: { broadcast: { desired_status: "running" } }, method: :patch, class: "btn btn-outline-success", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
       %i.icon.ti.ti-player-play
       = translate(:"titles.broadcasts.start")
-  - elsif resource.may_stop?
-    = button_to(dashboard_broadcast_callout_events_path(resource, event: :stop), class: "btn btn-outline-danger", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
+  - elsif state_machine.may_transition_to?(:stopped)
+    = button_to(dashboard_broadcast_path(resource), params: { broadcast: { desired_status: "stopped" } }, method: :patch, class: "btn btn-outline-danger", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
       %i.icon.ti.ti-player-pause
       = translate(:"titles.broadcasts.stop")
-  - elsif resource.may_resume?
-    = button_to(dashboard_broadcast_callout_events_path(resource, event: :resume), class: "btn btn-outline-success", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
-      %i.icon.ti.ti-player-play
-      = translate(:"titles.broadcasts.resume")
 
-  - if resource.not_yet_started?
+  - if state_machine.updatable?
     = render("shared/edit_resource_page_action", path: edit_dashboard_broadcast_path(resource))
-
-  = render "shared/resource_related_links" do
-    = related_link_to t(:"titles.alerts.index"), dashboard_broadcast_alerts_path(resource)
-    - if resource.not_yet_started?
-      = render("shared/destroy_resource_page_action", path: dashboard_broadcast_path(resource))
 
 .card
   .card-body
@@ -29,8 +21,6 @@
       = f.attribute :audio_file do
         - if resource.audio_file.attached?
           = audio_tag(resource.audio_file, controls: true)
-
-      = f.attribute :created_by, value: resource.created_by&.name
 
       = f.attribute :created_at, value: local_time(resource.created_at)
       = f.attribute :updated_at, value: local_time(resource.updated_at)

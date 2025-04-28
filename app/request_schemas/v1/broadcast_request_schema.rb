@@ -1,6 +1,6 @@
 module V1
   class BroadcastRequestSchema < JSONAPIRequestSchema
-    option :broadcast_status_validator, default: -> { BroadcastStatusValidator.new }
+    option :broadcast_status_validator, default: -> { BroadcastStateMachine.new }
 
     params do
       required(:data).value(:hash).schema do

@@ -1,4 +1,4 @@
-class BroadcastStatusValidator
+class BroadcastStateMachine
   attr_reader :current_status
 
   delegate :may_transition_to?, :transition_to!, to: :state_machine
@@ -14,6 +14,10 @@ class BroadcastStatusValidator
 
   def initialize(current_status = nil)
     @current_status = current_status
+  end
+
+  def updatable?
+    state_machine.pending? || state_machine.errored?
   end
 
   private

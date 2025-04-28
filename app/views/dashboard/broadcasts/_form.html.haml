@@ -19,9 +19,8 @@
           %label.form-label Value
 
       = f.simple_fields_for :beneficiary_filter do |filter_form|
-        - FieldDefinitions::BeneficiaryFields.each do |field|
+        - FieldDefinitions::BroadcastBeneficiaryFields.each do |field|
           - next if BeneficiaryAddress.country_address_data?('kh') && field.name.start_with?("address.")
-          - next if BeneficiaryFilter::IGNORE_FIELDS_FOR_BROADCAST.include?(field.name)
 
           = filter_form.simple_fields_for field.name.to_sym, @resource.beneficiary_filter.attributes[field.name] do |field_form|
             .row{data: { controller: "beneficiary-filter-field" }}

@@ -1,8 +1,9 @@
 class BeneficiaryFilter < ApplicationFilter
   has_fields FieldDefinitions::BeneficiaryFields
 
-  IGNORE_FIELDS_FOR_BROADCAST = [
-    "status",
-    "iso_country_code"
+  FIELDS_FOR_BROADCAST = [
+    "gender",
+    "disability_status",
+    "disability_status"
   ].freeze
 end

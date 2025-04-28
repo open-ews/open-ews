@@ -5,6 +5,8 @@ class BeneficiaryAddress < ApplicationRecord
 
   belongs_to :beneficiary
 
+  validates :iso_region_code, presence: true
+
   validates :iso_region_code,
     :administrative_division_level_2_code,
     :administrative_division_level_2_name,

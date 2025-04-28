@@ -58,7 +58,7 @@ class Broadcast < ApplicationRecord
             },
             if: ->(broadcast) { broadcast.audio_file.attached? }
 
-  delegate :pending?, :queued?, :errored?, :may_transition_to?, :transition_to!, to: :state_machine
+  delegate :running?, :stopped?, :completed?, :pending?, :queued?, :errored?, :may_transition_to?, :transition_to!, to: :state_machine
 
   before_create :set_default_status
 
