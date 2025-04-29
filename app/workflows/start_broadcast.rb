@@ -6,6 +6,7 @@ class StartBroadcast < ApplicationWorkflow
   delegate :account, :beneficiary_filter, to: :broadcast, private: true
 
   def initialize(broadcast)
+    super()
     @broadcast = broadcast
   end
 

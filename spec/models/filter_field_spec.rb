@@ -122,6 +122,30 @@ RSpec.describe FilterField, type: :model do
       expect(result).to eq(Beneficiary.arel_table["gender"].not_eq(nil))
     end
 
+    it "handles `in` operator" do
+      field_definition = find_field_definition("gender")
+
+      result = FilterField.new(
+        field_definition: field_definition,
+        operator: "in",
+        value: [ "M", "F" ]
+      ).to_query
+
+      expect(result).to eq(Beneficiary.arel_table["gender"].in([ "M", "F" ]))
+    end
+
+    it "handles `not_in` operator" do
+      field_definition = find_field_definition("gender")
+
+      result = FilterField.new(
+        field_definition: field_definition,
+        operator: "not_in",
+        value: [ "M", "F" ]
+      ).to_query
+
+      expect(result).to eq(Beneficiary.arel_table["gender"].not_in([ "M", "F" ]))
+    end
+
     it "handles unsupported operator" do
       field_definition = find_field_definition("gender")
 

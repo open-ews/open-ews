@@ -2,9 +2,9 @@ require "rails_helper"
 
 RSpec.resource "Broadcasts"  do
   get "/v1/broadcasts" do
-    with_options scope: :filter do
-      FieldDefinitions::BroadcastFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+    FieldDefinitions::BroadcastFields.each do |field|
+      with_options scope: [ :filter, field.name.to_sym ] do
+        parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
 
@@ -84,13 +84,13 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    with_options scope: %i[data attributes beneficiary_filter] do
-      FieldDefinitions::BeneficiaryFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+    FieldDefinitions::BeneficiaryFields.each do |field|
+      with_options scope: [ :data, :attributes, :beneficiary_filter, field.name.to_sym ] do
+        parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
 
-    with_options scope: [:data, :relationships, :beneficiary_groups] do
+    with_options scope: [ :data, :relationships, :beneficiary_groups ] do
       parameter(
         :"data.*.type", "Must be `beneficiary_group`",
         required: false,
@@ -105,6 +105,7 @@ RSpec.resource "Broadcasts"  do
 
     example "Create and start a broadcast" do
       account = create(:account, :configured_for_broadcasts)
+      create(:beneficiary_address, beneficiary: create(:beneficiary, gender: "M", account:), iso_region_code: "KH-1")
       stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
 
       set_authorization_header_for(account)
@@ -118,7 +119,7 @@ RSpec.resource "Broadcasts"  do
               status: :running,
               beneficiary_filter: {
                 gender: { eq: "M" },
-                "address.iso_region_code" => { eq: "KH-1" }
+                "address.iso_region_code" => { in: [ "KH-1", "KH-2" ] }
               }
             }
           }
@@ -133,7 +134,7 @@ RSpec.resource "Broadcasts"  do
         "audio_url" => "https://www.example.com/test.mp3",
         "beneficiary_filter" => {
           "gender" => { "eq" => "M" },
-          "address.iso_region_code" => { "eq" => "KH-1" }
+          "address.iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }
         }
       )
     end
@@ -232,9 +233,9 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    with_options scope: %i[data attributes beneficiary_filter] do
-      FieldDefinitions::BeneficiaryFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+    FieldDefinitions::BeneficiaryFields.each do |field|
+      with_options scope: [ :data, :attributes, :beneficiary_filter, field.name.to_sym ] do
+        parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
 

@@ -36,6 +36,16 @@ RSpec.describe FieldDefinitions::FilterSchema::StringType do
     expect(schema.call(starts_with: nil)).not_to be_success
   end
 
+  it "supports `in` operator" do
+    expect(schema.call(in: [ "foo", "bar" ])).to be_success
+    expect(schema.call(in: "foo")).not_to be_success
+  end
+
+  it "supports `not_in` operator" do
+    expect(schema.call(not_in: [ "foo", "bar" ])).to be_success
+    expect(schema.call(not_in: "foo")).not_to be_success
+  end
+
   it "handles only operators" do
     expect(schema.key_map.map(&:name)).to contain_exactly(
       "eq",
@@ -43,7 +53,9 @@ RSpec.describe FieldDefinitions::FilterSchema::StringType do
       "contains",
       "not_contains",
       "starts_with",
-      "is_null"
+      "is_null",
+      "in",
+      "not_in"
     )
   end
 

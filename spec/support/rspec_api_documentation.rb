@@ -58,6 +58,64 @@ RspecApiDocumentation.configure do |config|
     ### Example Authorization Header
 
     `Authorization: Bearer YOUR_API_TOKEN`
+
+    ## Filtering
+
+    OpenEWS supports filtering of resources using query parameters. Filters are passed using the following format:
+
+    ```http
+    ?filter[$attribute][$operator]=value
+    ```
+
+    You can combine multiple filters by adding additional `filter[...]` query parameters.
+
+    Filtering operators vary depending on the attribute type.
+
+    ### String Type Operators
+
+    For attributes of type **string**, the following operators are supported:
+
+    | Operator       | Description                                      |
+    |----------------|--------------------------------------------------|
+    | `eq`           | Equals the specified value                       |
+    | `not_eq`       | Does not equal the specified value               |
+    | `contains`     | Contains the specified substring                 |
+    | `not_contains` | Does not contain the specified substring         |
+    | `starts_with`  | Starts with the specified substring              |
+    | `in`           | Matches any of the specified values (array)      |
+    | `not_in`       | Does not match any of the specified values       |
+    | `is_null`      | Checks if the value is null (`true` or `false`)  |
+
+    **Examples:**
+
+    ```http
+    GET https://api.open-ews.org/v1/beneficiaries?filter[phone_number][starts_with]=855
+    GET https://api.open-ews.org/v1/beneficiaries?filter[gender][in][]=M&filter[gender][in][]=F
+    GET https://api.open-ews.org/v1/beneficiaries?filter[gender][is_null]=true
+    ```
+
+    ### Value Type Operators (e.g., integers, floats, dates)
+
+    Use these for numeric or comparable types (e.g., `created_at`):
+
+    | Operator   | Description                                          |
+    |------------|------------------------------------------------------|
+    | `eq`       | Equals the specified value                           |
+    | `not_eq`   | Does not equal the specified value                   |
+    | `gt`       | Greater than the specified value                     |
+    | `gteq`     | Greater than or equal to the specified value         |
+    | `lt`       | Less than the specified value                        |
+    | `lteq`     | Less than or equal to the specified value            |
+    | `between`  | Between two values (inclusive), passed as an array   |
+    | `is_null`  | Checks if the value is null (`true` or `false`)      |
+
+    **Examples:**
+
+    ```http
+    GET https://api.open-ews.org/v1/beneficiaries?filter[created_at][between][]=2025-04-01&filter[created_at][between][]=2025-04-30
+    GET https://api.open-ews.org/v1/beneficiaries?filter[created_at][gteq]=2025-04-01
+    ```
+
   HEREDOC
 
   config.format = :open_ews_slate
