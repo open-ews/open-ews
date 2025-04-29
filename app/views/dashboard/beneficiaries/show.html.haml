@@ -16,3 +16,20 @@
       = f.attribute :disability_status
       = f.attribute :created_at, value: local_time(resource.created_at)
       = f.attribute :updated_at, value: local_time(resource.updated_at)
+
+    - if resource.addresses.present?
+      .hr-text Addresses
+
+      - resource.addresses.each_with_index do |address, index|
+        - if index > 0
+          .hr
+
+        = show_for(address) do |address_fields|
+          = address_fields.attribute :iso_region_code
+          = address_fields.attribute :administrative_division_level_2_code
+          = address_fields.attribute :administrative_division_level_2_name
+          = address_fields.attribute :administrative_division_level_3_code
+          = address_fields.attribute :administrative_division_level_3_name
+          = address_fields.attribute :administrative_division_level_4_code
+          = address_fields.attribute :administrative_division_level_4_name
+
