@@ -27,7 +27,7 @@ Rails.application.routes.draw do
       root to: "accounts#show"
 
       resource :account, only: [ :show, :update ]
-      resources :users, only: :index
+      resources :users, only: [ :index, :show ]
       resources :developers, only: :index
     end
 
