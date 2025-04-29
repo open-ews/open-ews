@@ -52,8 +52,8 @@ RUN apk update --no-cache && \
   apk add --update --no-cache build-base gcompat postgresql-dev vips-dev ffmpeg
 
 # Copy built artifacts: gems, application
-COPY --from=build --link /usr/local/bundle /usr/local/bundle
-COPY --from=build --link /rails /rails
+COPY --from=build --link /usr/local/bundle/ /usr/local/bundle/
+COPY --from=build --link /rails/ /rails/
 
 # Run and own only the runtime files as a non-root user for security
 RUN addgroup -S -g 1000 rails && \

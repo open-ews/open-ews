@@ -8,11 +8,11 @@ module LegacyEvent
         # This will happen automatically when the batch operation is queued
         return if [ "pending", "queued" ].include?(eventable.status)
 
-        if broadcast_status_validator.may_transition_to?(:running)
-          eventable.transition_to!(broadcast_status_validator.transition_to!(:running).name)
+        if broadcast_state_machine.may_transition_to?(:running)
+          eventable.transition_to!(broadcast_state_machine.transition_to!(:running).name)
         end
-      elsif [ :stop, :pause ].include?(event.to_sym) && broadcast_status_validator.may_transition_to?(:stopped)
-        eventable.transition_to!(broadcast_status_validator.transition_to!(:stopped).name)
+      elsif [ :stop, :pause ].include?(event.to_sym) && broadcast_state_machine.may_transition_to?(:stopped)
+        eventable.transition_to!(broadcast_state_machine.transition_to!(:stopped).name)
       end
     end
 
@@ -20,8 +20,8 @@ module LegacyEvent
       [ "start", "stop", "pause", "resume" ]
     end
 
-    def broadcast_status_validator
-      @broadcast_status_validator ||= BroadcastStatusValidator.new(eventable.status)
+    def broadcast_state_machine
+      @broadcast_state_machine ||= BroadcastStateMachine.new(eventable.status)
     end
   end
 end
