@@ -12,6 +12,9 @@
   - if state_machine.updatable?
     = render("shared/edit_resource_page_action", path: edit_dashboard_broadcast_path(resource))
 
+    = render "shared/resource_related_links" do
+      = render("shared/destroy_resource_page_action", path: dashboard_broadcast_path(resource))
+
 .card
   .card-body
     = show_for(resource) do |f|
@@ -25,3 +28,22 @@
       = f.attribute :created_at, value: local_time(resource.created_at)
       = f.attribute :updated_at, value: local_time(resource.updated_at)
 
+    .hr-text Beneficiary filters
+
+    .row.mb-3
+      .col
+        %label.form-label Field
+      .col
+        %label.form-label Operator
+      .col
+        %label.form-label Value
+
+    - resource.beneficiary_filter.each do |field, filter|
+      - operator, value = filter.first
+      .row.mb-3{id: "beneficiary_filter_#{field}"}
+        .col
+          %input.field-name.form-control{type: "text", value: field.titleize, readonly: true }
+        .col
+          %input.field-operator.form-control{type: "text", value: FieldDefinitions::Field::OPERATORS.fetch(operator.to_sym), readonly: true }
+        .col
+          %input.field-value.form-control{type: "text", value: value, readonly: true }

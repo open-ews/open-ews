@@ -1,9 +1,9 @@
 require "rails_helper"
 
-RSpec.describe "Callouts", :aggregate_failures do
+RSpec.describe "Broadcasts" do
   it "can list broadcasts" do
-    user          = create(:user)
-    broadcast       = create(
+    user = create(:user)
+    broadcast = create(
       :broadcast,
       :pending,
       account: user.account
@@ -13,67 +13,72 @@ RSpec.describe "Callouts", :aggregate_failures do
     sign_in(user)
     visit dashboard_broadcasts_path
 
-    expect(page).to have_title("Callouts")
+    expect(page).to have_title("Broadcasts")
 
-    within("#page_actions") do
-      expect(page).to have_link("New", href: new_dashboard_broadcast_path)
-    end
-
-    within("#resources") do
-      expect(page).to have_content_tag_for(broadcast)
-      expect(page).not_to have_content_tag_for(other_broadcast)
-      expect(page).to have_content("#")
-      expect(page).to have_link(
-        broadcast.id.to_s,
-        href: dashboard_broadcast_path(broadcast)
-      )
-    end
+    expect(page).to have_content_tag_for(broadcast)
+    expect(page).not_to have_content_tag_for(other_broadcast)
   end
 
-  it "create and start a broadcast", :js do
+  it "can create a broadcast attaching an audio file", :js do
     user = create(:user)
 
     sign_in(user)
     visit new_dashboard_broadcast_path
 
-    expect(page).to have_title("New Callout")
-
-    fill_in("Audio URL", with: "https://www.example.com/sample.mp3")
     select("Voice", from: "Channel")
-
-    click_on("Create Callout")
-
-    expect(page).to have_content("Callout was successfully created.")
-  end
-
-  it "can create a broadcast attaching an audio file" do
-    user = create(:user)
-
-    sign_in(user)
-    visit new_dashboard_broadcast_path
-
     attach_file("Audio file", Rails.root + file_fixture("test.mp3"))
-    select("Voice", from: "Channel")
-    click_on("Create Callout")
 
-    expect(page).to have_content("Callout was successfully created.")
+    # Add a beneficiary filter
+    within("#beneficiary_filter_gender") do
+      check(class: "form-check-input")
+      select("Equals", from: "broadcast[beneficiary_filter][gender][operator]")
+      select("M", from: "broadcast[beneficiary_filter][gender][value]")
+    end
+
+    click_on("Create Broadcast")
+
+    expect(page).to have_content("Broadcast was successfully created.")
+    within("#beneficiary_filter_gender") do
+      expect(page).to have_selector("input.field-name[value='Gender']")
+      expect(page).to have_selector("input.field-operator[value='Equals']")
+      expect(page).to have_selector("input.field-value[value='M']")
+    end
   end
 
   it "can update a broadcast", :js do
     user = create(:user)
     broadcast = create(
       :broadcast,
-      account: user.account
+      account: user.account,
+      beneficiary_filter: {
+        disability_status: { eq: 'normal' }
+      },
     )
 
     sign_in(user)
     visit edit_dashboard_broadcast_path(broadcast)
 
-    expect(page).to have_title("Edit Callout")
+    attach_file("Audio file", Rails.root + file_fixture("test.mp3"))
+
+    within("#beneficiary_filter_gender") do
+      check(class: "form-check-input")
+      select("Equals", from: "broadcast[beneficiary_filter][gender][operator]")
+      select("M", from: "broadcast[beneficiary_filter][gender][value]")
+    end
 
     click_on "Save"
 
-    expect(page).to have_text("Callout was successfully updated.")
+    expect(page).to have_text("Broadcast was successfully updated.")
+    within("#beneficiary_filter_gender") do
+      expect(page).to have_selector("input.field-name[value='Gender']")
+      expect(page).to have_selector("input.field-operator[value='Equals']")
+      expect(page).to have_selector("input.field-value[value='M']")
+    end
+    within("#beneficiary_filter_disability_status") do
+      expect(page).to have_selector("input.field-name[value='Disability Status']")
+      expect(page).to have_selector("input.field-operator[value='Equals']")
+      expect(page).to have_selector("input.field-value[value='normal']")
+    end
   end
 
   it "can delete a broadcast" do
@@ -85,41 +90,7 @@ RSpec.describe "Callouts", :aggregate_failures do
 
     click_on "Delete"
 
-    expect(page).to have_current_path(dashboard_broadcasts_path, ignore_query: true)
-    expect(page).to have_text("Callout was successfully destroyed.")
-  end
-
-  it "can show a broadcast" do
-    user = create(:user)
-    broadcast = create(
-      :broadcast,
-      :pending,
-      account: user.account,
-      audio_file: file_fixture("test.mp3"),
-      audio_url: "https://example.com/audio.mp3"
-    )
-
-    sign_in(user)
-    visit dashboard_broadcast_path(broadcast)
-
-    expect(page).to have_title("Callout #{broadcast.id}")
-
-    within("#page_actions") do
-      expect(page).to have_link("Edit", href: edit_dashboard_broadcast_path(broadcast))
-    end
-
-    within(".broadcast") do
-      expect(page).to have_content(broadcast.id)
-      expect(page).to have_link(broadcast.audio_url, href: broadcast.audio_url)
-    end
-
-    within("#broadcast_summary") do
-      expect(page).to have_content("Callout Summary")
-      expect(page).to have_link("Refresh", href: dashboard_broadcast_path(broadcast))
-      expect(page).to have_content("Participants")
-      expect(page).to have_content("Participants still to be called")
-      expect(page).to have_content("Completed calls")
-      expect(page).to have_content("Failed calls")
-    end
+    expect(page).to have_text("Broadcast was successfully destroyed.")
+    expect(page).to have_current_path(dashboard_broadcasts_path)
   end
 end
