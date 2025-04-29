@@ -15,9 +15,9 @@ RSpec.resource "Beneficiary Groups"  do
   HEREDOC
 
   get "/v1/beneficiary_groups" do
-    with_options scope: :filter do
-      FieldDefinitions::BeneficiaryGroupFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+    FieldDefinitions::BeneficiaryGroupFields.each do |field|
+      with_options scope: [ :filter, field.name.to_sym ] do
+        parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
 
@@ -184,9 +184,9 @@ RSpec.resource "Beneficiary Groups"  do
   end
 
   get "/v1/beneficiary_groups/:beneficiary_group_id/members" do
-    with_options scope: :filter do
-      FieldDefinitions::BeneficiaryFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+    FieldDefinitions::BeneficiaryFields.each do |field|
+      with_options scope: [ :filter, field.name.to_sym] do
+        parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
 
@@ -337,9 +337,9 @@ RSpec.resource "Beneficiary Groups"  do
   end
 
   get "/v1/beneficiary_groups/:beneficiary_group_id/members/stats" do
-    with_options scope: :filter do
-      FieldDefinitions::BeneficiaryFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+    FieldDefinitions::BeneficiaryFields.each do |field|
+      with_options scope: [ :filter, field.name.to_sym] do
+        parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
 

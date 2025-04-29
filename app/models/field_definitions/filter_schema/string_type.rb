@@ -8,6 +8,8 @@ module FieldDefinitions
           optional(:contains).filled(type)
           optional(:not_contains).filled(type)
           optional(:starts_with).filled(type)
+          optional(:in).array(type)
+          optional(:not_in).array(type)
           optional(:is_null).filled(:bool, included_in?: [ true, false ])
         end
       end

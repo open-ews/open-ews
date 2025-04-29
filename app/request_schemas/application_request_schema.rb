@@ -32,7 +32,7 @@ class ApplicationRequestSchema < Dry::Validation::Contract
 
   register_macro(:broadcast_status) do
     next unless key?
-    next unless broadcast_status_validator.may_transition_to?(:running)
+    next unless broadcast_state_machine.may_transition_to?(:running)
     next if account.configured_for_broadcasts?
 
     base.failure("Account not configured")

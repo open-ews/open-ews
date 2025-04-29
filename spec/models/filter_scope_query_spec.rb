@@ -25,8 +25,8 @@ RSpec.describe FilterScopeQuery, type: :model do
 
     filter_field = FilterField.new(
       field_definition: find_field_definition("address.iso_region_code"),
-      operator: "eq",
-      value: "KH-1"
+      operator: "in",
+      value: [ "KH-1", "KH-2" ]
     )
 
     query = FilterScopeQuery.new(Beneficiary, Array(filter_field))

@@ -2,9 +2,9 @@ require "rails_helper"
 
 RSpec.resource "Alerts"  do
   get "/v1/broadcasts/:broadcast_id/alerts" do
-    with_options scope: :filter do
-      FieldDefinitions::AlertFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+    FieldDefinitions::AlertFields.each do |field|
+      with_options scope: [ :filter, field.name.to_sym ] do
+        parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
 

@@ -19,7 +19,7 @@ class FilterField
   # https://www.rubydoc.info/gems/arel/Arel/Predications
   def operator_method
     case operator
-    when :eq, :not_eq, :gt, :gteq, :lt, :lteq, :between then operator
+    when :eq, :not_eq, :gt, :gteq, :lt, :lteq, :between, :in, :not_in then operator
     when :contains, :starts_with then :matches
     when :not_contains then :does_not_match
     when :is_null then value ? :eq : :not_eq
