@@ -11,7 +11,9 @@ module FieldDefinitions
       lt: "Less Than",
       lteq: "Less Than or Equal",
       between: "Between",
-      is_null: "Is NULL"
+      is_null: "Is NULL",
+      in: "In",
+      not_in: "Not In"
     }.freeze
 
     attr_reader :name, :column, :schema, :association, :description, :attributes

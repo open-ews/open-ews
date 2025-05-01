@@ -24,7 +24,8 @@
     "nodemon": "^3.1.9",
     "postcss": "^8.5.3",
     "postcss-cli": "^11.0.0",
-    "sass": "^1.85.1"
+    "sass": "^1.85.1",
+    "tom-select": "^2.4.3"
   },
   "devDependencies": {
     "esbuild": "^0.25.0"

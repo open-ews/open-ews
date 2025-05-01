@@ -8,6 +8,61 @@
         .col
           = f.input :audio_file, as: :file, required: resource.new_record?,
             input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
+      .row
+        %select#select-state{:autocomplete => "off", :multiple => "multiple", :name => "state[]", :placeholder => "Select a state..."}
+          %option{:value => ""} Select a state...
+          %option{:value => "AL"} Alabama
+          %option{:value => "AK"} Alaska
+          %option{:value => "AZ"} Arizona
+          %option{:value => "AR"} Arkansas
+          %option{:selected => "selected", :value => "CA"} California
+          %option{:value => "CO"} Colorado
+          %option{:value => "CT"} Connecticut
+          %option{:value => "DE"} Delaware
+          %option{:value => "DC"} District of Columbia
+          %option{:value => "FL"} Florida
+          %option{:value => "GA"} Georgia
+          %option{:value => "HI"} Hawaii
+          %option{:value => "ID"} Idaho
+          %option{:value => "IL"} Illinois
+          %option{:value => "IN"} Indiana
+          %option{:value => "IA"} Iowa
+          %option{:value => "KS"} Kansas
+          %option{:value => "KY"} Kentucky
+          %option{:value => "LA"} Louisiana
+          %option{:value => "ME"} Maine
+          %option{:value => "MD"} Maryland
+          %option{:value => "MA"} Massachusetts
+          %option{:value => "MI"} Michigan
+          %option{:value => "MN"} Minnesota
+          %option{:value => "MS"} Mississippi
+          %option{:value => "MO"} Missouri
+          %option{:value => "MT"} Montana
+          %option{:value => "NE"} Nebraska
+          %option{:value => "NV"} Nevada
+          %option{:value => "NH"} New Hampshire
+          %option{:value => "NJ"} New Jersey
+          %option{:value => "NM"} New Mexico
+          %option{:value => "NY"} New York
+          %option{:value => "NC"} North Carolina
+          %option{:value => "ND"} North Dakota
+          %option{:value => "OH"} Ohio
+          %option{:value => "OK"} Oklahoma
+          %option{:value => "OR"} Oregon
+          %option{:value => "PA"} Pennsylvania
+          %option{:value => "RI"} Rhode Island
+          %option{:value => "SC"} South Carolina
+          %option{:value => "SD"} South Dakota
+          %option{:value => "TN"} Tennessee
+          %option{:value => "TX"} Texas
+          %option{:value => "UT"} Utah
+          %option{:value => "VT"} Vermont
+          %option{:value => "VA"} Virginia
+          %option{:value => "WA"} Washington
+          %option{:value => "WV"} West Virginia
+          %option{:value => "WI"} Wisconsin
+          %option{:selected => "selected", :value => "WY"} Wyoming
+
 
       .hr-text Beneficiary Filters
       .row
@@ -23,7 +78,7 @@
           - next if BeneficiaryAddress.country_address_data?('kh') && field.name.start_with?("address.")
 
           = filter_form.simple_fields_for field.name.to_sym, @resource.beneficiary_filter.attributes[field.name] do |field_form|
-            .row{id: "beneficiary_filter_#{field.name}", data: { controller: "beneficiary-filter-field" }}
+            .row{id: "beneficiary_filter_#{field.name}", data: { controller: "beneficiary-filter-field-foo" }}
               .col
                 .input-group.mb-3
                   %span.input-group-text
@@ -39,7 +94,7 @@
               .col
                 .value-input
                   - if field.field_type == :list
-                    = field_form.input "value", label: false, as: :select, required: true, collection: field.schema.options, input_html: { data: { "beneficiary-filter-field-target": "value" } }
+                    = field_form.input "value", label: false, as: :select, required: true, multiple: true, collection: field.schema.options, input_html: { data: { "beneficiary-filter-field-target": "value" } }
                   - elsif field.field_type == :string
                     = field_form.input "value", label: false, as: :string, required: true, input_html: { data: { "beneficiary-filter-field-target": "value" } }
                   - elsif field.field_type == :value

@@ -1,5 +1,6 @@
 import * as tabler from "@tabler/core";
 import moment from "moment";
+import TomSelect from "tom-select";
 
 // NOTE: Run javascript after turbo stream has finished replace the DOM
 // https://nts.strzibny.name/rails-turbo-after-stream-render/
@@ -23,6 +24,10 @@ const initializeJSComponents = () => {
   [].slice
     .call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     .forEach((element) => new tabler.bootstrap.Tooltip(element));
+
+  new TomSelect("#select-state")
+  new TomSelect("#broadcast_beneficiary_filter_gender_value")
+  new TomSelect("#broadcast_beneficiary_filter_disability_status_value")
 };
 
 ["turbo:load", "turbo:after-stream-render"].forEach((e) =>
