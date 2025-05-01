@@ -1,7 +1,7 @@
 class BroadcastStateMachine
   attr_reader :current_status
 
-  delegate :may_transition_to?, :transition_to!, to: :state_machine
+  delegate :pending?, :errored?, :may_transition_to?, :transition_to!, to: :state_machine
 
   class StateMachine < StateMachine::Machine
     state :pending, initial: true, transitions_to: { running: { as: :queued } }
@@ -17,7 +17,7 @@ class BroadcastStateMachine
   end
 
   def updatable?
-    state_machine.pending? || state_machine.errored?
+    pending? || errored?
   end
 
   private

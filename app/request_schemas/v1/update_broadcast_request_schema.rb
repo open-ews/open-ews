@@ -2,7 +2,7 @@ module V1
   class UpdateBroadcastRequestSchema < JSONAPIRequestSchema
     VALID_STATES = [ "running", "stopped" ].freeze
 
-    option :broadcast_status_validator, default: -> { BroadcastStateMachine.new(resource.status) }
+    option :broadcast_state_machine, default: -> { BroadcastStateMachine.new(resource.status) }
 
     params do
       required(:data).value(:hash).schema do
@@ -31,14 +31,14 @@ module V1
 
     attribute_rule(:beneficiary_filter) do
       next unless key?
-      next if broadcast_status_validator.may_transition_to?(:running)
+      next if broadcast_state_machine.updatable?
 
       key.failure("cannot be updated after broadcast started")
     end
 
     attribute_rule(:audio_url) do
       next unless key?
-      next if broadcast_status_validator.may_transition_to?(:running)
+      next if broadcast_state_machine.updatable?
 
       key.failure("cannot be updated after broadcast started")
     end
@@ -47,8 +47,8 @@ module V1
     attribute_rule(:status) do |context:, **|
       next unless key?
 
-      if broadcast_status_validator.may_transition_to?(value)
-        context[:desired_status] = broadcast_status_validator.transition_to!(value).name
+      if broadcast_state_machine.may_transition_to?(value)
+        context[:desired_status] = broadcast_state_machine.transition_to!(value).name
       else
         key.failure("cannot transition from #{resource.status} to #{value}")
       end
@@ -57,7 +57,7 @@ module V1
     relationship_rule(:beneficiary_groups).validate(:beneficiary_groups)
     relationship_rule(:beneficiary_groups) do
       next unless key?
-      next if broadcast_status_validator.may_transition_to?(:running)
+      next if broadcast_state_machine.may_transition_to?(:running)
 
       key.failure("cannot be updated after broadcast started")
     end

@@ -1,6 +1,6 @@
 module V1
   class BroadcastRequestSchema < JSONAPIRequestSchema
-    option :broadcast_status_validator, default: -> { BroadcastStateMachine.new }
+    option :broadcast_state_machine, default: -> { BroadcastStateMachine.new }
 
     params do
       required(:data).value(:hash).schema do
@@ -39,7 +39,7 @@ module V1
     def output
       result = super
       result[:beneficiary_group_ids] = Array(result.delete(:beneficiary_groups))
-      result[:desired_status] = broadcast_status_validator.transition_to!(result.delete(:status)).name if result.key?(:status)
+      result[:desired_status] = broadcast_state_machine.transition_to!(result.delete(:status)).name if result.key?(:status)
       result
     end
   end

@@ -2,9 +2,9 @@ require "rails_helper"
 
 RSpec.resource "Beneficiaries"  do
   get "/v1/beneficiaries" do
-    with_options scope: :filter do
-      FieldDefinitions::BeneficiaryFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+    FieldDefinitions::BeneficiaryFields.each do |field|
+      with_options scope: [ :filter, field.name.to_sym ] do
+        parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
 
@@ -105,7 +105,7 @@ RSpec.resource "Beneficiaries"  do
         method: :_disabled
       )
       parameter(
-        :disability_status, "If supplied, must be one of #{Beneficiary.disability_status.values.map { |t| "`#{t}`" }.join(", ")}}.",
+        :disability_status, "If supplied, must be one of #{Beneficiary.disability_status.values.map { |t| "`#{t}`" }.join(", ")}.",
         required: false,
         method: :_disabled
       )
@@ -394,9 +394,9 @@ RSpec.resource "Beneficiaries"  do
   end
 
   get "/v1/beneficiaries/stats" do
-    with_options scope: :filter do
-      FieldDefinitions::BeneficiaryFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+    FieldDefinitions::BeneficiaryFields.each do |field|
+      with_options scope: [ :filter, field.name.to_sym] do
+        parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
 

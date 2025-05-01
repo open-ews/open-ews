@@ -21,9 +21,9 @@ RSpec.resource "Events"  do
   HEREDOC
 
   get "/v1/events" do
-    with_options scope: :filter do
-      FieldDefinitions::EventFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+    FieldDefinitions::EventFields.each do |field|
+      with_options scope: [ :filter, field.name.to_sym ] do
+        parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
 
