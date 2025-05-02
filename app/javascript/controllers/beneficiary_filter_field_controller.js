@@ -10,8 +10,6 @@ export default class extends Controller {
   ]
 
   connect() {
-    console.log("stimulus")
-
     this.#toggleInputs()
   }
 
@@ -67,8 +65,13 @@ export default class extends Controller {
 
     const tomSelect = this.valueTarget.tomselect
     if (tomSelect) {
-      tomSelect.sync()
       this.valueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
+
+      // FIXME: switching between single and multiple items
+      this.valueTarget.multiple = "true"
+      tomSelect.setMaxItems(null)
+
+      tomSelect.sync()
     }
   }
 }
