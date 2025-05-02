@@ -10,6 +10,8 @@ export default class extends Controller {
   ]
 
   connect() {
+    console.log("stimulus")
+
     this.#toggleInputs()
   }
 
@@ -42,6 +44,11 @@ export default class extends Controller {
     this.valueTarget.closest(".value-input").style.display = isNullSelected
       ? "none"
       : "unset"
+
+    const tomSelect = this.valueTarget.tomselect
+    if (tomSelect) {
+      this.valueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
+    }
   }
 
   #toggleValueInput() {
@@ -52,9 +59,16 @@ export default class extends Controller {
     this.isNullValueTarget.disabled = !isNullSelected
     this.isNullValueTarget.style.display = isNullSelected ? "unset" : "none"
 
+    this.valueTarget.value = null
     this.valueTarget.disabled = !enabled || isNullSelected
     this.valueTarget.closest(".value-input").style.display = isNullSelected
       ? "none"
       : "unset"
+
+    const tomSelect = this.valueTarget.tomselect
+    if (tomSelect) {
+      tomSelect.sync()
+      this.valueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
+    }
   }
 }

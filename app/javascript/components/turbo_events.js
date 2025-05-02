@@ -25,8 +25,9 @@ const initializeJSComponents = () => {
     .call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     .forEach((element) => new tabler.bootstrap.Tooltip(element));
 
-  // new TomSelect("#broadcast_beneficiary_filter_gender_value")
-  // new TomSelect("#broadcast_beneficiary_filter_disability_status_value")
+  [].slice
+    .call(document.querySelectorAll('select[data-beneficiary-filter-field-target="value"]'))
+    .forEach((element) => new TomSelect(element));
 }
 
 ["turbo:load", "turbo:after-stream-render"].forEach((e) =>
