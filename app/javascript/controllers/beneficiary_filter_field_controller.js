@@ -30,39 +30,31 @@ export default class extends Controller {
 
   #toggleInputs() {
     const enabled = this.toggleElementTarget.checked
+    const isNullSelected = this.operatorTarget.value === "is_null"
 
     this.fieldNameTarget.disabled = !enabled
     this.operatorTarget.disabled = !enabled
 
-    const isNullSelected = this.operatorTarget.value === "is_null"
     this.isNullValueTarget.disabled = !isNullSelected
     this.isNullValueTarget.style.display = isNullSelected ? "unset" : "none"
 
-    // NOTE: handle multiple value inputs (eg. date select)
-    this.valueTargets.forEach((e) => {
-      e.disabled = !enabled || isNullSelected
-      // NOTE: hide the entire wrapper
-      e.closest(".value-input").style.display = isNullSelected
-        ? "none"
-        : "unset"
-    })
+    this.valueTarget.disabled = !enabled || isNullSelected
+    this.valueTarget.closest(".value-input").style.display = isNullSelected
+      ? "none"
+      : "unset"
   }
 
   #toggleValueInput() {
+    const enabled = this.toggleElementTarget.checked
     const isNullSelected = this.operatorTarget.value === "is_null"
 
-    this.isNullValueTarget.disabled = !isNullSelected
     this.isNullValueTarget.value = null
+    this.isNullValueTarget.disabled = !isNullSelected
     this.isNullValueTarget.style.display = isNullSelected ? "unset" : "none"
 
-    // NOTE: handle multiple value inputs (eg. date select)
-    this.valueTargets.forEach((e) => {
-      e.disabled = !this.toggleElementTarget.checked || isNullSelected
-      // NOTE: hide the entire wrapper
-      e.closest(".value-input").style.display = isNullSelected
-        ? "none"
-        : "unset"
-      e.value = null
-    })
+    this.valueTarget.disabled = !enabled || isNullSelected
+    this.valueTarget.closest(".value-input").style.display = isNullSelected
+      ? "none"
+      : "unset"
   }
 }
