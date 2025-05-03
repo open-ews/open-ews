@@ -1,5 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
+const MULTIPLE_VALUE_OPERATORS = ["in", "not_in"]
+
 export default class extends Controller {
   static targets = [
     "toggleElement",
@@ -63,15 +65,31 @@ export default class extends Controller {
       ? "none"
       : "unset"
 
-    const tomSelect = this.valueTarget.tomselect
-    if (tomSelect) {
-      this.valueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
-
-      // FIXME: switching between single and multiple items
-      this.valueTarget.multiple = "true"
-      tomSelect.setMaxItems(null)
-
-      tomSelect.sync()
+    if (MULTIPLE_VALUE_OPERATORS.includes(this.operatorTarget.value)) {
+      this.valueTarget.multiple = "multiple"
+      this.valueTarget.name = `${this.valueTarget.name}[]`
+    } else {
+      this.valueTarget.multiple = undefined
+      this.valueTarget.name = this.valueTarget.name.replace("[]", "")
     }
+
+    // const tomSelect = this.valueTarget.tomselect
+    // if (tomSelect) {
+    //   this.valueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
+    //
+    //   if (
+    //     this.operatorTarget.value === "in" ||
+    //     this.operatorTarget.value === "not_in"
+    //   ) {
+    //     this.valueTarget.multiple = "true"
+    //     tomSelect.setMaxItems(null)
+    //   } else {
+    //     this.valueTarget.multiple = undefined
+    //     tomSelect.setMaxItems(1)
+    //   }
+    //
+    //   tomSelect.refreshState()
+    //   tomSelect.sync()
+    // }
   }
 }

@@ -16,6 +16,8 @@ module FieldDefinitions
       not_in: "Not In"
     }.freeze
 
+    MULTIPLE_SELECTION_OPERATORS = %w[in not_in]
+
     attr_reader :name, :column, :schema, :association, :description, :attributes
 
     def initialize(attributes)
