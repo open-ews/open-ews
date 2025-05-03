@@ -1,6 +1,8 @@
 ---
 en:
   titles:
+    home:
+      index: Dashboard
     access_tokens:
       edit: Edit API Key
       index: API Keys
@@ -18,49 +20,33 @@ en:
       refresh: Refresh
       update: Edit
     alerts:
-      index: Callout Participations
-      show: Callout Participation %{id}
-    app_name: Somleng SCFM
-    batch_operations:
-      index: Callout Populations
-      queue: Start
-      show: Callout Population %{id}
+      index: Alerts
+      show: Alert
+    app_name: OpenEWS
     beneficiaries:
-      create: New Contact
-      edit: Edit Contact
-      index: Contacts
-      new: New Contact
-      show: Contact %{id}
-      update: Edit Contact
+      create: New Beneficiary
+      edit: Edit Beneficiary
+      index: Beneficiaries
+      new: New Beneficiary
+      show: Beneficiary
+      update: Edit Beneficiary
     broadcasts:
-      create: New Callout
-      edit: Edit Callout
-      index: Callouts
-      new: New Callout
+      create: New Broadcast
+      edit: Edit Broadcast
+      index: Broadcasts
+      new: New Broadcast
       pause: Pause
       resume: Resume
-      show: Callout %{id}
+      show: Broadcast
       start: Start
       stop: Stop
-      summary: Callout Summary
-      update: Edit Callout
-    callout_populations:
-      create: New Callout Population
-      edit: Edit Callout Population
-      new: New Callout Population
-      show: Callout Population %{id}
-      update: Edit Callout Population
+      summary: Broadcast Summary
+      update: Edit Broadcast
     delivery_attempts:
-      index: Phone Calls
+      index: Delivery Attempts
       queue: Send
       queue_remote_fetch: Fetch Remote Status
-      show: Phone Call %{id}
-    recordings:
-      index: Recordings
-      show: Recording %{id}
-    remote_phone_call_events:
-      index: Phone Call Events
-      show: Phone Call Event %{id}
+      show: Delivery Attempt
     user_invitations:
       create: Invite User
       edit: Set your password
@@ -80,6 +66,12 @@ en:
       new: Sign In
     users:
       edit: Edit User
-      index: Users
-      show: User %{id}
+      index: Settings
+      show: User
       update: Edit User
+    account:
+      show: Settings
+    developers:
+      index: Settings
+    registrations:
+      edit: Edit Profile

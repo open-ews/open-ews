@@ -1,9 +1,28 @@
 class Broadcast < ApplicationRecord
   extend Enumerize
+  include MetadataHelpers
 
   AUDIO_CONTENT_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/x-wav].freeze
+  CHANNELS = %i[voice].freeze
 
-  include MetadataHelpers
+  module ActiveStorageDirty
+    attr_reader :audio_file_blob_was, :audio_file_will_change
+    attr_accessor :cache_audio_file_from_audio_url
+
+    def audio_file=(attachable)
+      return unless not_yet_started?
+      @audio_file_blob_was = audio_file.blob if audio_file.attached?
+      @audio_file_will_change = true
+      super(attachable)
+    end
+
+    def audio_file_blob_changed?
+      return false unless audio_file.attached?
+      return false unless audio_file_will_change
+
+      audio_file.blob != audio_file_blob_was
+    end
+  end
 
   class StateMachine < StateMachine::ActiveRecord
     state :pending, initial: true, transitions_to: :queued
@@ -39,7 +58,7 @@ class Broadcast < ApplicationRecord
             },
             if: ->(broadcast) { broadcast.audio_file.attached? }
 
-  delegate :pending?, :queued?, :errored?, :may_transition_to?, :transition_to!, to: :state_machine
+  delegate :running?, :stopped?, :completed?, :pending?, :queued?, :errored?, :may_transition_to?, :transition_to!, to: :state_machine
 
   before_create :set_default_status
 
@@ -48,10 +67,6 @@ class Broadcast < ApplicationRecord
     result = super(except: [ "channel", "beneficiary_filter" ])
     result["status"] = "initialized" if result["status"] == "pending" || result["status"] == "queued"
     result
-  end
-
-  def updatable?
-    status == "pending"
   end
 
   def mark_as_errored!(message)

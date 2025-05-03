@@ -1,0 +1,21 @@
+:root {
+  --tblr-font-sans-serif: "Inter";
+}
+
+.navbar-brand-image {
+  height: 3rem;
+}
+
+.datagrid {
+  --tblr-datagrid-item-width: 20rem;
+}
+
+.ts-control > input {
+  min-width: unset;
+}
+
+.ts-wrapper.multi .ts-control > div {
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}

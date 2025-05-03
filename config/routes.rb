@@ -13,25 +13,31 @@ Rails.application.routes.draw do
              controllers: { invitations: "users/invitations" },
              skip: :registrations
 
-  get "dashboard", to: "dashboard/broadcasts#index", as: :user_root
-  root to: "dashboard/broadcasts#index"
+  get "dashboard", to: "dashboard/home#index", as: :user_root
+  root to: "dashboard/home#index"
 
   namespace :admin do
     mount(PgHero::Engine, at: "pghero")
   end
 
   namespace "dashboard" do
-    root to: "broadcasts#index"
-    resources :access_tokens, only: :index
-    resource :account, only: %i[edit update]
+    root to: "home#index"
 
-    resources :beneficiaries, only: %i[index show destroy]
+    namespace :settings do
+      root to: "accounts#show"
+
+      resource :account, only: [ :show, :update ]
+      resources :users, only: [ :index, :show ]
+      resources :developers, only: :index
+    end
+
+    resources :beneficiaries
+    resources :beneficiary_addresses, only: :new
 
     resources :broadcasts do
       resources :alerts, only: %i[index show]
     end
 
-    resources :users, except: %i[new create]
     resource :locale, only: :update
   end
 
@@ -48,6 +54,7 @@ Rails.application.routes.draw do
     end
 
     resources :broadcasts, only: [ :index, :show, :create, :update ] do
+      resource :audio_file, controller: "broadcasts/audio_files", only: :show
       resources :alerts, controller: "broadcasts/alerts", only: [ :index, :show ] do
         get "stats" => "broadcasts/alerts/stats#index", on: :collection
       end

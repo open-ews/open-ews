@@ -1,4 +1,12 @@
-.card-body
-  = render("shared/resources_table", resource_class: Alert, columns: [:beneficiary_id, :broadcast_id, :created_at])
-  = render("shared/pagination", resources: resources)
+.card
+  .card-header
+    .card-actions
+      %a.btn
+        %i.icon.ti.ti-filter
+        Filter
+      %a.btn
+        %i.icon.ti.ti-file-export
+        Export
 
+  = render("shared/resources_table", resource_class: Alert, columns: [:phone_number, :delivery_attempts_count, :status, :created_at])
+  = render("shared/pagination", resources: resources)

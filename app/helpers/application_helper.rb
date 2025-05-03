@@ -1,4 +1,16 @@
 module ApplicationHelper
+  def user_profile_image_url(user)
+    user_email = Digest::MD5.hexdigest(user.email)
+    "https://www.gravatar.com/avatar/#{user_email}?size=200"
+  end
+
+  def country_name(iso_country_code)
+    return if iso_country_code.blank?
+
+    country = ISO3166::Country[iso_country_code]
+    country.translations[I18n.locale.to_s] || country.common_name || country.iso_short_name
+  end
+
   def flash_class(level)
     case level.to_sym
     when :notice then "alert alert-info"
@@ -47,13 +59,12 @@ module ApplicationHelper
   end
 
   def sidebar_nav(text, path, icon_class:, link_options: {})
-    content_tag(:li, class: "nav-item") do
-      sidebar_nav_class = "nav-link"
-      sidebar_nav_class += " active" if request.path == path
-      link_to(path, class: sidebar_nav_class, **link_options) do
+    is_active = request.path == path || (path != dashboard_root_path && request.path.start_with?(path))
+    content_tag(:li, class: "nav-item #{"active" if is_active}") do
+      link_to(path, class: "nav-link", **link_options) do
         content = "".html_safe
-        content += content_tag(:i, nil, class: "nav-icon #{icon_class}")
-        content + " " + text
+        content += content_tag(:i, nil, class: "nav-link-icon d-md-none d-lg-inline-block #{icon_class}", style: "font-size: 20px")
+        content + " " + content_tag(:span, text, class: "nav-link-title")
       end
     end
   end
