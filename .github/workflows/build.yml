@@ -52,7 +52,7 @@ jobs:
             },
             {
               "identifier": "open-ews",
-              "branch": "master",
+              "branch": "infra_rename_1",
               "environment": "production",
               "friendly_image_tag": "latest",
               "image_tag": "prod-${{ github.sha }}",
