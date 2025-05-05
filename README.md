@@ -4,7 +4,7 @@
   </a>
 </h1>
 
-![Build](https://github.com/somleng/open-ews/workflows/Build/badge.svg)
+[![Build](https://github.com/open-ews/open-ews/actions/workflows/build.yml/badge.svg)](https://github.com/open-ews/open-ews/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/open-ews/open-ews/graph/badge.svg?token=f9n8FQJUcK)](https://codecov.io/gh/open-ews/open-ews)
 [![View performance data on Skylight](https://badges.skylight.io/status/YxPzpqwXsqPx.svg)](https://oss.skylight.io/app/applications/YxPzpqwXsqPx)
 
