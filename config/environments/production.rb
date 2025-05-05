@@ -59,7 +59,7 @@ Rails.application.configure do
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
-  # config.active_job.queue_name_prefix = "somleng_scfm_production"
+  # config.active_job.queue_name_prefix = "open_ews_production"
   config.active_job.queue_adapter = ActiveJob::QueueAdapters::ShoryukenConcurrentSendAdapter.new
   # Explicitly set this value as otherwise ActiveJob will call queue_adapter.enqueue_after_transaction_commit?
   # which Shoruken doesn't define

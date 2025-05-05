@@ -7,7 +7,7 @@ module "app" {
   route53_zone          = data.terraform_remote_state.core.outputs.route53_zone
   internal_route53_zone = data.terraform_remote_state.core.outputs.internal_route53_zone
 
-  app_identifier             = "scfm"
+  app_identifier             = "open-ews"
   scfm_subdomain             = "scfm"
   scfm_cdn_subdomain         = "cdn-scfm"
   scfm_route53_zone          = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_somleng_org

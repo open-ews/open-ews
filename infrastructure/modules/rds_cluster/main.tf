@@ -15,7 +15,7 @@ resource "aws_security_group" "db" {
 }
 
 resource "aws_ssm_parameter" "db_master_password" {
-  name  = "scfm.db_master_password"
+  name  = "open-ews.db_master_password"
   type  = "SecureString"
   value = "change-me"
 
