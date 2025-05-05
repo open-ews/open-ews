@@ -89,9 +89,9 @@ locals {
       name  = "worker",
       image = "${var.app_image}:latest",
       logConfiguration = {
-        logDriver = "awslogs",
+        logDriver = "awslogs"
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.worker.name,
+          awslogs-group         = aws_cloudwatch_log_group.app.name,
           awslogs-region        = var.region.aws_region,
           awslogs-stream-prefix = var.app_environment
         }

@@ -20,6 +20,7 @@ variable "ecs_service_name" {}
 variable "task_definition_name" {}
 variable "ecs_cluster_name" {}
 variable "container_instances_name" {}
+variable "log_group_name" {}
 
 variable "webserver_container_port" {
   default = 80
