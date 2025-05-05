@@ -44,7 +44,7 @@ jobs:
           [
             {
               "identifier": "open-ews-staging",
-              "branch": "infra_rename_1",
+              "branch": "develop",
               "environment": "staging",
               "friendly_image_tag": "beta",
               "image_tag": "stag-${{ github.sha }}",
