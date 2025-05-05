@@ -8,11 +8,6 @@ module "app" {
   internal_route53_zone = data.terraform_remote_state.core.outputs.internal_route53_zone
 
   app_identifier             = "open-ews-staging"
-  ecs_service_name           = "open-ews-staging"
-  task_definition_name       = "open-ews-staging"
-  ecs_cluster_name           = "open-ews-staging"
-  container_instances_name   = "open-ews-staging"
-  log_group_name             = "open-ews-staging"
   scfm_subdomain             = "scfm-staging"
   scfm_cdn_subdomain         = "cdn-scfm-staging"
   scfm_route53_zone          = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_somleng_org
