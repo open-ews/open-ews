@@ -8,6 +8,10 @@ module "app" {
   internal_route53_zone = data.terraform_remote_state.core.outputs.internal_route53_zone
 
   app_identifier             = "scfm"
+  ecs_service_name           = "open-ews"
+  task_definition_name       = "open-ews"
+  ecs_cluster_name           = "open-ews"
+  container_instances_name   = "open-ews"
   scfm_subdomain             = "scfm"
   scfm_cdn_subdomain         = "cdn-scfm"
   scfm_route53_zone          = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_somleng_org

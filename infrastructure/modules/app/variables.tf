@@ -16,6 +16,10 @@ variable "api_subdomain" {}
 variable "app_subdomain" {}
 variable "route53_zone" {}
 variable "internal_route53_zone" {}
+variable "ecs_service_name" {}
+variable "task_definition_name" {}
+variable "ecs_cluster_name" {}
+variable "container_instances_name" {}
 
 variable "webserver_container_port" {
   default = 80

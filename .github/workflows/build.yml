@@ -48,16 +48,14 @@ jobs:
               "environment": "staging",
               "friendly_image_tag": "beta",
               "image_tag": "stag-${{ github.sha }}",
-              "ecs_cluster": "open-ews-staging",
               "docs_path": "staging/docs/open-ews"
             },
             {
-              "identifier": "scfm",
-              "branch": "master",
+              "identifier": "open-ews",
+              "branch": "infra_rename_1",
               "environment": "production",
               "friendly_image_tag": "latest",
               "image_tag": "prod-${{ github.sha }}",
-              "ecs_cluster": "scfm",
               "docs_path":  "docs/open-ews"
             }
           ]
@@ -334,8 +332,8 @@ jobs:
 
       - name: Run DB Migrate using Fargate
         run: |
-          network_configuration=$(aws ecs describe-services --cluster ${{ matrix.ecs_cluster }} --service ${{ matrix.identifier }}-worker --query 'services[0]' | jq 'with_entries(select([.key] | inside(["networkConfiguration"])))')
-          run_task_params=$(echo $network_configuration | jq '.startedBy = "db_migrate_ci" | .cluster = "${{ matrix.ecs_cluster }}" | .launchType = "FARGATE" | .taskDefinition = "${{ matrix.identifier }}-worker-fargate" | .overrides.containerOverrides[0].name = "worker" | .overrides.containerOverrides[0].command = ["bundle", "exec", "rails", "db:migrate"]' | jq -r tostring)
+          network_configuration=$(aws ecs describe-services --cluster ${{ matrix.identifier }} --service ${{ matrix.identifier }}-worker --query 'services[0]' | jq 'with_entries(select([.key] | inside(["networkConfiguration"])))')
+          run_task_params=$(echo $network_configuration | jq '.startedBy = "db_migrate_ci" | .cluster = "${{ matrix.identifier }}" | .launchType = "FARGATE" | .taskDefinition = "${{ matrix.identifier }}-worker-fargate" | .overrides.containerOverrides[0].name = "worker" | .overrides.containerOverrides[0].command = ["bundle", "exec", "rails", "db:migrate"]' | jq -r tostring)
           aws ecs run-task --cli-input-json $run_task_params
 
       - name: Deploy Webserver
@@ -343,7 +341,7 @@ jobs:
         with:
           task-definition: ${{ steps.render-webserver-task-def.outputs.task-definition }}
           service: ${{ matrix.identifier }}-webserver
-          cluster: ${{ matrix.ecs_cluster }}
+          cluster: ${{ matrix.identifier }}
           wait-for-service-stability: true
 
       - name: Deploy Worker
@@ -351,7 +349,7 @@ jobs:
         with:
           task-definition: ${{ steps.render-worker-task-def.outputs.task-definition }}
           service: ${{ matrix.identifier }}-worker
-          cluster: ${{ matrix.ecs_cluster }}
+          cluster: ${{ matrix.identifier }}
           wait-for-service-stability: true
 
       # Need this step for creating Sentry release

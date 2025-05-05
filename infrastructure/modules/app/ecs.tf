@@ -107,7 +107,7 @@ locals {
 }
 
 resource "aws_ecs_cluster" "this" {
-  name = var.app_identifier
+  name = var.ecs_cluster_name
 
   setting {
     name  = "containerInsights"
@@ -143,7 +143,7 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
 }
 
 resource "aws_ecs_task_definition" "webserver" {
-  family                   = "${var.app_identifier}-webserver"
+  family                   = "${var.task_definition_name}-webserver"
   network_mode             = "awsvpc"
   requires_compatibilities = ["EC2"]
   container_definitions = jsonencode([
@@ -177,7 +177,7 @@ resource "aws_ecs_task_definition" "webserver" {
 }
 
 resource "aws_ecs_service" "webserver" {
-  name            = aws_ecs_task_definition.webserver.family
+  name            = "${var.ecs_service_name}-webserver"
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.webserver.arn
   desired_count   = var.webserver_min_tasks
@@ -226,7 +226,7 @@ resource "aws_ecs_service" "webserver" {
 }
 
 resource "aws_ecs_task_definition" "worker" {
-  family                   = "${var.app_identifier}-worker"
+  family                   = "${var.task_definition_name}-worker"
   network_mode             = "awsvpc"
   requires_compatibilities = ["EC2"]
   container_definitions    = jsonencode(local.worker_container_definitions)
@@ -236,7 +236,7 @@ resource "aws_ecs_task_definition" "worker" {
 }
 
 resource "aws_ecs_task_definition" "worker_fargate" {
-  family                   = "${var.app_identifier}-worker-fargate"
+  family                   = "${var.task_definition_name}-worker-fargate"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   container_definitions    = jsonencode(local.worker_container_definitions)
@@ -252,7 +252,7 @@ resource "aws_ecs_task_definition" "worker_fargate" {
 }
 
 resource "aws_ecs_service" "worker" {
-  name            = aws_ecs_task_definition.worker.family
+  name            = "${var.ecs_service_name}-worker"
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.worker.arn
   desired_count   = var.worker_min_tasks
