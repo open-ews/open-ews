@@ -35,18 +35,17 @@ resource "aws_db_subnet_group" "db" {
 }
 
 resource "aws_rds_cluster" "db" {
-  cluster_identifier               = var.identifier
-  engine                           = "aurora-postgresql"
-  engine_mode                      = "provisioned"
-  engine_version                   = "16.1"
-  allow_major_version_upgrade      = true
-  db_instance_parameter_group_name = "aurora-postgresql15"
-  master_username                  = "somleng"
-  master_password                  = aws_ssm_parameter.db_master_password.value
-  vpc_security_group_ids           = [aws_security_group.db.id]
-  skip_final_snapshot              = true
-  storage_encrypted                = true
-  enabled_cloudwatch_logs_exports  = ["postgresql"]
+  cluster_identifier              = var.identifier
+  engine                          = "aurora-postgresql"
+  engine_mode                     = "provisioned"
+  engine_version                  = "17.4"
+  allow_major_version_upgrade     = true
+  master_username                 = "somleng"
+  master_password                 = aws_ssm_parameter.db_master_password.value
+  vpc_security_group_ids          = [aws_security_group.db.id]
+  skip_final_snapshot             = true
+  storage_encrypted               = true
+  enabled_cloudwatch_logs_exports = ["postgresql"]
 
   serverlessv2_scaling_configuration {
     max_capacity = 64
