@@ -39,6 +39,115 @@ Local Mobile Network Operators (MNOs) can use Somleng to deliver EWS messages to
 - 💬 SMS
 - 🗼 Cell Broadcast
 
+
+## 🚀 Getting Started (Local Development with Docker)
+
+This guide will help you get OpenEWS running locally using Docker. It is the fastest way to get started for development and testing purposes.
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed on your system:
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/open-ews/open-ews.git
+cd open-ews
+```
+
+### 2. Build and Start the Services
+
+Run the following command to build and start the application:
+
+```bash
+docker-compose up --build
+```
+
+This will:
+
+* Build the Docker containers
+* Start the web app and PostgreSQL
+
+### 3. Seed the database
+
+Run the following command to seed the database:
+
+```bash
+docker compose exec open-ews bundle exec rails db:setup
+```
+
+This will:
+
+* Create the database
+* Seed the database with sample data
+
+After the command runs, it will output:
+
+* The user credentials for logging into the web interface
+* The API key for authenticating with the API
+
+> 📌 Be sure to copy and store this information somewhere safe during development.
+
+### 4. Access the Application
+
+Once the services are up, open your browser and navigate to:
+
+```
+http://localhost:3000
+```
+
+You should see the OpenEWS application running and you can login with the credentials from the output above.
+
+### 5. Testing the API with cURL
+
+You can interact with the OpenEWS API using your generated API key. Here's how to create a beneficiary using `cURL`.
+
+```bash
+curl -X POST http://api.lvh.me:3000/v1/beneficiaries \
+  -H "Authorization: Bearer YOUR_API_KEY_HERE" \
+  -H "Content-Type: application/vnd.api+json" \
+  -d '{
+    "data": {
+      "type": "beneficiary",
+      "attributes": {
+        "phone_number": "+85510999999",
+        "iso_country_code": "KH"
+      }
+    }
+  }'
+```
+
+Replace `YOUR_API_KEY_HERE` with the actual key that was displayed when running `rails db:setup`.
+
+If successful, the API will respond with the details of the newly created beneficiary in JSON format.
+
+> 📖 You can find more API endpoints and usage examples in the upcoming [OpenEWS API documentation](https://www.somleng.org/docs/open-ews).
+
+### 🔄 Common Commands
+
+* **Rebuild containers:**
+
+  ```bash
+  docker-compose up --build
+  ```
+
+* **Stop the application:**
+
+  ```bash
+  docker-compose down
+  ```
+
+### 📚 Additional Resources
+
+* [API Documentation](https://www.somleng.org/docs/open-ews)
+
+---
+
+If you run into any issues, feel free to open an issue or start a discussion in the [GitHub Issues](https://github.com/open-ews/open-ews/issues) tab.
+
 ## Deployment
 
 The [infrastructure directory](infrastructure) contains [Terraform](https://www.terraform.io/) configuration files in order to deploy OpenEWS to AWS.
