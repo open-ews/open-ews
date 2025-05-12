@@ -124,7 +124,7 @@ Replace `YOUR_API_KEY_HERE` with the actual key that was displayed when running 
 
 If successful, the API will respond with the details of the newly created beneficiary in JSON format.
 
-> 📖 You can find more API endpoints and usage examples in the upcoming [OpenEWS API documentation](https://www.somleng.org/docs/open-ews).
+> 📖 You can find more API endpoints and usage examples in the upcoming [OpenEWS API documentation](https://www.open-ews.org/docs/api).
 
 ### 🔄 Common Commands
 
@@ -142,7 +142,7 @@ If successful, the API will respond with the details of the newly created benefi
 
 ### 📚 Additional Resources
 
-* [API Documentation](https://www.somleng.org/docs/open-ews)
+* [API Documentation](https://www.open-ews.org/docs/api)
 
 ---
 
