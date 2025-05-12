@@ -48,7 +48,7 @@ jobs:
               "environment": "staging",
               "friendly_image_tag": "beta",
               "image_tag": "stag-${{ github.sha }}",
-              "docs_path": "staging/docs/open-ews"
+              "docs_path": "staging/docs/api"
             },
             {
               "identifier": "open-ews",
@@ -56,7 +56,7 @@ jobs:
               "environment": "production",
               "friendly_image_tag": "latest",
               "image_tag": "prod-${{ github.sha }}",
-              "docs_path":  "docs/open-ews"
+              "docs_path":  "docs/api"
             }
           ]
           EOF
@@ -156,10 +156,10 @@ jobs:
 
       - name: Deploy API Documentation
         run: |
-          aws s3 sync --delete --acl public-read build/api s3://www.somleng.org/${{ matrix.docs_path }}
+          aws s3 sync --delete build/api s3://${{ secrets.OPEN_EWS_WEBSITE_BUCKET_ID }}/${{ matrix.docs_path }}
 
       - name: Invalidate Cache
-        run: aws cloudfront create-invalidation --distribution-id E3962XCJFZ0KB1 --paths /${{ matrix.docs_path }}/\*
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.OPEN_EWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths /${{ matrix.docs_path }}/\*
 
   build-packages:
     name: Build Packages
