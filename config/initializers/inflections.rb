@@ -20,4 +20,8 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "JSONAPI"
   inflect.acronym "ISO"
   inflect.acronym "TwiML"
+
+  # Country codes
+  inflect.acronym "KH"
+  inflect.acronym "LA"
 end

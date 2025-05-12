@@ -15,35 +15,4 @@ class BeneficiaryAddress < ApplicationRecord
     :administrative_division_level_4_code,
     :administrative_division_level_4_name,
     length: { maximum: 255 }
-
-
-  def self.country_address_data?(iso_country_code)
-    @country_address_data ||= YAML.load_file(Rails.root.join("config", "country_address_data.yml"))
-
-    @country_address_data[iso_country_code].present?
-  end
-
-
-  def self.address_data(iso_country_code)
-    @address_data ||= {}
-
-    @address_data[iso_country_code] ||= Pumi::Province.all.map do |province|
-      {
-        id: province.iso3166_2,
-        text: province.name_latin,
-        children: Pumi::District.where(province_id: province.id).map do |district|
-          {
-            id: district.id,
-            text: district.name_latin,
-            children: Pumi::Commune.where(district_id: district.id).map do |commune|
-              {
-                id: commune.id,
-                text: commune.name_latin
-              }
-            end
-          }
-        end
-      }
-    end
-  end
 end

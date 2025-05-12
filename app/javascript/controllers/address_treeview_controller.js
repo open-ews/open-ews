@@ -31,6 +31,8 @@ export default class extends Controller {
         const node = n.itree.ref
         const checkbox = node.querySelector('input[type="checkbox"]')
 
+        console.log(checkbox)
+
         checkbox.setAttribute("name", `${this.fieldNameValue}[value][]`)
         checkbox.setAttribute("value", node.getAttribute("data-uid"))
 

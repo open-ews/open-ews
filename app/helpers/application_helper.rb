@@ -82,4 +82,20 @@ module ApplicationHelper
       end
     end
   end
+
+  def treeview_address_data(iso_country_code)
+    Rails.cache.fetch("#{iso_country_code}-#{I18n.locale}") do
+      CountryAddressData.address_data(iso_country_code).map { |locality| treeview_node(locality) }
+    end
+  end
+
+  def treeview_node(locality)
+    node = {
+      id: locality.value,
+      text: I18n.locale == :en ? locality.name_en : locality.name_local,
+    }
+    node[:children] = locality.subdivisions.map { |i| treeview_node(i) } if locality.subdivisions.present?
+
+    node
+  end
 end

@@ -20,7 +20,7 @@
 
       = f.simple_fields_for :beneficiary_filter do |filter_form|
         - FieldDefinitions::BroadcastBeneficiaryFields.each do |field|
-          - next if BeneficiaryAddress.country_address_data?('kh') && field.name.start_with?("address.")
+          - next if CountryAddressData.supported?('kh') && field.name.start_with?("address.")
 
           = filter_form.simple_fields_for field.name.to_sym, @resource.beneficiary_filter.attributes[field.name] do |field_form|
             .row{id: "beneficiary_filter_#{field.name}", data: { controller: "beneficiary-filter-field" }}
@@ -63,7 +63,7 @@
               style: "max-height: 200px",
               data: {
                 controller: "address-treeview",
-                "address-treeview-data-value": BeneficiaryAddress.address_data("kh").to_json,
+                "address-treeview-data-value": treeview_address_data("kh").to_json,
                 "address-treeview-selected-value": (@resource.beneficiary_filter.administrative_division_level_3_code&.value || []).to_json,
                 "address-treeview-field-name-value": "broadcast[beneficiary_filter][administrative_division_level_3_code]"
               }
