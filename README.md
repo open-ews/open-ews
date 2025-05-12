@@ -29,7 +29,7 @@ OpenEWS is:
 - 💖 Free and Open Source
 - ✅ DPG Certified
 
-## OpenEWS + Somleng
+## OpenEWS 💖 Somleng
 
 In order to deliver the emergency warning messages to the beneficiaries OpenEWS will connect to Somleng out of the box. [Somleng](https://github.com/somleng/somleng) (Part of the Somleng Project) is an Open Source, [DPG Certified](https://www.digitalpublicgoods.net/registry#:~:text=Somleng), Telco-as-a-Service (TaaS) and Communications-Platform-as-a-Service (CPaaS).
 
