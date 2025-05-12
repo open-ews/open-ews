@@ -25,11 +25,11 @@ const initializeJSComponents = () => {
     .call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     .forEach((element) => new tabler.bootstrap.Tooltip(element));
 
-  // [].slice
-  //   .call(document.querySelectorAll('select[data-beneficiary-filter-field-target="value"]'))
-  //   .forEach((element) => new TomSelect(element));
+  [].slice
+    .call(document.querySelectorAll('select[data-beneficiary-filter-field-target="value"][multiple="multiple"]'))
+    .forEach((element) => new TomSelect(element));
 }
 
-["turbo:load", "turbo:after-stream-render"].forEach((e) =>
+["turbo:render", "turbo:load", "turbo:after-stream-render"].forEach((e) =>
   document.addEventListener(e, initializeJSComponents),
 )

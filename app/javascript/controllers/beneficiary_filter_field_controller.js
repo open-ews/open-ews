@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import TomSelect from "tom-select"
 
 const MULTIPLE_VALUE_OPERATORS = ["in", "not_in"]
 
@@ -65,31 +66,33 @@ export default class extends Controller {
       ? "none"
       : "unset"
 
+    if (this.valueTarget.tagName === "SELECT") {
+      this.#toggleSelectInput()
+    }
+  }
+
+  #toggleSelectInput() {
+    this.valueTarget.name = this.valueTarget.name.replace("[]", "")
+
     if (MULTIPLE_VALUE_OPERATORS.includes(this.operatorTarget.value)) {
-      this.valueTarget.multiple = "multiple"
+      this.valueTarget.multiple = true
       this.valueTarget.name = `${this.valueTarget.name}[]`
     } else {
       this.valueTarget.multiple = undefined
-      this.valueTarget.name = this.valueTarget.name.replace("[]", "")
     }
 
-    // const tomSelect = this.valueTarget.tomselect
-    // if (tomSelect) {
-    //   this.valueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
-    //
-    //   if (
-    //     this.operatorTarget.value === "in" ||
-    //     this.operatorTarget.value === "not_in"
-    //   ) {
-    //     this.valueTarget.multiple = "true"
-    //     tomSelect.setMaxItems(null)
-    //   } else {
-    //     this.valueTarget.multiple = undefined
-    //     tomSelect.setMaxItems(1)
-    //   }
-    //
-    //   tomSelect.refreshState()
-    //   tomSelect.sync()
-    // }
+    let tomSelect = this.valueTarget.tomselect
+    if (tomSelect) {
+      tomSelect.destroy()
+    }
+
+    this.valueTarget.querySelectorAll("option").forEach((e) => {
+      e.removeAttribute("selected")
+    })
+
+    if (this.valueTarget.multiple === true) {
+      tomSelect = new TomSelect(this.valueTarget)
+      this.valueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
+    }
   }
 }

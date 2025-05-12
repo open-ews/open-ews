@@ -90,12 +90,12 @@ module ApplicationHelper
   end
 
   def treeview_node(locality)
-    node = {
+    children = locality.subdivisions.map { |i| treeview_node(i) } if locality.subdivisions.present?
+
+    {
       id: locality.value,
       text: I18n.locale == :en ? locality.name_en : locality.name_local,
+      children: children
     }
-    node[:children] = locality.subdivisions.map { |i| treeview_node(i) } if locality.subdivisions.present?
-
-    node
   end
 end
