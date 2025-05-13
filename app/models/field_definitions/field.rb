@@ -18,7 +18,7 @@ module FieldDefinitions
 
     MULTIPLE_SELECTION_OPERATORS = %w[in not_in]
 
-    attr_reader :name, :column, :schema, :association, :description, :attributes
+    attr_reader :name, :column, :schema, :association, :description, :example, :attributes
 
     def initialize(attributes)
       @name = attributes.fetch(:name)
@@ -26,7 +26,18 @@ module FieldDefinitions
       @schema = attributes.fetch(:schema)
       @association = attributes[:association]
       @description = attributes[:description]
+      @read_only = attributes.fetch(:read_only, false)
+      @required = attributes.fetch(:required, false)
+      @example = attributes[:example]
       @attributes = attributes
+    end
+
+    def read_only?
+      !!@read_only
+    end
+
+    def required?
+      !!@required
     end
 
     def clone(overrides)

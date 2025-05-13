@@ -34,6 +34,7 @@ gem "aws-sdk-rails"
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sqs"
 gem "aws-actionmailer-ses"
+gem "active_storage_validations"
 gem "bootsnap", require: false
 gem "countries"
 gem "country_select"

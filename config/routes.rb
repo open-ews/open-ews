@@ -39,6 +39,8 @@ Rails.application.routes.draw do
     end
 
     resource :locale, only: :update
+
+    resources :imports, only: %i[index create]
   end
 
   namespace :v1, module: "api/v1", as: "api_v1", defaults: { format: "json" } do

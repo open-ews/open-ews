@@ -1,0 +1,4 @@
+.card
+
+  = render("shared/resources_table", resource_class: Import, columns: [:import, :import_type, :status, :error_message, :created_at])
+  = render("shared/pagination", resources: resources)

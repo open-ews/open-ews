@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_13_075804) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_13_060236) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -206,6 +206,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_075804) do
     t.index ["type"], name: "index_events_on_type"
   end
 
+  create_table "imports", force: :cascade do |t|
+    t.string "resource_type", null: false
+    t.string "status", null: false
+    t.string "error_message"
+    t.bigint "user_id", null: false
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_imports_on_account_id"
+    t.index ["user_id"], name: "index_imports_on_user_id"
+  end
+
   create_table "oauth_access_grants", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
     t.bigint "application_id", null: false
@@ -267,7 +279,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_075804) do
 
   create_table "users", force: :cascade do |t|
     t.bigint "account_id", null: false
-    t.jsonb "metadata", default: {}, null: false
     t.string "email", null: false
     t.string "encrypted_password", null: false
     t.string "reset_password_token"
@@ -295,7 +306,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_075804) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.string "locale", default: "en", null: false
-    t.string "name"
+    t.string "name", null: false
     t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
@@ -322,6 +333,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_075804) do
   add_foreign_key "delivery_attempts", "beneficiaries", on_delete: :nullify
   add_foreign_key "delivery_attempts", "broadcasts"
   add_foreign_key "events", "accounts", on_delete: :cascade
+  add_foreign_key "imports", "accounts", on_delete: :cascade
+  add_foreign_key "imports", "users", on_delete: :cascade
   add_foreign_key "oauth_access_grants", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "accounts", column: "created_by_id"

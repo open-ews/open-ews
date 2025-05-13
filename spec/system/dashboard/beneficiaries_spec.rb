@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Beneficiaries" do
-  it "can list all beneficiaries" do
+  it "lists all beneficiaries" do
     user = create(:user)
     _beneficiary = create(:beneficiary, phone_number: "85516789111", account: user.account)
     _other_beneficiary = create(:beneficiary, phone_number: "85510555123")
@@ -11,6 +11,28 @@ RSpec.describe "Beneficiaries" do
 
     expect(page).to have_content("85516789111")
     expect(page).not_to have_content("85510555123")
+  end
+
+  it "imports beneficiaries" do
+    user = create(:user)
+
+    sign_in(user)
+    visit dashboard_beneficiaries_path
+
+    click_on("Import")
+    attach_file("File", file_fixture("beneficiaries.csv"))
+
+    perform_enqueued_jobs do
+      click_on("Upload")
+    end
+
+    within(".alert") do
+      expect(page).to have_content("Your import is being processed")
+      click_on("Imports")
+    end
+
+    expect(page).to have_content("Succeeded")
+    expect(page).to have_content("beneficiaries.csv")
   end
 
   it "creates a new beneficiary", :js do

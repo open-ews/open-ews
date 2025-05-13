@@ -1,5 +1,7 @@
 module V1
   class BeneficiaryRequestSchema < JSONAPIRequestSchema
+    option :beneficiary_address_validator, default: -> { BeneficiaryAddressValidator.new }
+
     params do
       required(:data).value(:hash).schema do
         required(:type).filled(:str?, eql?: "beneficiary")
@@ -44,10 +46,9 @@ module V1
     attribute_rule(:address) do
       next unless key?
 
-      validator = BeneficiaryAddressValidator.new(value)
-      next if validator.valid?
+      next if beneficiary_address_validator.valid?(value)
 
-      validator.errors.each do |error|
+      beneficiary_address_validator.errors.each do |error|
         key([*key.path, error.key]).failure(error.message)
       end
     end
