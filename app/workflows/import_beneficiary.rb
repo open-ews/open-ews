@@ -22,7 +22,7 @@ class ImportBeneficiary < ApplicationWorkflow
       account: import.account
     )
     beneficiary.iso_country_code = sanitize(data.fetch(:iso_country_code)) if data[:iso_country_code].present?
-    beneficiary.language_code = sanitize(data.fetch(:iso_language_code)) if data[:iso_language_code].present?
+    beneficiary.iso_language_code = sanitize(data.fetch(:iso_language_code)) if data[:iso_language_code].present?
     beneficiary.gender = sanitize(data.fetch(:gender)) if data[:gender].present?
     beneficiary.disability_status = sanitize(data.fetch(:disability_status)) if data[:disability_status].present?
     beneficiary.date_of_birth = sanitize(data.fetch(:date_of_birth)) if data[:date_of_birth].present?

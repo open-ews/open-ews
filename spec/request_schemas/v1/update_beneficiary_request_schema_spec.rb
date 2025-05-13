@@ -20,6 +20,16 @@ module V1
       ).not_to have_valid_field(:data, :attributes, :phone_number)
     end
 
+    it "validates the status" do
+      expect(
+        validate_schema(input_params: { data: { attributes: { status: "wrong" } } })
+      ).not_to have_valid_field(:data, :attributes, :status)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { status: "disabled" } } })
+      ).to have_valid_field(:data, :attributes, :status)
+    end
+
     def validate_schema(input_params:, options: {})
       UpdateBeneficiaryRequestSchema.new(
         input_params:,
