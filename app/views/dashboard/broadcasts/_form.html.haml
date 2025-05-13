@@ -38,9 +38,9 @@
                   input_html: { data: { "beneficiary-filter-field-target": "operator", action:  "beneficiary-filter-field#operatorChanged" } }
               .col
                 .value-input
-                  - base_options = { label: false, required: true, multiple: (true if FieldDefinitions::Field::MULTIPLE_SELECTION_OPERATORS.include?(field_form.object&.operator)), input_html: { data: { "beneficiary-filter-field-target": "value" } }}
+                  - base_options = { label: false, required: true, input_html: { data: { "beneficiary-filter-field-target": "value" } }}
                   - if field.field_type == :list
-                    = field_form.input "value", as: :select, collection: field.schema.options, **base_options
+                    = field_form.input "value", as: :select, collection: field.schema.options, multiple: (true if FieldDefinitions::Field::MULTIPLE_SELECTION_OPERATORS.include?(field_form.object&.operator)), **base_options
                   - elsif field.field_type == :string
                     = field_form.input "value", as: :string, **base_options
                   - elsif field.field_type == :value

@@ -58,8 +58,6 @@ RSpec.describe "Broadcasts" do
     sign_in(user)
     visit edit_dashboard_broadcast_path(broadcast)
 
-    attach_file("Audio file", Rails.root + file_fixture("test.mp3"))
-
     within("#beneficiary_filter_gender") do
       check(class: "form-check-input")
       select("Equals", from: "broadcast[beneficiary_filter][gender][operator]")
