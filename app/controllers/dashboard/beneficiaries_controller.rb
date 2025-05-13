@@ -27,7 +27,7 @@ module Dashboard
         :gender,
         :date_of_birth,
         :disability_status,
-        :language_code,
+        :iso_language_code,
         :iso_country_code,
         addresses_attributes: [
           :id,

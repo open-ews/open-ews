@@ -5,7 +5,7 @@ class BroadcastForm::BeneficiaryFilter
   attribute :gender, BeneficiaryFilterFieldType.new
   attribute :disability_status, BeneficiaryFilterFieldType.new
   attribute :date_of_birth, BeneficiaryFilterFieldType.new
-  attribute :language_code, BeneficiaryFilterFieldType.new
+  attribute :iso_language_code, BeneficiaryFilterFieldType.new
   attribute :iso_country_code, BeneficiaryFilterFieldType.new
   attribute :iso_region_code, BeneficiaryFilterFieldType.new
   attribute :administrative_division_level_2_code, BeneficiaryFilterFieldType.new

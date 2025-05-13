@@ -5,7 +5,7 @@ module FieldDefinitions
     "gender",
     "disability_status",
     "date_of_birth",
-    "language_code",
+    "iso_language_code",
     "address.iso_region_code",
     "address.administrative_division_level_2_code",
     "address.administrative_division_level_2_name",

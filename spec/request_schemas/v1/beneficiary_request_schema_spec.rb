@@ -50,18 +50,18 @@ module V1
       ).to have_valid_field(:data, :attributes, :iso_country_code)
     end
 
-    it "validates the language_code" do
+    it "validates the iso_language_code" do
       expect(
-        validate_schema(input_params: { data: { attributes: { language_code: nil } } })
-      ).to have_valid_field(:data, :attributes, :language_code)
+        validate_schema(input_params: { data: { attributes: { iso_language_code: nil } } })
+      ).to have_valid_field(:data, :attributes, :iso_language_code)
 
       expect(
         validate_schema(input_params: { data: { attributes: {} }  })
-      ).to have_valid_field(:data, :attributes, :language_code)
+      ).to have_valid_field(:data, :attributes, :iso_language_code)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { language_code: "km" } }  })
-      ).to have_valid_field(:data, :attributes, :language_code)
+        validate_schema(input_params: { data: { attributes: { iso_language_code: "khm" } }  })
+      ).to have_valid_field(:data, :attributes, :iso_language_code)
     end
 
     it "validates the gender" do
