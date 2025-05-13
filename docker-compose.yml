@@ -1,0 +1,37 @@
+services:
+  db:
+    image: public.ecr.aws/docker/library/postgres:alpine
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  open-ews:
+    image: ghcr.io/open-ews/open-ews
+    build:
+      context: .
+    environment:
+      RAILS_ENV: development
+      DATABASE_HOST: db
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --server-response --spider --quiet http://0.0.0.0:3000/health_checks 2>&1 | grep '200 OK' > /dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    command:
+      - "./bin/thrust"
+      - "./bin/rails"
+      - "server"
+      - "-b"
+      - "0.0.0.0"

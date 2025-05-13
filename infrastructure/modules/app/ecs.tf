@@ -89,9 +89,9 @@ locals {
       name  = "worker",
       image = "${var.app_image}:latest",
       logConfiguration = {
-        logDriver = "awslogs",
+        logDriver = "awslogs"
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.worker.name,
+          awslogs-group         = aws_cloudwatch_log_group.app.name,
           awslogs-region        = var.region.aws_region,
           awslogs-stream-prefix = var.app_environment
         }
@@ -177,7 +177,7 @@ resource "aws_ecs_task_definition" "webserver" {
 }
 
 resource "aws_ecs_service" "webserver" {
-  name            = aws_ecs_task_definition.webserver.family
+  name            = "${var.app_identifier}-webserver"
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.webserver.arn
   desired_count   = var.webserver_min_tasks
@@ -252,7 +252,7 @@ resource "aws_ecs_task_definition" "worker_fargate" {
 }
 
 resource "aws_ecs_service" "worker" {
-  name            = aws_ecs_task_definition.worker.family
+  name            = "${var.app_identifier}-worker"
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.worker.arn
   desired_count   = var.worker_min_tasks

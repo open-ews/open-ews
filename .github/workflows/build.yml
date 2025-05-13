@@ -2,8 +2,7 @@ on: push
 name: Build
 
 env:
-  ECR_REPOSITORY_NAME: scfm
-  GHCR_PACKAGE_NAME: open-ews
+  REPOSITORY_NAME: open-ews
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -49,17 +48,15 @@ jobs:
               "environment": "staging",
               "friendly_image_tag": "beta",
               "image_tag": "stag-${{ github.sha }}",
-              "ecs_cluster": "open-ews-staging",
-              "docs_path": "staging/docs/open-ews"
+              "docs_path": "staging/docs/api"
             },
             {
-              "identifier": "scfm",
+              "identifier": "open-ews",
               "branch": "master",
               "environment": "production",
               "friendly_image_tag": "latest",
               "image_tag": "prod-${{ github.sha }}",
-              "ecs_cluster": "scfm",
-              "docs_path":  "docs/open-ews"
+              "docs_path":  "docs/api"
             }
           ]
           EOF
@@ -159,10 +156,10 @@ jobs:
 
       - name: Deploy API Documentation
         run: |
-          aws s3 sync --delete --acl public-read build/api s3://www.somleng.org/${{ matrix.docs_path }}
+          aws s3 sync --delete build/api s3://${{ secrets.OPEN_EWS_WEBSITE_BUCKET_ID }}/${{ matrix.docs_path }}
 
       - name: Invalidate Cache
-        run: aws cloudfront create-invalidation --distribution-id E3962XCJFZ0KB1 --paths /${{ matrix.docs_path }}/\*
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.OPEN_EWS_CLOUDFRONT_DISTRIBUTION_ID }} --paths /${{ matrix.docs_path }}/\*
 
   build-packages:
     name: Build Packages
@@ -216,8 +213,8 @@ jobs:
           cache-to: type=gha,mode=max
           provenance: false
           tags: |
-            ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}-${{ matrix.platform.arch }}
-            ${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform.arch }}
+            ${{ secrets.ECR_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ matrix.image_tag }}-${{ matrix.platform.arch }}
+            ${{ secrets.GHCR_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-${{ matrix.platform.arch }}
 
   build-manifest:
     name: Build Manifest
@@ -264,11 +261,11 @@ jobs:
         run: |
           declare -a platforms=("amd64" "arm64")
 
-          source_images=$(printf "${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}-%s " "${platforms[@]}")
-          docker buildx imagetools create -t ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }} -t ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }} $source_images
+          source_images=$(printf "${{ secrets.ECR_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ matrix.image_tag }}-%s " "${platforms[@]}")
+          docker buildx imagetools create -t ${{ secrets.ECR_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }} -t ${{ secrets.ECR_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ matrix.image_tag }} $source_images
 
-          source_images=$(printf "${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
-          docker buildx imagetools create -t ${{ secrets.GHCR_REGISTRY }}/${{ env.GHCR_PACKAGE_NAME }}:${{ matrix.friendly_image_tag }} $source_images
+          source_images=$(printf "${{ secrets.GHCR_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }}-%s " "${platforms[@]}")
+          docker buildx imagetools create -t ${{ secrets.GHCR_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ matrix.friendly_image_tag }} $source_images
 
   deploy:
     name: Deploy
@@ -302,7 +299,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: app
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
+          image: ${{ secrets.ECR_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
       - name: Get current worker task definition
         run: |
@@ -314,7 +311,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: worker
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
+          image: ${{ secrets.ECR_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
       - name: Get current worker (Fargate) task definition
         run: |
@@ -326,7 +323,7 @@ jobs:
         with:
           task-definition: task-definition.json
           container-name: worker
-          image: ${{ secrets.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:${{ matrix.image_tag }}
+          image: ${{ secrets.ECR_REGISTRY }}/${{ env.REPOSITORY_NAME }}:${{ matrix.image_tag }}
 
       - name: Register Fargate task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
@@ -335,8 +332,8 @@ jobs:
 
       - name: Run DB Migrate using Fargate
         run: |
-          network_configuration=$(aws ecs describe-services --cluster ${{ matrix.ecs_cluster }} --service ${{ matrix.identifier }}-worker --query 'services[0]' | jq 'with_entries(select([.key] | inside(["networkConfiguration"])))')
-          run_task_params=$(echo $network_configuration | jq '.startedBy = "db_migrate_ci" | .cluster = "${{ matrix.ecs_cluster }}" | .launchType = "FARGATE" | .taskDefinition = "${{ matrix.identifier }}-worker-fargate" | .overrides.containerOverrides[0].name = "worker" | .overrides.containerOverrides[0].command = ["bundle", "exec", "rails", "db:migrate"]' | jq -r tostring)
+          network_configuration=$(aws ecs describe-services --cluster ${{ matrix.identifier }} --service ${{ matrix.identifier }}-worker --query 'services[0]' | jq 'with_entries(select([.key] | inside(["networkConfiguration"])))')
+          run_task_params=$(echo $network_configuration | jq '.startedBy = "db_migrate_ci" | .cluster = "${{ matrix.identifier }}" | .launchType = "FARGATE" | .taskDefinition = "${{ matrix.identifier }}-worker-fargate" | .overrides.containerOverrides[0].name = "worker" | .overrides.containerOverrides[0].command = ["bundle", "exec", "rails", "db:migrate"]' | jq -r tostring)
           aws ecs run-task --cli-input-json $run_task_params
 
       - name: Deploy Webserver
@@ -344,7 +341,7 @@ jobs:
         with:
           task-definition: ${{ steps.render-webserver-task-def.outputs.task-definition }}
           service: ${{ matrix.identifier }}-webserver
-          cluster: ${{ matrix.ecs_cluster }}
+          cluster: ${{ matrix.identifier }}
           wait-for-service-stability: true
 
       - name: Deploy Worker
@@ -352,7 +349,7 @@ jobs:
         with:
           task-definition: ${{ steps.render-worker-task-def.outputs.task-definition }}
           service: ${{ matrix.identifier }}-worker
-          cluster: ${{ matrix.ecs_cluster }}
+          cluster: ${{ matrix.identifier }}
           wait-for-service-stability: true
 
       # Need this step for creating Sentry release

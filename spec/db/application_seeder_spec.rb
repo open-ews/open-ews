@@ -2,12 +2,24 @@ require "rails_helper"
 require Rails.root.join("db/application_seeder")
 
 RSpec.describe ApplicationSeeder do
-  describe "#seed!" do
-    it "creates an account" do
-      ApplicationSeeder.new.seed!
+  it "seeds the database" do
+    seeder = ApplicationSeeder.new
 
-      expect(Account.count).to eq(1)
-      expect(Account.first.access_tokens.count).to eq(1)
-    end
+    seeder.seed!
+
+    expect(Account.count).to eq(1)
+    expect(Account.first).to have_attributes(
+      access_tokens: be_present,
+      users: contain_exactly(
+        have_attributes(
+          email: "user@example.com"
+        )
+      )
+    )
+
+    seeder.seed!
+
+    expect(Account.count).to eq(1)
+    expect(User.count).to eq(1)
   end
 end
