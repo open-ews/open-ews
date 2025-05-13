@@ -40,11 +40,18 @@
                 .value-input
                   - base_options = { label: false, required: true, input_html: { data: { "beneficiary-filter-field-target": "value" } }}
                   - if field.field_type == :list
-                    = field_form.input "value", as: :select, collection: field.schema.options, multiple: (true if FieldDefinitions::Field::MULTIPLE_SELECTION_OPERATORS.include?(field_form.object&.operator)), **base_options
+                    = field_form.input "value", as: :select, collection: field.schema.options, **base_options
                   - elsif field.field_type == :string
                     = field_form.input "value", as: :string, **base_options
                   - elsif field.field_type == :value
                     = field_form.input "value", as: field.schema.input_type, html5: true, **base_options
+
+                .multi-value-input
+                  - base_options = { label: false, required: true, input_html: { data: { "beneficiary-filter-field-target": "multiValue" } }}
+                  - if field.field_type == :list
+                    = field_form.input "value", as: :select, collection: field.schema.options, multiple: true, **base_options
+                  - elsif field.field_type == :string
+                    = field_form.input "value", as: :select, collection: [], **base_options
 
                 .is-null-value-input
                   = field_form.input "value", label: false, as: :select, required: true, input_html: { data: { "beneficiary-filter-field-target": "isNullValue" } }

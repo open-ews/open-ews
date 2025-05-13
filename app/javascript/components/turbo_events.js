@@ -15,21 +15,23 @@ addEventListener("turbo:before-stream-render", (event) => {
 })
 
 const initializeJSComponents = () => {
-  [].slice
+  ;[].slice
     .call(document.querySelectorAll("time[data-behavior~=local-time]"))
     .forEach(function (element) {
       element.textContent = moment(element.textContent).format("lll (Z)")
-    });
-
-  [].slice
+    })
+  ;[].slice
     .call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    .forEach((element) => new tabler.bootstrap.Tooltip(element));
-
-  [].slice
-    .call(document.querySelectorAll('select[data-beneficiary-filter-field-target="value"][multiple="multiple"]'))
-    .forEach((element) => new TomSelect(element));
+    .forEach((element) => new tabler.bootstrap.Tooltip(element))
+  ;[].slice
+    .call(
+      document.querySelectorAll(
+        'select[data-beneficiary-filter-field-target="multiValue"][multiple="multiple"]',
+      ),
+    )
+    .forEach((element) => new TomSelect(element))
 }
 
-["turbo:render", "turbo:load", "turbo:after-stream-render"].forEach((e) =>
+;["turbo:render", "turbo:load", "turbo:after-stream-render"].forEach((e) =>
   document.addEventListener(e, initializeJSComponents),
 )
