@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus"
-import TomSelect from "tom-select"
 
 const MULTIPLE_VALUE_OPERATORS = ["in", "not_in"]
 
@@ -9,6 +8,7 @@ export default class extends Controller {
     "fieldName",
     "operator",
     "value",
+    "multiValue",
     "isNullValue",
   ]
 
@@ -24,16 +24,22 @@ export default class extends Controller {
     this.operatorTarget.disabled = !enabled
     this.operatorTarget.value = null
 
-    this.#toggleValueInput()
+    this.#clearInputValue()
+    this.#toggleInputs()
   }
 
   operatorChanged() {
-    this.#toggleValueInput()
+    this.#clearInputValue()
+    this.#toggleInputs()
   }
 
   #toggleInputs() {
     const enabled = this.toggleElementTarget.checked
+
     const isNullSelected = this.operatorTarget.value === "is_null"
+    const isMultiSelected = MULTIPLE_VALUE_OPERATORS.includes(
+      this.operatorTarget.value,
+    )
 
     this.fieldNameTarget.disabled = !enabled
     this.operatorTarget.disabled = !enabled
@@ -41,58 +47,45 @@ export default class extends Controller {
     this.isNullValueTarget.disabled = !isNullSelected
     this.isNullValueTarget.style.display = isNullSelected ? "unset" : "none"
 
-    this.valueTarget.disabled = !enabled || isNullSelected
-    this.valueTarget.closest(".value-input").style.display = isNullSelected
-      ? "none"
-      : "unset"
+    if (enabled) {
+      if (isMultiSelected) {
+        this.valueTarget.disabled = true
+        this.valueTarget.closest(".value-input").style.display = "none"
 
-    const tomSelect = this.valueTarget.tomselect
-    if (tomSelect) {
-      this.valueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
-    }
-  }
+        this.multiValueTarget.disabled = false
+        this.multiValueTarget.closest(".multi-value-input").style.display =
+          "unset"
+      } else {
+        this.valueTarget.disabled = false
+        this.valueTarget.closest(".value-input").style.display = "unset"
 
-  #toggleValueInput() {
-    const enabled = this.toggleElementTarget.checked
-    const isNullSelected = this.operatorTarget.value === "is_null"
-
-    this.isNullValueTarget.value = null
-    this.isNullValueTarget.disabled = !isNullSelected
-    this.isNullValueTarget.style.display = isNullSelected ? "unset" : "none"
-
-    this.valueTarget.value = null
-    this.valueTarget.disabled = !enabled || isNullSelected
-    this.valueTarget.closest(".value-input").style.display = isNullSelected
-      ? "none"
-      : "unset"
-
-    if (this.valueTarget.tagName === "SELECT") {
-      this.#toggleSelectInput()
-    }
-  }
-
-  #toggleSelectInput() {
-    this.valueTarget.name = this.valueTarget.name.replace("[]", "")
-
-    if (MULTIPLE_VALUE_OPERATORS.includes(this.operatorTarget.value)) {
-      this.valueTarget.multiple = true
-      this.valueTarget.name = `${this.valueTarget.name}[]`
+        this.multiValueTarget.disabled = true
+        this.multiValueTarget.closest(".multi-value-input").style.display =
+          "none"
+      }
     } else {
-      this.valueTarget.multiple = undefined
+      this.valueTarget.disabled = true
+      this.valueTarget.closest(".value-input").style.display = "none"
+
+      this.multiValueTarget.disabled = true
+      this.multiValueTarget.closest(".multi-value-input").style.display = "none"
     }
 
-    let tomSelect = this.valueTarget.tomselect
+    const tomSelect = this.multiValueTarget.tomselect
     if (tomSelect) {
-      tomSelect.destroy()
+      this.multiValueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
     }
+  }
 
-    this.valueTarget.querySelectorAll("option").forEach((e) => {
-      e.removeAttribute("selected")
-    })
+  #clearInputValue() {
+    this.isNullValueTarget.value = null
+    this.valueTarget.value = null
+    this.multiValueTarget.value = null
 
-    if (this.valueTarget.multiple === true) {
-      tomSelect = new TomSelect(this.valueTarget)
-      this.valueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
+    const tomSelect = this.multiValueTarget.tomselect
+    if (tomSelect) {
+      tomSelect.clear()
+      tomSelect.sync()
     }
   }
 }

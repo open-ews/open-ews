@@ -4,4 +4,8 @@ class BroadcastForm::BeneficiaryFilterField
 
   attribute :operator
   attribute :value
+
+  def value=(val)
+    val.is_a?(Array) ? super(val.reject(&:blank?)) : super
+  end
 end
