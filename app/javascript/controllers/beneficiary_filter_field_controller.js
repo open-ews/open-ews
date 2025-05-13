@@ -17,11 +17,6 @@ export default class extends Controller {
   }
 
   toggle() {
-    const enabled = this.toggleElementTarget.checked
-
-    this.fieldNameTarget.disabled = !enabled
-
-    this.operatorTarget.disabled = !enabled
     this.operatorTarget.value = null
 
     this.#clearInputValue()
@@ -35,11 +30,11 @@ export default class extends Controller {
 
   #toggleInputs() {
     const enabled = this.toggleElementTarget.checked
-
     const isNullSelected = this.operatorTarget.value === "is_null"
     const isMultiSelected = MULTIPLE_VALUE_OPERATORS.includes(
       this.operatorTarget.value,
     )
+    const isSingleSelected = enabled && !isNullSelected && !isMultiSelected
 
     this.fieldNameTarget.disabled = !enabled
     this.operatorTarget.disabled = !enabled
@@ -47,29 +42,13 @@ export default class extends Controller {
     this.isNullValueTarget.disabled = !isNullSelected
     this.isNullValueTarget.style.display = isNullSelected ? "unset" : "none"
 
-    if (enabled) {
-      if (isMultiSelected) {
-        this.valueTarget.disabled = true
-        this.valueTarget.closest(".value-input").style.display = "none"
+    this.valueTarget.disabled = !isSingleSelected
+    this.valueTarget.closest(".value-input").style.display =
+      isSingleSelected || !enabled ? "unset" : "none"
 
-        this.multiValueTarget.disabled = false
-        this.multiValueTarget.closest(".multi-value-input").style.display =
-          "unset"
-      } else {
-        this.valueTarget.disabled = false
-        this.valueTarget.closest(".value-input").style.display = "unset"
-
-        this.multiValueTarget.disabled = true
-        this.multiValueTarget.closest(".multi-value-input").style.display =
-          "none"
-      }
-    } else {
-      this.valueTarget.disabled = true
-      this.valueTarget.closest(".value-input").style.display = "none"
-
-      this.multiValueTarget.disabled = true
-      this.multiValueTarget.closest(".multi-value-input").style.display = "none"
-    }
+    this.multiValueTarget.disabled = !isMultiSelected
+    this.multiValueTarget.closest(".multi-value-input").style.display =
+      isMultiSelected ? "unset" : "none"
 
     const tomSelect = this.multiValueTarget.tomselect
     if (tomSelect) {
@@ -83,9 +62,7 @@ export default class extends Controller {
     this.multiValueTarget.value = null
 
     const tomSelect = this.multiValueTarget.tomselect
-    if (tomSelect) {
-      tomSelect.clear()
-      tomSelect.sync()
-    }
+    tomSelect.clear()
+    tomSelect.sync()
   }
 }

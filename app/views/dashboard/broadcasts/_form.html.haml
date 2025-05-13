@@ -45,7 +45,7 @@
                     = field_form.input "value", as: field.schema.input_type, html5: true, **base_options
 
                 .multi-value-input.hidden
-                  - base_options = { label: false, required: true, multiple: true, input_html: { data: { "beneficiary-filter-field-target": "multiValue" } }}
+                  - base_options = { label: false, required: true, include_hidden: false, multiple: true, input_html: { data: { "beneficiary-filter-field-target": "multiValue" } }}
                   - if field.field_type == :list
                     = field_form.input "value", as: :select, collection: field.schema.options, **base_options
                   - else
