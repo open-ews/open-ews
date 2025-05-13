@@ -1,13 +1,11 @@
 .card.col-md-6
-  - foobar = resource
   = simple_form_for([:dashboard, resource]) do |f|
     .card-body
       .row
         .col
           = f.input :channel
         .col
-          = f.input :audio_file, as: :file, required: resource.new_record?,
-            input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
+          = f.input :audio_file, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
 
       .hr-text Beneficiary Filters
       .row
@@ -37,7 +35,7 @@
                   required: true,
                   input_html: { data: { "beneficiary-filter-field-target": "operator", action:  "beneficiary-filter-field#operatorChanged" } }
               .col
-                .value-input
+                .value-input.hidden
                   - base_options = { label: false, required: true, input_html: { data: { "beneficiary-filter-field-target": "value" } }}
                   - if field.field_type == :list
                     = field_form.input "value", as: :select, collection: field.schema.options, **base_options
@@ -46,14 +44,14 @@
                   - elsif field.field_type == :value
                     = field_form.input "value", as: field.schema.input_type, html5: true, **base_options
 
-                .multi-value-input
-                  - base_options = { label: false, required: true, input_html: { data: { "beneficiary-filter-field-target": "multiValue" } }}
+                .multi-value-input.hidden
+                  - base_options = { label: false, required: true, multiple: true, input_html: { data: { "beneficiary-filter-field-target": "multiValue" } }}
                   - if field.field_type == :list
-                    = field_form.input "value", as: :select, collection: field.schema.options, multiple: true, **base_options
-                  - elsif field.field_type == :string
+                    = field_form.input "value", as: :select, collection: field.schema.options, **base_options
+                  - else
                     = field_form.input "value", as: :select, collection: [], **base_options
 
-                .is-null-value-input
+                .is-null-value-input.hidden
                   = field_form.input "value", label: false, as: :select, required: true, input_html: { data: { "beneficiary-filter-field-target": "isNullValue" } }
 
         .row{data: { controller: "beneficiary-addresses-filter-field" }}

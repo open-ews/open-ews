@@ -26,7 +26,7 @@ const initializeJSComponents = () => {
   ;[].slice
     .call(
       document.querySelectorAll(
-        'select[data-beneficiary-filter-field-target="multiValue"][multiple="multiple"]',
+        'select[data-beneficiary-filter-field-target="multiValue"]',
       ),
     )
     .forEach((element) => new TomSelect(element))
