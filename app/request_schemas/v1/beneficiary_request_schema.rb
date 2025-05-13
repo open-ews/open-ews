@@ -9,6 +9,7 @@ module V1
           optional(:iso_language_code).maybe(:string)
           optional(:date_of_birth).maybe(:date)
           optional(:gender).maybe(Types::UpcaseString, included_in?: Beneficiary.gender.values)
+          optional(:status).maybe(:string, included_in?: Beneficiary.status.values)
           optional(:disability_status).maybe(:string, included_in?: Beneficiary.disability_status.values)
           optional(:metadata).value(:hash)
 
