@@ -33,7 +33,7 @@ RSpec.describe CreateBeneficiary do
     beneficiary = CreateBeneficiary.call(
       account:,
       phone_number: "+85510999999",
-      language_code: "km",
+      iso_language_code: "km",
       gender: "M",
       date_of_birth: "1990-01-01",
       metadata: { "foo" => "bar" },
@@ -46,7 +46,7 @@ RSpec.describe CreateBeneficiary do
 
     expect(beneficiary).to have_attributes(
       phone_number: "85510999999",
-      language_code: "km",
+      iso_language_code: "km",
       gender: "M",
       date_of_birth: Date.parse("1990-01-01"),
       metadata: { "foo" => "bar" },

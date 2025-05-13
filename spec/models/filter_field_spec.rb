@@ -74,32 +74,32 @@ RSpec.describe FilterField, type: :model do
 
     it "handles `contains` operator" do
       result = FilterField.new(
-        field_definition: find_field_definition("language_code"),
+        field_definition: find_field_definition("iso_language_code"),
         operator: "contains",
         value: "foo"
       ).to_query
 
-      expect(result).to eq(Beneficiary.arel_table["language_code"].matches("%foo%"))
+      expect(result).to eq(Beneficiary.arel_table["iso_language_code"].matches("%foo%"))
     end
 
     it "handles `not_contains` operator" do
       result = FilterField.new(
-        field_definition: find_field_definition("language_code"),
+        field_definition: find_field_definition("iso_language_code"),
         operator: "not_contains",
         value: "foo"
       ).to_query
 
-      expect(result).to eq(Beneficiary.arel_table["language_code"].does_not_match("%foo%"))
+      expect(result).to eq(Beneficiary.arel_table["iso_language_code"].does_not_match("%foo%"))
     end
 
     it "handles `starts_with` operator" do
       result = FilterField.new(
-        field_definition: find_field_definition("language_code"),
+        field_definition: find_field_definition("iso_language_code"),
         operator: "starts_with",
         value: "foo"
       ).to_query
 
-      expect(result).to eq(Beneficiary.arel_table["language_code"].matches("foo%"))
+      expect(result).to eq(Beneficiary.arel_table["iso_language_code"].matches("foo%"))
     end
 
     it "handles `is_null` operator" do

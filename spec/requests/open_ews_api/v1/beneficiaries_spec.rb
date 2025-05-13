@@ -95,12 +95,17 @@ RSpec.resource "Beneficiaries"  do
         method: :_disabled
       )
       parameter(
-        :language_code, "The [ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
+        :iso_language_code, "The [ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
         required: false,
         method: :_disabled
       )
       parameter(
         :gender, "Must be one of `M` or `F`.",
+        required: false,
+        method: :_disabled
+      )
+      parameter(
+        :status, "If supplied, must be one of #{Beneficiary.status.values.map { |t| "`#{t}`" }.join(", ")}. Only beneficiaries with active status are considered when creating a broadcast.",
         required: false,
         method: :_disabled
       )
@@ -179,7 +184,7 @@ RSpec.resource "Beneficiaries"  do
           type: :beneficiary,
           attributes: {
             phone_number: "+85510999999",
-            language_code: "khm",
+            iso_language_code: "khm",
             gender: "M",
             date_of_birth: "1990-01-01",
             metadata: { "my_custom_property" => "my_custom_property_value" },
@@ -193,7 +198,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
         "phone_number" => "85510999999",
-        "language_code" => "khm",
+        "iso_language_code" => "khm",
         "gender" => "M",
         "date_of_birth" => "1990-01-01",
         "metadata" => { "my_custom_property" => "my_custom_property_value" },
@@ -331,12 +336,17 @@ RSpec.resource "Beneficiaries"  do
         required: false
       )
       parameter(
-        :language_code, "The [ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
+        :iso_language_code, "The [ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
         required: false
       )
       parameter(
         :gender, "Must be one of `M` or `F`.",
         required: false
+      )
+      parameter(
+        :status, "If supplied, must be one of #{Beneficiary.status.values.map { |t| "`#{t}`" }.join(", ")}. Only beneficiaries with active status are considered when creating a broadcast.",
+        required: false,
+        method: :_disabled
       )
       parameter(
         :disability_status, "If supplied, must be one of #{Beneficiary.disability_status.values.map { |t| "`#{t}`" }.join(", ")}.",
@@ -357,7 +367,7 @@ RSpec.resource "Beneficiaries"  do
         :beneficiary,
         phone_number: "+85510999001",
         gender: nil,
-        language_code: nil,
+        iso_language_code: nil,
         date_of_birth: nil,
         metadata: {}
       )
@@ -372,7 +382,7 @@ RSpec.resource "Beneficiaries"  do
             phone_number: "+85510999002",
             gender: "F",
             status: "disabled",
-            language_code: "eng",
+            iso_language_code: "eng",
             date_of_birth: "1990-01-01",
             metadata: {
               foo: "bar"
@@ -385,10 +395,35 @@ RSpec.resource "Beneficiaries"  do
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
         "phone_number" => "85510999002",
-        "language_code" => "eng",
+        "iso_language_code" => "eng",
         "gender" => "F",
         "date_of_birth" => "1990-01-01",
         "metadata" => { "foo" => "bar" }
+      )
+    end
+
+    example "Disable a beneficiary" do
+      beneficiary = create(
+        :beneficiary,
+        status: :active,
+      )
+
+      set_authorization_header_for(beneficiary.account)
+      do_request(
+        id: beneficiary.id,
+        data: {
+          id: beneficiary.id,
+          type: :beneficiary,
+          attributes: {
+            status: :disabled
+          }
+        }
+      )
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_schema("beneficiary")
+      expect(jsonapi_response_attributes).to include(
+        "status" => "disabled"
       )
     end
   end

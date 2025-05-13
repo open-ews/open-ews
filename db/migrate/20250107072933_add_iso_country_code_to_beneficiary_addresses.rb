@@ -1,4 +1,4 @@
-class AddIsoCountryCodeToBeneficiaryAddresses < ActiveRecord::Migration[8.0]
+class AddISOCountryCodeToBeneficiaryAddresses < ActiveRecord::Migration[8.0]
   def change
     change_column_null :beneficiary_addresses, :iso_region_code, false
     add_column :beneficiary_addresses, :iso_country_code, :citext, null: false

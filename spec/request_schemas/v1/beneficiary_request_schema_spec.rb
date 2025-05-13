@@ -100,6 +100,16 @@ module V1
       ).to have_valid_field(:data, :attributes, :date_of_birth)
     end
 
+    it "validates the status" do
+      expect(
+        validate_schema(input_params: { data: { attributes: { status: "wrong" } } })
+      ).not_to have_valid_field(:data, :attributes, :status)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { status: "disabled" } } })
+      ).to have_valid_field(:data, :attributes, :status)
+    end
+
     it "validates the address" do
       expect(
         validate_schema(input_params: { data: { attributes: { address: nil } } })

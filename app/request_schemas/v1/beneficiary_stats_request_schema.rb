@@ -3,7 +3,7 @@ module V1
     GROUPS = [
       "gender",
       "disability_status",
-      "language_code",
+      "iso_language_code",
       "iso_country_code",
       "address.iso_region_code",
       "address.administrative_division_level_2_code",
