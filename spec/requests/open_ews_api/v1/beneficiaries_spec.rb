@@ -95,7 +95,7 @@ RSpec.resource "Beneficiaries"  do
         method: :_disabled
       )
       parameter(
-        :language_code, "The [ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
+        :iso_language_code, "The [ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
         required: false,
         method: :_disabled
       )
@@ -179,7 +179,7 @@ RSpec.resource "Beneficiaries"  do
           type: :beneficiary,
           attributes: {
             phone_number: "+85510999999",
-            language_code: "khm",
+            iso_language_code: "khm",
             gender: "M",
             date_of_birth: "1990-01-01",
             metadata: { "my_custom_property" => "my_custom_property_value" },
@@ -193,7 +193,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
         "phone_number" => "85510999999",
-        "language_code" => "khm",
+        "iso_language_code" => "khm",
         "gender" => "M",
         "date_of_birth" => "1990-01-01",
         "metadata" => { "my_custom_property" => "my_custom_property_value" },
@@ -331,7 +331,7 @@ RSpec.resource "Beneficiaries"  do
         required: false
       )
       parameter(
-        :language_code, "The [ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
+        :iso_language_code, "The [ISO 639-2](https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes) alpha-3 language code of the beneficiary.",
         required: false
       )
       parameter(
@@ -357,7 +357,7 @@ RSpec.resource "Beneficiaries"  do
         :beneficiary,
         phone_number: "+85510999001",
         gender: nil,
-        language_code: nil,
+        iso_language_code: nil,
         date_of_birth: nil,
         metadata: {}
       )
@@ -372,7 +372,7 @@ RSpec.resource "Beneficiaries"  do
             phone_number: "+85510999002",
             gender: "F",
             status: "disabled",
-            language_code: "eng",
+            iso_language_code: "eng",
             date_of_birth: "1990-01-01",
             metadata: {
               foo: "bar"
@@ -385,7 +385,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_body).to match_jsonapi_resource_schema("beneficiary")
       expect(jsonapi_response_attributes).to include(
         "phone_number" => "85510999002",
-        "language_code" => "eng",
+        "iso_language_code" => "eng",
         "gender" => "F",
         "date_of_birth" => "1990-01-01",
         "metadata" => { "foo" => "bar" }

@@ -6,7 +6,7 @@ module V1
         required(:attributes).value(:hash).schema do
           required(:phone_number).filled(Types::Number)
           required(:iso_country_code).filled(Types::UpcaseString, included_in?: Beneficiary.iso_country_code.values)
-          optional(:language_code).maybe(:string)
+          optional(:iso_language_code).maybe(:string)
           optional(:date_of_birth).maybe(:date)
           optional(:gender).maybe(Types::UpcaseString, included_in?: Beneficiary.gender.values)
           optional(:disability_status).maybe(:string, included_in?: Beneficiary.disability_status.values)

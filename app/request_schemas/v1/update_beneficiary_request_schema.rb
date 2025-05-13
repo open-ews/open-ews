@@ -8,7 +8,7 @@ module V1
           optional(:phone_number).filled(Types::Number)
           optional(:iso_country_code).filled(Types::UpcaseString, included_in?: Beneficiary.iso_country_code.values)
           optional(:disability_status).maybe(:string, included_in?: Beneficiary.disability_status.values)
-          optional(:language_code).maybe(:string)
+          optional(:iso_language_code).maybe(:string)
           optional(:date_of_birth).maybe(:date)
           optional(:gender).maybe(:string, included_in?: Beneficiary.gender.values)
           optional(:metadata).maybe(:hash?)

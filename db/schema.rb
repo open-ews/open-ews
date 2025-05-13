@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_13_075804) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_13_144529) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -98,7 +98,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_075804) do
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "account_id", null: false
     t.string "status", default: "active", null: false
-    t.string "language_code"
+    t.string "iso_language_code"
     t.string "gender"
     t.date "date_of_birth"
     t.citext "iso_country_code", null: false
@@ -107,7 +107,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_075804) do
     t.index ["account_id", "disability_status"], name: "index_beneficiaries_on_account_id_and_disability_status"
     t.index ["account_id", "gender"], name: "index_beneficiaries_on_account_id_and_gender"
     t.index ["account_id", "iso_country_code"], name: "index_beneficiaries_on_account_id_and_iso_country_code"
-    t.index ["account_id", "language_code"], name: "index_beneficiaries_on_account_id_and_language_code"
+    t.index ["account_id", "iso_language_code"], name: "index_beneficiaries_on_account_id_and_iso_language_code"
     t.index ["account_id", "phone_number"], name: "index_beneficiaries_on_account_id_and_phone_number", unique: true
     t.index ["account_id", "status"], name: "index_beneficiaries_on_account_id_and_status", where: "((status)::text = 'active'::text)"
     t.index ["account_id"], name: "index_beneficiaries_on_account_id"
