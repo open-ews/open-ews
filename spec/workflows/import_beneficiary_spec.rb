@@ -224,6 +224,11 @@ RSpec.describe ImportBeneficiary do
     )
 
     expect(Beneficiary.find_by(id: beneficiary.id)).to eq(nil)
+    expect(beneficiary.account.events).to contain_exactly(
+      have_attributes(
+        type: "beneficiary.deleted"
+      )
+    )
   end
 
   it "fails to delete a beneficiary if other attributes are given" do
