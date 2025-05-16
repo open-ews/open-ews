@@ -74,6 +74,9 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Enable Corepack (Yarn 4+ Manager)
+        run: corepack enable
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:

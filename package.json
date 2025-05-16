@@ -29,5 +29,6 @@
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "packageManager": "yarn@4.9.1"
 }
