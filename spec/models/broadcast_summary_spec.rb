@@ -1,29 +1,29 @@
 require "rails_helper"
 
 RSpec.describe BroadcastSummary do
-  describe "#alerts_count" do
-    it "returns the number of alerts" do
+  describe "#notifications_count" do
+    it "returns the number of notifications" do
       broadcast = create(:broadcast)
-      create(:alert, broadcast:)
+      create(:notification, broadcast:)
       broadcast_summary = BroadcastSummary.new(broadcast)
 
-      result = broadcast_summary.alerts_count
+      result = broadcast_summary.notifications_count
 
       expect(result).to eq(1)
     end
   end
 
-  describe "#alerts_still_to_be_called" do
-    it "returns the number of alerts still to be called" do
+  describe "#notifications_still_to_be_called" do
+    it "returns the number of notifications still to be called" do
       broadcast = create(:broadcast)
-      create(:alert, :succeeded, broadcast:)
-      create(:alert, :failed, broadcast:, delivery_attempts_count: 3)
-      create(:alert, :failed, broadcast:, delivery_attempts_count: 1)
-      create(:alert, :pending, broadcast:, delivery_attempts_count: 0)
+      create(:notification, :succeeded, broadcast:)
+      create(:notification, :failed, broadcast:, delivery_attempts_count: 3)
+      create(:notification, :failed, broadcast:, delivery_attempts_count: 1)
+      create(:notification, :pending, broadcast:, delivery_attempts_count: 0)
 
       broadcast_summary = BroadcastSummary.new(broadcast)
 
-      result = broadcast_summary.alerts_still_to_be_called
+      result = broadcast_summary.notifications_still_to_be_called
 
       expect(result).to eq(1)
     end
@@ -32,9 +32,9 @@ RSpec.describe BroadcastSummary do
   describe "#completed_calls" do
     it "returns the number of calls" do
       broadcast = create(:broadcast)
-      alert = create(:alert, broadcast:)
-      create(:delivery_attempt, :succeeded, alert:)
-      create(:delivery_attempt, :failed, alert:)
+      notification = create(:notification, broadcast:)
+      create(:delivery_attempt, :succeeded, notification:)
+      create(:delivery_attempt, :failed, notification:)
 
       broadcast_summary = BroadcastSummary.new(broadcast)
 
@@ -47,9 +47,9 @@ RSpec.describe BroadcastSummary do
   describe "#failed_calls" do
     it "returns the number of calls" do
       broadcast = create(:broadcast)
-      alert = create(:alert, broadcast:)
-      create(:delivery_attempt, :failed, alert:)
-      create(:delivery_attempt, :initiated, alert:)
+      notification = create(:notification, broadcast:)
+      create(:delivery_attempt, :failed, notification:)
+      create(:delivery_attempt, :initiated, notification:)
       broadcast_summary = BroadcastSummary.new(broadcast)
 
       result = broadcast_summary.failed_calls

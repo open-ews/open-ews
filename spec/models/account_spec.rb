@@ -8,7 +8,7 @@ RSpec.describe Account do
 
     expect(account).to have_attributes(
       delivery_attempt_queue_limit: 200,
-      max_delivery_attempts_for_alert: 3
+      max_delivery_attempts_for_notification: 3
     )
   end
 end

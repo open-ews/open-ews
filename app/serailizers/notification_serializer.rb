@@ -1,4 +1,4 @@
-class AlertSerializer < ResourceSerializer
+class NotificationSerializer < ResourceSerializer
   attributes :phone_number, :status, :delivery_attempts_count
 
   belongs_to :broadcast

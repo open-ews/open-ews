@@ -14,7 +14,7 @@ class ScheduledJob < ApplicationJob
   def queue_delivery_attempts(account)
     delivery_attempts = DeliveryAttempt.where(status: :created).where(broadcast_id: account.broadcasts.where(status: :running).select(:id))
 
-    delivery_attempts.joins(:alert).order("alerts.priority").limit(account.delivery_attempt_queue_limit).each do |delivery_attempt|
+    delivery_attempts.joins(:notification).order("notifications.priority").limit(account.delivery_attempt_queue_limit).each do |delivery_attempt|
       delivery_attempt.transition_to!(:queued)
       InitiateDeliveryAttemptJob.perform_later(delivery_attempt)
     end

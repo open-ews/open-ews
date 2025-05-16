@@ -5,11 +5,11 @@ RSpec.describe UpdateDeliveryAttemptStatusJob do
     it "updates the status of a delivery attempt" do
       account = create(:account, somleng_account_sid: "account-sid", somleng_auth_token: "auth-token")
       broadcast = create(:broadcast, :running, account:)
-      alert = create(:alert, broadcast:)
+      notification = create(:notification, broadcast:)
       delivery_attempt = create(
         :delivery_attempt,
         :initiated,
-        alert:,
+        notification:,
         metadata: {
           "somleng_call_sid" => "call-sid"
         }

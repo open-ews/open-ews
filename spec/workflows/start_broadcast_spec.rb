@@ -39,7 +39,7 @@ RSpec.describe StartBroadcast do
       audio_file: be_attached
     )
     expect(broadcast.beneficiaries).to contain_exactly(*female_beneficiaries.first(2), beneficiary_in_group)
-    expect(broadcast.alerts).to contain_exactly(
+    expect(broadcast.notifications).to contain_exactly(
       have_attributes(
         beneficiary: female_beneficiaries[0],
         priority: 0,

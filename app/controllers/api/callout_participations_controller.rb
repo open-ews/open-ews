@@ -3,11 +3,11 @@ module API
     private
 
     def find_resources_association_chain
-      broadcast.alerts
+      broadcast.notifications
     end
 
     def filter_class
-      Filter::Resource::Alert
+      Filter::Resource::Notification
     end
 
     def broadcast

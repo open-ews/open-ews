@@ -4,8 +4,8 @@ RSpec.describe "Call Status Callbacks" do
   it "Handles call status callbacks" do
     account = create(:account, somleng_account_sid: "account-sid", somleng_auth_token: "auth-token")
     broadcast = create(:broadcast, :running, account:)
-    alert = create(:alert, :pending, broadcast:)
-    delivery_attempt = create(:delivery_attempt, :initiated, alert:)
+    notification = create(:notification, :pending, broadcast:)
+    delivery_attempt = create(:delivery_attempt, :initiated, notification:)
 
     request_body = build_request_body(
       account_sid: account.somleng_account_sid,
@@ -39,7 +39,7 @@ RSpec.describe "Call Status Callbacks" do
       ),
       completed_at: be_present
     )
-    expect(alert.reload).to have_attributes(
+    expect(notification.reload).to have_attributes(
       status: "succeeded",
       completed_at: be_present
     )
@@ -47,7 +47,7 @@ RSpec.describe "Call Status Callbacks" do
 
   it "Handles incorrect signatures" do
     account = create(:account, somleng_account_sid: "account-sid", somleng_auth_token: "auth-token")
-    delivery_attempt = create(:delivery_attempt, :initiated, alert: create(:alert, :pending, broadcast: create(:broadcast, account:)))
+    delivery_attempt = create(:delivery_attempt, :initiated, notification: create(:notification, :pending, broadcast: create(:broadcast, account:)))
     request_body = build_request_body(
       account_sid: account.somleng_account_sid
     )

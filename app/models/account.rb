@@ -13,13 +13,13 @@ class Account < ApplicationRecord
   strip_attributes
 
   def configured_for_broadcasts?
-    somleng_account_sid.present? && somleng_auth_token.present? && alert_phone_number.present?
+    somleng_account_sid.present? && somleng_auth_token.present? && notification_phone_number.present?
   end
 
   private
 
   def set_default_settings
     self.delivery_attempt_queue_limit ||= 200
-    self.max_delivery_attempts_for_alert ||= 3
+    self.max_delivery_attempts_for_notification ||= 3
   end
 end

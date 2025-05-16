@@ -1,6 +1,6 @@
 module Filter
   module Resource
-    class Alert < Filter::Resource::Msisdn
+    class Notification < Filter::Resource::Msisdn
       def self.attribute_filters
         super << :broadcast_scope
       end

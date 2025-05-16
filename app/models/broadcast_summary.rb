@@ -9,12 +9,12 @@ class BroadcastSummary
     self.broadcast = broadcast
   end
 
-  def alerts_count
-    alerts.count
+  def notifications_count
+    notifications.count
   end
 
-  def alerts_still_to_be_called
-    alerts.where(status: :pending).count
+  def notifications_still_to_be_called
+    notifications.where(status: :pending).count
   end
 
   def completed_calls
@@ -27,8 +27,8 @@ class BroadcastSummary
 
   private
 
-  def alerts
-    broadcast.alerts
+  def notifications
+    broadcast.notifications
   end
 
   def delivery_attempts

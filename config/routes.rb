@@ -28,7 +28,7 @@ Rails.application.routes.draw do
     resources :beneficiaries, only: %i[index show destroy]
 
     resources :broadcasts do
-      resources :alerts, only: %i[index show]
+      resources :notifications, only: %i[index show]
     end
 
     resources :users, except: %i[new create]
@@ -48,8 +48,8 @@ Rails.application.routes.draw do
     end
 
     resources :broadcasts, only: [ :index, :show, :create, :update ] do
-      resources :alerts, controller: "broadcasts/alerts", only: [ :index, :show ] do
-        get "stats" => "broadcasts/alerts/stats#index", on: :collection
+      resources :notifications, controller: "broadcasts/notifications", only: [ :index, :show ] do
+        get "stats" => "broadcasts/notifications/stats#index", on: :collection
       end
     end
 

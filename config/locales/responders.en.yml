@@ -5,7 +5,7 @@ en:
       create:
         notice: "%{resource_name} was successfully created."
       destroy:
-        alert: "%{resource_name} could not be destroyed."
         notice: "%{resource_name} was successfully destroyed."
+        notification: "%{resource_name} could not be destroyed."
       update:
         notice: "%{resource_name} was successfully updated."
