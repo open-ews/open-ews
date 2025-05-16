@@ -14,7 +14,7 @@ class StartBroadcast < ApplicationWorkflow
     ApplicationRecord.transaction do
       download_audio_file unless broadcast.audio_file.attached?
 
-      create_alerts
+      create_notifications
       create_delivery_attempts
 
       broadcast.error_message = nil
@@ -30,30 +30,30 @@ class StartBroadcast < ApplicationWorkflow
     DownloadBroadcastAudioFile.call(broadcast)
   end
 
-  def create_alerts
+  def create_notifications
     raise Error, "Account not configured" unless broadcast.account.configured_for_broadcasts?
-    alerts = []
+    notifications = []
 
     group_beneficiaries.find_each do |beneficiary|
-      alerts << build_alert(beneficiary, priority: 0)
+      notifications << build_notification(beneficiary, priority: 0)
     end
 
     filtered_beneficiaries.find_each do |beneficiary|
-      alerts << build_alert(beneficiary, priority: 1)
+      notifications << build_notification(beneficiary, priority: 1)
     end
 
-    raise Error, "No beneficiaries match the filters" if alerts.none?
+    raise Error, "No beneficiaries match the filters" if notifications.none?
 
-    Alert.upsert_all(alerts)
+    Notification.upsert_all(notifications)
   end
 
   def create_delivery_attempts
-    delivery_attempts = broadcast.alerts.find_each.map do |alert|
+    delivery_attempts = broadcast.notifications.find_each.map do |notification|
       {
         broadcast_id: broadcast.id,
-        beneficiary_id: alert.beneficiary_id,
-        alert_id: alert.id,
-        phone_number: alert.phone_number,
+        beneficiary_id: notification.beneficiary_id,
+        notification_id: notification.id,
+        phone_number: notification.phone_number,
         status: :created
       }
     end
@@ -72,7 +72,7 @@ class StartBroadcast < ApplicationWorkflow
     broadcast.group_beneficiaries.active
   end
 
-  def build_alert(beneficiary, **params)
+  def build_notification(beneficiary, **params)
     {
       broadcast_id: broadcast.id,
       beneficiary_id: beneficiary.id,

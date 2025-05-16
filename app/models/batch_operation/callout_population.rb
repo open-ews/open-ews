@@ -19,7 +19,7 @@ module BatchOperation
 
     def run!
       transaction do
-        create_alerts
+        create_notifications
         create_delivery_attempts
         start_broadcast
       end
@@ -29,7 +29,7 @@ module BatchOperation
       ApplicationRecord.transaction do
         download_audio_file unless broadcast.audio_file.attached?
 
-        create_alerts
+        create_notifications
         create_delivery_attempts
 
         broadcast.error_message = nil
@@ -66,15 +66,15 @@ module BatchOperation
       Filter::Resource::Beneficiary.new(
         { association_chain: account.beneficiaries },
         contact_filter_params.with_indifferent_access
-      ).resources.where.not(id: Alert.select(:beneficiary_id).where(broadcast:))
+      ).resources.where.not(id: Notification.select(:beneficiary_id).where(broadcast:))
     end
 
-    def create_alerts
+    def create_notifications
       beneficiaries = beneficiaries_scope
       raise Error, "Account not configured" unless broadcast.account.configured_for_broadcasts?
       raise Error, "No beneficiaries match the filters" if beneficiaries.none?
 
-      alerts = beneficiaries.find_each.map do |beneficiary|
+      notifications = beneficiaries.find_each.map do |beneficiary|
         {
           broadcast_id: broadcast.id,
           beneficiary_id: beneficiary.id,
@@ -84,16 +84,16 @@ module BatchOperation
         }
       end
 
-      Alert.upsert_all(alerts)
+      Notification.upsert_all(notifications)
     end
 
     def create_delivery_attempts
-      delivery_attempts = broadcast.alerts.find_each.map do |alert|
+      delivery_attempts = broadcast.notifications.find_each.map do |notification|
         {
           broadcast_id: broadcast.id,
-          beneficiary_id: alert.beneficiary_id,
-          alert_id: alert.id,
-          phone_number: alert.phone_number,
+          beneficiary_id: notification.beneficiary_id,
+          notification_id: notification.id,
+          phone_number: notification.phone_number,
           status: :created
         }
       end

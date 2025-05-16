@@ -21,8 +21,8 @@ class Broadcast < ApplicationRecord
   validates :channel, presence: true
 
   belongs_to :account
-  has_many :alerts
-  has_many :beneficiaries, through: :alerts
+  has_many :notifications
+  has_many :beneficiaries, through: :notifications
   has_many :delivery_attempts
   has_many :broadcast_beneficiary_groups
   has_many :beneficiary_groups, through: :broadcast_beneficiary_groups

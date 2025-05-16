@@ -1,12 +1,12 @@
 module Dashboard
-  class AlertsController < Dashboard::BaseController
+  class NotificationsController < Dashboard::BaseController
     private
 
     def association_chain
       if parent_resource
-        parent_resource.alerts
+        parent_resource.notifications
       else
-        current_account.alerts
+        current_account.notifications
       end
     end
 
@@ -39,11 +39,11 @@ module Dashboard
     end
 
     def show_location(resource)
-      dashboard_broadcast_alert_path(resource.broadcast, resource)
+      dashboard_broadcast_notification_path(resource.broadcast, resource)
     end
 
     def filter_class
-      Filter::Resource::Alert
+      Filter::Resource::Notification
     end
   end
 end

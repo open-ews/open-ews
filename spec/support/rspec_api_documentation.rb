@@ -6,7 +6,7 @@ RspecApiDocumentation.configure do |config|
     # Introduction
 
     The OpenEWS API enables Organizations and Governments to efficiently manage and disseminate early warning broadcasts to beneficiaries in disaster-prone areas.
-    It provides robust tools for interacting with beneficiary data, crafting broadcast alert messages, and monitoring the performance of dissemination broadcasts. Built with scalability and flexibility in mind, OpenEWS supports integration with external systems, ensuring seamless communication and data interoperability.
+    It provides robust tools for interacting with beneficiary data, crafting broadcast notification messages, and monitoring the performance of dissemination broadcasts. Built with scalability and flexibility in mind, OpenEWS supports integration with external systems, ensuring seamless communication and data interoperability.
 
     The API follows the [JSON:API standard](https://jsonapi.org/), a specification for building APIs in a consistent and predictable manner. This ensures standardization in resource representation, error handling, and query parameters, making integration and development easier for your technical team.
 

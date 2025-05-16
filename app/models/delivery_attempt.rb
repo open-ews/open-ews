@@ -1,7 +1,7 @@
 class DeliveryAttempt < ApplicationRecord
   attribute :phone_number, :phone_number
 
-  belongs_to :alert, counter_cache: true
+  belongs_to :notification, counter_cache: true
   belongs_to :beneficiary
   belongs_to :broadcast
 

@@ -38,7 +38,7 @@ class InitiateDeliveryAttemptJob < ApplicationJob
         HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
         update_metadata!(
           somleng_error_message: e.message,
-          alert_phone_number:
+          notification_phone_number:
         )
       end
     end
@@ -48,7 +48,7 @@ class InitiateDeliveryAttemptJob < ApplicationJob
     def initiate_call
       somleng_client.create_call(
         to: delivery_attempt.phone_number,
-        from: alert_phone_number,
+        from: notification_phone_number,
         twiml: build_twiml,
         status_callback: status_callback_url
       )
@@ -62,8 +62,8 @@ class InitiateDeliveryAttemptJob < ApplicationJob
       AudioURL.new(key: delivery_attempt.broadcast.audio_file.key).url
     end
 
-    def alert_phone_number
-      delivery_attempt.account.alert_phone_number
+    def notification_phone_number
+      delivery_attempt.account.notification_phone_number
     end
 
     def update_metadata!(metadata)

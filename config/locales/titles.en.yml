@@ -17,9 +17,6 @@ en:
       preview: Preview
       refresh: Refresh
       update: Edit
-    alerts:
-      index: Callout Participations
-      show: Callout Participation %{id}
     app_name: Somleng SCFM
     batch_operations:
       index: Callout Populations
@@ -55,6 +52,9 @@ en:
       queue: Send
       queue_remote_fetch: Fetch Remote Status
       show: Phone Call %{id}
+    notifications:
+      index: Callout Participations
+      show: Callout Participation %{id}
     recordings:
       index: Recordings
       show: Recording %{id}

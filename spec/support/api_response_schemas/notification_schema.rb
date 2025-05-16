@@ -1,7 +1,7 @@
 module APIResponseSchema
-  AlertSchema = Dry::Schema.JSON do
+  NotificationSchema = Dry::Schema.JSON do
     required(:id).filled(:str?)
-    required(:type).filled(eql?: "alert")
+    required(:type).filled(eql?: "notification")
 
     required(:attributes).schema do
       required(:phone_number).filled(:str?)
