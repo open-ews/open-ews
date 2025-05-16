@@ -1,0 +1,51 @@
+<%= page_title(title: title) do %>
+  <%= render(
+    "shared/edit_resource_page_action",
+    path: edit_dashboard_broadcast_path(resource),
+  ) %>
+  <%= render(
+    "shared/destroy_resource_page_action",
+    path: dashboard_broadcast_path(resource),
+  ) %>
+
+  <%= render "shared/resource_related_links" do %>
+    <%= related_link_to t(:"titles.notifications.index"),
+    dashboard_broadcast_notifications_path(resource) %>
+  <% end %>
+<% end %>
+
+<div class="card-body">
+  <%= show_for(resource) do |f| %>
+    <%= f.attribute :id %>
+    <%= f.attribute :status, value: resource.status.humanize %>
+    <%= f.attribute :audio_file do %>
+      <% if resource.audio_file.attached? %>
+        <%= link_to(resource.audio_file_blob.filename, url_for(resource.audio_file)) %>
+      <% end %>
+    <% end %>
+    <%= f.attribute :audio_url do %>
+      <% if resource.audio_url.present? %>
+        <%= link_to(resource.audio_url, resource.audio_url) %>
+      <% end %>
+    <% end %>
+    <%= f.attribute :created_at, value: local_time(resource.created_at) %>
+    <%= f.attribute :metadata, value: json_attribute_value(resource.metadata) %>
+  <% end %>
+
+  <div class="card" id="broadcast_summary">
+    <div class="card-body">
+      <div class="card-title">
+        <h5>
+          <%= translate(:"titles.broadcasts.summary") %>
+        </h5>
+        <small>
+          <%= link_to do %>
+            <%= tag.i(class: "fas fa-sync-alt") %>
+            <%= translate(:"titles.actions.refresh") %>
+          <% end %>
+        </small>
+      </div>
+      <%= render("summary") %>
+    </div>
+  </div>
+</div>

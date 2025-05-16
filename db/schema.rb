@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_13_144529) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_16_005826) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -23,8 +23,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_144529) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "name", null: false
     t.integer "delivery_attempt_queue_limit", null: false
-    t.string "alert_phone_number"
-    t.integer "max_delivery_attempts_for_alert", null: false
+    t.string "notification_phone_number"
+    t.integer "max_delivery_attempts_for_notification", null: false
     t.index ["somleng_account_sid"], name: "index_accounts_on_somleng_account_sid", unique: true
   end
 
@@ -54,25 +54,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_144529) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
-  end
-
-  create_table "alerts", force: :cascade do |t|
-    t.bigint "broadcast_id", null: false
-    t.bigint "beneficiary_id"
-    t.jsonb "metadata", default: {}, null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.integer "delivery_attempts_count", default: 0, null: false
-    t.string "phone_number", null: false
-    t.string "status", null: false
-    t.datetime "completed_at"
-    t.integer "priority", default: 0, null: false
-    t.index ["beneficiary_id"], name: "index_alerts_on_beneficiary_id"
-    t.index ["broadcast_id", "beneficiary_id"], name: "index_alerts_on_broadcast_id_and_beneficiary_id", unique: true
-    t.index ["broadcast_id"], name: "index_alerts_on_broadcast_id"
-    t.index ["completed_at"], name: "index_alerts_on_completed_at"
-    t.index ["priority"], name: "index_alerts_on_priority"
-    t.index ["status"], name: "index_alerts_on_status"
   end
 
   create_table "batch_operations", force: :cascade do |t|
@@ -172,7 +153,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_144529) do
   end
 
   create_table "delivery_attempts", force: :cascade do |t|
-    t.bigint "alert_id", null: false
+    t.bigint "notification_id", null: false
     t.bigint "beneficiary_id"
     t.string "status", null: false
     t.string "phone_number", null: false
@@ -185,12 +166,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_144529) do
     t.bigint "broadcast_id", null: false
     t.datetime "queued_at"
     t.datetime "completed_at"
-    t.index ["alert_id"], name: "index_delivery_attempts_on_alert_id"
     t.index ["beneficiary_id"], name: "index_delivery_attempts_on_beneficiary_id"
     t.index ["broadcast_id", "status"], name: "index_delivery_attempts_on_broadcast_id_and_status"
     t.index ["broadcast_id"], name: "index_delivery_attempts_on_broadcast_id"
     t.index ["created_at"], name: "index_delivery_attempts_on_created_at"
     t.index ["initiated_at"], name: "index_delivery_attempts_on_initiated_at"
+    t.index ["notification_id"], name: "index_delivery_attempts_on_notification_id"
     t.index ["phone_number"], name: "index_delivery_attempts_on_phone_number"
     t.index ["status"], name: "index_delivery_attempts_on_status"
     t.index ["status_update_queued_at"], name: "index_delivery_attempts_on_status_update_queued_at"
@@ -216,6 +197,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_144529) do
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_imports_on_account_id"
     t.index ["user_id"], name: "index_imports_on_user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "broadcast_id", null: false
+    t.bigint "beneficiary_id"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "delivery_attempts_count", default: 0, null: false
+    t.string "phone_number", null: false
+    t.string "status", null: false
+    t.datetime "completed_at"
+    t.integer "priority", default: 0, null: false
+    t.index ["beneficiary_id"], name: "index_notifications_on_beneficiary_id"
+    t.index ["broadcast_id", "beneficiary_id"], name: "index_notifications_on_broadcast_id_and_beneficiary_id", unique: true
+    t.index ["broadcast_id"], name: "index_notifications_on_broadcast_id"
+    t.index ["completed_at"], name: "index_notifications_on_completed_at"
+    t.index ["priority"], name: "index_notifications_on_priority"
+    t.index ["status"], name: "index_notifications_on_status"
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -317,8 +317,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_144529) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "alerts", "beneficiaries", on_delete: :nullify
-  add_foreign_key "alerts", "broadcasts"
   add_foreign_key "batch_operations", "accounts"
   add_foreign_key "batch_operations", "broadcasts"
   add_foreign_key "beneficiaries", "accounts"
@@ -329,12 +327,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_13_144529) do
   add_foreign_key "broadcast_beneficiary_groups", "beneficiary_groups", on_delete: :cascade
   add_foreign_key "broadcast_beneficiary_groups", "broadcasts", on_delete: :cascade
   add_foreign_key "broadcasts", "accounts"
-  add_foreign_key "delivery_attempts", "alerts"
   add_foreign_key "delivery_attempts", "beneficiaries", on_delete: :nullify
   add_foreign_key "delivery_attempts", "broadcasts"
+  add_foreign_key "delivery_attempts", "notifications"
   add_foreign_key "events", "accounts", on_delete: :cascade
   add_foreign_key "imports", "accounts", on_delete: :cascade
   add_foreign_key "imports", "users", on_delete: :cascade
+  add_foreign_key "notifications", "beneficiaries", on_delete: :nullify
+  add_foreign_key "notifications", "broadcasts"
   add_foreign_key "oauth_access_grants", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "accounts", column: "created_by_id"

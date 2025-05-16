@@ -1,4 +1,4 @@
-class Alert < ApplicationRecord
+class Notification < ApplicationRecord
   include MetadataHelpers
 
   attribute :phone_number, :phone_number
@@ -24,7 +24,7 @@ class Alert < ApplicationRecord
   end
 
   def max_delivery_attempts_reached?
-    delivery_attempts_count >= account.max_delivery_attempts_for_alert
+    delivery_attempts_count >= account.max_delivery_attempts_for_notification
   end
 
   # NOTE: This is for backward compatibility until we moved to the new API

@@ -16,7 +16,7 @@ class Beneficiary < ApplicationRecord
   has_many :addresses, class_name: "BeneficiaryAddress", foreign_key: :beneficiary_id, inverse_of: :beneficiary, autosave: true
   has_many :group_memberships, class_name: "BeneficiaryGroupMembership"
   has_many :groups, through: :group_memberships, source: :beneficiary_group, class_name: "BeneficiaryGroup"
-  has_many :alerts
+  has_many :notifications
   has_many :delivery_attempts
 
   validates :phone_number, presence: true, phone_number_type: true, uniqueness: { scope: :account_id }

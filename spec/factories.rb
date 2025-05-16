@@ -120,7 +120,7 @@ FactoryBot.define do
     end
   end
 
-  factory :alert do
+  factory :notification do
     broadcast
     beneficiary { association :beneficiary, account: broadcast.account }
     pending
@@ -141,9 +141,9 @@ FactoryBot.define do
   end
 
   factory :delivery_attempt do
-    alert
-    broadcast { alert.broadcast }
-    beneficiary { alert.beneficiary }
+    notification
+    broadcast { notification.broadcast }
+    beneficiary { notification.beneficiary }
     phone_number { beneficiary.phone_number }
     status { :created }
 
@@ -184,7 +184,7 @@ FactoryBot.define do
     trait :configured_for_broadcasts do
       somleng_account_sid { generate(:somleng_account_sid) }
       somleng_auth_token { generate(:auth_token) }
-      alert_phone_number { "1294" }
+      notification_phone_number { "1294" }
     end
   end
 

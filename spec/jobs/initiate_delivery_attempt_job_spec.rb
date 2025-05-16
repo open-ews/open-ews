@@ -5,16 +5,16 @@ RSpec.describe InitiateDeliveryAttemptJob do
     it "initiates the delivery attempt" do
       account = create(
         :account,
-        alert_phone_number: "1294",
+        notification_phone_number: "1294",
         somleng_account_sid: "account-sid",
         somleng_auth_token: "auth-token"
       )
       broadcast = create(:broadcast, :with_attached_audio, account:)
-      alert = create(:alert, broadcast:)
+      notification = create(:notification, broadcast:)
       delivery_attempt = create(
         :delivery_attempt,
         :queued,
-        alert:,
+        notification:,
         phone_number: "855715100999"
       )
       stub_somleng_request(
@@ -50,10 +50,10 @@ RSpec.describe InitiateDeliveryAttemptJob do
     end
 
     it "handles errors" do
-      account = create(:account, alert_phone_number: "1294")
+      account = create(:account, notification_phone_number: "1294")
       broadcast = create(:broadcast, :with_attached_audio, account:)
-      alert = create(:alert, broadcast:)
-      delivery_attempt = create(:delivery_attempt, :queued, alert:)
+      notification = create(:notification, broadcast:)
+      delivery_attempt = create(:delivery_attempt, :queued, notification:)
       stub_somleng_request(response: { status: 422 })
 
       InitiateDeliveryAttemptJob.perform_now(delivery_attempt)
@@ -64,10 +64,10 @@ RSpec.describe InitiateDeliveryAttemptJob do
         completed_at: be_present,
         metadata: {
           "somleng_error_message" => be_present,
-          "alert_phone_number" => "1294"
+          "notification_phone_number" => "1294"
         }
       )
-      expect(RetryAlertJob).to have_been_enqueued.with(alert)
+      expect(RetryNotificationJob).to have_been_enqueued.with(notification)
     end
 
     def stub_somleng_request(response:)

@@ -35,7 +35,7 @@ Rails.application.routes.draw do
     resources :beneficiary_addresses, only: :new
 
     resources :broadcasts do
-      resources :alerts, only: %i[index show]
+      resources :notifications, only: %i[index show]
     end
 
     resource :locale, only: :update
@@ -57,8 +57,8 @@ Rails.application.routes.draw do
 
     resources :broadcasts, only: [ :index, :show, :create, :update ] do
       resource :audio_file, controller: "broadcasts/audio_files", only: :show
-      resources :alerts, controller: "broadcasts/alerts", only: [ :index, :show ] do
-        get "stats" => "broadcasts/alerts/stats#index", on: :collection
+      resources :notifications, controller: "broadcasts/notifications", only: [ :index, :show ] do
+        get "stats" => "broadcasts/notifications/stats#index", on: :collection
       end
     end
 

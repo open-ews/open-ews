@@ -6,38 +6,38 @@ RSpec.describe ScheduledJob do
 
     low_priority_delivery_attempt = create(
       :delivery_attempt,
-      alert: create(
-        :alert,
+      notification: create(
+        :notification,
         broadcast: create(:broadcast, :running, account:),
         priority: 1
       )
     )
     high_priority_delivery_attempt = create(
       :delivery_attempt,
-      alert: create(
-        :alert,
+      notification: create(
+        :notification,
         broadcast: create(:broadcast, :running, account:)
       )
     )
     delivery_attempt_from_running_broadcast = create(
       :delivery_attempt,
-      alert: create(
-        :alert,
+      notification: create(
+        :notification,
         broadcast: create(:broadcast, :running, account:)
       )
     )
     delivery_attempt_from_stopped_broadcast = create(
       :delivery_attempt,
-      alert: create(
-        :alert,
+      notification: create(
+        :notification,
         broadcast: create(:broadcast, :stopped, account:)
       )
     )
     queued_delivery_attempt = create(
       :delivery_attempt,
       :queued,
-      alert: create(
-        :alert,
+      notification: create(
+        :notification,
         broadcast: create(:broadcast, :running, account:)
       )
     )
@@ -60,8 +60,8 @@ RSpec.describe ScheduledJob do
       :delivery_attempt,
       :initiated,
       initiated_at: 10.minutes.ago,
-      alert: create(
-        :alert,
+      notification: create(
+        :notification,
         broadcast: create(:broadcast, account:)
       )
     )
@@ -71,8 +71,8 @@ RSpec.describe ScheduledJob do
       :initiated,
       initiated_at: 10.minutes.ago,
       status_update_queued_at: 20.minutes.ago,
-      alert: create(
-        :alert,
+      notification: create(
+        :notification,
         broadcast: create(:broadcast, account:)
       )
     )
@@ -81,8 +81,8 @@ RSpec.describe ScheduledJob do
       :delivery_attempt,
       :initiated,
       initiated_at: Time.current,
-      alert: create(
-        :alert,
+      notification: create(
+        :notification,
         broadcast: create(:broadcast, account:)
       )
     )
@@ -92,8 +92,8 @@ RSpec.describe ScheduledJob do
       :initiated,
       initiated_at: 10.minutes.ago,
       status_update_queued_at: Time.current,
-      alert: create(
-        :alert,
+      notification: create(
+        :notification,
         broadcast: create(:broadcast, account:)
       )
     )
