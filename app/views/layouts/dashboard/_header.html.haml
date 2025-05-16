@@ -1,26 +1,27 @@
-%body
-  %header.header.header-sticky.mb-4
-    .container-fluid
-      %button.header-toggler.px-md-0.me-md-3{data: { action: "sidebar#toggle" }, type: "button"}
-        %i.fa-solid.fa-bars
-      = link_to(dashboard_root_path, class: "header-brand d-lg-none header-brand-sm-up-center") do
-        = t(:"titles.app_name")
-      %ul.header-nav.mr-auto
-      %ul.header-nav
-        %li.nav-item.dropdown#language_menu
-          %a.nav-link{"aria-expanded" => "false", "aria-haspopup" => "true", "data-bs-toggle" => "dropdown", href: "#", role: "button"}
-            %i.fa-solid.fa-language.mfe-2
-          .dropdown-menu.dropdown-menu-right.pt-0
-            = button_to("🇬🇧 English", dashboard_locale_path(user: { locale: "en" }), class: "dropdown-item", method: :patch)
-            = button_to("🇰🇭 ខែ្មរ", dashboard_locale_path(user: { locale: "km" }), class: "dropdown-item", method: :patch)
-        %li.nav-item.dropdown
-          %a.nav-link{"aria-expanded" => "false", "aria-haspopup" => "true", "data-bs-toggle" => "dropdown", href: "#", role: "button"}
-            %i.fa-solid.fa-user.mfe-2
-          .dropdown-menu.dropdown-menu-right.pt-0
-            = link_to(edit_user_registration_path, class: "dropdown-item") do
-              %i.fa-solid.fa-user-cog.mfe-2
-              = translate(:"titles.user_registrations.edit")
-            .dropdown-divider
-            = button_to(destroy_user_session_path, class: "dropdown-item", method: :delete, form: { data: { turbo: false } }) do
-              %i.fa-solid.fa-sign-out-alt.mfe-2
-              = translate(:"titles.user_sessions.destroy")
+%header{class: "navbar navbar-expand-md d-none d-lg-flex d-print-none"}
+  .container-xl
+    %button.navbar-toggler{"aria-controls" => "navbar-menu", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-bs-target" => "#navbar-menu", "data-bs-toggle" => "collapse", type: "button"}
+      %span.navbar-toggler-icon
+
+    .navbar-nav.flex-row.order-md-last
+      .d-none.d-md-flex
+        .nav-item
+          = link_to url_for(params: request.query_parameters.merge(theme: 'light')), class: "nav-link px-0 hide-theme-light", "data-turbo-prefetch" => false, title: "Enable light mode" do
+            %i.icon.ti.ti-sun
+          = link_to url_for(params: request.query_parameters.merge(theme: 'dark')), class: "nav-link px-0 hide-theme-dark", "data-turbo-prefetch" => false, title: "Enable dark mode" do
+            %i.icon.ti.ti-moon
+        .nav-item.dropdown
+          %a.nav-link.px-0{"aria-label" => "Select language", "data-bs-original-title" => "Select language", "data-bs-toggle" => "dropdown"}
+            %i.icon.ti.ti-language
+          .dropdown-menu.dropdown-menu-end.dropdown-menu-arrow
+            = button_to(dashboard_locale_path(user: { locale: "en" }), class: "dropdown-item", method: :patch) do
+              .i.icon.ti
+                🇬🇧
+              English
+            = button_to(dashboard_locale_path(user: { locale: "km" }), class: "dropdown-item", method: :patch) do
+              .i.icon.ti
+                🇰🇭
+              ខែ្មរ
+      = render "layouts/dashboard/account_dropdown"
+
+    #navbar-menu

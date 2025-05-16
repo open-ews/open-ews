@@ -1,0 +1,11 @@
+= content_tag_for(:tr, import, role: "row") do
+  %td
+    = link_to(import.file.filename, rails_blob_path(import.file, disposition: "attachment"))
+  %td
+    = import.resource_type.humanize
+  %td
+    = import.status.humanize
+  %td
+    = import.error_message
+  %td
+    = local_time(import.created_at)

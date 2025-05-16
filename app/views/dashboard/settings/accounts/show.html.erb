@@ -1,0 +1,27 @@
+<%= render "dashboard/settings/frame" do %>
+  <%= simple_form_for(resource, url: dashboard_settings_account_path) do |f| %>
+    <div class="card-header">
+      <h2 class="mb-0">Account Settings</h2>
+    </div>
+
+    <div class="card-body">
+      <div class="col-md-6">
+        <%= f.input :name %>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <%= f.input :somleng_account_sid %>
+        </div>
+        <div class="col">
+          <%= f.input :somleng_auth_token %>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card-footer text-end">
+      <%= f.button :submit, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+<% end %>

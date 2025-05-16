@@ -1,13 +1,22 @@
-<%= page_title(title: "Invite User") %>
-
-<div class="card-body">
+<%= render "dashboard/settings/frame" do %>
   <%= simple_form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :post, data: { turbo: false } }) do |f| %>
-    <div class="row">
-      <div class="col">
-        <%= f.input :email %>
+    <div class="card-header">
+      <h2 class="mb-0">Invite User</h2>
+    </div>
+
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <%= f.input :email %>
+        </div>
+        <div class="col">
+          <%= f.input :name %>
+        </div>
       </div>
     </div>
 
-    <%= f.button :submit, t("devise.invitations.new.submit_button") %>
+    <div class="card-footer text-end">
+      <%= f.button :submit, t("devise.invitations.new.submit_button") %>
+    </div>
   <% end %>
-</div>
+<% end %>

@@ -44,27 +44,9 @@ en:
       batch_operation/phone_call_queue_remote_fetch:
         one: Fetch phone call status
         other: Fetch phone call status
-      beneficiary:
-        one: Contact
-        other: Contacts
       broadcast:
-        one: Callout
-        other: Callouts
-      callout:
-        one: Callout
-        other: Callouts
-      callout_participation:
-        one: Callout participation
-        other: Callout participations
-      delivery_attempt:
-        one: Phone call
-        other: Phone calls
-      notification:
-        one: Callout participation
-        other: Callout participations
-      remote_phone_call_event:
-        one: Phone call event
-        other: Phone call events
+        one: Broadcast
+        other: Broadcasts
       user:
         one: User
         other: Users
@@ -74,11 +56,9 @@ en:
     broadcast: Callout
     broadcast_id: Callout
     created_at: Created at
-    delivery_attempt: Phone call
-    delivery_attempt_id: Phone call
+    delivery_attempt: Delivery attempt
+    delivery_attempt_id: Delivery attempt
     duration: Duration (seconds)
     metadata: Metadata
-    msisdn: Phone number
-    notification: Callout participation
-    notification_id: Callout participation
     status: Status
+    iso_country_code: Country

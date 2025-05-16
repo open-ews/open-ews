@@ -1,8 +1,78 @@
-.card-body
+.card.col-md-6
   = simple_form_for([:dashboard, resource]) do |f|
-    = f.input :channel
-    = f.input :audio_file, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
-    = f.input :audio_url
-    .form-group.actions
+    .card-body
+      .row
+        .col
+          = f.input :channel
+        .col
+          = f.input :audio_file, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
+
+      .hr-text Beneficiary Filters
+      .row
+        .col
+          %label.form-label Field
+        .col
+          %label.form-label Operator
+        .col
+          %label.form-label Value
+
+      = f.simple_fields_for :beneficiary_filter do |filter_form|
+        - FieldDefinitions::BroadcastBeneficiaryFields.each do |field|
+          - next if CountryAddressData.supported?('kh') && field.name.start_with?("address.")
+
+          = filter_form.simple_fields_for field.name.to_sym, @resource.beneficiary_filter.attributes[field.name] do |field_form|
+            .row{id: "beneficiary_filter_#{field.name}", data: { controller: "beneficiary-filter-field" }}
+              .col
+                .input-group.mb-3
+                  %span.input-group-text
+                    %input.form-check-input.m-0{type: "checkbox", checked: field_form.object.present?, data: { "beneficiary-filter-field-target": "toggleElement", action:  "beneficiary-filter-field#toggle" }}
+                  %input.form-control{type: "text", value: field.name.titleize, readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
+              .col
+                = field_form.input "operator",
+                  label: false,
+                  as: :select,
+                  collection: field.operator_options_for_select,
+                  required: true,
+                  input_html: { data: { "beneficiary-filter-field-target": "operator", action:  "beneficiary-filter-field#operatorChanged" } }
+              .col
+                .value-input.hidden
+                  - base_options = { label: false, required: true, input_html: { data: { "beneficiary-filter-field-target": "value" } }}
+                  - if field.field_type == :list
+                    = field_form.input "value", as: :select, collection: field.schema.options, **base_options
+                  - elsif field.field_type == :string
+                    = field_form.input "value", as: :string, **base_options
+                  - elsif field.field_type == :value
+                    = field_form.input "value", as: field.schema.input_type, html5: true, **base_options
+
+                .multi-value-input.hidden
+                  - base_options = { label: false, required: true, include_hidden: false, multiple: true, input_html: { data: { "beneficiary-filter-field-target": "multiValue" } }}
+                  - if field.field_type == :list
+                    = field_form.input "value", as: :select, collection: field.schema.options, **base_options
+                  - else
+                    = field_form.input "value", as: :select, collection: [], **base_options
+
+                .is-null-value-input.hidden
+                  = field_form.input "value", label: false, as: :select, required: true, input_html: { data: { "beneficiary-filter-field-target": "isNullValue" } }
+
+        .row{data: { controller: "beneficiary-addresses-filter-field" }}
+          .col
+            .input-group.mb-2
+              %span.input-group-text
+                %input.form-check-input.m-0{type: "checkbox", checked: @resource.beneficiary_filter.administrative_division_level_3_code.present?, data: { "beneficiary-addresses-filter-field-target": "toggleElement", action:  "beneficiary-addresses-filter-field#toggle", "bs-toggle": "collapse", "bs-target": "#addresses" }}
+              %input.form-control{type: "text", value: "Addresses", readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
+
+              %input.form-control{name: "broadcast[beneficiary_filter][administrative_division_level_3_code][operator]", type: "hidden", value: "in", data: { "beneficiary-addresses-filter-field-target": "operator" } }
+
+            #addresses.collapse.overflow-auto{
+              class: ("show" if @resource.beneficiary_filter.administrative_division_level_3_code.present?),
+              style: "max-height: 200px",
+              data: {
+                controller: "address-treeview",
+                "address-treeview-data-value": treeview_address_data("kh").to_json,
+                "address-treeview-selected-value": (@resource.beneficiary_filter.administrative_division_level_3_code&.value || []).to_json,
+                "address-treeview-field-name-value": "broadcast[beneficiary_filter][administrative_division_level_3_code]"
+              }
+            }
+
+    .card-footer.text-end
       = f.button :submit, class: 'btn btn-primary'
-      = link_to(translate(:"titles.actions.cancel"), :back, class: 'btn btn-outline-dark')

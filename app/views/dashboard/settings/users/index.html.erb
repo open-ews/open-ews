@@ -1,0 +1,23 @@
+<%= content_for(:page_actions) do %>
+  <%= render("shared/new_resource_page_action", path: new_user_invitation_path) %>
+<% end %>
+
+<%= render "dashboard/settings/frame" do %>
+  <div class="card-header">
+    <h2 class="mb-0">Users</h2>
+
+    <div class="card-actions">
+      <a class="btn"><i class="icon ti ti-filter"></i>Filter</a>
+      <a class="btn"><i class="icon ti ti-file-export"></i>Export</a>
+    </div>
+  </div>
+
+  <%= render(
+    "shared/resources_table",
+    resource_class: User,
+    partial: "dashboard/settings/users/user",
+    columns: %i[email invitation_accepted_at last_sign_in_at created_at],
+  ) %>
+
+  <%= render("shared/pagination", resources: resources) %>
+<% end %>

@@ -1,6 +1,8 @@
 ---
 en:
   titles:
+    home:
+      index: Dashboard
     access_tokens:
       edit: Edit API Key
       index: API Keys
@@ -17,44 +19,33 @@ en:
       preview: Preview
       refresh: Refresh
       update: Edit
-    app_name: Somleng SCFM
+    app_name: OpenEWS
     batch_operations:
       index: Callout Populations
       queue: Start
       show: Callout Population %{id}
     beneficiaries:
-      create: New Contact
-      edit: Edit Contact
-      index: Contacts
-      new: New Contact
-      show: Contact %{id}
-      update: Edit Contact
+      create: New Beneficiary
+      edit: Edit Beneficiary
+      index: Beneficiaries
+      new: New Beneficiary
+      show: Beneficiary
+      update: Edit Beneficiary
     broadcasts:
-      create: New Callout
-      edit: Edit Callout
-      index: Callouts
-      new: New Callout
+      create: New Broadcast
+      edit: Edit Broadcast
+      index: Broadcasts
+      new: New Broadcast
       pause: Pause
       resume: Resume
-      show: Callout %{id}
+      show: Broadcast
       start: Start
       stop: Stop
-      summary: Callout Summary
-      update: Edit Callout
-    callout_populations:
-      create: New Callout Population
-      edit: Edit Callout Population
-      new: New Callout Population
-      show: Callout Population %{id}
-      update: Edit Callout Population
-    delivery_attempts:
-      index: Phone Calls
-      queue: Send
-      queue_remote_fetch: Fetch Remote Status
-      show: Phone Call %{id}
+      summary: Broadcast Summary
+      update: Edit Broadcast
     notifications:
-      index: Callout Participations
-      show: Callout Participation %{id}
+      index: Notifications
+      show: Notification %{id}
     recordings:
       index: Recordings
       show: Recording %{id}
@@ -80,6 +71,12 @@ en:
       new: Sign In
     users:
       edit: Edit User
-      index: Users
-      show: User %{id}
+      index: Settings
+      show: User
       update: Edit User
+    account:
+      show: Settings
+    developers:
+      index: Settings
+    registrations:
+      edit: Edit Profile
