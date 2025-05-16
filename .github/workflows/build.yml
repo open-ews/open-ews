@@ -80,6 +80,12 @@ jobs:
           node-version-file: ".tool-versions"
           cache: "yarn"
 
+      - name: Enable Corepack (Yarn 4+ Manager)
+        run: corepack enable
+
+      - name: Install Dependencies with Yarn 4
+        run: yarn install
+
       - name: Setup DB
         run: bundle exec rails db:create db:schema:load
 
