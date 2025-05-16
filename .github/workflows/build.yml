@@ -44,7 +44,7 @@ jobs:
           [
             {
               "identifier": "open-ews-staging",
-              "branch": "develop",
+              "branch": "use_yarn_4_in_dockerfile",
               "environment": "staging",
               "friendly_image_tag": "beta",
               "image_tag": "stag-${{ github.sha }}",
