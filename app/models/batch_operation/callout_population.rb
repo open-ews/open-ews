@@ -18,14 +18,6 @@ module BatchOperation
     validates :contact_filter_params, contact_filter_params: true
 
     def run!
-      transaction do
-        create_notifications
-        create_delivery_attempts
-        start_broadcast
-      end
-    end
-
-    def run!
       ApplicationRecord.transaction do
         download_audio_file unless broadcast.audio_file.attached?
 
