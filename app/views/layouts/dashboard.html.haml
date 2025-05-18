@@ -1,5 +1,5 @@
 !!!
-%html{lang: current_user.locale}
+%html{lang: current_user.locale, "data-bs-theme" => cookies[:theme]}
   %head
     %title= "OpenEWS - #{title(resource)}"
     %meta{:content => "width=device-width, initial-scale=1, shrink-to-fit=no", :name => "viewport"}/
@@ -20,7 +20,7 @@
 
     = stylesheet_link_tag :app, "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbo-track": "reload", type: "module"
-  %body{"data-bs-theme" => cookies[:theme]}
+  %body
     .page
       = render("layouts/dashboard/side_navigation")
       = render("layouts/dashboard/header")

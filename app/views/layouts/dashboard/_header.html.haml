@@ -6,9 +6,9 @@
     .navbar-nav.flex-row.order-md-last
       .d-none.d-md-flex
         .nav-item
-          = link_to url_for(params: request.query_parameters.merge(theme: 'light')), class: "nav-link px-0 hide-theme-light", "data-turbo-prefetch" => false, title: "Enable light mode" do
+          = link_to url_for(params: request.query_parameters.merge(theme: 'light')), class: "nav-link px-0 hide-theme-light", "data-turbo" => false, title: "Enable light mode" do
             %i.icon.ti.ti-sun
-          = link_to url_for(params: request.query_parameters.merge(theme: 'dark')), class: "nav-link px-0 hide-theme-dark", "data-turbo-prefetch" => false, title: "Enable dark mode" do
+          = link_to url_for(params: request.query_parameters.merge(theme: 'dark')), class: "nav-link px-0 hide-theme-dark", "data-turbo" => false, title: "Enable dark mode" do
             %i.icon.ti.ti-moon
         .nav-item.dropdown
           %a.nav-link.px-0{"aria-label" => "Select language", "data-bs-original-title" => "Select language", "data-bs-toggle" => "dropdown"}
