@@ -26,8 +26,12 @@ const initializeJSComponents = () => {
     .forEach((element) => new tabler.bootstrap.Tooltip(element));
 
   [].slice
-    .call(document.querySelectorAll('select[data-beneficiary-filter-field-target="multiValue"]'))
+    .call(document.querySelectorAll('select.list-select[data-beneficiary-filter-field-target="multiValue"]'))
     .forEach((element) => new TomSelect(element));
+
+  [].slice
+    .call(document.querySelectorAll('select.input-tags[data-beneficiary-filter-field-target="multiValue"]'))
+    .forEach((element) => new TomSelect(element, { create: true }));
 }
 
 ["turbo:render", "turbo:load", "turbo:after-stream-render"].forEach((e) =>

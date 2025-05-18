@@ -82,7 +82,9 @@ module ApplicationHelper
     end
   end
 
-  def treeview_address_data(iso_country_code)
+  def treeview_address_data
+    iso_country_code = current_account.iso_country_code
+
     Rails.cache.fetch("#{iso_country_code}-#{I18n.locale}") do
       CountryAddressData.address_data(iso_country_code).map { |locality| treeview_node(locality) }
     end
