@@ -12,6 +12,8 @@ class Account < ApplicationRecord
 
   strip_attributes
 
+  validates :iso_country_code, presence: true, inclusion: { in: ISO3166::Country.all.map(&:alpha2) }, if: :iso_country_code_changed?
+
   def configured_for_broadcasts?
     somleng_account_sid.present? && somleng_auth_token.present? && notification_phone_number.present?
   end

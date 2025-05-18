@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_16_005826) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_18_152352) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -25,6 +25,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_16_005826) do
     t.integer "delivery_attempt_queue_limit", null: false
     t.string "notification_phone_number"
     t.integer "max_delivery_attempts_for_notification", null: false
+    t.string "iso_country_code"
     t.index ["somleng_account_sid"], name: "index_accounts_on_somleng_account_sid", unique: true
   end
 

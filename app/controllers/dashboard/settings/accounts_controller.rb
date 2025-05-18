@@ -10,6 +10,7 @@ module Dashboard
       def permitted_params
         params.require(:account).permit(
           :name,
+          :iso_country_code,
           :somleng_account_sid,
           :somleng_auth_token,
         )
