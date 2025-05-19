@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 const MULTIPLE_VALUE_OPERATORS = ["in", "not_in"]
+const BETWEEN_OPERATOR = "between"
 
 export default class extends Controller {
   static targets = [
@@ -10,6 +11,7 @@ export default class extends Controller {
     "value",
     "multiValue",
     "isNullValue",
+    "betweenValue",
   ]
 
   connect() {
@@ -32,9 +34,11 @@ export default class extends Controller {
     const enabled = this.toggleElementTarget.checked
     const isNullSelected = this.operatorTarget.value === "is_null"
     const isMultiSelected = MULTIPLE_VALUE_OPERATORS.includes(
-      this.operatorTarget.value,
+      this.operatorTarget.value
     )
-    const isSingleSelected = enabled && !isNullSelected && !isMultiSelected
+    const isBetweenSelected = this.operatorTarget.value === BETWEEN_OPERATOR
+    const isSingleSelected =
+      enabled && !isNullSelected && !isMultiSelected && !isBetweenSelected
 
     this.fieldNameTarget.disabled = !enabled
     this.operatorTarget.disabled = !enabled
@@ -50,6 +54,14 @@ export default class extends Controller {
     this.multiValueTarget.closest(".multi-value-input").style.display =
       isMultiSelected ? "unset" : "none"
 
+    if (this.hasBetweenValueTarget) {
+      this.betweenValueTargets.forEach(
+        (input) => (input.disabled = !isBetweenSelected)
+      )
+      this.betweenValueTarget.closest(".between-value-input").style.display =
+        isBetweenSelected ? "unset" : "none"
+    }
+
     const tomSelect = this.multiValueTarget.tomselect
     if (tomSelect) {
       this.multiValueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
@@ -60,6 +72,10 @@ export default class extends Controller {
     this.isNullValueTarget.value = null
     this.valueTarget.value = null
     this.multiValueTarget.value = null
+
+    if (this.hasBetweenValueTarget) {
+      this.betweenValueTargets.forEach((input) => (input.value = null))
+    }
 
     const tomSelect = this.multiValueTarget.tomselect
     tomSelect.clear()
