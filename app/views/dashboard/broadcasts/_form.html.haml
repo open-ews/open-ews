@@ -26,7 +26,7 @@
                 .input-group.mb-3
                   %span.input-group-text
                     %input.form-check-input.m-0{type: "checkbox", checked: field_form.object.present?, data: { "beneficiary-filter-field-target": "toggleElement", action:  "beneficiary-filter-field#toggle" }}
-                  %input.form-control{type: "text", value: field.name.titleize, readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
+                  %input.form-control{type: "text", value: Beneficiary.human_attribute_name(field.name), readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
               .col
                 = field_form.input "operator",
                   label: false,
@@ -60,7 +60,7 @@
               .input-group.mb-2
                 %span.input-group-text
                   %input.form-check-input.m-0{type: "checkbox", checked: @resource.beneficiary_filter.administrative_division_level_3_code.present?, data: { "beneficiary-addresses-filter-field-target": "toggleElement", action:  "beneficiary-addresses-filter-field#toggle", "bs-toggle": "collapse", "bs-target": "#addresses" }}
-                %input.form-control{type: "text", value: "Addresses", readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
+                %input.form-control{type: "text", value: Beneficiary.human_attribute_name("locations"), readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
 
                 %input.form-control{name: "broadcast[beneficiary_filter][administrative_division_level_3_code][operator]", type: "hidden", value: "in", data: { "beneficiary-addresses-filter-field-target": "operator" } }
 

@@ -69,6 +69,16 @@ km:
         one: អ្នកប្រីប្រាស់
         other: អ្នកប្រីប្រាស់
   attributes:
+    locations: ទីតាំង
+    gender: ភេទ
+    disability_status: សិទិ្ធបានបង្រៀន
+    date_of_birth: ថ្ងៃខែឆ្នាំកំណើត
+    iso_language_code: ភាសា
+    iso_country_code: ប្រទេស
+    iso_region_code: ខេត្ត
+    administrative_division_level_2_code: ស្រុក/ខណ្ឌ
+    administrative_division_level_3_code: ឃុំ/សង្កាត់
+    administrative_division_level_4_code: ភូមិ
     beneficiary: សមាជិកទំនាក់ទំនង
     beneficiary_id: សមាជិកទំនាក់ទំនង
     broadcast: សេចក្ដីប្រកាស

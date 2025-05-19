@@ -1,20 +1,20 @@
 module FieldDefinitions
   class Field
-    OPERATORS = {
-      eq: "Equals",
-      not_eq: "Not Equals",
-      contains: "Contains",
-      not_contains: "Not Contains",
-      starts_with: "Starts With",
-      gt: "Greater Than",
-      gteq: "Greater Than or Equal",
-      lt: "Less Than",
-      lteq: "Less Than or Equal",
-      between: "Between",
-      is_null: "Is NULL",
-      in: "In",
-      not_in: "Not In"
-    }.freeze
+    OPERATORS = %i[
+      eq
+      not_eq
+      contains
+      not_contains
+      starts_with
+      gt
+      gteq
+      lt
+      lteq
+      between
+      is_null
+      in
+      not_in
+    ].freeze
 
     MULTIPLE_SELECTION_OPERATORS = %w[in not_in]
 
@@ -46,7 +46,7 @@ module FieldDefinitions
 
     def operator_options_for_select
       operators.map do |operator|
-        [ OPERATORS[operator.to_sym], operator ]
+        [ I18n.t(:"filter_operators.#{operator}"), operator ]
       end
     end
 

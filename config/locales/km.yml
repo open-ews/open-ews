@@ -15,3 +15,17 @@ km:
           attributes:
             base:
               restrict_destroy_status: Cannot delete record because status is %{status}
+  filter_operators:
+    eq: "ដូចគ្នា"
+    not_eq: "មិនដូចគ្នា"
+    contains: "ប្រហាក់ប្រហែល"
+    not_contains: "មិនប្រហាក់ប្រហែល"
+    starts_with: "ចាប់ផ្តើម"
+    gt: "ធំជាង"
+    gteq: "ធំជាងឬស្មើ"
+    lt: "តូចជាង"
+    lteq: "តូចជាងឬស្មើ"
+    between: "ចន្លោះ"
+    is_null: "មិនមាន"
+    in: "នៅក្នុង"
+    not_in: "មិននៅក្នុង"

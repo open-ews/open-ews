@@ -51,14 +51,9 @@ en:
         one: User
         other: Users
   attributes:
-    beneficiary: Contact
-    beneficiary_id: Contact
-    broadcast: Callout
-    broadcast_id: Callout
     created_at: Created at
     delivery_attempt: Delivery attempt
     delivery_attempt_id: Delivery attempt
     duration: Duration (seconds)
     metadata: Metadata
     status: Status
-    iso_country_code: Country

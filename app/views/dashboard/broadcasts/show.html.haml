@@ -42,8 +42,11 @@
       - operator, value = filter.first
       .row.mb-3{id: "beneficiary_filter_#{field}"}
         .col
-          %input.field-name.form-control{type: "text", value: field.titleize, readonly: true }
+          %input.field-name.form-control{type: "text", value: Beneficiary.human_attribute_name(field), readonly: true }
         .col
-          %input.field-operator.form-control{type: "text", value: FieldDefinitions::Field::OPERATORS.fetch(operator.to_sym), readonly: true }
+          %input.field-operator.form-control{type: "text", value: t(:"filter_operators.#{operator}"), readonly: true }
         .col
-          %input.field-value.form-control{type: "text", value: value, readonly: true }
+          - if value.is_a?(Array)
+            %input.field-value.form-control{type: "text", value: value.join(", "), readonly: true }
+          - else
+            %input.field-value.form-control{type: "text", value: value, readonly: true }

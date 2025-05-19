@@ -15,3 +15,18 @@ en:
           attributes:
             base:
               restrict_destroy_status: Cannot delete record because status is %{status}
+
+  filter_operators:
+    eq: "Equals"
+    not_eq: "Not Equals"
+    contains: "Contains"
+    not_contains: "Not Contains"
+    starts_with: "Starts With"
+    gt: "Greater Than"
+    gteq: "Greater Than or Equal"
+    lt: "Less Than"
+    lteq: "Less Than or Equal"
+    between: "Between"
+    is_null: "Is NULL"
+    in: "In"
+    not_in: "Not In"
