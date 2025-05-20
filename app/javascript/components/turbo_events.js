@@ -32,6 +32,19 @@ const initializeJSComponents = () => {
   [].slice
     .call(document.querySelectorAll('select.input-tags[data-beneficiary-filter-field-target="multiValue"]'))
     .forEach((element) => new TomSelect(element, { create: true }));
+
+  [].slice
+    .call(document.querySelectorAll("select.input-tags[readonly]"))
+    .forEach(
+      (element) =>
+        new TomSelect(element, {
+          plugins: ["no_backspace_delete"],
+          create: false,
+          persist: false,
+          onItemAdd: () => false,
+          onDelete: () => false,
+        })
+    )
 }
 
 ["turbo:render", "turbo:load", "turbo:after-stream-render"].forEach((e) =>

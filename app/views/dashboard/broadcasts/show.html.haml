@@ -46,7 +46,15 @@
         .col
           %input.field-operator.form-control{type: "text", value: t(:"filter_operators.#{operator}"), readonly: true }
         .col
-          - if value.is_a?(Array)
-            %input.field-value.form-control{type: "text", value: value.join(", "), readonly: true }
+          - if operator == "between"
+            .row
+              .col
+                %input.field-value.form-control{type: "text", value: value[0], readonly: true }
+              .col
+                %input.field-value.form-control{type: "text", value: value[1], readonly: true }
+          - elsif value.is_a?(Array)
+            %select.input-tags.form-control{readonly: true, multiple: true}
+              - value.each do |v|
+                %option{selected: true}= v
           - else
             %input.field-value.form-control{type: "text", value: value, readonly: true }

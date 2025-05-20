@@ -49,12 +49,13 @@
 
                 - if field.field_type == :value
                   - base_options = { label: false, required: true, wrapper: false, input_html: { name: "broadcast[beneficiary_filter][#{field.name}][value][]", data: { "beneficiary-filter-field-target": "betweenValue" } }}
+                  - existing_field_values = field_form.object&.value.is_a?(Array) ? field_form.object.value : []
                   .between-value-input.hidden
                     .row
                       .col
-                        = field_form.input "value", as: field.schema.input_type, html5: true, **base_options.deep_merge(input_html: { value: field_form.object&.value[0] })
+                        = field_form.input "value", as: field.schema.input_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[0] })
                       .col
-                        = field_form.input "value", as: field.schema.input_type, html5: true, **base_options.deep_merge(input_html: { value: field_form.object&.value[1] })
+                        = field_form.input "value", as: field.schema.input_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[1] })
 
                 .multi-value-input.hidden
                   - base_options = { label: false, required: true, include_hidden: false, multiple: true }

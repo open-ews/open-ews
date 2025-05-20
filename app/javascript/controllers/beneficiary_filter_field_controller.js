@@ -54,17 +54,17 @@ export default class extends Controller {
     this.multiValueTarget.closest(".multi-value-input").style.display =
       isMultiSelected ? "unset" : "none"
 
+    const tomSelect = this.multiValueTarget.tomselect
+    if (tomSelect) {
+      this.multiValueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
+    }
+
     if (this.hasBetweenValueTarget) {
       this.betweenValueTargets.forEach(
         (input) => (input.disabled = !isBetweenSelected)
       )
       this.betweenValueTarget.closest(".between-value-input").style.display =
         isBetweenSelected ? "unset" : "none"
-    }
-
-    const tomSelect = this.multiValueTarget.tomselect
-    if (tomSelect) {
-      this.multiValueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
     }
   }
 
