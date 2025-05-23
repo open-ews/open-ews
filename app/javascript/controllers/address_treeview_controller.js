@@ -10,7 +10,7 @@ export default class extends Controller {
   }
 
   connect() {
-    var tree = new InspireTree({
+    this.tree = new InspireTree({
       checkbox: {
         autoCheckChildren: true,
       },
@@ -20,11 +20,11 @@ export default class extends Controller {
       data: this.dataValue,
     })
 
-    new InspireTreeDOM(tree, {
+    new InspireTreeDOM(this.tree, {
       target: this.element,
     })
 
-    tree
+    this.tree
       .deepest()
       .available()
       .each((n) => {
@@ -38,5 +38,9 @@ export default class extends Controller {
           n.check()
         }
       })
+  }
+
+  clearSelection() {
+    this.tree.deselectDeep()
   }
 }

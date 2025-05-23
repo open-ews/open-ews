@@ -6,6 +6,10 @@ module CountryAddressData
     LA: :administrative_division_level_2_code
   }
 
+  def self.address_field_name(iso_country_code)
+    SETTINGS[iso_country_code.to_sym]
+  end
+
   def self.supported?(iso_country_code)
     return false if iso_country_code.blank?
 

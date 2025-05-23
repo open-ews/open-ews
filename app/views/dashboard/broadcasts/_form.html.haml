@@ -76,23 +76,26 @@
                   = field_form.input "value", label: false, as: :select, required: true, input_html: { data: { "beneficiary-filter-field-target": "isNullValue" } }
 
         - if CountryAddressData.supported?(current_account.iso_country_code)
+          - address_field_name = CountryAddressData.address_field_name(current_account.iso_country_code)
+          - address_field_value = @resource.beneficiary_filter.attributes[address_field_name.to_s]
+
           .row{data: { controller: "beneficiary-addresses-filter-field" }}
             .col
               .input-group.mb-3
                 %span.input-group-text
-                  %input.form-check-input.m-0{type: "checkbox", checked: @resource.beneficiary_filter.administrative_division_level_3_code.present?, data: { "beneficiary-addresses-filter-field-target": "toggleElement", action:  "beneficiary-addresses-filter-field#toggle", "bs-toggle": "collapse", "bs-target": "#addresses" }}
+                  %input.form-check-input.m-0{type: "checkbox", checked: address_field_value.present?, data: { "beneficiary-addresses-filter-field-target": "toggleElement", action:  "beneficiary-addresses-filter-field#toggle", "bs-toggle": "collapse", "bs-target": "#addresses-treeview" }}
                 %input.form-control{type: "text", value: Beneficiary.human_attribute_name("locations"), readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
 
-                %input.form-control{name: "broadcast[beneficiary_filter][administrative_division_level_3_code][operator]", type: "hidden", value: "in", data: { "beneficiary-addresses-filter-field-target": "operator" } }
+                %input.form-control{name: "broadcast[beneficiary_filter][#{address_field_name}][operator]", type: "hidden", value: "in", data: { "beneficiary-addresses-filter-field-target": "operator" } }
 
-              #addresses.collapse.overflow-auto{
-                class: ("show" if @resource.beneficiary_filter.administrative_division_level_3_code.present?),
+              #addresses-treeview.collapse.overflow-auto{
+                class: ("show" if address_field_value.present?),
                 style: "max-height: 200px",
                 data: {
-                  controller: "address-treeview",
-                  "address-treeview-data-value": treeview_address_data.to_json,
-                  "address-treeview-selected-value": (@resource.beneficiary_filter.administrative_division_level_3_code&.value || []).to_json,
-                  "address-treeview-field-name-value": "broadcast[beneficiary_filter][administrative_division_level_3_code]"
+                  "beneficiary-addresses-filter-field-target": "treeview",
+                  "beneficiary-addresses-filter-field-data-value": treeview_address_data.to_json,
+                  "beneficiary-addresses-filter-field-selected-value": Array(address_field_value&.value).to_json,
+                  "beneficiary-addresses-filter-field-field-name-value": "broadcast[beneficiary_filter][#{address_field_name}]"
                 }
               }
 
