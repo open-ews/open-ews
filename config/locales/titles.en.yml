@@ -1,82 +1,10 @@
 ---
 en:
   titles:
+    app_name: OpenEWS
     home:
       index: Dashboard
-    access_tokens:
-      edit: Edit API Key
-      index: API Keys
-      new: New API Key
-    accounts:
-      edit: Account Settings
-      update: Account Settings
-    actions:
-      back: Back
-      cancel: Cancel
-      data_confirm: Are you sure?
-      delete: Delete
-      edit: Edit
-      preview: Preview
-      refresh: Refresh
-      update: Edit
-    app_name: OpenEWS
-    batch_operations:
-      index: Callout Populations
-      queue: Start
-      show: Callout Population %{id}
-    beneficiaries:
-      create: New Beneficiary
-      edit: Edit Beneficiary
-      index: Beneficiaries
-      new: New Beneficiary
-      show: Beneficiary
-      update: Edit Beneficiary
-    broadcasts:
-      create: New Broadcast
-      edit: Edit Broadcast
-      index: Broadcasts
-      new: New Broadcast
-      pause: Pause
-      resume: Resume
-      show: Broadcast
-      start: Start
-      stop: Stop
-      summary: Broadcast Summary
-      update: Edit Broadcast
-    notifications:
-      index: Notifications
-      show: Notification %{id}
-    recordings:
-      index: Recordings
-      show: Recording %{id}
-    remote_phone_call_events:
-      index: Phone Call Events
-      show: Phone Call Event %{id}
-    user_invitations:
-      create: Invite User
-      edit: Set your password
-      new: Invite User
-      update: Set your password
-    user_passwords:
-      create: Forgot your password?
-      edit: Change Password
-      new: Forgot your password?
-      update: Save
-    user_registrations:
-      edit: Change Password
-      update: Save
-    user_sessions:
-      create: Sign In
-      destroy: Sign Out
-      new: Sign In
-    users:
-      edit: Edit User
+    sessions:
+      new: Sign in
+    settings:
       index: Settings
-      show: User
-      update: Edit User
-    account:
-      show: Settings
-    developers:
-      index: Settings
-    registrations:
-      edit: Edit Profile

@@ -39,6 +39,7 @@ gem "bootsnap", require: false
 gem "countries"
 gem "country_select"
 gem "cursor_paginator"
+gem "csv"
 gem "devise"
 gem "devise-async"
 gem "devise_invitable"
@@ -71,7 +72,6 @@ gem "tzinfo-data"
 
 group :development, :test do
   gem "brakeman", require: false
-  gem "i18n-tasks"
   gem "pry"
   gem "rspec_api_documentation", github: "zipmark/rspec_api_documentation"
   gem "rspec-rails"

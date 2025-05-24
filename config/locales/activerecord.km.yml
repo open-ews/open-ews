@@ -29,31 +29,13 @@ km:
       access_token:
         one: API key
         other: API keys
-      batch_operation/base:
-        one: Batch operation
-        other: Batch operations
-      batch_operation/callout_population:
-        one: Callout population
-        other: Callout populations
-      batch_operation/phone_call_create:
-        one: Create phone calls
-        other: Create phone calls
-      batch_operation/phone_call_queue:
-        one: Queue phone calls
-        other: Queue phone calls
-      batch_operation/phone_call_queue_remote_fetch:
-        one: Fetch phone call status
-        other: Fetch phone call status
       beneficiary:
         one: សមាជិកទំនាក់ទំនង
         other: សមាជិកទំនាក់ទំនង
       broadcast:
         one: សេចក្ដីប្រកាស
         other: សេចក្ដីប្រកាស
-      callout:
-        one: សេចក្ដីប្រកាស
-        other: សេចក្ដីប្រកាស
-      callout_participation:
+      notification:
         one: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
         other: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
       delivery_attempt:
@@ -62,9 +44,6 @@ km:
       notification:
         one: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
         other: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-      remote_phone_call_event:
-        one: ព្រឹត្តិការណ៍ការហៅចេញ
-        other: ព្រឹត្តិការណ៍ការហៅចេញ
       user:
         one: អ្នកប្រីប្រាស់
         other: អ្នកប្រីប្រាស់

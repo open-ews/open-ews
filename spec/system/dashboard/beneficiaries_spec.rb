@@ -42,7 +42,6 @@ RSpec.describe "Beneficiaries" do
     visit dashboard_beneficiaries_path
     click_on "New"
 
-
     fill_in "Phone number", with: "85516789111"
     select "Cambodia", from: "Country"
 
@@ -98,17 +97,17 @@ RSpec.describe "Beneficiaries" do
 
     fill_in "Phone number", with: "85516789111"
     select "Female", from: "Gender"
-    fill_in "Language code", with: "km"
+    fill_in "ISO language code", with: "khm"
 
     click_on "Add Address"
     fill_in "ISO region code", with: "KH-12"
 
-    click_on "Save"
+    click_on "Update Beneficiary"
 
     expect(page).to have_content("Beneficiary was successfully updated.")
     expect(page).to have_content("85516789111")
     expect(page).to have_content("Female")
-    expect(page).to have_content("km")
+    expect(page).to have_content("khm")
     expect(page).to have_content("KH-12")
   end
 end

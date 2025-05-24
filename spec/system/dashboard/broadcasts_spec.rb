@@ -64,7 +64,7 @@ RSpec.describe "Broadcasts" do
       select("M", from: "broadcast[beneficiary_filter][gender][value]")
     end
 
-    click_on "Save"
+    click_on "Update Broadcast"
 
     expect(page).to have_text("Broadcast was successfully updated.")
     within("#beneficiary_filter_gender") do
@@ -73,7 +73,7 @@ RSpec.describe "Broadcasts" do
       expect(page).to have_selector("input.field-value[value='M']")
     end
     within("#beneficiary_filter_disability_status") do
-      expect(page).to have_selector("input.field-name[value='Disability Status']")
+      expect(page).to have_selector("input.field-name[value='Disability status']")
       expect(page).to have_selector("input.field-operator[value='Equals']")
       expect(page).to have_selector("input.field-value[value='normal']")
     end

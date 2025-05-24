@@ -21,6 +21,7 @@ class Beneficiary < ApplicationRecord
 
   validates :phone_number, presence: true, phone_number_type: true, uniqueness: { scope: :account_id }
   validates :iso_country_code, presence: true
+  validates :iso_language_code, length: { is: 3, allow_blank: true }
 
   accepts_nested_attributes_for :addresses, allow_destroy: true, reject_if: :all_blank
 

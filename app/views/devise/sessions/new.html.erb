@@ -1,4 +1,4 @@
-<h2 class="h2 text-center mb-4"><%= translate(:"titles.user_sessions.new") %></h2>
+<h2 class="h2 text-center mb-4"><%= title %></h2>
 
 <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), html: { data: { turbo: false }, novalidate: true, autocomplete: "off" }) do |f| %>
   <%= f.input :email,
@@ -23,7 +23,7 @@
       </div>
 
       <div class="col text-end">
-        <%= f.button :submit, translate(:"titles.user_sessions.create"), class: "px-4" %>
+        <%= f.button :submit, class: "px-4" %>
       </div>
     </div>
   </div>

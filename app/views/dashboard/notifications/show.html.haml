@@ -1,7 +1,3 @@
-= content_for(:page_actions) do
-  = render "shared/resource_related_links" do
-    = related_link_to t(:"titles.delivery_attempts.index"), dashboard_alert_delivery_attempts_path(resource)
-
 .card
   .card-body
     = show_for(resource, style: "border: none") do |f|

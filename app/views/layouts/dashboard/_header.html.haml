@@ -11,7 +11,7 @@
           = link_to url_for(params: request.query_parameters.merge(theme: 'dark')), class: "nav-link px-0 hide-theme-dark", "data-turbo" => false, title: "Enable dark mode" do
             %i.icon.ti.ti-moon
         .nav-item.dropdown
-          %a.nav-link.px-0{"aria-label" => "Select language", "data-bs-original-title" => "Select language", "data-bs-toggle" => "dropdown"}
+          %a.language-switcher.nav-link.px-0{"aria-label" => "Select language", "data-bs-original-title" => "Select language", "data-bs-toggle" => "dropdown"}
             %i.icon.ti.ti-language
           .dropdown-menu.dropdown-menu-end.dropdown-menu-arrow
             = button_to(dashboard_locale_path(user: { locale: "en" }), class: "dropdown-item", method: :patch) do

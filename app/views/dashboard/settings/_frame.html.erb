@@ -1,3 +1,11 @@
+<%= content_for(:page_title) do %>
+  <%= title(controller_name: :settings, action_name: :index) %>
+<% end %>
+
+<%= content_for(:page_heading) do %>
+  <%= title(controller_name: :settings, action_name: :index) %>
+<% end %>
+
 <div class="card">
   <div class="row g-0">
     <div class="col-12 col-md-2 border-end">
@@ -8,7 +16,7 @@
               <i class="icon ti ti-settings"></i>
             </span>
             <span class="nav-link-title">
-              Account
+              <%= title(controller_name: :accounts, action_name: :show) %>
             </span>
           <% end %>
           <%= link_to dashboard_settings_users_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "users"}" do %>
@@ -16,7 +24,7 @@
               <i class="icon ti ti-users"></i>
             </span>
             <span class="nav-link-title">
-              Users
+              <%= title(controller_name: :users, action_name: :index) %>
             </span>
           <% end %>
           <%= link_to dashboard_settings_developers_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "developers"}" do %>
@@ -24,7 +32,7 @@
               <i class="icon ti ti-device-desktop-code"></i>
             </span>
             <span class="nav-link-title">
-              Developers
+              <%= title(controller_name: :developers, action_name: :index) %>
             </span>
           <% end %>
         </div>
