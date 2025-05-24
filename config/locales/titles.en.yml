@@ -10,3 +10,5 @@ en:
       index: Settings
     registrations:
       edit: Edit Profile
+    passwords:
+      new: Reset Password

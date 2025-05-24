@@ -1,7 +1,9 @@
 !!!
 %html{"data-bs-theme" => cookies[:theme]}
   %head
-    %title= title(resource)
+    - page_title = content_for(:page_title).presence || title(resource)
+    %title
+      = "OpenEWS - #{page_title}"
     %meta{:content => "width=device-width, initial-scale=1, shrink-to-fit=no", :name => "viewport"}/
 
     = csrf_meta_tags
