@@ -44,7 +44,7 @@ RSpec.describe FieldDefinitions::FilterSchema::ListType do
   it "whitelists supported operators" do
     schema = build_schema
 
-    expect(schema.key_map.map(&:name)).to contain_exactly(
+    expect(schema.schema_definition.key_map.map(&:name)).to contain_exactly(
       "eq",
       "not_eq",
       "is_null",
