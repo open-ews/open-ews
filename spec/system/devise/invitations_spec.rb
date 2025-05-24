@@ -20,19 +20,14 @@ RSpec.describe "User Invitations" do
 
   it "can set the password" do
     inviter = create(:user)
-    visit accept_user_invitation_path(invitation_token: invitation_token(inviter))
+    user = create(:user, account: inviter.account, invited_by: inviter)
+    user.invite!
+    visit accept_user_invitation_path(invitation_token: user.raw_invitation_token)
 
-    fill_in "Password", with: "myscret"
-    fill_in "Password confirmation", with: "myscret"
+    fill_in "Password", with: "mysecret"
+    fill_in "Password confirmation", with: "mysecret"
     click_on "Save"
 
     expect(page).to have_text("Your password was set successfully. You are now signed in.")
-  end
-
-  def invitation_token(inviter)
-    User.invite!(
-      { email: generate(:email), account_id: inviter.account_id },
-      inviter
-    ).raw_invitation_token
   end
 end

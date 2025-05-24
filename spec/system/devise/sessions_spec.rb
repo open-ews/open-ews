@@ -20,7 +20,7 @@ RSpec.describe "User sign in" do
     sign_in(user)
     visit dashboard_root_path
 
-    click_on "Sign Out"
+    click_on "Sign out"
 
     expect(page).to have_content("You need to sign in or sign up before continuing")
   end

@@ -2,9 +2,10 @@
   %a.nav-link.d-flex.lh-1.p-0.px-2{"aria-label" => "Open user menu", "data-bs-toggle" => "dropdown", :href => "#"}
     %span.avatar.avatar-sm{:style => "background-image: url('#{user_profile_image_url(current_user)}')"}
     .d-none.d-xl-block.ps-2
-      %div= current_user.name.presence || current_user.email.split("@").first
-      - if current_account.name.present?
-        .mt-1.small.text-secondary= current_account.name
+      %div
+        = current_user.name
+      .mt-1.small.text-secondary
+        = current_account.name
   .dropdown-menu.dropdown-menu-end.dropdown-menu-arrow
     = link_to edit_user_registration_path, class: "dropdown-item" do
       %i.icon.ti.ti-user
@@ -15,4 +16,4 @@
       Settings
     = button_to(destroy_user_session_path, class: "dropdown-item", method: :delete, form: { data: { turbo: false } }) do
       %i.icon.ti.ti-logout
-      = translate(:"titles.user_sessions.destroy")
+      = translate(:"helpers.submit.session.destroy")
