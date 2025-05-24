@@ -71,7 +71,7 @@ module API
       end
 
       def include_parameter(only:)
-        JSONAPI::IncludeParameterParser.new.parse(request.query_parameters).select { Array(only).include?(_1.to_sym) }
+        JSONAPI::IncludeParameterParser.new.parse(request.query_parameters).select { Array(only).include?(it.to_sym) }
       end
     end
   end

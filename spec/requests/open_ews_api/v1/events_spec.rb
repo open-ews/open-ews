@@ -17,7 +17,7 @@ RSpec.resource "Events"  do
 
     The Events API currently supports the following event types:
 
-    #{Event.type.values.map { "* `#{_1}`" }.join("\n")}
+    #{Event.type.values.map { "* `#{it}`" }.join("\n")}
   HEREDOC
 
   get "/v1/events" do
