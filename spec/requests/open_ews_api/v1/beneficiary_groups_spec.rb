@@ -372,7 +372,7 @@ RSpec.resource "Beneficiary Groups"  do
       account = create(:account)
       group = create(:beneficiary_group, account:)
       male_beneficiaries = create_list(:beneficiary, 2, account:, gender: "M")
-      male_beneficiaries.each { create(:beneficiary_group_membership, beneficiary: _1, beneficiary_group: group) }
+      male_beneficiaries.each { create(:beneficiary_group_membership, beneficiary: it, beneficiary_group: group) }
       create(:beneficiary_group_membership, beneficiary_group: group, beneficiary: create(:beneficiary, account:, gender: "F"))
       create(:beneficiary, account:, gender: "F")
 

@@ -5,7 +5,7 @@ module FieldDefinitions
         name: "type",
         column: Event.arel_table[:type],
         schema: FilterSchema::ListType.define(:string, Event.type.values),
-        description: "The event type. Must be one of #{Event.type.values.map { "`#{_1}`" }.join(", ")}."
+        description: "The event type. Must be one of #{Event.type.values.map { "`#{it}`" }.join(", ")}."
       ),
       Field.new(
         name: "created_at",

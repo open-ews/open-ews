@@ -212,7 +212,7 @@ RSpec.resource "Broadcasts"  do
       )
       parameter(
         :status,
-        "Update the status of a broadcast. Must be one of #{V1::UpdateBroadcastRequestSchema::VALID_STATES.map { "`#{_1}`" }.join(", ")}.",
+        "Update the status of a broadcast. Must be one of #{V1::UpdateBroadcastRequestSchema::VALID_STATES.map { "`#{it}`" }.join(", ")}.",
         method: :_disabled
       )
       parameter(
