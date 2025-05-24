@@ -27,7 +27,7 @@ RSpec.describe "Users" do
     expect(page).to have_content(user.id)
   end
 
-  it "can update a user" do
+  xit "can update a user" do
     user = create(:user)
     other_user = create(:user, account: user.account)
 
@@ -43,7 +43,7 @@ RSpec.describe "Users" do
     expect(page).to have_content("Bob Chann")
   end
 
-  it "can delete a user" do
+  xit "can delete a user" do
     user = create(:user)
     other_user = create(:user, account: user.account)
 

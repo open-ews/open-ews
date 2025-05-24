@@ -7,7 +7,7 @@ RSpec.describe "User Invitations" do
     visit new_user_invitation_path
 
     fill_in "Email", with: "bopha@somleng.com"
-    clear_enqueued_jobs
+    fill_in "Name", with: "Bopha"
 
     perform_enqueued_jobs do
       click_on "Send an invitation"
@@ -15,7 +15,7 @@ RSpec.describe "User Invitations" do
 
     expect(page).to have_text("An invitation email has been sent to bopha@somleng.com.")
     expect(last_email_sent.from).to contain_exactly("no-reply@somleng.org")
-    expect(current_path).to eq(dashboard_users_path)
+    expect(current_path).to eq(dashboard_settings_users_path)
   end
 
   it "can set the password" do

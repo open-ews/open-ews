@@ -13,7 +13,11 @@ class Users::InvitationsController < Devise::InvitationsController
   end
 
   def invite_params
-    super.merge(account_id: current_inviter.account_id)
+    super.merge(permitted_params).merge(account_id: current_inviter.account_id)
+  end
+
+  def permitted_params
+    params.require(:user).permit(:email, :name)
   end
 
   def after_invite_path_for(_inviter, _invitee = nil)

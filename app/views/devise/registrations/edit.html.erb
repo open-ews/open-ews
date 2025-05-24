@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col">
-    <div class="card">
+    <div class="card user-profile">
       <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :patch, data: { turbo: false } }) do |f| %>
         <div class="card-header">
           <h3 class="card-title">Profile</h3>
@@ -11,14 +11,14 @@
         </div>
 
         <div class="card-footer text-end">
-          <%= f.button :submit, translate(:"titles.user_registrations.update") %>
+          <%= f.button :submit %>
         </div>
       <% end %>
     </div>
   </div>
 
   <div class="col">
-    <div class="card">
+    <div class="card user-registration">
       <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :patch, data: { turbo: false } }) do |f| %>
         <div class="card-header">
           <h3 class="card-title">Settings</h3>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="card-footer text-end">
-          <%= f.button :submit, translate(:"titles.user_registrations.update") %>
+          <%= f.button :submit %>
         </div>
       <% end %>
     </div>

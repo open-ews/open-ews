@@ -8,3 +8,5 @@ en:
       new: Sign in
     settings:
       index: Settings
+    registrations:
+      edit: Edit Profile

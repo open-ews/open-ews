@@ -5,7 +5,6 @@ en:
       account:
         update: Save
       session:
-        create: Sign in
         destroy: Sign out
       user:
         update: Save
