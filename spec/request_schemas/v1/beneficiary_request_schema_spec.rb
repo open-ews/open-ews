@@ -60,6 +60,10 @@ module V1
       ).to have_valid_field(:data, :attributes, :iso_language_code)
 
       expect(
+        validate_schema(input_params: { data: { attributes: { iso_language_code: "km" } }  })
+      ).not_to have_valid_field(:data, :attributes, :iso_language_code)
+
+      expect(
         validate_schema(input_params: { data: { attributes: { iso_language_code: "khm" } }  })
       ).to have_valid_field(:data, :attributes, :iso_language_code)
     end

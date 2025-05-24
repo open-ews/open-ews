@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_18_152352) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_24_064349) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -80,7 +80,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_18_152352) do
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "account_id", null: false
     t.string "status", default: "active", null: false
-    t.string "iso_language_code"
+    t.citext "iso_language_code"
     t.string "gender"
     t.date "date_of_birth"
     t.citext "iso_country_code", null: false
