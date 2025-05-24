@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 # Make sure RUBY_VERSION matches the Ruby version in .tool-versions
-ARG RUBY_VERSION=3.3
+ARG RUBY_VERSION=3.4
 FROM public.ecr.aws/docker/library/ruby:$RUBY_VERSION-alpine AS base
 
 # Rails app lives here
@@ -19,7 +19,10 @@ FROM base AS build
 # Install packages needed to build gems
 RUN apk update --no-cache && \
   apk upgrade --no-cache && \
-  apk add --update --no-cache build-base git gcompat postgresql-dev nodejs yarn yaml-dev
+  apk add --update --no-cache build-base git gcompat postgresql-dev yaml-dev nodejs-current npm
+
+RUN corepack enable
+RUN corepack prepare yarn@stable --activate
 
 # Install application gems
 COPY Gemfile Gemfile.lock ./

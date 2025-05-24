@@ -9,7 +9,7 @@ module StateMachine
 
     class << self
       def find(state)
-        state_definitions.find(-> { state_definitions.find(&:initial) || raise(ArgumentError("Unknown state #{state}")) }) { _1.name == state.to_s.to_sym }
+        state_definitions.find(-> { state_definitions.find(&:initial) || raise(ArgumentError("Unknown state #{state}")) }) { it.name == state.to_s.to_sym }
       end
 
       def state(name, **options)
@@ -52,7 +52,7 @@ module StateMachine
     private
 
     def find_transition(new_state)
-      current_state.transitions_to.find { _1.name == new_state.to_s.to_sym }
+      current_state.transitions_to.find { it.name == new_state.to_s.to_sym }
     end
   end
 end
