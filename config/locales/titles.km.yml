@@ -1,85 +1,10 @@
 ---
 km:
   titles:
-    access_tokens:
-      edit: កែប្រែ API Key
-      index: API Keys
-      new: New API Key
-    accounts:
-      edit: Account Settings
-      update: Account Settings
-    actions:
-      back: ត្រលប់ក្រោយ
-      cancel: បោះបង់ចោល
-      data_confirm: Are you sure?
-      delete: លុបចោល
-      edit: កែប្រែ
-      preview: ការឃើញជាមុន
-      refresh: Refresh
-      update: កែប្រែ
-    app_name: សំឡេង SCFM
-    batch_operations:
-      index: Callout Populations
-      queue: ចាប់ផ្ដើម
-      show: Callout Population %{id}
-    beneficiaries:
-      create: បង្កើត សមាជិកទំនាក់ទំនង
-      edit: កែប្រែ សមាជិកទំនាក់ទំនង
-      index: សមាជិកទំនាក់ទំនង
-      new: បង្កើត សមាជិកទំនាក់ទំនង
-      show: សមាជិកទំនាក់ទំនង %{id}
-      update: កែប្រែ សមាជិកទំនាក់ទំនង
+    app_name: OpenEWS
+    home:
+      index: Dashboard
     broadcasts:
-      create: បង្កើត សេចក្ដីប្រកាស
-      edit: កែប្រែ សេចក្ដីប្រកាស
       index: សេចក្ដីប្រកាស
-      new: បង្កើត សេចក្ដីប្រកាស
-      pause: ផ្អាក
-      resume: បន្តរដំណើរការ
-      show: សេចក្ដីប្រកាស %{id}
-      start: ចាប់ផ្ដើម
-      stop: បញ្ឈប់
-      summary: Callout Summary
-      update: កែប្រែ សេចក្ដីប្រកាស
-    callout_populations:
-      create: New Callout Population
-      edit: កែប្រែ Callout Population
-      new: New Callout Population
-      show: Callout Population %{id}
-      update: កែប្រែ Callout Population
-    delivery_attempts:
-      index: កំណត់ត្រាការហៅចេញ
-      queue: Send
-      queue_remote_fetch: Fetch Remote Status
-      show: កំណត់ត្រាការហៅចេញ %{id}
-    notifications:
-      index: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-      show: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស %{id}
-    recordings:
-      index: Recordings
-      show: Recording %{id}
-    remote_phone_call_events:
-      index: ព្រឹត្តិការណ៍ការហៅចេញ
-      show: ព្រឹត្តិការណ៍ការហៅចេញ %{id}
-    user_invitations:
-      create: អញ្ជើញ អ្នកប្រីប្រាស
-      edit: Set your password
-      new: អញ្ជើញ អ្នកប្រីប្រាស
-      update: Set your password
-    user_passwords:
-      create: Forgot your password?
-      edit: Change Password
-      new: Forgot your password?
-      update: Save
-    user_registrations:
-      edit: Change Password
-      update: Save
-    user_sessions:
-      create: Sign In
-      destroy: Sign Out
-      new: Sign In
-    users:
-      edit: កែប្រែ អ្នកប្រីប្រាស់
-      index: អ្នកប្រីប្រាស់
-      show: អ្នកប្រីប្រាស់ %{id}
-      update: កែប្រែ អ្នកប្រីប្រាស់
+    beneficiaries:
+      index: អ្នកទទួលផល

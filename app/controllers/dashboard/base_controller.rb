@@ -2,6 +2,8 @@ require "application_responder"
 
 module Dashboard
   class BaseController < ::BaseController
+    include DarkMode
+
     layout "dashboard"
 
     KEY_VALUE_FIELD_ATTRIBUTES = %i[key value].freeze

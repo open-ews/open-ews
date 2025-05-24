@@ -1,14 +1,15 @@
 class BeneficiaryAddressValidator
-  attr_reader :attributes, :errors
+  attr_reader :errors
 
   Error = Data.define(:key, :message)
 
-  def initialize(attributes)
-    @attributes = attributes.symbolize_keys
+  def initialize
     @errors = []
   end
 
-  def valid?
+  def valid?(attributes)
+    attributes.symbolize_keys!
+
     4.downto(3) do |level|
       division_attributes = [ :code, :name ].map { |type| :"administrative_division_level_#{level}_#{type}" }
 

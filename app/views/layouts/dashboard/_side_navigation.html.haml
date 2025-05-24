@@ -1,16 +1,17 @@
-#sidebar.sidebar.sidebar-fixed{"data-sidebar-target" => "sidebar"}
-  .sidebar-brand
-    = link_to dashboard_root_path do
-      = image_tag("open-ews_landscape_logo.png", class: "sidebar-brand-full", height: 64)
+%aside{class: "navbar navbar-vertical navbar-expand-lg", "data-bs-theme": "dark"}
+  .container-fluid
+    %button.navbar-toggler{"aria-controls" => "sidebar-menu", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-bs-target" => "#sidebar-menu", "data-bs-toggle" => "collapse", type: "button"}
+      %span.navbar-toggler-icon
 
-  %ul.sidebar-nav{data: {simplebar: nil }}
-    = sidebar_nav(translate(:"titles.broadcasts.index"), dashboard_broadcasts_path, icon_class: "fa-solid fa-bullhorn")
-    = sidebar_nav(translate(:"titles.beneficiaries.index"), dashboard_beneficiaries_path, icon_class: "fa-solid fa-address-book")
-    = sidebar_nav(translate(:"titles.users.index"), dashboard_users_path, icon_class: "fa-solid fa-users")
-    %li.nav-group{data: { coreui: :navigation }}
-      %a.nav-link.nav-group-toggle{href: "#", data: {turbo: false}}
-        %i.nav-icon.fa-solid.fa-laptop-code
-        Developers
-      %ul.nav-group-items
-        = sidebar_nav(translate(:"titles.accounts.edit"), edit_dashboard_account_path, icon_class: "fa-solid fa-cog")
-        = sidebar_nav(translate(:"titles.access_tokens.index"), dashboard_access_tokens_path, icon_class: "fa-solid fa-code")
+    .navbar-brand
+      = link_to dashboard_root_path do
+        = image_tag("open-ews_landscape_logo.png", class: "navbar-brand-image")
+
+    .navbar-nav.flex-row.d-lg-none
+      = render "layouts/dashboard/account_dropdown"
+
+    #sidebar-menu.collapse.navbar-collapse
+      %ul.navbar-nav.pt-lg-3
+        = sidebar_nav(title(controller_name: :home, action_name: :index), dashboard_root_path, icon_class: "ti ti-home")
+        = sidebar_nav(title(controller_name: :beneficiaries, action_name: :index), dashboard_beneficiaries_path, icon_class: "ti ti-address-book")
+        = sidebar_nav(title(controller_name: :broadcasts, action_name: :index), dashboard_broadcasts_path, icon_class: "ti ti-speakerphone")

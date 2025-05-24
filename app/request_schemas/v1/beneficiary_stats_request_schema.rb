@@ -1,5 +1,7 @@
 module V1
   class BeneficiaryStatsRequestSchema < ApplicationRequestSchema
+    option :beneficiary_address_validator, default: -> { BeneficiaryAddressValidator.new }
+
     GROUPS = [
       "gender",
       "disability_status",
@@ -32,9 +34,8 @@ module V1
         _prefix, column = group.split(".")
         result[column] = true
       end
-      validator = BeneficiaryAddressValidator.new(address_attributes)
-      next if validator.valid?
-      key.failure("address.#{validator.errors.first.key} is required")
+      next if beneficiary_address_validator.valid?(address_attributes)
+      key.failure("address.#{beneficiary_address_validator.errors.first.key} is required")
     end
 
     def output

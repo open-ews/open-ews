@@ -23,6 +23,6 @@ class ApplicationSeeder
 
     return existing_user if existing_user.present?
 
-    User.create!(email: USER_EMAIL, password: USER_PASSWORD, **params)
+    User.create!(name: "John Doe", email: USER_EMAIL, password: USER_PASSWORD, **params)
   end
 end

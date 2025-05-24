@@ -1,4 +1,4 @@
-<h2><%= translate(:"titles.user_passwords.edit") %></h2>
+<h2 class="h2 text-center mb-4"><%= translate(:"titles.user_passwords.edit") %></h2>
 
 <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, data: { turbo: false } }) do |f| %>
   <%= f.error_notification %>
@@ -7,21 +7,34 @@
   <%= f.full_error :reset_password_token %>
 
   <%= f.input :password,
-              label: "New password",
-              required: true,
-              autofocus: true,
-              hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-              input_html: { autocomplete: "new-password" } %>
+          label: "New password",
+          required: true,
+          autofocus: true,
+          hint:
+            (
+              if @minimum_password_length
+                "#{@minimum_password_length} characters minimum"
+              end
+            ),
+          input_html: {
+            autocomplete: "new-password",
+          } %>
   <%= f.input :password_confirmation,
-              label: "Confirm your new password",
-              required: true,
-              input_html: { autocomplete: "new-password" } %>
+          label: "Confirm your new password",
+          required: true,
+          input_html: {
+            autocomplete: "new-password",
+          } %>
 
-  <%= f.button :submit, translate(:"titles.user_passwords.update") %>
-<% end %>
+  <div class="form-footer">
+    <div class="row">
+      <div class="col">
+        <%= render "devise/shared/links" %>
+      </div>
 
-<div class="row mt-3">
-  <div class="col-12">
-    <%= render "devise/shared/links" %>
+      <div class="col text-end">
+        <%= f.button :submit, "Change my password" %>
+      </div>
+    </div>
   </div>
-</div>
+<% end %>
