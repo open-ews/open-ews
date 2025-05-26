@@ -1,12 +1,11 @@
 module FieldDefinitions
   module FilterSchema
     class Base
-      attr_reader :schema_definition, :input_type, :type, :options
+      attr_reader :schema_definition, :value_type, :options
 
-      def initialize(schema_definition:, input_type:, type:, options: nil)
+      def initialize(schema_definition:, value_type:, **options)
         @schema_definition = schema_definition
-        @input_type = input_type
-        @type = type
+        @value_type = value_type
         @options = options
       end
     end

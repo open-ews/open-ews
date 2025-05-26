@@ -50,14 +50,18 @@ module FieldDefinitions
       end
     end
 
+    def value_options_for_select(model)
+      attributes = model.enumerized_attributes.attributes
+
+      return schema.options.fetch(:list_options) unless attributes.keys.include?(name)
+
+      attributes.fetch(name).values.map { [ it.text, it.value ] }
+    end
+
     def operators
       schema.schema_definition.key_map.map do |key|
         key.name
       end
-    end
-
-    def field_type
-      schema.type
     end
   end
 end

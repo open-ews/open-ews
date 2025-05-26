@@ -1,6 +1,4 @@
 class BeneficiaryAddress < ApplicationRecord
-  extend Enumerize
-
   enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
   attribute :beneficiary_address_validator, default: -> { BeneficiaryAddressValidator.new }
 

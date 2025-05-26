@@ -1,6 +1,4 @@
 class Beneficiary < ApplicationRecord
-  extend Enumerize
-
   include MetadataHelpers
 
   attribute :phone_number, :phone_number

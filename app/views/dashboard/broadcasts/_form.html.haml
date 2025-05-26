@@ -17,17 +17,19 @@
           %label.form-label Value
 
       = f.simple_fields_for :beneficiary_filter do |filter_form|
-        - FieldDefinitions::BroadcastBeneficiaryFields.each do |field|
-          - next if CountryAddressData.supported?(current_account.iso_country_code) && field.name.start_with?("address.")
+        - BroadcastForm::BeneficiaryFilter.attribute_names.each do |attribute_name|
+          - attribute_type = BroadcastForm::BeneficiaryFilter.type_for_attribute(attribute_name)
+          - field = attribute_type.field_definition
+          - next if CountryAddressData.supported?(current_account.iso_country_code) && attribute_type.is_a?(BroadcastForm::BeneficiaryAddressFilterFieldType)
 
-          = filter_form.simple_fields_for field.name.to_sym, @resource.beneficiary_filter.attributes[field.name] do |field_form|
-            .row{id: "beneficiary_filter_#{field.name}", data: { controller: "beneficiary-filter-field" }}
+          = filter_form.simple_fields_for(attribute_name, @resource.beneficiary_filter.attributes[attribute_name]) do |field_form|
+            .row{id: "beneficiary_filter_#{attribute_name}", data: { controller: "beneficiary-filter-field" }}
               -# Field name toggle
               .col
                 .input-group.mb-3
                   %span.input-group-text
                     %input.form-check-input.m-0{type: "checkbox", checked: field_form.object.present?, data: { "beneficiary-filter-field-target": "toggleElement", action:  "beneficiary-filter-field#toggle" }}
-                  %input.form-control{type: "text", value: Beneficiary.human_attribute_name(field.name), readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
+                  %input.form-control{type: "text", value: BroadcastForm::BeneficiaryFilter.human_attribute_name(attribute_name), readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
 
               -# Operator select
               .col
@@ -42,33 +44,34 @@
               .col
                 .value-input.hidden
                   - base_options = { label: false, required: true, input_html: { data: { "beneficiary-filter-field-target": "value" } }}
-                  - if field.field_type == :list
-                    = field_form.input "value", as: :select, collection: field.schema.options, **base_options
-                  - elsif field.field_type == :string
-                    = field_form.input "value", as: :string, **base_options
-                  - elsif field.field_type == :value
+                  - case field.schema
+                  - when FieldDefinitions::FilterSchema::ListType
+                    = field_form.input "value", as: :select, collection: field.value_options_for_select(Beneficiary), **base_options
+                  - when FieldDefinitions::FilterSchema::StringType
+                    = field_form.input "value", as: :string, **base_options.deep_merge(input_html: { class: "w-100", minlength: field.schema.options[:length], maxlength: field.schema.options[:length] })
+                  - when FieldDefinitions::FilterSchema::ValueType
                     - if field_form.object.present? && field_form.object.value.is_a?(Array)
-                      = field_form.input "value", as: field.schema.input_type, html5: true, **base_options.deep_merge(input_html: { value: '' })
+                      = field_form.input "value", as: field.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: '' })
                     - else
-                      = field_form.input "value", as: field.schema.input_type, html5: true, **base_options
+                      = field_form.input "value", as: field.schema.value_type, html5: true, **base_options
 
                 -# NOTE: `between` operator is used only for `value` field type.
-                - if field.field_type == :value
-                  - base_options = { label: false, required: true, wrapper: false, input_html: { name: "broadcast[beneficiary_filter][#{field.name}][value][]", data: { "beneficiary-filter-field-target": "betweenValue" } }}
+                - if field.schema.is_a?(FieldDefinitions::FilterSchema::ValueType)
+                  - base_options = { label: false, required: true, wrapper: false, input_html: { name: "broadcast[beneficiary_filter][#{attribute_name}][value][]", data: { "beneficiary-filter-field-target": "betweenValue" } }}
                   - existing_field_values = field_form.object&.operator == "between" ? field_form.object.value : []
                   .between-value-input.hidden
                     .row
                       .col
-                        = field_form.input "value", as: field.schema.input_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[0] })
+                        = field_form.input "value", as: field.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[0] })
                       .col
-                        = field_form.input "value", as: field.schema.input_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[1] })
+                        = field_form.input "value", as: field.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[1] })
 
                 -# NOTE: this is used for multi value fields from the lists or let the user enter values(similar to tags) manually.
                 .multi-value-input.hidden
                   - selected_values = FieldDefinitions::Field::MULTIPLE_SELECTION_OPERATORS.include?(field_form.object&.operator) ? field_form.object.value : []
                   - base_options = { label: false, required: true, include_hidden: false, multiple: true, selected: selected_values }
-                  - if field.field_type == :list
-                    = field_form.input "value", as: :select, collection: field.schema.options, input_html: { class: "list-select", data: { "beneficiary-filter-field-target": "multiValue" } }, **base_options
+                  - if field.schema.is_a?(FieldDefinitions::FilterSchema::ListType)
+                    = field_form.input "value", as: :select, collection: field.value_options_for_select(Beneficiary), input_html: { class: "list-select", data: { "beneficiary-filter-field-target": "multiValue" } }, **base_options
                   - else
                     = field_form.input "value", as: :select, collection: selected_values, input_html: { class: "input-tags", data: { "beneficiary-filter-field-target": "multiValue" } }, **base_options
 

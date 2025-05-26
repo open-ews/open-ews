@@ -1,6 +1,4 @@
 class Import < ApplicationRecord
-  extend Enumerize
-
   belongs_to :user
   belongs_to :account
 

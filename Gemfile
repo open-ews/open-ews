@@ -79,6 +79,7 @@ end
 
 group :development do
   gem "listen"
+  gem "foreman"
   gem "rubocop"
   gem "rubocop-performance"
   gem "rubocop-rails-omakase", require: false

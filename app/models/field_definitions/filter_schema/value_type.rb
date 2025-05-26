@@ -1,7 +1,7 @@
 module FieldDefinitions
   module FilterSchema
     class ValueType < Base
-      def self.define(type)
+      def self.define(type:)
         schema = Dry::Schema.Params do
           optional(:eq).filled(type)
           optional(:not_eq).filled(type)
@@ -15,8 +15,7 @@ module FieldDefinitions
 
         new(
           schema_definition: schema,
-          input_type: type,
-          type: :value,
+          value_type: type
         )
       end
     end
