@@ -19,7 +19,7 @@ class CreateBeneficiaryImportTemplate < ApplicationWorkflow
   private
 
   def attribute_names
-    ordered_fields.map { |field| field.name.to_s.parameterize.underscore }
+    ordered_fields.map { |field| field.path.to_s.parameterize.underscore }
   end
 
   def sample_data

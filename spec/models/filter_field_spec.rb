@@ -160,6 +160,6 @@ RSpec.describe FilterField, type: :model do
   end
 
   def find_field_definition(name)
-    FieldDefinitions::BeneficiaryFields.find(name)
+    FieldDefinitions::BeneficiaryFields.find_by!(name:)
   end
 end

@@ -20,7 +20,7 @@ module V1
       end
 
       result[:group_by_fields] = result[:group_by].map do |group|
-        FieldDefinitions::NotificationFields.find(group)
+        FieldDefinitions::NotificationFields.find_by!(path: group)
       end
 
       result

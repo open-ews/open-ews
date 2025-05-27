@@ -46,7 +46,7 @@ RSpec.describe "Broadcasts" do
     end
   end
 
-  it "can update a broadcast", :js, :selenium_chrome do
+  it "can update a broadcast", :js do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
     broadcast = create(
@@ -54,7 +54,7 @@ RSpec.describe "Broadcasts" do
       account: user.account,
       beneficiary_filter: {
         disability_status: { eq: 'normal' },
-        administrative_division_level_3_code: { in: [ "120101" ] }
+        "address.administrative_division_level_3_code": { in: [ "120101" ] }
       }
     )
 

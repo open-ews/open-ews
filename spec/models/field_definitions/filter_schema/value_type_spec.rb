@@ -80,6 +80,6 @@ RSpec.describe FieldDefinitions::FilterSchema::ValueType do
   end
 
   def build_schema(type = :integer)
-    FieldDefinitions::FilterSchema::ValueType.define(type)
+    FieldDefinitions::FilterSchema::ValueType.define(type:)
   end
 end

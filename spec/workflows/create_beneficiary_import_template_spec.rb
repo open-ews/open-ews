@@ -9,7 +9,7 @@ RSpec.describe CreateBeneficiaryImportTemplate do
     result = CSV.read(template, headers: true)
     expect(result).to have_attributes(
       headers: match_array(
-        FieldDefinitions::BeneficiaryFields.select { |field| !field.read_only? }.map { |field| field.name.to_s.parameterize.underscore }
+        FieldDefinitions::BeneficiaryFields.select { |field| !field.read_only? }.map { |field| field.path.to_s.parameterize.underscore }
       ),
       size: 1
     )

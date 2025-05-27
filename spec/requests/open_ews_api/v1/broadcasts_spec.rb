@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.resource "Broadcasts"  do
   get "/v1/broadcasts" do
     FieldDefinitions::BroadcastFields.each do |field|
-      with_options scope: [ :filter, field.name.to_sym ] do
+      with_options scope: [ :filter, field.path.to_sym ] do
         parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
@@ -85,7 +85,7 @@ RSpec.resource "Broadcasts"  do
     end
 
     FieldDefinitions::BeneficiaryFields.each do |field|
-      with_options scope: [ :data, :attributes, :beneficiary_filter, field.name.to_sym ] do
+      with_options scope: [ :data, :attributes, :beneficiary_filter, field.path.to_sym ] do
         parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
@@ -234,7 +234,7 @@ RSpec.resource "Broadcasts"  do
     end
 
     FieldDefinitions::BeneficiaryFields.each do |field|
-      with_options scope: [ :data, :attributes, :beneficiary_filter, field.name.to_sym ] do
+      with_options scope: [ :data, :attributes, :beneficiary_filter, field.path.to_sym ] do
         parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end

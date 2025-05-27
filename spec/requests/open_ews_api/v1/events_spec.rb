@@ -22,7 +22,7 @@ RSpec.resource "Events"  do
 
   get "/v1/events" do
     FieldDefinitions::EventFields.each do |field|
-      with_options scope: [ :filter, field.name.to_sym ] do
+      with_options scope: [ :filter, field.path.to_sym ] do
         parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
@@ -80,7 +80,7 @@ RSpec.resource "Events"  do
 
     with_options scope: :filter do
       FieldDefinitions::EventFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+        parameter(field.path, field.description, required: false, method: :_disabled)
       end
     end
 

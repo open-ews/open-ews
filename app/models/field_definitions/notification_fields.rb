@@ -5,8 +5,9 @@ module FieldDefinitions
     Field.new(name: "created_at", column: Notification.arel_table[:created_at], schema: FilterSchema::ValueType.define(type: :time), description: "The [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) timestamp of when the notification was created."),
     Field.new(name: "completed_at", column: Notification.arel_table[:created_at], schema: FilterSchema::ValueType.define(type: :time), description: "The [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) timestamp of when the notification was completed."),
 
+
     *BeneficiaryFields.map do |field|
-      field.clone(name: "beneficiary.#{field.name}", association: { beneficiary: field.association })
+      field.clone(prefix: [ "beneficiary", field.prefix ].compact.join("."), association: { beneficiary: field.association })
     end
   ])
 end

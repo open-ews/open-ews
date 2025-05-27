@@ -54,7 +54,7 @@ RSpec.describe FieldDefinitions::FilterSchema::ListType do
   end
 
   def build_schema(type: :string, options: [ "foo", "bar" ])
-    FieldDefinitions::FilterSchema::ListType.define(type, options)
+    FieldDefinitions::FilterSchema::ListType.define(type:, options:)
   end
 
   def validate_schema(schema, input:)

@@ -20,6 +20,7 @@ class JSONAPIResponder < ActionController::Responder
       resource = resource.decorated
     end
 
+    binding.pry
     super(serializer_class.new(resource, serializer_options), given_options)
   end
 

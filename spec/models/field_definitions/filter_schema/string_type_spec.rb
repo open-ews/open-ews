@@ -74,7 +74,7 @@ RSpec.describe FieldDefinitions::FilterSchema::StringType do
   end
 
   it "supports custom types" do
-    schema = build_schema(FieldDefinitions::Types::UpcaseString)
+    schema = build_schema(type: FieldDefinitions::Types::UpcaseString)
 
     result = validate_schema(schema, input: { eq: "kh" })
 
