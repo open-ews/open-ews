@@ -14,6 +14,10 @@ module Dashboard
       @resource = BroadcastForm.initialize_with(@resource)
     end
 
+    def show
+      @broadcast = scope.find(params[:id])
+    end
+
     def update
       broadcast = scope.find(params[:id])
       @resource =  BroadcastForm.new(

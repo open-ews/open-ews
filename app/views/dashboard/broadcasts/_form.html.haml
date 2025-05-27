@@ -24,14 +24,14 @@
           = filter_form.simple_fields_for(attribute_name, filter_form.object.attributes[attribute_name]) do |field_form|
             .row{id: "beneficiary_filter_#{attribute_name}", data: { controller: "beneficiary-filter-field" }}
               -# Field name toggle
-              .col
+              .col{id: "beneficiary_filter_#{attribute_name}_field"}
                 .input-group.mb-3
                   %span.input-group-text
                     %input.form-check-input.m-0{type: "checkbox", checked: field_form.object.present?, data: { "beneficiary-filter-field-target": "toggleElement", action:  "beneficiary-filter-field#toggle" }}
                   %input.form-control{type: "text", value: filter_form.object.human_attribute_name(attribute_name), readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
 
               -# Operator select
-              .col
+              .col{id: "beneficiary_filter_#{attribute_name}_operator"}
                 = field_form.input "operator",
                   label: false,
                   as: :select,
@@ -40,7 +40,7 @@
                   input_html: { data: { "beneficiary-filter-field-target": "operator", action:  "beneficiary-filter-field#operatorChanged" } }
 
               -# Value input
-              .col
+              .col{id: "beneficiary_filter_#{attribute_name}_value"}
                 .value-input.hidden
                   - base_options = { label: false, required: true, input_html: { data: { "beneficiary-filter-field-target": "value" } }}
                   - case field.schema

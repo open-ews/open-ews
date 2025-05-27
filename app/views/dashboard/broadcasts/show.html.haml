@@ -1,32 +1,34 @@
+- broadcast = BroadcastDecorator.new(@broadcast)
+
 = content_for(:page_actions) do
-  - state_machine = BroadcastStateMachine.new(resource.status)
+  - state_machine = BroadcastStateMachine.new(@broadcast.status)
   - if state_machine.may_transition_to?(:running)
-    = button_to(dashboard_broadcast_path(resource), params: { broadcast: { desired_status: "running" } }, method: :patch, class: "btn btn-outline-success", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
+    = button_to(dashboard_broadcast_path(@broadcast), params: { broadcast: { desired_status: "running" } }, method: :patch, class: "btn btn-outline-success", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
       %i.icon.ti.ti-player-play
       = translate(:"titles.broadcasts.start")
   - elsif state_machine.may_transition_to?(:stopped)
-    = button_to(dashboard_broadcast_path(resource), params: { broadcast: { desired_status: "stopped" } }, method: :patch, class: "btn btn-outline-danger", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
+    = button_to(dashboard_broadcast_path(@broadcast), params: { broadcast: { desired_status: "stopped" } }, method: :patch, class: "btn btn-outline-danger", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
       %i.icon.ti.ti-player-pause
       = translate(:"titles.broadcasts.stop")
 
   - if state_machine.updatable?
-    = render("shared/edit_resource_page_action", path: edit_dashboard_broadcast_path(resource))
+    = render("shared/edit_resource_page_action", path: edit_dashboard_broadcast_path(@broadcast))
 
     = render "shared/resource_related_links" do
-      = render("shared/destroy_resource_page_action", path: dashboard_broadcast_path(resource))
+      = render("shared/destroy_resource_page_action", path: dashboard_broadcast_path(@broadcast))
 
 .card
   .card-body
-    = show_for(resource) do |f|
+    = show_for(broadcast) do |f|
       = f.attribute :id
-      = f.attribute :status, value: resource.status.humanize
+      = f.attribute :status, value: broadcast.status.humanize
 
       = f.attribute :audio_file do
-        - if resource.audio_file.attached?
-          = audio_tag(resource.audio_file, controls: true)
+        - if broadcast.audio_file.attached?
+          = audio_tag(broadcast.audio_file, controls: true)
 
-      = f.attribute :created_at, value: local_time(resource.created_at)
-      = f.attribute :updated_at, value: local_time(resource.updated_at)
+      = f.attribute :created_at, value: local_time(broadcast.created_at)
+      = f.attribute :updated_at, value: local_time(broadcast.updated_at)
 
     .hr-text Beneficiary filters
 
@@ -38,13 +40,13 @@
       .col
         %label.form-label Value
 
-    - resource.beneficiary_filter.each do |field, filter|
+    - broadcast.beneficiary_filter.each do |field, filter|
       - operator, value = filter.first
-      .row.mb-3{id: "beneficiary_filter_#{field}"}
+      .row.mb-3{id: "beneficiary_filter_#{field.parameterize.underscore}"}
         .col
-          %input.field-name.form-control{type: "text", value: Beneficiary.human_attribute_name(field), readonly: true }
+          %input.field-name.form-control{type: "text", value: field, readonly: true }
         .col
-          %input.field-operator.form-control{type: "text", value: t(:"filter_operators.#{operator}"), readonly: true }
+          %input.field-operator.form-control{type: "text", value: operator, readonly: true }
         .col
           - if operator == "between"
             .row
