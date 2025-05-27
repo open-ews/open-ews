@@ -17,7 +17,7 @@
           %label.form-label Value
 
       = f.simple_fields_for(:beneficiary_filter, resource.beneficiary_filter) do |filter_form|
-        - filter_form.object.class.attributes.each do |(attribute_name, attribute_type)|
+        - filter_form.object.class.attributes.each do |attribute_name, attribute_type|
           - field = attribute_type.field_definition
           - next if CountryAddressData.supported?(current_account.iso_country_code) && attribute_type.is_a?(BroadcastForm::BeneficiaryAddressFilterFieldType)
 
