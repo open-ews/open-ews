@@ -106,7 +106,7 @@ GEM
     after_commit_everywhere (1.6.0)
       activerecord (>= 4.2)
       activesupport
-    appsignal (4.5.13)
+    appsignal (4.5.14)
       logger
       rack (>= 2.0.0)
     ast (2.4.3)
