@@ -14,7 +14,15 @@ class BroadcastForm::BeneficiaryFilter
   attribute :administrative_division_level_4_code, BroadcastForm::BeneficiaryAddressFilterFieldType.new(field_definition: FieldDefinitions::BeneficiaryFields.find("address.administrative_division_level_4_code"))
   attribute :administrative_division_level_4_name, BroadcastForm::BeneficiaryAddressFilterFieldType.new(field_definition: FieldDefinitions::BeneficiaryFields.find("address.administrative_division_level_4_name"))
 
+  delegate :human_attribute_name, to: :class
+
   def self.model_name
     ActiveModel::Name.new(self, nil, "BeneficiaryFilter")
+  end
+
+  def self.attributes
+    attribute_names.each_with_object({}) do |name, result|
+      result[name] = type_for_attribute(name)
+    end
   end
 end

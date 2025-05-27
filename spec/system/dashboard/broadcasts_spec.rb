@@ -45,7 +45,7 @@ RSpec.describe "Broadcasts" do
     end
   end
 
-  it "can update a broadcast", :js, :selenium_chrome do
+  it "can update a broadcast", :js do
     user = create(:user)
     broadcast = create(
       :broadcast,
@@ -63,8 +63,6 @@ RSpec.describe "Broadcasts" do
       select("Equals", from: "broadcast[beneficiary_filter][gender][operator]")
       select("M", from: "broadcast[beneficiary_filter][gender][value]")
     end
-
-    binding.pry
 
     click_on "Update Broadcast"
 

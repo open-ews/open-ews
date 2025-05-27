@@ -16,20 +16,19 @@
         .col
           %label.form-label Value
 
-      = f.simple_fields_for :beneficiary_filter do |filter_form|
-        - BroadcastForm::BeneficiaryFilter.attribute_names.each do |attribute_name|
-          - attribute_type = BroadcastForm::BeneficiaryFilter.type_for_attribute(attribute_name)
+      = f.simple_fields_for(:beneficiary_filter, resource.beneficiary_filter) do |filter_form|
+        - filter_form.object.class.attributes.each do |(attribute_name, attribute_type)|
           - field = attribute_type.field_definition
           - next if CountryAddressData.supported?(current_account.iso_country_code) && attribute_type.is_a?(BroadcastForm::BeneficiaryAddressFilterFieldType)
 
-          = filter_form.simple_fields_for(attribute_name, @resource.beneficiary_filter.attributes[attribute_name]) do |field_form|
+          = filter_form.simple_fields_for(attribute_name, filter_form.object.attributes[attribute_name]) do |field_form|
             .row{id: "beneficiary_filter_#{attribute_name}", data: { controller: "beneficiary-filter-field" }}
               -# Field name toggle
               .col
                 .input-group.mb-3
                   %span.input-group-text
                     %input.form-check-input.m-0{type: "checkbox", checked: field_form.object.present?, data: { "beneficiary-filter-field-target": "toggleElement", action:  "beneficiary-filter-field#toggle" }}
-                  %input.form-control{type: "text", value: BroadcastForm::BeneficiaryFilter.human_attribute_name(attribute_name), readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
+                  %input.form-control{type: "text", value: filter_form.object.human_attribute_name(attribute_name), readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
 
               -# Operator select
               .col
@@ -80,7 +79,7 @@
 
         - if CountryAddressData.supported?(current_account.iso_country_code)
           - address_field_name = CountryAddressData.address_field_name(current_account.iso_country_code)
-          - address_field_value = @resource.beneficiary_filter.attributes[address_field_name.to_s]
+          - address_field_value = resource.beneficiary_filter.attributes[address_field_name.to_s]
 
           .row{data: { controller: "beneficiary-addresses-filter-field" }}
             .col

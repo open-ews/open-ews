@@ -11,11 +11,7 @@ module Dashboard
     def edit
       super
 
-      broadcast = @resource
-      @resource = BroadcastForm.initialize_with(
-        broadcast,
-        beneficiary_filter: broadcast.beneficiary_filter
-      )
+      @resource = BroadcastForm.initialize_with(@resource)
     end
 
     def update

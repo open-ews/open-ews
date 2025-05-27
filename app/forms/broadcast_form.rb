@@ -9,8 +9,8 @@ class BroadcastForm
   attribute :channel
   attribute :audio_file
   attribute :beneficiary_filter,
-    BeneficiaryFilterType.new,
-    default: -> { BroadcastForm::BeneficiaryFilter.new }
+            BeneficiaryFilterType.new,
+            default: -> { BroadcastForm::BeneficiaryFilter.new }
 
   enumerize :channel, in: Broadcast::CHANNELS, default: :voice
 
@@ -23,12 +23,12 @@ class BroadcastForm
     ActiveModel::Name.new(self, nil, "Broadcast")
   end
 
-  def self.initialize_with(broadcast, beneficiary_filter:)
+  def self.initialize_with(broadcast)
     new(
       object: broadcast,
       channel: broadcast.channel,
       audio_file: broadcast.audio_file,
-      beneficiary_filter:
+      beneficiary_filter: broadcast.beneficiary_filter
     )
   end
 
