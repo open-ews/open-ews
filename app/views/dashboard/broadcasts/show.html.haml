@@ -55,7 +55,7 @@
               .col
                 %input.field-value.form-control{type: "text", value: value[1], readonly: true }
           - elsif value.is_a?(Array)
-            %select.input-tags.form-control{readonly: true, multiple: true}
+            %select.input-tags-readonly.form-control{readonly: true, multiple: true}
               - value.each do |v|
                 %option{selected: true}= v
           - else
