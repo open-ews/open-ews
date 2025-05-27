@@ -81,7 +81,14 @@
           - address_field_name = CountryAddressData.address_field_name(current_account.iso_country_code)
           - address_field_value = resource.beneficiary_filter.attributes[address_field_name.to_s]
 
-          .row{data: { controller: "beneficiary-addresses-filter-field" }}
+          .row{
+            data: {
+              controller: "beneficiary-addresses-filter-field",
+              "beneficiary-addresses-filter-field-data-value": treeview_address_data.to_json,
+              "beneficiary-addresses-filter-field-selected-value": Array(address_field_value&.value).to_json,
+              "beneficiary-addresses-filter-field-field-name-value": "broadcast[beneficiary_filter][#{address_field_name}]"
+            }
+          }
             .col
               .input-group.mb-3
                 %span.input-group-text
@@ -90,15 +97,12 @@
 
                 %input.form-control{name: "broadcast[beneficiary_filter][#{address_field_name}][operator]", type: "hidden", value: "in", data: { "beneficiary-addresses-filter-field-target": "operator" } }
 
+
+
               #addresses-treeview.collapse.overflow-auto{
                 class: ("show" if address_field_value.present?),
                 style: "max-height: 200px",
-                data: {
-                  "beneficiary-addresses-filter-field-target": "treeview",
-                  "beneficiary-addresses-filter-field-data-value": treeview_address_data.to_json,
-                  "beneficiary-addresses-filter-field-selected-value": Array(address_field_value&.value).to_json,
-                  "beneficiary-addresses-filter-field-field-name-value": "broadcast[beneficiary_filter][#{address_field_name}]"
-                }
+                data: { "beneficiary-addresses-filter-field-target": "treeview" }
               }
 
     .card-footer.text-end
