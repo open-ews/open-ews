@@ -26,15 +26,15 @@ const initializeJSComponents = () => {
     .forEach((element) => new tabler.bootstrap.Tooltip(element));
 
   [].slice
-    .call(document.querySelectorAll('select.list-select[data-beneficiary-filter-field-target="multiValue"]'))
+    .call(document.querySelectorAll('select.list-select'))
     .forEach((element) => new TomSelect(element));
 
   [].slice
-    .call(document.querySelectorAll('select.input-tags[data-beneficiary-filter-field-target="multiValue"]'))
+    .call(document.querySelectorAll('select.input-tags'))
     .forEach((element) => new TomSelect(element, { create: true }));
 
   [].slice
-    .call(document.querySelectorAll("select.input-tags[readonly]"))
+    .call(document.querySelectorAll("select.input-tags-readonly"))
     .forEach(
       (element) =>
         new TomSelect(element, {
@@ -47,6 +47,6 @@ const initializeJSComponents = () => {
     )
 }
 
-["turbo:render", "turbo:load", "turbo:after-stream-render"].forEach((e) =>
+["turbo:load", "turbo:after-stream-render"].forEach((e) =>
   document.addEventListener(e, initializeJSComponents),
 )
