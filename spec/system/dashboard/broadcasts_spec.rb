@@ -39,6 +39,7 @@ RSpec.describe "Broadcasts" do
 
     expect(page).to have_content("Broadcast was successfully created.")
     within("#beneficiary_filter_gender") do
+      expect(page).to have_field(with: "Gender")
       expect(page).to have_selector("input.field-name[value='Gender']")
       expect(page).to have_selector("input.field-operator[value='Equals']")
       expect(page).to have_selector("input.field-value[value='M']")
@@ -52,7 +53,8 @@ RSpec.describe "Broadcasts" do
       :broadcast,
       account: user.account,
       beneficiary_filter: {
-        disability_status: { eq: 'normal' }
+        disability_status: { eq: 'normal' },
+        administrative_division_level_3_code: { in: [ "120101" ] }
       }
     )
 
@@ -75,6 +77,11 @@ RSpec.describe "Broadcasts" do
       expect(page).to have_field(with: "Disability status")
       expect(page).to have_field(with: "Equals")
       expect(page).to have_field(with: "Disabled")
+    end
+    within("#beneficiary_filter_iso_language_code") do
+      expect(page).to have_field(with: "ISO language code")
+      expect(page).to have_field(with: "Equals")
+      expect(page).to have_field(with: "khm")
     end
   end
 

@@ -9,11 +9,14 @@ export default class extends Controller {
     fieldName: String,
     data: Array,
     selected: Array,
+    readOnly: { type: Boolean, default: false },
   }
 
   connect() {
     this.#initializeTreeview()
-    this.toggle()
+    if (!this.readOnlyValue) {
+      this.toggle()
+    }
   }
 
   toggle() {
@@ -34,6 +37,7 @@ export default class extends Controller {
       },
       selection: {
         mode: "checkbox",
+        disableDirectDeselection: true,
       },
       data: this.dataValue,
     })
@@ -48,6 +52,13 @@ export default class extends Controller {
       .each((n) => {
         const node = n.itree.ref
         const checkbox = node.querySelector('input[type="checkbox"]')
+        const originalLabel = node.querySelector("a.title")
+        const parent = originalLabel.parentNode
+
+        const label = document.createElement("a")
+        label.className = "title icon"
+        label.innerHTML = originalLabel.innerHTML
+        parent.replaceChild(label, originalLabel)
 
         checkbox.setAttribute("name", `${this.fieldNameValue}[value][]`)
         checkbox.setAttribute("value", node.getAttribute("data-uid"))
@@ -56,6 +67,23 @@ export default class extends Controller {
           n.check()
         }
       })
+
+    this.tree.available().each((n) => {
+      const node = n.itree.ref
+      const checkbox = node.querySelector('input[type="checkbox"]')
+
+      if (checkbox.checked && !checkbox.indeterminate) {
+        console.log(checkbox)
+      }
+
+      if (!checkbox.checked && !checkbox.indeterminate) {
+        n.hide()
+      } else if (this.readOnlyValue) {
+        n.expand()
+        checkbox.disabled = true
+        checkbox.readonly = true
+      }
+    })
   }
 
   #clearSelections() {

@@ -15,25 +15,21 @@ addEventListener("turbo:before-stream-render", (event) => {
 })
 
 const initializeJSComponents = () => {
-  [].slice
+  ;[].slice
     .call(document.querySelectorAll("time[data-behavior~=local-time]"))
     .forEach(function (element) {
       element.textContent = moment(element.textContent).format("lll (Z)")
-    });
-
-  [].slice
+    })
+  ;[].slice
     .call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    .forEach((element) => new tabler.bootstrap.Tooltip(element));
-
-  [].slice
-    .call(document.querySelectorAll('select.list-select'))
-    .forEach((element) => new TomSelect(element));
-
-  [].slice
-    .call(document.querySelectorAll('select.input-tags'))
-    .forEach((element) => new TomSelect(element, { create: true }));
-
-  [].slice
+    .forEach((element) => new tabler.bootstrap.Tooltip(element))
+  ;[].slice
+    .call(document.querySelectorAll("select.list-select"))
+    .forEach((element) => new TomSelect(element))
+  ;[].slice
+    .call(document.querySelectorAll("select.input-tags"))
+    .forEach((element) => new TomSelect(element, { create: true }))
+  ;[].slice
     .call(document.querySelectorAll("select.input-tags-readonly"))
     .forEach(
       (element) =>
@@ -47,6 +43,6 @@ const initializeJSComponents = () => {
     )
 }
 
-["turbo:load", "turbo:after-stream-render"].forEach((e) =>
-  document.addEventListener(e, initializeJSComponents),
+;["turbo:load", "turbo:after-stream-render"].forEach((e) =>
+  document.addEventListener(e, initializeJSComponents)
 )

@@ -57,6 +57,23 @@
           - elsif value.is_a?(Array)
             %select.input-tags-readonly.form-control{readonly: true, multiple: true}
               - value.each do |v|
-                %option{selected: true}= v
+                %option{selected: true}
+                  = v
           - else
             %input.field-value.form-control{type: "text", value: value, readonly: true }
+
+    .row.mb-3{
+      id: "beneficiary_filter_address_administrative_division_level_3",
+      data: {
+        controller: "beneficiary-addresses-filter-field",
+        "beneficiary-addresses-filter-field-data-value": treeview_address_data.to_json,
+        "beneficiary-addresses-filter-field-read-only-value": true,
+        "beneficiary-addresses-filter-field-selected-value": Array(@broadcast.beneficiary_filter["address.administrative_division_level_3_code"]["in"]).to_json,
+        "beneficiary-addresses-filter-field-field-name-value": "broadcast[beneficiary_filter][foobar]"
+      }
+    }
+      #addresses-treeview.collapse.overflow-auto{
+        class: "show",
+        style: "max-height: 200px",
+        data: { "beneficiary-addresses-filter-field-target": "treeview" }
+      }
