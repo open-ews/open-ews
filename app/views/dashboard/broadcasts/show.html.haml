@@ -43,7 +43,7 @@
       - next if filter.address_data_field.present? && filter.address_fields.values.include?(field)
       .row.mb-3{id: "beneficiary_filter_#{field.name}"}
         .col
-          %input.field-name.form-control{type: "text", value: field.human_name(namespace: current_account.iso_country_code), readonly: true }
+          %input.field-name.form-control{type: "text", value: field.field_definition.human_name(namespace: current_account.iso_country_code), readonly: true }
         .col
           %input.field-operator.form-control{type: "text", value: field.operator.human_name, readonly: true }
         .col
@@ -64,7 +64,7 @@
     - if filter.address_data_field.present?
       .row{id: "beneficiary_filter_#{filter.address_data_field.name}"}
         .col
-          %input.field-name.form-control{type: "text", value: filter.address_data_field.human_name(namespace: current_account.iso_country_code), readonly: true }
+          %input.field-name.form-control{type: "text", value: filter.address_data_field.field_definition.human_name(namespace: current_account.iso_country_code), readonly: true }
         .col
           %input.field-operator.form-control{type: "text", value: filter.address_data_field.operator.human_name, readonly: true }
 

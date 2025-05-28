@@ -18,7 +18,7 @@
 
       = f.simple_fields_for(:beneficiary_filter, @broadcast.beneficiary_filter) do |filter_form|
         - filter_form.object.class.form_attributes.each do |attribute_name, attribute_type|
-          - field = FieldDefinitions::BeneficiaryFields.find_by!(name: attribute_name)
+          - field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name: attribute_name)
           - next if CountryAddressData.supported?(current_account.iso_country_code) && attribute_type.form == BroadcastForm::BeneficiaryFilterForm::AddressFieldForm
 
           = filter_form.simple_fields_for(attribute_name, filter_form.object.attributes[attribute_name]) do |field_form|
@@ -29,14 +29,14 @@
                 .input-group.mb-3
                   %span.input-group-text
                     %input.form-check-input.m-0{id: "#{element_id}_enabled", type: "checkbox", checked: field_form.object.present?, data: { "beneficiary-filter-field-target": "toggleElement", action: "beneficiary-filter-field#toggle" }}
-                  %input.form-control{type: "text", value: filter_form.object.human_attribute_name(attribute_name), readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
+                  %input.form-control{type: "text", value: field_definition.human_name(namespace: current_account.iso_country_code), readonly: true, data: { "beneficiary-filter-field-target": "fieldName" } }
 
               -# Operator select
               .col
                 = field_form.input :operator,
                   label: false,
                   as: :select,
-                  collection: field.operator_options_for_select,
+                  collection: field_definition.operator_options_for_select,
                   required: true,
                   input_html: { data: { "beneficiary-filter-field-target": "operator", action:  "beneficiary-filter-field#operatorChanged" } }
 
@@ -44,34 +44,34 @@
               .col
                 .value-input.hidden
                   - base_options = { label: false, required: true, input_html: { data: { "beneficiary-filter-field-target": "value" } }}
-                  - case field.schema
+                  - case field_definition.schema
                   - when FieldDefinitions::FilterSchema::ListType
-                    = field_form.input(:value, as: :select, collection: field.schema.options_for_select, **base_options)
+                    = field_form.input(:value, as: :select, collection: field_definition.schema.options_for_select, **base_options)
                   - when FieldDefinitions::FilterSchema::StringType
-                    = field_form.input(:value, as: :string, **base_options.deep_merge(input_html: { class: "w-100", minlength: field.schema.options[:length], maxlength: field.schema.options[:length] }))
+                    = field_form.input(:value, as: :string, **base_options.deep_merge(input_html: { class: "w-100", minlength: field_definition.schema.options[:length], maxlength: field_definition.schema.options[:length] }))
                   - when FieldDefinitions::FilterSchema::ValueType
                     - if field_form.object.present? && field_form.object.value.is_a?(Array)
-                      = field_form.input(:value, as: field.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: '' }))
+                      = field_form.input(:value, as: field_definition.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: '' }))
                     - else
-                      = field_form.input(:value, as: field.schema.value_type, html5: true, **base_options)
+                      = field_form.input(:value, as: field_definition.schema.value_type, html5: true, **base_options)
 
                 -# NOTE: `between` operator is used only for `value` field type.
-                - if field.schema.is_a?(FieldDefinitions::FilterSchema::ValueType)
+                - if field_definition.schema.is_a?(FieldDefinitions::FilterSchema::ValueType)
                   - base_options = { label: false, required: true, wrapper: false, input_html: { name: "broadcast[beneficiary_filter][#{attribute_name}][value][]", data: { "beneficiary-filter-field-target": "betweenValue" } }}
                   - existing_field_values = field_form.object&.operator == "between" ? field_form.object.value : []
                   .between-value-input.hidden
                     .row
                       .col
-                        = field_form.input(:value, as: field.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[0] }))
+                        = field_form.input(:value, as: field_definition.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[0] }))
                       .col
-                        = field_form.input(:value, as: field.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[1] }))
+                        = field_form.input(:value, as: field_definition.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[1] }))
 
                 -# NOTE: this is used for multi value fields from the lists or let the user enter values(similar to tags) manually.
                 .multi-value-input.hidden
                   - selected_values = FieldDefinitions::Field::MULTIPLE_SELECTION_OPERATORS.include?(field_form.object&.operator) ? field_form.object.value : []
                   - base_options = { label: false, required: true, include_hidden: false, multiple: true, selected: selected_values }
-                  - if field.schema.is_a?(FieldDefinitions::FilterSchema::ListType)
-                    = field_form.input(:value, as: :select, collection: field.schema.options_for_select, input_html: { class: "list-select", data: { "beneficiary-filter-field-target": "multiValue" } }, **base_options)
+                  - if field_definition.schema.is_a?(FieldDefinitions::FilterSchema::ListType)
+                    = field_form.input(:value, as: :select, collection: field_definition.schema.options_for_select, input_html: { class: "list-select", data: { "beneficiary-filter-field-target": "multiValue" } }, **base_options)
                   - else
                     = field_form.input(:value, as: :select, collection: selected_values, input_html: { class: "input-tags", data: { "beneficiary-filter-field-target": "multiValue" } }, **base_options)
 
@@ -80,6 +80,7 @@
 
         - if CountryAddressData.supported?(current_account.iso_country_code)
           - address_field_name = CountryAddressData.address_field_name(current_account.iso_country_code)
+          - field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name: address_field_name)
           = filter_form.simple_fields_for(address_field_name, filter_form.object.attributes[address_field_name.to_s]) do |address_field|
             - element_id = address_field.object_name.parameterize.underscore
             .row{
@@ -95,7 +96,7 @@
                 .input-group.mb-3
                   %span.input-group-text
                     %input.form-check-input.m-0{id: "#{element_id}_enabled", type: "checkbox", checked: address_field.object&.value.present?, data: { "beneficiary-addresses-filter-field-target": "toggleElement", action:  "beneficiary-addresses-filter-field#toggle", "bs-toggle": "collapse", "bs-target": "#addresses-treeview" }}
-                  %input.form-control{type: "text", value: filter_form.object.human_attribute_name("#{current_account.iso_country_code.downcase}.#{address_field_name}"), readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
+                  %input.form-control{type: "text", value: field_definition.human_name(namespace: current_account.iso_country_code), readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
 
                   = address_field.input(:operator, as: :hidden, input_html: { value: "in", data: { "beneficiary-addresses-filter-field-target": "operator" }})
 

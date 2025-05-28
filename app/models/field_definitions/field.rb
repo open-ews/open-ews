@@ -52,6 +52,11 @@ module FieldDefinitions
       end
     end
 
+    def human_name(**options)
+      translation_key = [ options[:namespace]&.downcase, name ].compact.join(".")
+      ApplicationRecord.human_attribute_name(translation_key)
+    end
+
     def operators
       schema.schema_definition.key_map.map do |key|
         key.name

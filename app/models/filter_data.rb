@@ -1,10 +1,5 @@
 class FilterData
-  Field = Data.define(:name, :operator, :value, :field_definition) do
-    def human_name(**options)
-      translation_key = [ options[:namespace]&.downcase, field_definition.name ].compact.join(".")
-      ApplicationRecord.human_attribute_name(translation_key)
-    end
-  end
+  Field = Data.define(:name, :operator, :value, :field_definition)
 
   Operator = Data.define(:name) do
     def human_name
