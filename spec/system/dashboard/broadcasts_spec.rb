@@ -99,23 +99,20 @@ RSpec.describe "Broadcasts" do
   end
 
   def select_filter(name, operator, **options)
-    filter_id = "beneficiary_filter_#{name.parameterize.underscore}"
+    filter_id = "broadcast_beneficiary_filter_#{name.parameterize.underscore}"
 
     within("##{filter_id}") do
       if options.fetch(:enable_filter, true)
-        within("##{filter_id}_field") do
-          page.find("input[type='checkbox']").check
-        end
+        check("#{filter_id}_enabled")
       end
-      within("##{filter_id}_operator") do
-        page.find_field(type: :select).find(:option, operator).select_option
-      end
-      within("##{filter_id}_value") do
-        if options[:select].present?
-          page.find_field(type: :select).find(:option, options.fetch(:select)).select_option
-        elsif options[:fill_in].present?
-          page.find_field(type: :text).set(options.fetch(:fill_in))
-        end
+
+      select(operator, from: "#{filter_id}_operator")
+
+      value_input_id = "#{filter_id}_value"
+      if options[:select].present?
+        select(options.fetch(:select), from: value_input_id)
+      elsif options[:fill_in].present?
+        fill_in(value_input_id, with: options.fetch(:fill_in))
       end
     end
   end

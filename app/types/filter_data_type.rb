@@ -6,15 +6,18 @@ class FilterDataType < ActiveRecord::Type::Json
     super(**options)
   end
 
+  def deserialize(value)
+    cast(super(value))
+  end
+
   def cast(value)
     return value if value.is_a?(FilterData)
 
-    fields = (super || {}).each_with_object([]) do |(key, filter_options), result|
+    fields = (value || {}).each_with_object({}) do |(key, filter_options), result|
       operator, value = filter_options.first
-
       field_definition = field_definitions.find_by!(path: key)
 
-      result << FilterData::Field.new(
+      result[field_definition.name] = FilterData::Field.new(
         field_definition:,
         name: field_definition.name,
         human_name: field_definition.human_name,
@@ -33,9 +36,9 @@ class FilterDataType < ActiveRecord::Type::Json
   end
 
   def serialize(value)
-    return value unless value.is_a?(FilterData)
+    return super(value) unless value.is_a?(FilterData)
 
-    result = value.fields.each_with_object({}) do |field, result|
+    result = value.fields.each_with_object({}) do |(_name, field), result|
       result[field.field_definition.path] = { field.operator.name => field.value.actual_value }
     end
 

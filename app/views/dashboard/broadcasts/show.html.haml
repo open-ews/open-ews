@@ -19,7 +19,7 @@
   .card-body
     = show_for(@broadcast) do |f|
       = f.attribute :id
-      = f.attribute :status, value: broadcast.status.humanize
+      = f.attribute :status, value: @broadcast.status.humanize
 
       = f.attribute :audio_file do
         - if @broadcast.audio_file.attached?
@@ -39,7 +39,7 @@
         %label.form-label Value
 
     - filter = BeneficiaryFilterData.new(@broadcast.beneficiary_filter, address_data_field_name: CountryAddressData.address_field_name(current_account.iso_country_code))
-    - filter.fields.each do |field|
+    - filter.fields.each do |_name, field|
       - next if filter.address_data_field.present? && filter.address_fields.include?(field)
       .row.mb-3{id: "beneficiary_filter_#{field.name}"}
         .col
@@ -53,7 +53,7 @@
                 %input.field-value.form-control{type: "text", value: field.value.actual_value[0], readonly: true }
               .col
                 %input.field-value.form-control{type: "text", value: field.value.actual_value[1], readonly: true }
-          - elsif field.value.human.is_a?(Array)
+          - elsif field.value.human_value.is_a?(Array)
             %select.input-tags-readonly.form-control{readonly: true, multiple: true}
               - field.value.human_value.each do |value|
                 %option{selected: true}

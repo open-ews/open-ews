@@ -7,7 +7,7 @@ class BeneficiaryFilterData < SimpleDelegator
   end
 
   def address_fields
-    @address_fields ||= fields.select { it.field_definition.prefix&.address? }
+    @address_fields ||= fields.select { |_name, field| field.field_definition.prefix&.address? }
   end
 
   def address_data_field

@@ -20,13 +20,8 @@ module Dashboard
 
     def update
       broadcast = scope.find(params[:id])
-      @resource =  BroadcastForm.new(
-        object: broadcast,
-        **permitted_params
-      )
-
+      @resource = BroadcastForm.new(object: broadcast, **permitted_params)
       @resource.save
-
       respond_with(:dashboard, @resource)
 
       # UpdateBroadcast.call()
@@ -61,15 +56,7 @@ module Dashboard
     end
 
     def permitted_params
-      permitted = params.fetch(:broadcast, {}).permit(:audio_file, :channel, :desired_status)
-
-      if params.dig(:broadcast, :beneficiary_filter).present?
-        permitted[:beneficiary_filter] = BroadcastForm::BeneficiaryFilter.new(
-          params.dig(:broadcast, :beneficiary_filter).permit!
-        )
-      end
-
-      permitted
+      params.require(:broadcast).permit(:audio_file, :channel, :desired_status, beneficiary_filter: {})
     end
 
     def broadcast_summary

@@ -16,6 +16,10 @@ module FieldDefinitions
           list_options: options
         )
       end
+
+      def options_for_select
+        options.fetch(:list_options).map { [ it.text, it ] }
+      end
     end
   end
 end
