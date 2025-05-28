@@ -1,9 +1,10 @@
 class FormType < ActiveRecord::Type::Value
-  attr_reader :form
+  attr_reader :form, :options
 
-  def initialize(form:, **options)
+  def initialize(form:, options: {}, **)
     @form = form
-    super(**options)
+    @options = options
+    super(**)
   end
 
   def cast(value)

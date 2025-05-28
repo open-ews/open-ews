@@ -19,22 +19,15 @@ RSpec.describe "Broadcasts" do
     expect(page).not_to have_content_tag_for(other_broadcast)
   end
 
-  it "can create a broadcast attaching an audio file", :js do
+  it "can create a broadcast attaching an audio file", :js, :selenium_chrome do
     user = create(:user)
 
     sign_in(user)
     visit new_dashboard_broadcast_path
 
     select("Voice", from: "Channel")
-    attach_file("Audio file", Rails.root + file_fixture("test.mp3"))
-
-    # Add a beneficiary filter
-    within("#beneficiary_filter_gender") do
-      check(class: "form-check-input")
-      select("Equals", from: "broadcast[beneficiary_filter][gender][operator]")
-      select("M", from: "broadcast[beneficiary_filter][gender][value]")
-    end
-
+    attach_file("Audio file", file_fixture("test.mp3"))
+    select_filter("Gender", "Equals", select: "Male")
     click_on("Create Broadcast")
 
     expect(page).to have_content("Broadcast was successfully created.")

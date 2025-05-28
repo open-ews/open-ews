@@ -10,6 +10,7 @@ class BroadcastForm
     attribute :date_of_birth, FormType.new(form: FilterFieldForm)
     attribute :iso_language_code, FormType.new(form: FilterFieldForm)
     attribute :iso_region_code, FormType.new(form: FilterFieldForm)
+    attribute :iso_country_code, FormType.new(form: FilterFieldForm, options: { hidden: true })
     attribute :administrative_division_level_2_code, FormType.new(form: AddressFieldForm)
     attribute :administrative_division_level_2_name, FormType.new(form: AddressFieldForm)
     attribute :administrative_division_level_3_code, FormType.new(form: AddressFieldForm)
@@ -23,9 +24,12 @@ class BroadcastForm
       ActiveModel::Name.new(self, nil, "BeneficiaryFilter")
     end
 
-    def self.attributes
+    def self.form_attributes
       attribute_names.each_with_object({}) do |name, result|
-        result[name] = type_for_attribute(name)
+        type = type_for_attribute(name)
+        next if type.options[:hidden]
+
+        result[name] = type
       end
     end
   end
@@ -42,8 +46,8 @@ class BroadcastForm
 
       fields = value.attributes.each_with_object({}) do |(name, filter), result|
         next if filter.blank?
-        field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name:)
 
+        field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name:)
         result[field_definition.name] = FilterData::Field.new(
           field_definition:,
           name: field_definition.name,
@@ -67,8 +71,8 @@ class BroadcastForm
     def cast_form_params(params)
       params.each_with_object({}) do |(name, filter), result|
         result[name] = {
-          operator: filter["operator"],
-          value: filter["value"]
+          operator: filter.with_indifferent_access.fetch(:operator),
+          value: filter.with_indifferent_access.fetch(:value)
         }
       end
     end
@@ -88,11 +92,11 @@ class BroadcastForm
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  attribute :object, default: -> { Broadcast.new }
-
+  attribute :account, default: -> { Account.new }
   attribute :channel
   attribute :audio_file
   attribute :beneficiary_filter, BeneficiaryFilterFormType.new, default: -> { BeneficiaryFilterForm.new }
+  attribute :object, default: -> { Broadcast.new }
 
   enumerize :channel, in: Broadcast::CHANNELS, default: :voice
 
@@ -114,11 +118,20 @@ class BroadcastForm
     )
   end
 
+  def beneficiary_filter=(value)
+    super
+    beneficiary_filter.iso_country_code ||= {
+      operator: "eq",
+      value: account.iso_country_code
+    }
+  end
+
   def save
     return false if invalid?
 
     object.channel = channel
     object.audio_file = audio_file
+    object.account ||= account
     object.beneficiary_filter = BeneficiaryFilterFormType.new.serialize(beneficiary_filter)
 
     object.save!

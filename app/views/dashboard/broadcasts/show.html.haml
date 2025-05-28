@@ -39,8 +39,8 @@
         %label.form-label Value
 
     - filter = BeneficiaryFilterData.new(@broadcast.beneficiary_filter, address_data_field_name: CountryAddressData.address_field_name(current_account.iso_country_code))
-    - filter.fields.each do |_name, field|
-      - next if filter.address_data_field.present? && filter.address_fields.include?(field)
+    - filter.fields.values.each do |field|
+      - next if filter.address_data_field.present? && filter.address_fields.values.include?(field)
       .row.mb-3{id: "beneficiary_filter_#{field.name}"}
         .col
           %input.field-name.form-control{type: "text", value: field.human_name, readonly: true }

@@ -1,5 +1,5 @@
 .card
-  = simple_form_for([:dashboard, resource]) do |f|
+  = simple_form_for([:dashboard, @broadcast]) do |f|
     .card-body
       .row
         .col
@@ -16,8 +16,8 @@
         .col
           %label.form-label Value
 
-      = f.simple_fields_for(:beneficiary_filter, resource.beneficiary_filter) do |filter_form|
-        - filter_form.object.class.attributes.each do |attribute_name, attribute_type|
+      = f.simple_fields_for(:beneficiary_filter, @broadcast.beneficiary_filter) do |filter_form|
+        - filter_form.object.class.form_attributes.each do |attribute_name, attribute_type|
           - field = FieldDefinitions::BeneficiaryFields.find_by!(name: attribute_name)
           - next if CountryAddressData.supported?(current_account.iso_country_code) && attribute_type.form == BroadcastForm::BeneficiaryFilterForm::AddressFieldForm
 
