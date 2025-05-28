@@ -38,7 +38,7 @@ RSpec.describe "Broadcasts" do
     end
   end
 
-  it "can update a broadcast", :js do
+  it "can update a broadcast", :js, :selenium_chrome do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
     broadcast = create(

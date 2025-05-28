@@ -80,13 +80,13 @@
 
         - if CountryAddressData.supported?(current_account.iso_country_code)
           - address_field_name = CountryAddressData.address_field_name(current_account.iso_country_code)
-          - address_field_value = filter_form.object.attributes[address_field_name]
+          - address_field_value = filter_form.object.attributes[address_field_name.to_s].value
 
           .row{
             data: {
               controller: "beneficiary-addresses-filter-field",
               "beneficiary-addresses-filter-field-data-value": treeview_address_data.to_json,
-              "beneficiary-addresses-filter-field-selected-value": Array(address_field_value&.actual_value).to_json,
+              "beneficiary-addresses-filter-field-selected-value": Array(address_field_value).to_json,
               "beneficiary-addresses-filter-field-field-name-value": "broadcast[beneficiary_filter][#{address_field_name}]"
             }
           }
