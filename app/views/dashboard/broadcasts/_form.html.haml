@@ -22,7 +22,7 @@
           - next if CountryAddressData.supported?(current_account.iso_country_code) && attribute_type.form == BroadcastForm::BeneficiaryFilterForm::AddressFieldForm
 
           = filter_form.simple_fields_for(attribute_name, filter_form.object.attributes[attribute_name]) do |field_form|
-            - element_id = "broadcast_beneficiary_filter_#{attribute_name}"
+            - element_id = field_form.object_name.parameterize.underscore
             .row{id: element_id, data: { controller: "beneficiary-filter-field" }}
               -# Field name toggle
               .col
@@ -80,30 +80,30 @@
 
         - if CountryAddressData.supported?(current_account.iso_country_code)
           - address_field_name = CountryAddressData.address_field_name(current_account.iso_country_code)
-          - address_field_value = filter_form.object.attributes[address_field_name.to_s]&.value
-
-          .row{
-            data: {
-              controller: "beneficiary-addresses-filter-field",
-              "beneficiary-addresses-filter-field-data-value": treeview_address_data.to_json,
-              "beneficiary-addresses-filter-field-selected-value": Array(address_field_value).to_json,
-              "beneficiary-addresses-filter-field-field-name-value": "broadcast[beneficiary_filter][#{address_field_name}]"
+          = filter_form.simple_fields_for(address_field_name, filter_form.object.attributes[address_field_name.to_s]) do |address_field|
+            - element_id = address_field.object_name.parameterize.underscore
+            .row{
+              id: element_id,
+              data: {
+                controller: "beneficiary-addresses-filter-field",
+                "beneficiary-addresses-filter-field-data-value": treeview_address_data.to_json,
+                "beneficiary-addresses-filter-field-selected-value": Array(address_field.object&.value).to_json,
+                "beneficiary-addresses-filter-field-field-name-value": "broadcast[beneficiary_filter][#{address_field_name}]"
+              }
             }
-          }
-            .col
-              .input-group.mb-3
-                %span.input-group-text
-                  %input.form-check-input.m-0{type: "checkbox", checked: address_field_value.present?, data: { "beneficiary-addresses-filter-field-target": "toggleElement", action:  "beneficiary-addresses-filter-field#toggle", "bs-toggle": "collapse", "bs-target": "#addresses-treeview" }}
-                %input.form-control{type: "text", value: Beneficiary.human_attribute_name("locations"), readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
+              .col
+                .input-group.mb-3
+                  %span.input-group-text
+                    %input.form-check-input.m-0{id: "#{element_id}_enabled", type: "checkbox", checked: address_field.object&.value.present?, data: { "beneficiary-addresses-filter-field-target": "toggleElement", action:  "beneficiary-addresses-filter-field#toggle", "bs-toggle": "collapse", "bs-target": "#addresses-treeview" }}
+                  %input.form-control{type: "text", value: filter_form.object.human_attribute_name("#{current_account.iso_country_code.downcase}.#{address_field_name}"), readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
 
-                = filter_form.simple_fields_for(address_field_name, filter_form.object.attributes[address_field_name]) do |address_field|
                   = address_field.input(:operator, as: :hidden, input_html: { value: "in", data: { "beneficiary-addresses-filter-field-target": "operator" }})
 
-              #addresses-treeview.collapse.overflow-auto{
-                class: ("show" if address_field_value.present?),
-                style: "max-height: 200px",
-                data: { "beneficiary-addresses-filter-field-target": "treeview" }
-              }
+                #addresses-treeview.collapse.overflow-auto{
+                  class: ("show" if address_field.object&.value.present?),
+                  style: "max-height: 200px",
+                  data: { "beneficiary-addresses-filter-field-target": "treeview" }
+                }
 
     .card-footer.text-end
       = f.button :submit, class: 'btn btn-primary'

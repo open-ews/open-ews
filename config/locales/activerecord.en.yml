@@ -2,3 +2,5 @@
 en:
   attributes:
     iso_country_code: Country
+    kh:
+      administrative_division_level_3_code: Commune

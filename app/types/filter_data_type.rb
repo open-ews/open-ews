@@ -20,10 +20,8 @@ class FilterDataType < ActiveRecord::Type::Json
       result[field_definition.name] = FilterData::Field.new(
         field_definition:,
         name: field_definition.name,
-        human_name: ApplicationRecord.human_attribute_name(field_definition.name),
         operator: FilterData::Operator.new(
-          name: operator,
-          human_name: I18n.t("filter_operators.#{operator}")
+          name: operator
         ),
         value: FilterData::Value.new(
           actual_value: value,

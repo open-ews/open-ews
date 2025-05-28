@@ -51,14 +51,12 @@ class BroadcastForm
         result[field_definition.name] = FilterData::Field.new(
           field_definition:,
           name: field_definition.name,
-          human_name: field_definition.human_name,
           operator: FilterData::Operator.new(
             name: filter.operator,
-            human_name: filter.operator,
           ),
           value: FilterData::Value.new(
             actual_value: filter.value,
-            human_value: filter.value
+            human_value: nil
           )
         )
       end
@@ -116,14 +114,6 @@ class BroadcastForm
       audio_file: broadcast.audio_file,
       beneficiary_filter: broadcast.beneficiary_filter
     )
-  end
-
-  def beneficiary_filter=(value)
-    super
-    beneficiary_filter.iso_country_code ||= {
-      operator: "eq",
-      value: account.iso_country_code
-    }
   end
 
   def save
