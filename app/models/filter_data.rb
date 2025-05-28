@@ -5,7 +5,7 @@ class FilterData
 
   attr_reader :fields
 
-  def initialize(**options)
-    @fields = options.fetch(:fields)
+  def initialize(fields:)
+    @fields = fields
   end
 end

@@ -9,7 +9,7 @@ class FilterDataType < ActiveRecord::Type::Json
   def cast(value)
     return value if value.is_a?(FilterData)
 
-    fields = (value || {}).each_with_object([]) do |(key, filter_options), result|
+    fields = (super || {}).each_with_object([]) do |(key, filter_options), result|
       operator, value = filter_options.first
 
       field_definition = field_definitions.find_by!(path: key)
@@ -35,8 +35,10 @@ class FilterDataType < ActiveRecord::Type::Json
   def serialize(value)
     return value unless value.is_a?(FilterData)
 
-    value.fields.each_with_object({}) do |field, result|
+    result = value.fields.each_with_object({}) do |field, result|
       result[field.field_definition.path] = { field.operator.name => field.value.actual_value }
     end
+
+    super(result)
   end
 end

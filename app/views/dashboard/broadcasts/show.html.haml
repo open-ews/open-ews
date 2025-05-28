@@ -1,5 +1,3 @@
-- broadcast = BroadcastDecorator.new(@broadcast)
-
 = content_for(:page_actions) do
   - state_machine = BroadcastStateMachine.new(@broadcast.status)
   - if state_machine.may_transition_to?(:running)
@@ -19,16 +17,16 @@
 
 .card
   .card-body
-    = show_for(broadcast) do |f|
+    = show_for(@broadcast) do |f|
       = f.attribute :id
       = f.attribute :status, value: broadcast.status.humanize
 
       = f.attribute :audio_file do
-        - if broadcast.audio_file.attached?
-          = audio_tag(broadcast.audio_file, controls: true)
+        - if @broadcast.audio_file.attached?
+          = audio_tag(@broadcast.audio_file, controls: true)
 
-      = f.attribute :created_at, value: local_time(broadcast.created_at)
-      = f.attribute :updated_at, value: local_time(broadcast.updated_at)
+      = f.attribute :created_at, value: local_time(@broadcast.created_at)
+      = f.attribute :updated_at, value: local_time(@broadcast.updated_at)
 
     .hr-text Beneficiary filters
 
@@ -40,36 +38,37 @@
       .col
         %label.form-label Value
 
-    - broadcast.beneficiary_filter.fields.each do |field|
-      - next if broadcast.beneficiary_filter.display_address_tree? && broadcast.beneficiary_filter.address_fields.include?(field)
-      .row.mb-3{id: "beneficiary_filter_#{field.name.parameterize.underscore}"}
+    - filter = BeneficiaryFilterData.new(@broadcast.beneficiary_filter, address_data_field_name: CountryAddressData.address_field_name(current_account.iso_country_code))
+    - filter.fields.each do |field|
+      - next if filter.address_data_field.present? && filter.address_fields.include?(field)
+      .row.mb-3{id: "beneficiary_filter_#{field.name}"}
         .col
-          %input.field-name.form-control{type: "text", value: field.human, readonly: true }
+          %input.field-name.form-control{type: "text", value: field.human_name, readonly: true }
         .col
-          %input.field-operator.form-control{type: "text", value: field.operator.human, readonly: true }
+          %input.field-operator.form-control{type: "text", value: field.operator.human_name, readonly: true }
         .col
           - if field.operator.name == "between"
             .row
               .col
-                %input.field-value.form-control{type: "text", value: field.value.human[0], readonly: true }
+                %input.field-value.form-control{type: "text", value: field.value.actual_value[0], readonly: true }
               .col
-                %input.field-value.form-control{type: "text", value: field.value.human[1], readonly: true }
+                %input.field-value.form-control{type: "text", value: field.value.actual_value[1], readonly: true }
           - elsif field.value.human.is_a?(Array)
             %select.input-tags-readonly.form-control{readonly: true, multiple: true}
-              - field.value.human.each do |value|
+              - field.value.human_value.each do |value|
                 %option{selected: true}
                   = value
           - else
-            %input.field-value.form-control{type: "text", value: field.value.human, readonly: true }
+            %input.field-value.form-control{type: "text", value: field.value.human_value, readonly: true }
 
-    - if broadcast.beneficiary_filter.display_address_tree?
+    - if filter.address_data_field.present?
       .row.mb-3{
         id: "beneficiary_filter_address_administrative_division_level_3",
         data: {
           controller: "beneficiary-addresses-filter-field",
           "beneficiary-addresses-filter-field-data-value": treeview_address_data.to_json,
           "beneficiary-addresses-filter-field-read-only-value": true,
-          "beneficiary-addresses-filter-field-selected-value": Array(broadcast.beneficiary_filter.address_data_field.value.actual).to_json,
+          "beneficiary-addresses-filter-field-selected-value": Array(filter.address_data_field.value.actual_value).to_json,
           "beneficiary-addresses-filter-field-field-name-value": "broadcast[beneficiary_filter][foobar]"
         }
       }
