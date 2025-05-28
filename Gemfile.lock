@@ -120,7 +120,7 @@ GEM
     after_commit_everywhere (1.6.0)
       activerecord (>= 4.2)
       activesupport
-    appsignal (4.5.13)
+    appsignal (4.5.14)
       logger
       rack (>= 2.0.0)
     ast (2.4.3)
@@ -374,8 +374,8 @@ GEM
     pg (1.5.9)
     pg_query (6.1.0)
       google-protobuf (>= 3.25.3)
-    pghero (3.6.2)
-      activerecord (>= 6.1)
+    pghero (3.7.0)
+      activerecord (>= 7.1)
     phony (2.22.2)
     pp (0.6.2)
       prettyprint

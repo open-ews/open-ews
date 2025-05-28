@@ -180,6 +180,7 @@ FactoryBot.define do
 
   factory :account do
     name { "PIN 1294" }
+    iso_country_code { "KH" }
 
     trait :configured_for_broadcasts do
       somleng_account_sid { generate(:somleng_account_sid) }

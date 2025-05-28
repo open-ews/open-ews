@@ -3,7 +3,7 @@ class ApplicationSeeder
   USER_EMAIL = "user@example.com".freeze
 
   def seed!
-    account = Account.first_or_create!(name: "My Account")
+    account = Account.first_or_create!(name: "My Account", iso_country_code: "KH")
     access_token = account.access_tokens.first_or_create!(created_by: account)
 
     user = create_user(account:)
