@@ -19,7 +19,7 @@ RSpec.describe "Broadcasts" do
     expect(page).not_to have_content_tag_for(other_broadcast)
   end
 
-  it "can create a broadcast attaching an audio file", :js, :selenium_chrome do
+  it "can create a broadcast attaching an audio file", :js do
     user = create(:user)
 
     sign_in(user)
@@ -33,9 +33,8 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_content("Broadcast was successfully created.")
     within("#beneficiary_filter_gender") do
       expect(page).to have_field(with: "Gender")
-      expect(page).to have_selector("input.field-name[value='Gender']")
-      expect(page).to have_selector("input.field-operator[value='Equals']")
-      expect(page).to have_selector("input.field-value[value='M']")
+      expect(page).to have_field(with: "Equals")
+      expect(page).to have_field(with: "Male")
     end
   end
 
