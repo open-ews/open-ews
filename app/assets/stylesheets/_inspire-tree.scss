@@ -9,3 +9,7 @@
 .inspire-tree [type="checkbox"] {
   top: 6px;
 }
+
+.inspire-tree .selected > .wholerow {
+  background: none;
+}

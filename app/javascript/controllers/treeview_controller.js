@@ -3,8 +3,6 @@ import InspireTree from "inspire-tree"
 import InspireTreeDOM from "inspire-tree-dom"
 
 export default class extends Controller {
-  static targets = ["treeview"]
-
   static values = {
     data: Array,
     selected: Array,

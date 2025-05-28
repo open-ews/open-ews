@@ -41,7 +41,7 @@ module FieldDefinitions
     Field.new(
       name: :iso_country_code,
       column: Beneficiary.arel_table[:iso_country_code],
-      schema: FilterSchema::ListType.define(type: Types::UpcaseString, options: Beneficiary.iso_country_code.values),
+      schema: FilterSchema::CountryListType.define(type: Types::UpcaseString, options: Beneficiary.iso_country_code.values),
       description: "The [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code of the beneficiary.",
       required: true,
       example: "KH"

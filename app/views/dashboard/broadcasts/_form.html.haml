@@ -71,7 +71,7 @@
                   - selected_values = FieldDefinitions::Field::MULTIPLE_SELECTION_OPERATORS.include?(field_form.object&.operator) ? field_form.object.value : []
                   - base_options = { label: false, required: true, include_hidden: false, multiple: true, selected: selected_values }
                   - if field.schema.is_a?(FieldDefinitions::FilterSchema::ListType)
-                    = field_form.input(:value, as: :select, collection: field.schema.options.fetch(:list_options), input_html: { class: "list-select", data: { "beneficiary-filter-field-target": "multiValue" } }, **base_options)
+                    = field_form.input(:value, as: :select, collection: field.schema.options_for_select, input_html: { class: "list-select", data: { "beneficiary-filter-field-target": "multiValue" } }, **base_options)
                   - else
                     = field_form.input(:value, as: :select, collection: selected_values, input_html: { class: "input-tags", data: { "beneficiary-filter-field-target": "multiValue" } }, **base_options)
 
@@ -80,7 +80,7 @@
 
         - if CountryAddressData.supported?(current_account.iso_country_code)
           - address_field_name = CountryAddressData.address_field_name(current_account.iso_country_code)
-          - address_field_value = filter_form.object.attributes[address_field_name.to_s].value
+          - address_field_value = filter_form.object.attributes[address_field_name.to_s]&.value
 
           .row{
             data: {
@@ -97,7 +97,7 @@
                 %input.form-control{type: "text", value: Beneficiary.human_attribute_name("locations"), readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
 
                 = filter_form.simple_fields_for(address_field_name, filter_form.object.attributes[address_field_name]) do |address_field|
-                  = address_field.input(:operator, as: :hidden, value: :in, input_html: { data: { "beneficiary-addresses-filter-field-target": "operator" }})
+                  = address_field.input(:operator, as: :hidden, input_html: { value: "in", data: { "beneficiary-addresses-filter-field-target": "operator" }})
 
               #addresses-treeview.collapse.overflow-auto{
                 class: ("show" if address_field_value.present?),

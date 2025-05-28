@@ -62,16 +62,11 @@
             %input.field-value.form-control{type: "text", value: field.value.human_value, readonly: true }
 
     - if filter.address_data_field.present?
-      .row.mb-3{
-        id: "beneficiary_filter_address_administrative_division_level_3",
-        data: {
-          controller: "treeview",
-          "treeview-data-value": treeview_address_data.to_json,
-          "treeview-selected-value": Array(filter.address_data_field.value.actual_value).to_json,
-        }
-      }
-        #addresses-treeview.collapse.overflow-auto{
-          class: "show",
-          style: "max-height: 200px",
-          data: { "treeview-target": "treeview" }
+      .row
+        .col{
+          data: {
+            controller: "treeview",
+            "treeview-data-value": treeview_address_data.to_json,
+            "treeview-selected-value": Array(filter.address_data_field.value.actual_value).to_json,
+          }
         }

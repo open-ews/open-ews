@@ -19,6 +19,33 @@ RSpec.describe "Broadcasts" do
     expect(page).not_to have_content_tag_for(other_broadcast)
   end
 
+  it "shows the broadcast details" do
+    account = create(:account, iso_country_code: "US")
+    user = create(:user, account:)
+    broadcast = create(
+      :broadcast,
+      account: account,
+      beneficiary_filter: {
+        disability_status: { eq: 'normal' },
+        "address.administrative_division_level_3_code": { in: [ "120101" ] }
+      }
+    )
+
+    sign_in(user)
+    visit dashboard_broadcast_path(broadcast)
+
+    within("#beneficiary_filter_disability_status") do
+      expect(page).to have_field(with: "Disability status")
+      expect(page).to have_field(with: "Equals")
+      expect(page).to have_field(with: "Normal")
+    end
+    within("#beneficiary_filter_administrative_division_level_3_code") do
+      expect(page).to have_field(with: "Administrative division level 3 code")
+      expect(page).to have_field(with: "In")
+      expect(page).to have_field(with: "120101")
+    end
+  end
+
   it "can create a broadcast attaching an audio file", :js do
     user = create(:user)
 
@@ -38,7 +65,7 @@ RSpec.describe "Broadcasts" do
     end
   end
 
-  it "can update a broadcast", :js, :selenium_chrome do
+  it "can update a broadcast", :js do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
     broadcast = create(
