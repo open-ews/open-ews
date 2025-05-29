@@ -1,13 +1,12 @@
-class BeneficiaryFilterData < SimpleDelegator
-  attr_reader :address_data_field_name
+class BeneficiaryFilterData
+  include ActiveModel::Model
+  include ActiveModel::Attributes
 
-  def initialize(*, **options)
-    super(*)
-    @address_data_field_name = options[:address_data_field_name]
-  end
+  attribute :data, FilterDataType.new(field_definitions: FieldDefinitions::BeneficiaryFields)
+  attribute :address_data_field_name
 
   def address_fields
-    @address_fields ||= fields.each_with_object({}) do |(_name, field), result|
+    @address_fields ||= data.fields.each_with_object({}) do |(_name, field), result|
       next unless field.field_definition.prefix&.address?
 
       result[field.name] = field
@@ -19,11 +18,5 @@ class BeneficiaryFilterData < SimpleDelegator
     return unless fields.one?
 
     fields.first if fields.first.name == address_data_field_name
-  end
-
-  private
-
-  def object
-    __getobj__
   end
 end

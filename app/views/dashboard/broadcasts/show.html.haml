@@ -32,46 +32,42 @@
 
     .row.mb-3
       .col
-        %label.form-label Field
+        %label.form-label
+          Field
       .col
-        %label.form-label Operator
+        %label.form-label
+          Operator
       .col
-        %label.form-label Value
+        %label.form-label
+          Value
 
-    - filter = BeneficiaryFilterData.new(@broadcast.beneficiary_filter, address_data_field_name: CountryAddressData.address_field_name(current_account.iso_country_code))
-    - filter.fields.values.each do |field|
-      - next if filter.address_data_field.present? && filter.address_fields.values.include?(field)
+    - filter = BeneficiaryFilterData.new(data: @broadcast.beneficiary_filter, address_data_field_name: CountryAddressData.address_field_name(current_account.iso_country_code))
+    - filter.data.fields.values.each do |field|
+      - next if filter.address_data_field.present? && filter.address_fields.values.include?(field) && field != filter.address_data_field
       .row.mb-3{id: "beneficiary_filter_#{field.name}"}
         .col
           %input.field-name.form-control{type: "text", value: field.field_definition.human_name(namespace: current_account.iso_country_code), readonly: true }
         .col
-          %input.field-operator.form-control{type: "text", value: field.operator.human_name, readonly: true }
+          %input.field-operator.form-control{type: "text", value: field.field_definition.human_operator(field.operator), readonly: true }
         .col
-          - if field.operator.name == "between"
+          - if field.operator == "between"
             .row
               .col
-                %input.field-value.form-control{type: "text", value: field.value.actual_value[0], readonly: true }
+                %input.field-value.form-control{type: "text", value: field.value[0], readonly: true }
               .col
-                %input.field-value.form-control{type: "text", value: field.value.actual_value[1], readonly: true }
-          - elsif field.value.human_value.is_a?(Array)
+                %input.field-value.form-control{type: "text", value: field.value[1], readonly: true }
+          - elsif field == filter.address_data_field
+            %div{
+              data: {
+                controller: "treeview",
+                "treeview-data-value": treeview_address_data.to_json,
+                "treeview-selected-value": Array(filter.address_data_field.value).to_json,
+              }
+            }
+          - elsif field.value.is_a?(Array)
             %select.input-tags-readonly.form-control{readonly: true, multiple: true}
-              - field.value.human_value.each do |value|
+              - field.value.each do |value|
                 %option{selected: true}
-                  = value
+                  = field.field_definition.human_value(value)
           - else
-            %input.field-value.form-control{type: "text", value: field.value.human_value, readonly: true }
-
-    - if filter.address_data_field.present?
-      .row{id: "beneficiary_filter_#{filter.address_data_field.name}"}
-        .col
-          %input.field-name.form-control{type: "text", value: filter.address_data_field.field_definition.human_name(namespace: current_account.iso_country_code), readonly: true }
-        .col
-          %input.field-operator.form-control{type: "text", value: filter.address_data_field.operator.human_name, readonly: true }
-
-        .col{
-          data: {
-            controller: "treeview",
-            "treeview-data-value": treeview_address_data.to_json,
-            "treeview-selected-value": Array(filter.address_data_field.value.actual_value).to_json,
-          }
-        }
+            %input.field-value.form-control{type: "text", value: field.field_definition.human_value(field.value), readonly: true }

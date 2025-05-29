@@ -2,7 +2,14 @@ require "rails_helper"
 
 RSpec.describe BroadcastForm do
   it "handles initialization" do
-    broadcast = create(:broadcast, channel: :voice, beneficiary_filter: { gender: { eq: "M" } })
+    broadcast = create(
+      :broadcast,
+      channel: :voice,
+      beneficiary_filter: {
+        gender: { eq: "M" },
+        "address.iso_region_code": { eq: "KH-1" }
+      },
+    )
 
     form = BroadcastForm.initialize_with(broadcast)
 
@@ -12,13 +19,17 @@ RSpec.describe BroadcastForm do
         gender: have_attributes(
           operator: "eq",
           value: "M"
+        ),
+        iso_region_code: have_attributes(
+          operator: "eq",
+          value: "KH-1"
         )
       )
     )
   end
 
   it "handles form inputs" do
-    account = create(:account, iso_country_code: "KH")
+    account = create(:account)
 
     form = BroadcastForm.new(account:, channel: :voice, beneficiary_filter: { gender: { operator: "eq", value: "M" } })
 
@@ -29,10 +40,6 @@ RSpec.describe BroadcastForm do
         gender: have_attributes(
           operator: "eq",
           value: "M"
-        ),
-        iso_country_code: have_attributes(
-          operator: "eq",
-          value: "KH"
         )
       )
     )

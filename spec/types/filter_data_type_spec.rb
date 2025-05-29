@@ -20,42 +20,21 @@ RSpec.describe FilterDataType do
     }
 
     expect(klass.new(filter_data: filter).filter_data).to have_attributes(
-      fields: contain_exactly(
-        have_attributes(
+      fields: include(
+        gender: have_attributes(
           name: :gender,
-          human_name: "Gender",
-          operator: have_attributes(
-            name: :eq,
-            human_name: "Equals"
-          ),
-          value: have_attributes(
-            actual_value: "M",
-            human_value: "Male"
-          )
+          operator: :eq,
+          value: "M",
         ),
-        have_attributes(
+        date_of_birth: have_attributes(
           name: :date_of_birth,
-          human_name: "Date of birth",
-          operator: have_attributes(
-            name: :between,
-            human_name: "Between"
-          ),
-          value: have_attributes(
-            actual_value: [ Date.new(2000, 1, 1), Date.new(2025, 1, 1) ],
-            human_value: [ Date.new(2000, 1, 1), Date.new(2025, 1, 1) ]
-          )
+          operator: :between,
+          value: [ Date.new(2000, 1, 1), Date.new(2025, 1, 1) ]
         ),
-        have_attributes(
+        iso_region_code: have_attributes(
           name: :iso_region_code,
-          human_name: "ISO region code",
-          operator: have_attributes(
-            name: :in,
-            human_name: "In"
-          ),
-          value: have_attributes(
-            actual_value: [ "KH-12" ],
-            human_value: [ "KH-12" ]
-          )
+          operator: :in,
+          value: [ "KH-12" ]
         )
       )
     )

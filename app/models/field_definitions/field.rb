@@ -48,13 +48,24 @@ module FieldDefinitions
 
     def operator_options_for_select
       operators.map do |operator|
-        [ I18n.t(:"filter_operators.#{operator}"), operator ]
+        [ human_operator(operator), operator ]
       end
     end
 
     def human_name(**options)
       translation_key = [ options[:namespace]&.downcase, name ].compact.join(".")
       ApplicationRecord.human_attribute_name(translation_key)
+    end
+
+    def human_operator(operator)
+      I18n.t("filter_operators.#{operator}")
+    end
+
+    def human_value(value)
+      return value unless schema.is_a?(FilterSchema::ListType)
+      return value if value.blank?
+
+      schema.options_for_select.find { it.last == value }.first
     end
 
     def operators

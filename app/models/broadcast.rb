@@ -16,8 +16,6 @@ class Broadcast < ApplicationRecord
   store_accessor :settings
   accepts_nested_key_value_fields_for :settings
 
-  attribute :beneficiary_filter, FilterDataType.new(field_definitions: FieldDefinitions::BeneficiaryFields)
-
   enumerize :channel, in: [ :voice ]
   validates :channel, presence: true
 

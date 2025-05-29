@@ -38,30 +38,18 @@ class BroadcastForm
     def cast(value)
       return value if value.is_a?(BeneficiaryFilterForm)
 
-      BeneficiaryFilterForm.new(value.is_a?(FilterData) ? cast_filter_data(value) : cast_form_params(value))
+      BeneficiaryFilterForm.new(value.is_a?(BeneficiaryFilterData) ? cast_filter_data(value) : cast_form_params(value))
     end
 
     def serialize(value)
       return value unless value.is_a?(BeneficiaryFilterForm)
 
-      fields = value.attributes.each_with_object({}) do |(name, filter), result|
+      value.attributes.each_with_object({}) do |(name, filter), result|
         next if filter.blank?
 
         field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name:)
-        result[field_definition.name] = FilterData::Field.new(
-          field_definition:,
-          name: field_definition.name,
-          operator: FilterData::Operator.new(
-            name: filter.operator,
-          ),
-          value: FilterData::Value.new(
-            actual_value: filter.value,
-            human_value: nil
-          )
-        )
+        result[field_definition.path] = { filter.operator => filter.value }
       end
-
-      FilterData.new(fields:)
     end
 
     private
@@ -76,10 +64,10 @@ class BroadcastForm
     end
 
     def cast_filter_data(filter_data)
-      filter_data.fields.each_with_object({}) do |(name, field), result|
+      filter_data.data.fields.each_with_object({}) do |(name, field), result|
         result[name] = {
-          operator: field.operator.name,
-          value: field.value.actual_value
+          operator: field.operator,
+          value: field.value
         }
       end
     end
@@ -112,7 +100,7 @@ class BroadcastForm
       object: broadcast,
       channel: broadcast.channel,
       audio_file: broadcast.audio_file,
-      beneficiary_filter: broadcast.beneficiary_filter
+      beneficiary_filter: BeneficiaryFilterData.new(data: broadcast.beneficiary_filter)
     )
   end
 
