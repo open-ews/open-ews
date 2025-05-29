@@ -148,6 +148,58 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_current_path(dashboard_broadcasts_path)
   end
 
+  it "starts a broadcast" do
+    account = create(:account, :configured_for_broadcasts)
+    user = create(:user, account:)
+    create(:beneficiary, account:, gender: "M")
+
+    broadcast = create(
+      :broadcast,
+      :pending,
+      :with_attached_audio,
+      account: account,
+      beneficiary_filter: {
+        gender: { eq: "M" }
+      }
+    )
+
+    sign_in(user)
+    visit dashboard_broadcast_path(broadcast)
+
+    perform_enqueued_jobs do
+      click_on "Start"
+    end
+
+    expect(page).to have_text("Broadcast was successfully updated.")
+    expect(page).to have_text("Running")
+  end
+
+  it "fails to start a broadcast" do
+    account = create(:account, :configured_for_broadcasts)
+    user = create(:user, account:)
+    create(:beneficiary, account:, gender: "F")
+
+    broadcast = create(
+      :broadcast,
+      :pending,
+      :with_attached_audio,
+      account: account,
+      beneficiary_filter: {
+        gender: { eq: "M" }
+      }
+    )
+
+    sign_in(user)
+    visit dashboard_broadcast_path(broadcast)
+
+    perform_enqueued_jobs do
+      click_on "Start"
+    end
+
+    expect(page).to have_text("Errored")
+    expect(page).to have_text("No beneficiaries match the filters")
+  end
+
   def select_filter(name, **options)
     filter_id = filter_id(name)
 

@@ -1,0 +1,8 @@
+---
+en:
+  flash:
+    dashboard:
+      broadcasts:
+        states:
+          create:
+            notice: "Broadcast was successfully updated."

@@ -1,11 +1,11 @@
 = content_for(:page_actions) do
   - state_machine = BroadcastStateMachine.new(@broadcast.status)
   - if state_machine.may_transition_to?(:running)
-    = button_to(dashboard_broadcast_path(@broadcast), params: { broadcast: { desired_status: "running" } }, method: :patch, class: "btn btn-outline-success", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
+    = button_to(dashboard_broadcast_state_path(@broadcast, desired_status: "running"), method: :post, class: "btn btn-outline-success", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
       %i.icon.ti.ti-player-play
       = translate(:"titles.broadcasts.start")
   - elsif state_machine.may_transition_to?(:stopped)
-    = button_to(dashboard_broadcast_path(@broadcast), params: { broadcast: { desired_status: "stopped" } }, method: :patch, class: "btn btn-outline-danger", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
+    = button_to(dashboard_broadcast_state_path(@broadcast, desired_status: "stopped"), method: :post, class: "btn btn-outline-danger", form_class: "d-inline", form: { data: { turbo_confirm: translate(:"titles.actions.data_confirm")}}) do
       %i.icon.ti.ti-player-pause
       = translate(:"titles.broadcasts.stop")
 
@@ -19,7 +19,10 @@
   .card-body
     = show_for(@broadcast) do |f|
       = f.attribute :id
-      = f.attribute :status, value: @broadcast.status.humanize
+      = f.attribute :status do
+        = broadcast_status(@broadcast)
+        - if @broadcast.errored?
+          .text-danger= @broadcast.error_message
 
       = f.attribute :audio_file do
         - if @broadcast.audio_file.attached?

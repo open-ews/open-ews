@@ -19,11 +19,8 @@ module Dashboard
     def update
       @broadcast = BroadcastForm.new(object: scope.find(params[:id]), **permitted_params)
       @broadcast.save
-      respond_with(:dashboard, @broadcast)
 
-      # UpdateBroadcast.call()
-    rescue UpdateBroadcast::InvalidStateTransitionError
-      redirect_to action: :show, error: "Invalid state transition"
+      respond_with(:dashboard, @broadcast)
     end
 
     def show
@@ -41,7 +38,7 @@ module Dashboard
     end
 
     def permitted_params
-      params.require(:broadcast).permit(:audio_file, :channel, :desired_status, beneficiary_filter: {})
+      params.require(:broadcast).permit(:audio_file, :channel, beneficiary_filter: {})
     end
 
     def broadcast_summary

@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     resources :beneficiary_addresses, only: :new
 
     resources :broadcasts do
+      resource :state, only: :create, controller: "broadcasts/states"
       resources :notifications, only: %i[index show]
     end
 
