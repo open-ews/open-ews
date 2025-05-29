@@ -6,6 +6,7 @@ class BroadcastForm
     attribute :disability_status, FormType.new(form: FilterFieldForm)
     attribute :date_of_birth, FormType.new(form: FilterFieldForm)
     attribute :iso_language_code, FormType.new(form: FilterFieldForm)
+    attribute :created_at, FormType.new(form: FilterFieldForm)
     attribute :iso_country_code, FormType.new(form: FilterFieldForm)
     attribute :iso_region_code, FormType.new(form: FilterFieldForm)
     attribute :administrative_division_level_2_code, FormType.new(form: AddressFieldForm)

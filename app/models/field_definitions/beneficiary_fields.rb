@@ -49,7 +49,7 @@ module FieldDefinitions
     Field.new(
       name: :created_at,
       column: Beneficiary.arel_table[:created_at],
-      schema: FilterSchema::ValueType.define(type: :time),
+      schema: FilterSchema::ValueType.define(type: :date_time, form_value_type: :date),
       description: "The [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) timestamp of when the beneficiary was created.",
       read_only: true
     ),

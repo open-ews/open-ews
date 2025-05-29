@@ -162,7 +162,7 @@ RSpec.resource "Beneficiaries"  do
         method: :_disabled
       )
     end
-    with_options scope: [:data, :relationships, :groups] do
+    with_options scope: [ :data, :relationships, :groups ] do
       parameter(
         :"data.*.type", "Must be `beneficiary_group`",
         required: false,

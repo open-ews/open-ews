@@ -50,21 +50,19 @@
                   - when FieldDefinitions::FilterSchema::StringType
                     = field_form.input(:value, as: :string, **base_options.deep_merge(input_html: { class: "w-100", minlength: field_definition.schema.options[:length], maxlength: field_definition.schema.options[:length] }))
                   - when FieldDefinitions::FilterSchema::ValueType
-                    - if field_form.object.present? && field_form.object.value.is_a?(Array)
-                      = field_form.input(:value, as: field_definition.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: '' }))
-                    - else
-                      = field_form.input(:value, as: field_definition.schema.value_type, html5: true, **base_options)
+                    - base_options = base_options.deep_merge(input_html: { value: "" }) if field_form.object.present? && field_form.object.value.is_a?(Array)
+                    = field_form.input(:value, as: field_definition.schema.form_value_type, html5: true, **base_options)
 
                 -# NOTE: `between` operator is used only for `value` field type.
                 - if field_definition.schema.is_a?(FieldDefinitions::FilterSchema::ValueType)
-                  - base_options = { label: false, required: true, wrapper: false, input_html: { name: "broadcast[beneficiary_filter][#{attribute_name}][value][]", data: { "beneficiary-filter-field-target": "betweenValue" } }}
+                  - base_options = { label: false, required: true, wrapper: false, input_html: { name: "#{field_form.object_name}[value][]", data: { "beneficiary-filter-field-target": "betweenValue" } }}
                   - existing_field_values = field_form.object&.operator == "between" ? field_form.object.value : []
                   .between-value-input.hidden
                     .row
                       .col
-                        = field_form.input(:value, as: field_definition.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[0] }))
+                        = field_form.input(:value, as: field_definition.schema.form_value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[0] }))
                       .col
-                        = field_form.input(:value, as: field_definition.schema.value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[1] }))
+                        = field_form.input(:value, as: field_definition.schema.form_value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[1] }))
 
                 -# NOTE: this is used for multi value fields from the lists or let the user enter values(similar to tags) manually.
                 .multi-value-input.hidden
