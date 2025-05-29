@@ -1,16 +1,12 @@
-class FilterDataType < ActiveRecord::Type::Json
+class FilterDataType < ActiveRecord::Type::Value
   FilterData = Data.define(:fields)
   FilterData::Field = Data.define(:name, :operator, :value, :field_definition)
 
   attr_reader :field_definitions
 
-  def initialize(**options)
-    @field_definitions = options.delete(:field_definitions)
-    super(**options)
-  end
-
-  def deserialize(value)
-    cast(super(value))
+  def initialize(field_definitions:, **)
+    @field_definitions = field_definitions
+    super(**)
   end
 
   def cast(value)
@@ -29,15 +25,5 @@ class FilterDataType < ActiveRecord::Type::Json
     end
 
     FilterData.new(fields:)
-  end
-
-  def serialize(value)
-    return super(value) unless value.is_a?(FilterData)
-
-    result = value.fields.each_with_object({}) do |(_name, field), result|
-      result[field.field_definition.path] = { field.operator => field.value }
-    end
-
-    super(result)
   end
 end
