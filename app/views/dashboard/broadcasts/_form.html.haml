@@ -89,7 +89,7 @@
                 controller: "beneficiary-addresses-filter-field",
                 "beneficiary-addresses-filter-field-data-value": treeview_address_data.to_json,
                 "beneficiary-addresses-filter-field-selected-value": Array(address_field.object&.value).to_json,
-                "beneficiary-addresses-filter-field-field-name-value": "broadcast[beneficiary_filter][#{address_field_name}]"
+                "beneficiary-addresses-filter-field-field-name-value": address_field.object_name
               }
             }
               .col
