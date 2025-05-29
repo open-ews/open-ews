@@ -5,7 +5,12 @@
         .col
           = f.input :channel
         .col
-          = f.input :audio_file, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
+          .row
+            .col
+              = f.input :audio_file, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }
+            - if @broadcast.object.audio_file.attached?
+              .col
+                = audio_tag(@broadcast.audio_file, controls: true, class: "mt-3")
 
       .hr-text Beneficiary Filters
       .row
@@ -91,7 +96,7 @@
               }
             }
               .col
-                .input-group.mb-3
+                .input-group.mb-1
                   %span.input-group-text
                     %input.form-check-input.m-0{id: "#{element_id}_enabled", type: "checkbox", checked: address_field.object&.value.present?, data: { "beneficiary-addresses-filter-field-target": "toggleElement", action:  "beneficiary-addresses-filter-field#toggle", "bs-toggle": "collapse", "bs-target": "#addresses-treeview" }}
                   %input.form-control{type: "text", value: field_definition.human_name(namespace: current_account.iso_country_code), readonly: true, data: { "beneficiary-addresses-filter-field-target": "fieldName" }}
@@ -100,7 +105,6 @@
 
                 #addresses-treeview.collapse.overflow-auto{
                   class: ("show" if address_field.object&.value.present?),
-                  style: "max-height: 200px",
                   data: { "beneficiary-addresses-filter-field-target": "treeview" }
                 }
 

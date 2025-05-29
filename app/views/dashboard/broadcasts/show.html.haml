@@ -30,7 +30,7 @@
 
     .hr-text Beneficiary filters
 
-    .row.mb-3
+    .row
       .col
         %label.form-label
           Field
@@ -43,7 +43,7 @@
 
     - filter = BeneficiaryFilterData.new(data: @broadcast.beneficiary_filter, address_data_field_name: CountryAddressData.address_field_name(current_account.iso_country_code))
     - filter.data.fields.values.each do |field|
-      - next if filter.address_data_field.present? && filter.address_fields.values.include?(field) && field != filter.address_data_field
+      - next if filter.address_data_field.present? && filter.address_fields.values.include?(field)
       .row.mb-3{id: "beneficiary_filter_#{field.name}"}
         .col
           %input.field-name.form-control{type: "text", value: field.field_definition.human_name(namespace: current_account.iso_country_code), readonly: true }
@@ -56,14 +56,6 @@
                 %input.field-value.form-control{type: "text", value: field.value[0], readonly: true }
               .col
                 %input.field-value.form-control{type: "text", value: field.value[1], readonly: true }
-          - elsif field == filter.address_data_field
-            %div{
-              data: {
-                controller: "treeview",
-                "treeview-data-value": treeview_address_data.to_json,
-                "treeview-selected-value": Array(filter.address_data_field.value).to_json,
-              }
-            }
           - elsif field.value.is_a?(Array)
             %select.input-tags-readonly.form-control{readonly: true, multiple: true}
               - field.value.each do |value|
@@ -71,3 +63,16 @@
                   = field.field_definition.human_value(value)
           - else
             %input.field-value.form-control{type: "text", value: field.field_definition.human_value(field.value), readonly: true }
+
+    - if filter.address_data_field.present?
+      .row{id: "beneficiary_filter_#{filter.address_data_field.name}"}
+        .col
+          %input.mb-1.field-name.form-control{type: "text", value: filter.address_data_field.field_definition.human_name(namespace: current_account.iso_country_code), readonly: true }
+
+          %div{
+            data: {
+              controller: "treeview",
+              "treeview-data-value": treeview_address_data.to_json,
+              "treeview-selected-value": Array(filter.address_data_field.value).to_json,
+            }
+          }

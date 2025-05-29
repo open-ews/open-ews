@@ -22,7 +22,7 @@ class BroadcastForm
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  attribute :account, default: -> { Account.new }
+  attribute :account
   attribute :channel
   attribute :audio_file
   attribute :beneficiary_filter,
@@ -59,7 +59,7 @@ class BroadcastForm
     return false if invalid?
 
     object.channel = channel
-    object.audio_file = audio_file
+    object.audio_file = audio_file if audio_file.present?
     object.account ||= account
     object.beneficiary_filter = FilterFormType.new(
       form: BeneficiaryFilterForm,

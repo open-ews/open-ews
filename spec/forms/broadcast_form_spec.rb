@@ -31,7 +31,7 @@ RSpec.describe BroadcastForm do
   it "handles form inputs" do
     account = create(:account)
 
-    form = BroadcastForm.new(account:, channel: :voice, beneficiary_filter: { gender: { operator: "eq", value: "M" } })
+    form = BroadcastForm.new(account:, audio_file: file_fixture("test.mp3"), channel: :voice, beneficiary_filter: { gender: { operator: "eq", value: "M" } })
 
     expect(form).to have_attributes(
       account:,
@@ -42,6 +42,17 @@ RSpec.describe BroadcastForm do
           value: "M"
         )
       )
+    )
+
+    expect(form.save).to be_truthy
+
+    expect(form.object).to have_attributes(
+      persisted?: true,
+      channel: "voice",
+      audio_file: be_attached,
+      beneficiary_filter: {
+        "gender" => { "eq" => "M" }
+      }
     )
   end
 end
