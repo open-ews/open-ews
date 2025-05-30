@@ -13,6 +13,7 @@ module Dashboard
           :iso_country_code,
           :somleng_account_sid,
           :somleng_auth_token,
+          :notification_phone_number,
         )
       end
 
