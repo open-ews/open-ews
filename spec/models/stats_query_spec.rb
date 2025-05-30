@@ -7,7 +7,7 @@ RSpec.describe StatsQuery, type: :model do
 
     result = StatsQuery.new(
       group_by_fields: [
-        FieldDefinitions::BeneficiaryFields.find_by(name: :gender)
+        FieldDefinitions::BeneficiaryFields.find_by!(name: :gender)
       ],
     ).apply(Beneficiary.all)
 

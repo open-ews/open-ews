@@ -23,8 +23,8 @@ RSpec.describe "Users" do
     sign_in(user)
     visit dashboard_settings_user_path(user)
 
-    expect(page).to have_title("User ##{user.id}")
     expect(page).to have_content(user.id)
+    expect(page).to have_content(user.email)
   end
 
   xit "can update a user" do
