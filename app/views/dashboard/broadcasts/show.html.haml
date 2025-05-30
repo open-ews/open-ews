@@ -14,6 +14,9 @@
 
     = render "shared/resource_related_links" do
       = render("shared/destroy_resource_page_action", path: dashboard_broadcast_path(@broadcast))
+  - else
+    = render "shared/resource_related_links" do
+      = related_link_to t(:"titles.notifications"), dashboard_broadcast_notifications_path(@broadcast)
 
 .card
   .card-body
