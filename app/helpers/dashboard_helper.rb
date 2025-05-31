@@ -6,7 +6,7 @@ module DashboardHelper
     when "running"
       broadcast_badge_status(broadcast.status, color: "blue", icon: "hourglass-high")
     when "stopped"
-      broadcast_badge_status(broadcast.status, color: "yellow", icon: "player-pause")
+      broadcast_badge_status(broadcast.status, color: "yellow", icon: "player-stop")
     when "completed"
       broadcast_badge_status(broadcast.status, color: "green", icon: "check")
     when "errored"

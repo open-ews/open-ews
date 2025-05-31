@@ -19,23 +19,6 @@ module ApplicationHelper
     end
   end
 
-  def page_title(title:, &block)
-    content_for(:page_title, title)
-
-    content_tag(:div, class: "card-header d-flex justify-content-between align-items-center") do
-      content = "".html_safe
-      content += content_tag(:span, title, class: "h2")
-
-      if block_given?
-        content += content_tag(:div, id: "page_actions", class: "card-header-actions") do
-          capture(&block)
-        end
-      end
-
-      content
-    end
-  end
-
   def title(**options)
     default = options.fetch(:controller_name, controller_name).to_s
     default = default.singularize if options.fetch(:action_name, action_name).to_s != "index"
@@ -69,14 +52,6 @@ module ApplicationHelper
     return if time.blank?
 
     tag.time(time.utc.iso8601, data: { behavior: "local-time" })
-  end
-
-  def json_attribute_value(json)
-    content_tag(:pre) do
-      content_tag(:code) do
-        JSON.pretty_generate(json)
-      end
-    end
   end
 
   def treeview_address_data

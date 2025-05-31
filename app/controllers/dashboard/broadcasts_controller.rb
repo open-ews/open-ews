@@ -41,10 +41,6 @@ module Dashboard
       current_account.broadcasts
     end
 
-    def association_chain
-      scope
-    end
-
     def permitted_params
       params.require(:broadcast).permit(:audio_file, :channel, beneficiary_filter: {})
     end
