@@ -8,10 +8,6 @@ RSpec.describe PhoneNumberTypeValidator do
 
       attribute :phone_number
 
-      def self.model_name
-        ActiveModel::Name.new(self, nil, "temp")
-      end
-
       validates :phone_number, phone_number_type: true
     end
 

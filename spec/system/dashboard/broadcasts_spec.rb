@@ -5,7 +5,7 @@ RSpec.describe "Broadcasts" do
     user = create(:user)
     broadcast = create(
       :broadcast,
-      :pending,
+      :completed,
       account: user.account
     )
     other_broadcast = create(:broadcast)
