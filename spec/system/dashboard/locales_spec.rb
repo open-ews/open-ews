@@ -2,14 +2,15 @@ require "rails_helper"
 
 RSpec.describe "Locales" do
   it "can update the user's preferred language" do
-    user = create(:user)
+    user = create(:user, locale: "km")
 
     sign_in(user)
     visit dashboard_root_path
 
-    click_on("ខែ្មរ")
+    expect(page.find("html")[:lang]).to eq("km")
 
-    expect(page).to have_content("សេចក្ដីប្រកាស")
-    expect(page).to have_selector(:xpath, './/html[@lang="km"]')
+    click_on("English")
+
+    expect(page.find("html")[:lang]).to eq("en")
   end
 end
