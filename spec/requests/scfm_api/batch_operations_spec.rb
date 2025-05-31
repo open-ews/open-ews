@@ -69,7 +69,7 @@ RSpec.resource "Batch Operations" do
         audio_url: "https://www.example.com/test.mp3",
         account:
       )
-      beneficiary = create(:beneficiary, account:, metadata: { "gender" => "f" })
+      create(:beneficiary, account:, metadata: { "gender" => "f" })
       callout_population = create(
         :callout_population,
         account:,

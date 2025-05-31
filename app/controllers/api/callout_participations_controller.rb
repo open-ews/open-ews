@@ -1,17 +1,17 @@
 module API
   class CalloutParticipationsController < API::BaseController
+    def index
+      respond_with(:api, paginate(scope))
+    end
+
     private
 
-    def find_resources_association_chain
+    def scope
       broadcast.notifications
     end
 
-    def filter_class
-      Filter::Resource::Notification
-    end
-
     def broadcast
-      @broadcast ||= current_account.broadcasts.find(params[:callout_id])
+      @broadcast = current_account.broadcasts.find(params[:callout_id])
     end
   end
 end

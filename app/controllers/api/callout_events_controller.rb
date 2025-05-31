@@ -1,25 +1,26 @@
 module API
-  class CalloutEventsController < API::ResourceEventsController
-    private
-
-    def parent_resource
-      broadcast
+  class CalloutEventsController < API::BaseController
+    def create
+      @resource = LegacyEvent::Callout.new(eventable: broadcast, **permitted_params)
+      if @resource.save
+        respond_with(broadcast, location: -> { api_callout_path(broadcast) })
+      else
+        respond_with(@resource)
+      end
     end
 
-    def path_to_parent
-      api_callout_path(broadcast)
+    private
+
+    def scope
+      current_account.broadcasts
+    end
+
+    def permitted_params
+      params.permit(:event)
     end
 
     def broadcast
-      @broadcast ||= current_account.broadcasts.find(params[:callout_id])
-    end
-
-    def event_class
-      LegacyEvent::Callout
-    end
-
-    def access_token_write_permissions
-      [ :callouts_write ]
+      @broadcast ||= scope.find(params[:callout_id])
     end
   end
 end
