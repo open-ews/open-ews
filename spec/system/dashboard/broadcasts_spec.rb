@@ -173,6 +173,20 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_text("Running")
   end
 
+  it "stop a broadcast" do
+    account = create(:account)
+    user = create(:user, account:)
+    broadcast = create(:broadcast, :running, account:)
+
+    sign_in(user)
+    visit dashboard_broadcast_path(broadcast)
+
+    click_on "Stop"
+
+    expect(page).to have_text("Broadcast was successfully updated.")
+    expect(page).to have_text("Stopped")
+  end
+
   it "fail to start a broadcast" do
     account = create(:account, :configured_for_broadcasts)
     user = create(:user, account:)

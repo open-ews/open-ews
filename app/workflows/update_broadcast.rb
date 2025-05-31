@@ -4,6 +4,7 @@ class UpdateBroadcast < ApplicationWorkflow
   attr_reader :broadcast, :desired_status, :params
 
   def initialize(broadcast, desired_status: nil, **params)
+    super()
     @broadcast = broadcast
     @desired_status = desired_status
     @params = params
