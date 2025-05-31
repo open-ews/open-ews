@@ -1,0 +1,14 @@
+<%= content_tag_for(:tr, beneficiary) do %>
+  <td>
+    <%= link_to(beneficiary.id, dashboard_beneficiary_path(beneficiary)) %>
+  </td>
+  <td>
+    <%= beneficiary.phone_number %>
+  </td>
+  <td>
+    <%= beneficiary.gender_text %>
+  </td>
+  <td>
+    <%= local_time(beneficiary.created_at) %>
+  </td>
+<% end %>

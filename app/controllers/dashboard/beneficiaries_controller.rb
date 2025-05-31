@@ -1,10 +1,40 @@
 module Dashboard
-  class BeneficiariesController < Dashboard::BaseController
-    def create
-      @resource = scope.new(permitted_params)
-      @resource.save
+  class BeneficiariesController < DashboardController
+    def index
+      @beneficiaries = scope.page(params[:page]).without_count
+    end
 
-      respond_with(:dashboard, @resource)
+    def new
+      @beneficiary = scope.new
+    end
+
+    def create
+      @beneficiary = scope.new(permitted_params)
+      @beneficiary.save
+
+      respond_with(:dashboard, @beneficiary)
+    end
+
+    def edit
+      @beneficiary = scope.find(params[:id])
+    end
+
+    def update
+      @beneficiary = scope.find(params[:id])
+      @beneficiary.update(permitted_params)
+
+      respond_with(:dashboard, @beneficiary)
+    end
+
+    def show
+      @beneficiary = scope.find(params[:id])
+    end
+
+    def destroy
+      @beneficiary = scope.find(params[:id])
+      @beneficiary.destroy
+
+      respond_with(:dashboard, @beneficiary)
     end
 
     private
@@ -13,16 +43,8 @@ module Dashboard
       current_account.beneficiaries
     end
 
-    def association_chain
-      current_account.beneficiaries
-    end
-
-    def build_key_value_fields
-      build_metadata_field
-    end
-
     def permitted_params
-      params.fetch(:beneficiary, {}).permit(
+      params.require(:beneficiary).permit(
         :phone_number,
         :gender,
         :date_of_birth,
