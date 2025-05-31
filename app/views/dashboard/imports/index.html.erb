@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="table-responsive">
+    <table id="resources" class="table table-vcenter card-table">
+      <thead>
+        <tr role="row">
+          <th>#</th>
+          <% [:import, :import_type, :status, :error_message, :created_at].each do |column| %>
+            <th>
+              <div class="text">
+                <%= @imports.human_attribute_name(column) %>
+              </div>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <%= render(@imports) %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= render("shared/pagination", resources: @imports) %>
+</div>

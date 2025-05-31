@@ -34,6 +34,18 @@ RSpec.describe "Beneficiaries" do
     expect(page).to have_content("beneficiaries.csv")
   end
 
+  it "fails to import beneficiaries" do
+    user = create(:user)
+
+    sign_in(user)
+    visit dashboard_beneficiaries_path
+    click_on("Import")
+    attach_file("File", file_fixture("test.mp3"))
+    click_on("Upload")
+
+    expect(page).to have_content("Failed to create import: File has an invalid content type (authorized content type is CSV)")
+  end
+
   it "creates a new beneficiary", :js do
     user = create(:user)
 

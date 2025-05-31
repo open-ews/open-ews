@@ -1,32 +1,34 @@
 module Dashboard
-  class ImportsController < Dashboard::BaseController
-    def create
-      @resource = build_import
-      @resource.save!
-      ExecuteWorkflowJob.perform_later(ImportCSV.to_s, @resource)
+  class ImportsController < DashboardController
+    def index
+      @imports = scope.page(params[:page]).without_count
+    end
 
-      redirect_back(
-        fallback_location: dashboard_imports_path,
-        flash: {
-          notice: "Your import is being processed. You can view its status from the #{helpers.link_to('Imports', dashboard_imports_path)} page."
-        }
-      )
+    def create
+      @import = build_import
+      if @import.save
+        ExecuteWorkflowJob.perform_later(ImportCSV.to_s, @import)
+        flash[:notice] = "Your import is being processed. You can view its status from the #{helpers.link_to('Imports', dashboard_imports_path)} page."
+      else
+        flash[:alert] = "Failed to create import: #{@import.errors.full_messages.to_sentence}"
+      end
+
+      redirect_back_or_to(dashboard_imports_path)
     end
 
     private
 
     def build_import
-      @resource = Import.new(permitted_params)
-      @resource.user = current_user
-      @resource.account = current_account
-      @resource
+      @import = scope.new(permitted_params)
+      @import.account = current_account
+      @import
     end
 
     def permitted_params
       params.require(:import).permit(:resource_type, :file)
     end
 
-    def association_chain
+    def scope
       current_user.imports
     end
   end
