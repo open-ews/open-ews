@@ -1,5 +1,5 @@
 class Users::InvitationsController < Devise::InvitationsController
-  include DarkMode
+  include DashboardTheme
 
   helper_method :current_account
   layout :resolve_layout

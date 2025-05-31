@@ -1,6 +1,8 @@
 module Dashboard
-  class BroadcastsController < Dashboard::BaseController
-    helper_method :broadcast_summary
+  class BroadcastsController < DashboardController
+    def index
+      @broadcasts = scope.page(params[:page]).without_count
+    end
 
     def new
       @broadcast = BroadcastForm.new
@@ -27,6 +29,12 @@ module Dashboard
       @broadcast = scope.find(params[:id])
     end
 
+    def destroy
+      @broadcast = scope.find(params[:id])
+      @broadcast.destroy
+      respond_with(:dashboard, @broadcast)
+    end
+
     private
 
     def scope
@@ -39,10 +47,6 @@ module Dashboard
 
     def permitted_params
       params.require(:broadcast).permit(:audio_file, :channel, beneficiary_filter: {})
-    end
-
-    def broadcast_summary
-      @broadcast_summary ||= BroadcastSummary.new(resource)
     end
   end
 end

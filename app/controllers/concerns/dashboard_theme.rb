@@ -1,4 +1,4 @@
-module DarkMode
+module DashboardTheme
   extend ActiveSupport::Concern
 
   included do
@@ -8,6 +8,6 @@ module DarkMode
   private
 
   def set_theme
-    cookies[:theme] = params.fetch(:theme) { cookies[:theme] || "light" }
+    cookies[:theme] = params.fetch(:theme) { cookies.fetch(:theme, "light") }
   end
 end

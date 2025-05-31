@@ -14,7 +14,6 @@ RSpec.describe "Broadcasts" do
     visit dashboard_broadcasts_path
 
     expect(page).to have_title("Broadcasts")
-
     expect(page).to have_content_tag_for(broadcast)
     expect(page).not_to have_content_tag_for(other_broadcast)
   end
