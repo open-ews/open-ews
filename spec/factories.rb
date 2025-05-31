@@ -192,13 +192,13 @@ FactoryBot.define do
   factory :user do
     account
     email
+    name { "John Doe" }
     password { "secret123" }
     password_confirmation { password }
   end
 
   factory :access_token do
-    association :resource_owner, factory: :account
-    created_by { resource_owner }
+    account
   end
 
   factory :active_storage_attachment, class: "ActiveStorage::Blob" do
@@ -225,6 +225,19 @@ FactoryBot.define do
       administrative_division_level_3_name { "Banteay Neang" }
       administrative_division_level_4_code { "01020101" }
       administrative_division_level_4_name { "Ou Thum" }
+    end
+  end
+
+  factory :import do
+    beneficiaries
+    user
+    account { user.account }
+    status { :processing }
+
+    trait :beneficiaries do
+      resource_type { "Beneficiary" }
+
+      association :file, factory: :active_storage_attachment, filename: "beneficiaries.csv"
     end
   end
 end

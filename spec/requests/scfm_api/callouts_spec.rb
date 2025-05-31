@@ -5,27 +5,17 @@ RSpec.resource "Callouts" do
 
   get "/api/callouts" do
     example "List all Callouts" do
-      filtered_broadcast = create(
-        :broadcast,
-        account: account,
-        metadata: {
-          "foo" => "bar"
-        }
-      )
-      create(:broadcast, account: account)
+      account = create(:account)
+      broadcast = create(:broadcast, account:)
       create(:broadcast)
 
       set_authorization_header_for(account)
-      do_request(
-        q: {
-          "metadata" => { "foo" => "bar" }
-        }
-      )
+      do_request
 
       expect(response_status).to eq(200)
       parsed_body = JSON.parse(response_body)
       expect(parsed_body.size).to eq(1)
-      expect(parsed_body.first.fetch("id")).to eq(filtered_broadcast.id)
+      expect(parsed_body.first.fetch("id")).to eq(broadcast.id)
     end
   end
 

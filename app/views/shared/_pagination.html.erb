@@ -1,0 +1,14 @@
+<% if rel_next_prev_link_tags(resources).present? %>
+  <div class="card-footer">
+    <nav>
+      <ul class="pagination mb-0">
+        <li class="page-item">
+          <%= link_to_prev_page(resources, raw(t('views.pagination.previous')), rel: 'prev', class: 'page-link') %>
+        </li>
+        <li class="page-item">
+          <%= link_to_next_page(resources, raw(t('views.pagination.next')), rel: 'next', class: 'page-link') %>
+        </li>
+      </ul>
+    </nav>
+  </div>
+<% end %>

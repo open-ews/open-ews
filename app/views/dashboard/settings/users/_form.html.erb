@@ -1,0 +1,10 @@
+<div class="card-body">
+  <%= simple_form_for [:dashboard, resource] do |f| %>
+    <%= f.input :email, input_html: { disabled: true } %>
+    <%= render("shared/key_value_fields", attribute: :metadata, f: f) %>
+    <div class="form-group actions">
+      <%= f.button :submit, class: 'btn btn-primary' %>
+      <%= link_to t(:"titles.actions.cancel"), :back, class: 'btn btn-outline-dark' %>
+    </div>
+  <% end %>
+</div>

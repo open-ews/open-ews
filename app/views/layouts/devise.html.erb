@@ -1,42 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html data-bs-theme="<%= cookies[:theme] %>">
   <head>
-    <title>
-      Somleng -
-      <% if content_for?(:page_title) %>
-        <%= yield(:page_title) %>
-      <% else %>
-        SCFM
-      <% end %>
-    </title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>OpenEWS - <%= content_for?(:page_title) ? yield(:page_title) : title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
     <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
     <%= favicon_link_tag %>
 
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <!-- Enable PWA manifest for installable apps (uncomment and configure in routes.rb) -->
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body class="c-app mt-5">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-6">
-          <%= image_tag "open-ews_logo.png", class: "img-fluid mx-auto px-5 my-3 d-block w-50" %>
+  <body>
+    <div class="page page-center">
+      <div class="container container-tight py-4">
+        <div class="text-center mb-4">
+          <%= image_tag "open-ews_landscape_logo.png", class: "w-50" %>
+        </div>
 
-          <div class="card-group">
-            <div class="card p-4">
-              <div class="card-body">
-                <%= render "shared/alerts" %>
-                <%= yield(:flash) if content_for?(:flash) %>
+        <div class="card card-md">
+          <div class="card-body">
+            <%= render "shared/alerts" %>
 
-                <%= yield %>
-              </div>
-            </div>
+            <%= yield %>
           </div>
         </div>
       </div>
-    </div>
-  </body>
-</html>

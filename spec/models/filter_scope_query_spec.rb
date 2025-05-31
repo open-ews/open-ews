@@ -7,7 +7,7 @@ RSpec.describe FilterScopeQuery, type: :model do
     beneficiary_without_address = create(:beneficiary)
 
     filter_field = FilterField.new(
-      field_definition: find_field_definition("address.iso_region_code"),
+      field_definition: find_field_definition(:iso_region_code),
       operator: "is_null",
       value: true
     )
@@ -24,7 +24,7 @@ RSpec.describe FilterScopeQuery, type: :model do
     create_list(:beneficiary_address, 2, beneficiary:, iso_region_code: "KH-1")
 
     filter_field = FilterField.new(
-      field_definition: find_field_definition("address.iso_region_code"),
+      field_definition: find_field_definition(:iso_region_code),
       operator: "in",
       value: [ "KH-1", "KH-2" ]
     )
@@ -37,6 +37,6 @@ RSpec.describe FilterScopeQuery, type: :model do
   end
 
   def find_field_definition(name)
-    FieldDefinitions::BeneficiaryFields.find(name)
+    FieldDefinitions::BeneficiaryFields.find_by!(name:)
   end
 end

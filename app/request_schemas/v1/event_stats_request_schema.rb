@@ -17,7 +17,7 @@ module V1
       end
 
       result[:group_by_fields] = result[:group_by].map do |group|
-        FieldDefinitions::EventFields.find(group)
+        FieldDefinitions::EventFields.find_by!(path: group)
       end
 
       result

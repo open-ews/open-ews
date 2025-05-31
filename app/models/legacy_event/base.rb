@@ -1,7 +1,11 @@
 module LegacyEvent
   class Base
+    include ActiveModel::Model
+    include ActiveModel::Attributes
     include ActiveModel::Validations
-    attr_accessor :eventable, :event
+
+    attribute :eventable
+    attribute :event
 
     validates :eventable, presence: true
 
@@ -10,14 +14,10 @@ module LegacyEvent
                 in: :valid_events
               }
 
-    def initialize(options = {})
-      self.eventable = options[:eventable]
-      self.event = options[:event]
-    end
-
     def save
       if valid?
         fire_event!
+        true
       else
         false
       end

@@ -28,19 +28,19 @@ module V1
       ).output
 
       expect(result[:filter_fields][0]).to have_attributes(
-        field_definition: FieldDefinitions::BeneficiaryFields.find("gender"),
+        field_definition: FieldDefinitions::BeneficiaryFields.find_by!(name: :gender),
         operator: :eq,
         value: "M"
       )
       expect(result[:filter_fields][1]).to have_attributes(
-        field_definition: FieldDefinitions::BeneficiaryFields.find("iso_country_code"),
+        field_definition: FieldDefinitions::BeneficiaryFields.find_by!(name: :iso_country_code),
         operator: :eq,
         value: "KH"
       )
       expect(result[:group_by_fields]).to contain_exactly(
-        FieldDefinitions::BeneficiaryFields.find("iso_country_code"),
-        FieldDefinitions::BeneficiaryFields.find("gender"),
-        FieldDefinitions::BeneficiaryFields.find("address.iso_region_code")
+        FieldDefinitions::BeneficiaryFields.find_by!(name: :iso_country_code),
+        FieldDefinitions::BeneficiaryFields.find_by!(name: :gender),
+        FieldDefinitions::BeneficiaryFields.find_by!(name: :iso_region_code)
       )
     end
 

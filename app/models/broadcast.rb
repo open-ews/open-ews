@@ -1,7 +1,6 @@
 class Broadcast < ApplicationRecord
-  extend Enumerize
-
   AUDIO_CONTENT_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/x-wav].freeze
+  CHANNELS = %i[voice].freeze
 
   include MetadataHelpers
 
@@ -39,7 +38,7 @@ class Broadcast < ApplicationRecord
             },
             if: ->(broadcast) { broadcast.audio_file.attached? }
 
-  delegate :pending?, :queued?, :errored?, :may_transition_to?, :transition_to!, to: :state_machine
+  delegate :running?, :stopped?, :completed?, :pending?, :queued?, :errored?, :may_transition_to?, :transition_to!, to: :state_machine
 
   before_create :set_default_status
 
@@ -48,10 +47,6 @@ class Broadcast < ApplicationRecord
     result = super(except: [ "channel", "beneficiary_filter" ])
     result["status"] = "initialized" if result["status"] == "pending" || result["status"] == "queued"
     result
-  end
-
-  def updatable?
-    status == "pending"
   end
 
   def mark_as_errored!(message)

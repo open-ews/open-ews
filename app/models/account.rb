@@ -1,5 +1,5 @@
 class Account < ApplicationRecord
-  has_many :access_tokens, foreign_key: :resource_owner_id
+  has_one :access_token, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
   has_many :users
   has_many :beneficiaries
   has_many :beneficiary_groups
@@ -10,7 +10,12 @@ class Account < ApplicationRecord
 
   before_create :set_default_settings
 
-  strip_attributes
+  enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
+  validates :iso_country_code, presence: true
+
+  def api_key
+    access_token.token
+  end
 
   def configured_for_broadcasts?
     somleng_account_sid.present? && somleng_auth_token.present? && notification_phone_number.present?

@@ -10,10 +10,10 @@ module FieldDefinitions
       @collection = collection
     end
 
-    def find(name)
-      result = collection.find { |f| f.name == name }
-      raise ArgumentError, "Unknown field #{name}" if result.nil?
-      result
+    def find_by!(attributes)
+      collection.find(-> { raise ArgumentError, "Unable to find field with #{attributes}" }) do |field|
+        attributes.all? { |key, value| field.attributes[key]&.to_sym == value&.to_sym }
+      end
     end
   end
 end

@@ -1,28 +1,28 @@
 # Use this setup block to configure all options available in ShowFor.
 ShowFor.setup do |config|
   # The tag which wraps show_for calls.
-  config.show_for_tag = :dl
+  config.show_for_tag = :div
 
   # The DOM class set for show_for tag. Default is nil
-  config.show_for_class = :row
+  config.show_for_class = :datagrid
 
   # The tag which wraps each attribute/association call. Default is :p.
-  config.wrapper_tag = nil
+  config.wrapper_tag = :div
 
   # The DOM class set for the wrapper tag. Default is :wrapper.
-  # config.wrapper_class = :wrapper
+  config.wrapper_class = "datagrid-item"
 
   # The tag used to wrap each label. Default is :strong.
-  config.label_tag = :dt
+  config.label_tag = :div
 
   # The DOM class of each label tag. Default is :label.
-  config.label_class = "col-sm-3"
+  config.label_class = "datagrid-title"
 
   # The tag used to wrap each content (value). Default is nil.
-  config.content_tag = :dd
+  config.content_tag = :div
 
   # The DOM class of each content tag. Default is :content.
-  config.content_class = "col-sm-9"
+  config.content_class = "datagrid-content"
 
   # The DOM class set for blank content tags. Default is "blank".
   # config.blank_content_class = 'no_content'

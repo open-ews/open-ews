@@ -20,6 +20,16 @@ module V1
       ).not_to have_valid_field(:data, :attributes, :phone_number)
     end
 
+    it "validates the iso_language_code" do
+      expect(
+        validate_schema(input_params: { data: { attributes: { iso_language_code: "kh" } } })
+      ).not_to have_valid_field(:data, :attributes, :iso_language_code)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { iso_language_code: "khm" } } })
+      ).to have_valid_field(:data, :attributes, :iso_language_code)
+    end
+
     it "validates the status" do
       expect(
         validate_schema(input_params: { data: { attributes: { status: "wrong" } } })

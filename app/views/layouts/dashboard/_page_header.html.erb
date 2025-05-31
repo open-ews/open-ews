@@ -1,0 +1,21 @@
+<div class="page-header d-print-none">
+  <div class="container-xl">
+    <%= render("shared/alerts") %>
+
+    <div class="row g-2 align-items-center">
+      <div class="col">
+        <h2 class="page-title">
+          <%= content_for?(:page_title) ? yield(:page_title) : title %>
+        </h2>
+      </div>
+
+      <% if content_for?(:page_actions) %>
+        <div class="col-auto ms-auto d-print-none">
+          <div class="btn-list">
+            <%= yield(:page_actions) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

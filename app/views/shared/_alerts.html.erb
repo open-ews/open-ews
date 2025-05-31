@@ -1,23 +1,23 @@
 <% if notice.present? %>
   <div class="alert alert-success alert-dismissible" role="alert">
+    <div class="alert-icon">
+      <i class="icon ti ti-check"></i>
+    </div>
+
     <%= notice.html_safe %>
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
+
+    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
   </div>
 <% end %>
 
 <% if alert.present? %>
   <div class="alert alert-danger alert-dismissible" role="alert">
+    <div class="alert-icon">
+      <i class="icon ti ti-exclamation-circle"></i>
+    </div>
+
     <%= alert.html_safe %>
-    <button
-      type="button"
-      class="btn-close"
-      data-bs-dismiss="alert"
-      aria-label="Close"
-    ></button>
+
+    <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
   </div>
 <% end %>

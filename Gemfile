@@ -3,8 +3,16 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem "rails", "~> 8.0.2"
 
-# The modern asset pipeline for Rails
+# The modern frontend packages for Rails
 gem "propshaft"
+gem "cssbundling-rails"
+gem "jsbundling-rails"
+gem "stimulus-rails"
+gem "turbo-rails"
+
+# NOTE: date-select helper to support other locales other than `en`
+# https://github.com/heartcombo/simple_form/issues/1148
+gem "rails-i18n", "~> 8.0.0"
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 # gem "solid_cache"
@@ -26,11 +34,12 @@ gem "aws-sdk-rails"
 gem "aws-sdk-s3", require: false
 gem "aws-sdk-sqs"
 gem "aws-actionmailer-ses"
+gem "active_storage_validations"
 gem "bootsnap", require: false
-gem "cocoon"
-gem "cssbundling-rails"
 gem "countries"
+gem "country_select"
 gem "cursor_paginator"
+gem "csv"
 gem "devise"
 gem "devise-async"
 gem "devise_invitable"
@@ -39,8 +48,6 @@ gem "dry-validation"
 gem "enumerize"
 gem "faraday"
 gem "file_validators"
-gem "haml-rails"
-gem "jsbundling-rails"
 gem "jsonapi-serializer"
 gem "kaminari"
 gem "lograge"
@@ -52,21 +59,17 @@ gem "phony"
 gem "puma"
 gem "pumi"
 gem "record_tag_helper", github: "rails/record_tag_helper"
-gem "responders"
+gem "responders", github: "heartcombo/responders"
 gem "sentry-rails"
 gem "shoryuken"
 gem "show_for"
 gem "simple_form"
 gem "skylight"
-gem "stimulus-rails"
-gem "strip_attributes"
-gem "turbo-rails"
 gem "twilio-ruby"
 gem "tzinfo-data"
 
 group :development, :test do
   gem "brakeman", require: false
-  gem "i18n-tasks"
   gem "pry"
   gem "rspec_api_documentation", github: "zipmark/rspec_api_documentation"
   gem "rspec-rails"
@@ -74,6 +77,7 @@ end
 
 group :development do
   gem "listen"
+  gem "foreman"
   gem "rubocop"
   gem "rubocop-performance"
   gem "rubocop-rails-omakase", require: false

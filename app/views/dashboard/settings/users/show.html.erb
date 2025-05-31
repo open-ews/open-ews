@@ -1,0 +1,15 @@
+<%= render "dashboard/settings/frame" do %>
+  <div class="card-header">
+    <h2 class="mb-0"><%= title %></h2>
+  </div>
+
+  <div class="card-body">
+    <%= show_for(@user) do |f| %>
+      <%= f.attribute :name %>
+      <%= f.attribute :email %>
+      <%= f.attribute :created_at, value: local_time(@user.created_at) %>
+      <%= f.attribute :last_sign_in_at, value: local_time(@user.last_sign_in_at) %>
+      <%= f.attribute :invitation_accepted_at, value: local_time(@user.invitation_accepted_at) %>
+    <% end %>
+  </div>
+<% end %>

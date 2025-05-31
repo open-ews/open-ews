@@ -1,0 +1,52 @@
+<div class="card col-md-6">
+  <%= simple_form_for [:dashboard, @beneficiary] do |f| %>
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <%= f.input :phone_number %>
+        </div>
+        <div class="col">
+          <%= f.input :iso_country_code, as: :country %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <%= f.input :gender %>
+        </div>
+        <div class="col">
+          <%= f.input :iso_language_code %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <%= f.input :date_of_birth, html5: true %>
+        </div>
+        <div class="col">
+          <%= f.input :disability_status %>
+        </div>
+      </div>
+
+      <div class="hr-text">Addresses</div>
+
+      <div id="addresses">
+        <%= f.simple_fields_for :addresses do |addresses_form| %>
+          <%= render "dashboard/beneficiary_addresses/fields", form: addresses_form %>
+        <% end %>
+      </div>
+
+      <div class="text-center">
+        <%= link_to new_dashboard_beneficiary_address_path,
+                    class: "btn btn-outline-primary",
+                    title: "Add Address",
+                    data: { turbo_stream: true } do %>
+          <i class="icon ti ti-plus"></i>
+          Add Address
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card-footer text-end">
+      <%= f.button :submit, class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>

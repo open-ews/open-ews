@@ -18,7 +18,7 @@ class StatsQuery
 
     query.count.map.with_index do |(key, value), index|
       StatResult.new(
-        groups: group_by_fields.map(&:name),
+        groups: group_by_fields.map(&:path),
         key: Array(key),
         value:,
         sequence_number: index + 1

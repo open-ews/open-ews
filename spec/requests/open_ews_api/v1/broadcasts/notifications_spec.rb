@@ -19,7 +19,7 @@ RSpec.resource "Notifications" do
 
   get "/v1/broadcasts/:broadcast_id/notifications" do
     FieldDefinitions::NotificationFields.each do |field|
-      with_options scope: [ :filter, field.name.to_sym ] do
+      with_options scope: [ :filter, field.path.to_sym ] do
         parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
@@ -124,7 +124,7 @@ RSpec.resource "Notifications" do
   get "/v1/broadcasts/:broadcast_id/notifications/stats" do
     with_options scope: :filter do
       FieldDefinitions::NotificationFields.each do |field|
-        parameter(field.name, field.description, required: false, method: :_disabled)
+        parameter(field.path, field.description, required: false, method: :_disabled)
       end
     end
 

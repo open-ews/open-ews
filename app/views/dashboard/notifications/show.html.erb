@@ -1,0 +1,20 @@
+<div class="card">
+  <div class="card-body">
+    <%= show_for(@notification, style: "border: none") do |f| %>
+      <%= f.attribute :id %>
+      <%= f.attribute :broadcast do %>
+        <%= link_to(@notification.broadcast_id, dashboard_broadcast_path(@notification.broadcast_id)) %>
+      <% end %>
+      <%= f.attribute :phone_number do %>
+        <% if @notification.beneficiary_id.present? %>
+          <%= link_to(@notification.phone_number, dashboard_beneficiary_path(@notification.beneficiary_id)) %>
+        <% else %>
+          <%= @notification.phone_number %>
+        <% end %>
+      <% end %>
+      <%= f.attribute :delivery_attempts_count %>
+      <%= f.attribute :status, value: @notification.status.humanize %>
+      <%= f.attribute :created_at, value: local_time(@notification.created_at) %>
+    <% end %>
+  </div>
+</div>

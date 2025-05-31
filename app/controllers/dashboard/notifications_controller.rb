@@ -1,21 +1,21 @@
 module Dashboard
-  class NotificationsController < Dashboard::BaseController
+  class NotificationsController < DashboardController
+    def index
+      @notifications = scope.page(params[:page]).without_count
+    end
+
+    def show
+      @notification = scope.find(params[:id])
+    end
+
     private
 
-    def association_chain
+    def scope
       broadcast.notifications
     end
 
     def broadcast
       @broadcast ||= current_account.broadcasts.find(params[:broadcast_id])
-    end
-
-    def show_location(resource)
-      dashboard_broadcast_notification_path(resource.broadcast, resource)
-    end
-
-    def filter_class
-      Filter::Resource::Notification
     end
   end
 end
