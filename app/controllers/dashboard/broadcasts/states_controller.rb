@@ -1,6 +1,6 @@
 module Dashboard
   module Broadcasts
-    class StatesController < Dashboard::BaseController
+    class StatesController < DashboardController
       def create
         @broadcast = current_account.broadcasts.find(params[:broadcast_id])
         broadcast_state_machine = BroadcastStateMachine.new(@broadcast.status)

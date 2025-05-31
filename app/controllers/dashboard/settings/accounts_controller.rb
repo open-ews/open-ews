@@ -1,11 +1,12 @@
 module Dashboard
   module Settings
-    class AccountsController < Dashboard::BaseController
-      private
-
-      def find_resource
-        @resource = current_account
+    class AccountsController < DashboardController
+      def update
+        current_account.update(permitted_params)
+        respond_with(current_account, location: dashboard_settings_account_path)
       end
+
+      private
 
       def permitted_params
         params.require(:account).permit(
@@ -15,10 +16,6 @@ module Dashboard
           :somleng_auth_token,
           :notification_phone_number,
         )
-      end
-
-      def show_location(_resource)
-        dashboard_settings_account_path
       end
     end
   end

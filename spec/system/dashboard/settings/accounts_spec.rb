@@ -13,7 +13,6 @@ RSpec.describe "Account Settings" do
     select("Cambodia", from: "Country")
     fill_in("Somleng account sid", with: somleng_account_sid)
     fill_in("Somleng auth token", with: somleng_auth_token)
-
     click_on("Save")
 
     expect(page).to have_text("Account was successfully updated.")

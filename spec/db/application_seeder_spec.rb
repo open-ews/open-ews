@@ -9,7 +9,7 @@ RSpec.describe ApplicationSeeder do
 
     expect(Account.count).to eq(1)
     expect(Account.first).to have_attributes(
-      access_tokens: be_present,
+      api_key: be_present,
       users: contain_exactly(
         have_attributes(
           email: "user@example.com"

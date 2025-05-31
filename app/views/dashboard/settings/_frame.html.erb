@@ -19,7 +19,7 @@
               <%= title(controller_name: :accounts, action_name: :show) %>
             </span>
           <% end %>
-          <%= link_to dashboard_settings_users_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "users"}" do %>
+          <%= link_to(dashboard_settings_users_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "users"}") do %>
             <span class="nav-link-icon">
               <i class="icon ti ti-users"></i>
             </span>
@@ -27,12 +27,12 @@
               <%= title(controller_name: :users, action_name: :index) %>
             </span>
           <% end %>
-          <%= link_to dashboard_settings_developers_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "developers"}" do %>
+          <%= link_to(dashboard_settings_developer_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "developers"}") do %>
             <span class="nav-link-icon">
               <i class="icon ti ti-device-desktop-code"></i>
             </span>
             <span class="nav-link-title">
-              <%= title(controller_name: :developers, action_name: :index) %>
+              <%= title(controller_name: :developers, action_name: :show) %>
             </span>
           <% end %>
         </div>

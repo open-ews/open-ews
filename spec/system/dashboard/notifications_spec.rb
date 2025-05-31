@@ -11,7 +11,6 @@ RSpec.describe "Notifications" do
     visit(dashboard_broadcast_notifications_path(notification.broadcast))
 
     expect(page).to have_title("Notifications")
-
     within("#resources") do
       expect(page).to have_content_tag_for(notification)
       expect(page).not_to have_content_tag_for(other_notification)
@@ -29,11 +28,9 @@ RSpec.describe "Notifications" do
     sign_in(user)
     visit(dashboard_broadcast_notification_path(notification.broadcast, notification))
 
-    expect(page).to have_title("Notification ##{notification.id}")
-
+    expect(page).to have_title("Notification")
     within(".notification") do
       expect(page).to have_content(notification.id)
-
       expect(page).to have_content("Broadcast")
       expect(page).to have_link(
         notification.broadcast_id.to_s,

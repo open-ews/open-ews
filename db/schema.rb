@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_31_055239) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -235,7 +235,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
 
   create_table "oauth_access_tokens", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
-    t.bigint "created_by_id", null: false
     t.jsonb "metadata", default: {}, null: false
     t.bigint "application_id"
     t.string "token", null: false
@@ -248,7 +247,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
     t.string "previous_refresh_token", default: "", null: false
     t.bigint "permissions", default: 0, null: false
     t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
-    t.index ["created_by_id"], name: "index_oauth_access_tokens_on_created_by_id"
     t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
     t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
     t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
@@ -338,7 +336,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
   add_foreign_key "notifications", "broadcasts"
   add_foreign_key "oauth_access_grants", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
-  add_foreign_key "oauth_access_tokens", "accounts", column: "created_by_id"
   add_foreign_key "oauth_access_tokens", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_applications", "accounts", column: "owner_id"

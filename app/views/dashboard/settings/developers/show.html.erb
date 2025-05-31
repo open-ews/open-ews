@@ -1,0 +1,15 @@
+<%= render "dashboard/settings/frame" do %>
+  <div class="card-header">
+    <h2 class="mb-0"><%= title %></h2>
+  </div>
+
+  <div class="card-body">
+    <%= simple_form_for(current_account, url: dashboard_settings_developer_path, html: { novalidate: "novalidate" }) do |f| %>
+      <div class="row">
+        <div class="col">
+          <%= f.input :api_key, input_html: { readonly: true }, hint: 'Learn how to use the API at <a href="https://open-ews.org/docs/api" target="_blank">https://open-ews.org/docs/api</a>'.html_safe %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

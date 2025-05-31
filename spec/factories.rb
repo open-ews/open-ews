@@ -198,8 +198,7 @@ FactoryBot.define do
   end
 
   factory :access_token do
-    association :resource_owner, factory: :account
-    created_by { resource_owner }
+    account
   end
 
   factory :active_storage_attachment, class: "ActiveStorage::Blob" do

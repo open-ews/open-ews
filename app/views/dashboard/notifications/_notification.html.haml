@@ -1,9 +1,0 @@
-= content_tag_for(:tr, notification) do
-  %td
-    = link_to(notification.id, dashboard_broadcast_notification_path(notification.broadcast, notification))
-  %td
-    = link_to(notification.beneficiary_id, dashboard_beneficiary_path(notification.beneficiary_id))
-  %td
-    = link_to(notification.broadcast_id, dashboard_broadcast_path(notification.broadcast_id))
-  %td
-    = notification.created_at

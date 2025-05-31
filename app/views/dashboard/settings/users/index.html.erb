@@ -5,19 +5,32 @@
 <%= render "dashboard/settings/frame" do %>
   <div class="card-header">
     <h2 class="mb-0"><%= title %></h2>
+  </div>
 
-    <div class="card-actions">
-      <a class="btn"><i class="icon ti ti-filter"></i>Filter</a>
-      <a class="btn"><i class="icon ti ti-file-export"></i>Export</a>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table id="resources" class="table table-vcenter card-table">
+        <thead>
+          <tr role="row">
+            <th>
+              <div class="text">
+                <%= @users.human_attribute_name(:name) %>
+              </div>
+            </th>
+            <th>
+              <div class="text">
+                <%= @users.human_attribute_name(:email) %>
+              </div>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <%= render(@users) %>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <%= render(
-    "shared/resources_table",
-    resource_class: User,
-    partial: "dashboard/settings/users/user",
-    columns: %i[email invitation_accepted_at last_sign_in_at created_at],
-  ) %>
-
-  <%= render("shared/pagination", resources: resources) %>
+  <%= render("shared/pagination", resources: @users) %>
 <% end %>

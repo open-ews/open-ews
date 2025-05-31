@@ -147,7 +147,7 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_current_path(dashboard_broadcasts_path)
   end
 
-  it "starts a broadcast" do
+  it "start a broadcast" do
     account = create(:account, :configured_for_broadcasts)
     user = create(:user, account:)
     create(:beneficiary, account:, gender: "M")
@@ -173,7 +173,7 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_text("Running")
   end
 
-  it "fails to start a broadcast" do
+  it "fail to start a broadcast" do
     account = create(:account, :configured_for_broadcasts)
     user = create(:user, account:)
     create(:beneficiary, account:, gender: "F")

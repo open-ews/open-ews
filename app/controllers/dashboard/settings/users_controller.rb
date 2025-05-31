@@ -1,14 +1,18 @@
 module Dashboard
   module Settings
-    class UsersController < Dashboard::BaseController
-      private
-
-      def association_chain
-        current_account.users
+    class UsersController < DashboardController
+      def index
+        @users = scope.page(params[:page]).without_count
       end
 
-      def show_location(resource)
-        dashboard_settings_user_path(resource)
+      def show
+        @user = scope.find(params[:id])
+      end
+
+      private
+
+      def scope
+        current_account.users
       end
     end
   end

@@ -1,6 +1,6 @@
 module RequestSpecHelpers
   def set_authorization_header_for(account)
-    access_token = create(:access_token, resource_owner: account)
+    access_token = create(:access_token, account:)
     set_authorization_header(access_token:)
   end
 

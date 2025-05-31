@@ -1,0 +1,11 @@
+<%= content_tag_for(:tr, notification) do %>
+  <td>
+    <%= link_to(notification.id, dashboard_broadcast_notification_path(notification.broadcast, notification)) %>
+  </td>
+  <td>
+    <%= notification.status.humanize %>
+  </td>
+  <td>
+    <%= notification.delivery_attempts_count %>
+  </td>
+<% end %>
