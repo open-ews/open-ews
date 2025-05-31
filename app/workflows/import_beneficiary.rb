@@ -59,8 +59,6 @@ class ImportBeneficiary < ApplicationWorkflow
     raise Error.new("Cannot find phone number") if beneficiary.blank?
 
     DeleteBeneficiary.call(beneficiary)
-  rescue ActiveRecord::RecordNotDestroyed => e
-    raise Error.new(e)
   end
 
   def sanitize(data)
