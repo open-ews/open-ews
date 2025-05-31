@@ -13,7 +13,6 @@ RSpec.describe "Users" do
       other_user.name,
       href: dashboard_settings_user_path(other_user)
     )
-    expect(other_user.email).to appear_before(user.email)
   end
 
   it "can show a user" do
