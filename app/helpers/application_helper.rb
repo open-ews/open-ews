@@ -41,15 +41,13 @@ module ApplicationHelper
     end
   end
 
-  def title(resource = nil, **options)
+  def title(**options)
     default = options.fetch(:controller_name, controller_name).to_s
     default = default.singularize if options.fetch(:action_name, action_name).to_s != "index"
     default = default.to_s.humanize
-    default += " ##{resource.id}" if resource.present?
 
     translate(
       :"titles.#{options.fetch(:controller_name, controller_name)}.#{options.fetch(:action_name, action_name)}",
-      id: resource&.id,
       default:
     )
   end

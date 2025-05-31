@@ -4,8 +4,6 @@ en:
     app_name: OpenEWS
     actions:
       data_confirm: "Are you sure?"
-    home:
-      index: Dashboard
     sessions:
       new: Sign in
     settings:
@@ -14,3 +12,5 @@ en:
       edit: Edit Profile
     passwords:
       new: Reset Password
+    developers:
+      show: Developers
