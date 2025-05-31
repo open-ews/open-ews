@@ -1,0 +1,42 @@
+<div class="card mb-3" data-controller="remove-nested-form" data-remove-nested-form-target="element">
+  <div class="ribbon ribbon-top bg-red" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove address">
+    <i class="icon ti ti-trash cursor-pointer" data-action="click->remove-nested-form#remove"></i>
+  </div>
+
+  <div class="card-body">
+    <%= form.input :_destroy, as: :hidden, input_html: { data: { "remove-nested-form-target": "destroyElement" } } %>
+
+    <div class="row">
+      <div class="col-md-6">
+        <%= form.input :iso_region_code %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <%= form.input :administrative_division_level_2_code %>
+      </div>
+      <div class="col">
+        <%= form.input :administrative_division_level_2_name %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <%= form.input :administrative_division_level_3_code %>
+      </div>
+      <div class="col">
+        <%= form.input :administrative_division_level_3_name %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <%= form.input :administrative_division_level_4_code %>
+      </div>
+      <div class="col">
+        <%= form.input :administrative_division_level_4_name %>
+      </div>
+    </div>
+  </div>
+</div>

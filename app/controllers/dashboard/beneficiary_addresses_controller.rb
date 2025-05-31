@@ -1,5 +1,3 @@
 module Dashboard
-  class BeneficiaryAddressesController < Dashboard::BaseController
-    def new; end
-  end
+  class BeneficiaryAddressesController < DashboardController; end
 end
