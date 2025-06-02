@@ -25,4 +25,20 @@ RSpec.describe "Users" do
     expect(page).to have_content("John Doe")
     expect(page).to have_content("user@example.com")
   end
+
+  it "can invite a user" do
+    user = create(:user)
+
+    sign_in(user)
+    visit(dashboard_settings_users_path)
+    click_on("New")
+
+    fill_in("Email", with: "user@example.com")
+    fill_in("Name", with: "John Doe")
+    click_on("Send an invitation")
+
+    expect(page).to have_content("An invitation email has been sent to user@example.com.")
+    expect(page).to have_content("user@example.com")
+    expect(page).to have_content("John Doe")
+  end
 end
