@@ -15,7 +15,25 @@
       </thead>
 
       <tbody>
-        <%= render(@imports) %>
+        <% @imports.each do |import| %>
+          <%= content_tag_for :tr, import, role: "row" do %>
+            <td>
+              <%= link_to import.file.filename, rails_blob_path(import.file, disposition: "attachment") %>
+            </td>
+            <td>
+              <%= import.resource_type.humanize %>
+            </td>
+            <td>
+              <%= import.status.humanize %>
+            </td>
+            <td>
+              <%= import.error_message %>
+            </td>
+            <td>
+              <%= local_time(import.created_at) %>
+            </td>
+          <% end %>
+        <% end %>
       </tbody>
     </table>
   </div>

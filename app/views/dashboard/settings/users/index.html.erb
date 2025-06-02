@@ -25,7 +25,16 @@
       </thead>
 
       <tbody>
-        <%= render(@users) %>
+        <% @users.each do |user| %>
+          <%= content_tag_for :tr, user do %>
+            <td>
+              <%= link_to(user.name, dashboard_settings_user_path(user)) %>
+            </td>
+            <td>
+              <%= user.email %>
+            </td>
+          <% end %>
+        <% end %>
       </tbody>
     </table>
   </div>
