@@ -78,7 +78,9 @@ export default class extends Controller {
     }
 
     const tomSelect = this.multiValueTarget.tomselect
-    tomSelect.clear()
-    tomSelect.sync()
+    if (tomSelect) {
+      tomSelect.clear()
+      tomSelect.sync()
+    }
   }
 }

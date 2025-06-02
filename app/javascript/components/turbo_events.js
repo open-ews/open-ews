@@ -14,35 +14,54 @@ addEventListener("turbo:before-stream-render", (event) => {
   }
 })
 
-const initializeJSComponents = () => {
-  ;[].slice
-    .call(document.querySelectorAll("time[data-behavior~=local-time]"))
-    .forEach(function (element) {
+const initializeLocalTime = () => {
+  document
+    .querySelectorAll("time[data-behavior~=local-time]")
+    .forEach((element) => {
       element.textContent = moment(element.textContent).format("lll (Z)")
     })
-  ;[].slice
-    .call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    .forEach((element) => new tabler.bootstrap.Tooltip(element))
-  ;[].slice
-    .call(document.querySelectorAll("select.list-select"))
-    .forEach((element) => new TomSelect(element))
-  ;[].slice
-    .call(document.querySelectorAll("select.input-tags"))
-    .forEach((element) => new TomSelect(element, { create: true }))
-  ;[].slice
-    .call(document.querySelectorAll("select.input-tags-readonly"))
-    .forEach(
-      (element) =>
-        new TomSelect(element, {
-          plugins: ["no_backspace_delete"],
-          create: false,
-          persist: false,
-          onItemAdd: () => false,
-          onDelete: () => false,
-        })
-    )
 }
 
-;["turbo:load", "turbo:after-stream-render"].forEach((e) =>
-  document.addEventListener(e, initializeJSComponents)
+const initializeTooltips = () => {
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => {
+    new tabler.bootstrap.Tooltip(element)
+  })
+}
+
+const initializeTomSelect = () => {
+  // Clean up existing tomselect instances
+  document.querySelectorAll("select").forEach((element) => {
+    if (element.tomselect) {
+      element.tomselect.destroy()
+    }
+  })
+
+  document.querySelectorAll("select.list-select").forEach((element) => {
+    new TomSelect(element)
+  })
+
+  document.querySelectorAll("select.input-tags").forEach((element) => {
+    new TomSelect(element, { create: true })
+  })
+
+  document.querySelectorAll("select.input-tags-readonly").forEach((element) => {
+    new TomSelect(element, {
+      plugins: ["no_backspace_delete"],
+      create: false,
+      persist: false,
+      onItemAdd: () => false,
+      onDelete: () => false,
+    })
+  })
+}
+
+const initializeJSComponents = () => {
+  initializeLocalTime()
+  initializeTooltips()
+  initializeTomSelect()
+}
+
+const events = ["turbo:load", "turbo:after-stream-render", "turbo:render"]
+events.forEach((event) =>
+  document.addEventListener(event, initializeJSComponents)
 )
