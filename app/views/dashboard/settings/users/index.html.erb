@@ -7,29 +7,27 @@
     <h2 class="mb-0"><%= title %></h2>
   </div>
 
-  <div class="card-body">
-    <div class="table-responsive">
-      <table id="resources" class="table table-vcenter card-table">
-        <thead>
-          <tr role="row">
-            <th>
-              <div class="text">
-                <%= @users.human_attribute_name(:name) %>
-              </div>
-            </th>
-            <th>
-              <div class="text">
-                <%= @users.human_attribute_name(:email) %>
-              </div>
-            </th>
-          </tr>
-        </thead>
+  <div class="table-responsive">
+    <table id="resources" class="table table-vcenter card-table">
+      <thead>
+        <tr role="row">
+          <th>
+            <div class="text">
+              <%= @users.human_attribute_name(:name) %>
+            </div>
+          </th>
+          <th>
+            <div class="text">
+              <%= @users.human_attribute_name(:email) %>
+            </div>
+          </th>
+        </tr>
+      </thead>
 
-        <tbody>
-          <%= render(@users) %>
-        </tbody>
-      </table>
-    </div>
+      <tbody>
+        <%= render(@users) %>
+      </tbody>
+    </table>
   </div>
 
   <%= render("shared/pagination", resources: @users) %>
