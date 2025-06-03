@@ -1,9 +1,9 @@
 class Users::InvitationsController < Devise::InvitationsController
   include DashboardTheme
 
-  helper_method :current_account
   layout :resolve_layout
 
+  helper_method :current_account
   before_action :set_locale
 
   protected
@@ -13,7 +13,9 @@ class Users::InvitationsController < Devise::InvitationsController
   end
 
   def invite_params
-    super.merge(permitted_params).merge(account_id: current_inviter.account_id)
+    super.merge(permitted_params).merge(
+      account_id: current_inviter.account_id
+    )
   end
 
   def permitted_params
