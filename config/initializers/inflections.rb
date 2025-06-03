@@ -18,6 +18,11 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "EWS"
   inflect.acronym "URL"
   inflect.acronym "JSONAPI"
-  inflect.acronym "TwiML"
   inflect.acronym "ISO"
+  inflect.acronym "CSV"
+  inflect.acronym "TwiML"
+
+  # Country codes
+  inflect.acronym "KH"
+  inflect.acronym "LA"
 end

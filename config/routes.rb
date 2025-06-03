@@ -22,17 +22,26 @@ Rails.application.routes.draw do
 
   namespace "dashboard" do
     root to: "broadcasts#index"
-    resources :access_tokens, only: :index
-    resource :account, only: %i[edit update]
 
-    resources :beneficiaries, only: %i[index show destroy]
+    namespace :settings do
+      root to: "accounts#show"
+
+      resource :account, only: [ :show, :update ]
+      resource :developer, only: :show
+      resources :users, only: [ :index, :show ]
+    end
+
+    resources :beneficiaries
+    resources :beneficiary_addresses, only: :new
 
     resources :broadcasts do
+      resource :state, only: :create, controller: "broadcasts/states"
       resources :notifications, only: %i[index show]
     end
 
-    resources :users, except: %i[new create]
     resource :locale, only: :update
+
+    resources :imports, only: %i[index create]
   end
 
   namespace :v1, module: "api/v1", as: "api_v1", defaults: { format: "json" } do
@@ -48,6 +57,7 @@ Rails.application.routes.draw do
     end
 
     resources :broadcasts, only: [ :index, :show, :create, :update ] do
+      resource :audio_file, controller: "broadcasts/audio_files", only: :show
       resources :notifications, controller: "broadcasts/notifications", only: [ :index, :show ] do
         get "stats" => "broadcasts/notifications/stats#index", on: :collection
       end

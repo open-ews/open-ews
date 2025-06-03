@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="table-responsive">
+    <table id="resources" class="table table-vcenter card-table">
+      <thead>
+        <tr role="row">
+          <th>#</th>
+          <th>
+            <div class="text">
+              <%= @notifications.human_attribute_name(:beneficiary) %>
+            </div>
+          </th>
+          <th>
+            <div class="text">
+              <%= @notifications.human_attribute_name(:status) %>
+            </div>
+          </th>
+          <th>
+            <div class="text">
+              <%= @notifications.human_attribute_name(:delivery_attempts_count) %>
+            </div>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @notifications.each do |notification| %>
+          <%= content_tag_for(:tr, notification) do %>
+            <td>
+              <%= link_to(notification.id, dashboard_broadcast_notification_path(notification.broadcast, notification)) %>
+            </td>
+            <td>
+              <%= link_to_if(notification.beneficiary_id.present?, notification.phone_number, dashboard_beneficiary_path(notification.beneficiary)) %>
+            </td>
+            <td>
+              <%= notification.status.humanize %>
+            </td>
+            <td>
+              <%= notification.delivery_attempts_count %>
+            </td>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= render("shared/pagination", resources: @notifications) %>
+</div>

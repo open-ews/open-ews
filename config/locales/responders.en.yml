@@ -1,11 +1,8 @@
 ---
 en:
   flash:
-    actions:
-      create:
-        notice: "%{resource_name} was successfully created."
-      destroy:
-        notice: "%{resource_name} was successfully destroyed."
-        notification: "%{resource_name} could not be destroyed."
-      update:
-        notice: "%{resource_name} was successfully updated."
+    dashboard:
+      broadcasts:
+        states:
+          create:
+            notice: "Broadcast was successfully updated."

@@ -1,0 +1,15 @@
+@import "inspire-tree-dom/dist/inspire-tree-light";
+
+.inspire-tree .title {
+  overflow: visible;
+  font-size: 0.875rem;
+  color: var(--tblr-body-color);
+}
+
+.inspire-tree [type="checkbox"] {
+  top: 6px;
+}
+
+.inspire-tree .selected > .wholerow {
+  background: none;
+}

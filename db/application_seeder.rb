@@ -4,7 +4,7 @@ class ApplicationSeeder
 
   def seed!
     account = Account.first_or_create!(name: "My Account", iso_country_code: "KH")
-    access_token = account.access_tokens.first_or_create!(created_by: account)
+    access_token = account.access_token || account.create_access_token!
 
     user = create_user(account:)
     puts(<<~INFO)
@@ -23,6 +23,6 @@ class ApplicationSeeder
 
     return existing_user if existing_user.present?
 
-    User.create!(email: USER_EMAIL, password: USER_PASSWORD, **params)
+    User.create!(name: "John Doe", email: USER_EMAIL, password: USER_PASSWORD, **params)
   end
 end

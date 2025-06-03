@@ -7,7 +7,7 @@ RSpec.describe "User Invitations" do
     visit new_user_invitation_path
 
     fill_in "Email", with: "bopha@somleng.com"
-    clear_enqueued_jobs
+    fill_in "Name", with: "Bopha"
 
     perform_enqueued_jobs do
       click_on "Send an invitation"
@@ -15,24 +15,19 @@ RSpec.describe "User Invitations" do
 
     expect(page).to have_text("An invitation email has been sent to bopha@somleng.com.")
     expect(last_email_sent.from).to contain_exactly("no-reply@somleng.org")
-    expect(current_path).to eq(dashboard_users_path)
+    expect(current_path).to eq(dashboard_settings_users_path)
   end
 
   it "can set the password" do
     inviter = create(:user)
-    visit accept_user_invitation_path(invitation_token: invitation_token(inviter))
+    user = create(:user, account: inviter.account, invited_by: inviter)
+    user.invite!
+    visit accept_user_invitation_path(invitation_token: user.raw_invitation_token)
 
-    fill_in "Password", with: "myscret"
-    fill_in "Password confirmation", with: "myscret"
+    fill_in "Password", with: "mysecret"
+    fill_in "Password confirmation", with: "mysecret"
     click_on "Save"
 
     expect(page).to have_text("Your password was set successfully. You are now signed in.")
-  end
-
-  def invitation_token(inviter)
-    User.invite!(
-      { email: generate(:email), account_id: inviter.account_id },
-      inviter
-    ).raw_invitation_token
   end
 end

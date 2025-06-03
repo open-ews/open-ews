@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_31_055239) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -80,7 +80,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "account_id", null: false
     t.string "status", default: "active", null: false
-    t.string "iso_language_code"
+    t.citext "iso_language_code"
     t.string "gender"
     t.date "date_of_birth"
     t.citext "iso_country_code", null: false
@@ -188,6 +188,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
     t.index ["type"], name: "index_events_on_type"
   end
 
+  create_table "imports", force: :cascade do |t|
+    t.string "resource_type", null: false
+    t.string "status", null: false
+    t.string "error_message"
+    t.bigint "user_id", null: false
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_imports_on_account_id"
+    t.index ["user_id"], name: "index_imports_on_user_id"
+  end
+
   create_table "notifications", force: :cascade do |t|
     t.bigint "broadcast_id", null: false
     t.bigint "beneficiary_id"
@@ -223,7 +235,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
 
   create_table "oauth_access_tokens", force: :cascade do |t|
     t.bigint "resource_owner_id", null: false
-    t.bigint "created_by_id", null: false
     t.jsonb "metadata", default: {}, null: false
     t.bigint "application_id"
     t.string "token", null: false
@@ -236,7 +247,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
     t.string "previous_refresh_token", default: "", null: false
     t.bigint "permissions", default: 0, null: false
     t.index ["application_id"], name: "index_oauth_access_tokens_on_application_id"
-    t.index ["created_by_id"], name: "index_oauth_access_tokens_on_created_by_id"
     t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
     t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
     t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
@@ -268,7 +278,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
 
   create_table "users", force: :cascade do |t|
     t.bigint "account_id", null: false
-    t.jsonb "metadata", default: {}, null: false
     t.string "email", null: false
     t.string "encrypted_password", null: false
     t.string "reset_password_token"
@@ -296,6 +305,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.string "locale", default: "en", null: false
+    t.string "name", null: false
     t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
@@ -320,11 +330,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_28_080037) do
   add_foreign_key "delivery_attempts", "broadcasts"
   add_foreign_key "delivery_attempts", "notifications"
   add_foreign_key "events", "accounts", on_delete: :cascade
+  add_foreign_key "imports", "accounts", on_delete: :cascade
+  add_foreign_key "imports", "users", on_delete: :cascade
   add_foreign_key "notifications", "beneficiaries", on_delete: :nullify
   add_foreign_key "notifications", "broadcasts"
   add_foreign_key "oauth_access_grants", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
-  add_foreign_key "oauth_access_tokens", "accounts", column: "created_by_id"
   add_foreign_key "oauth_access_tokens", "accounts", column: "resource_owner_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_applications", "accounts", column: "owner_id"

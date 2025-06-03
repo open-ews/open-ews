@@ -4,5 +4,14 @@
 
 import { application } from "./application"
 
-import SidebarController from "./sidebar_controller"
-application.register("sidebar", SidebarController)
+import BeneficiaryAddressesFilterFieldController from "./beneficiary_addresses_filter_field_controller"
+application.register("beneficiary-addresses-filter-field", BeneficiaryAddressesFilterFieldController)
+
+import BeneficiaryFilterFieldController from "./beneficiary_filter_field_controller"
+application.register("beneficiary-filter-field", BeneficiaryFilterFieldController)
+
+import RemoveNestedFormController from "./remove_nested_form_controller"
+application.register("remove-nested-form", RemoveNestedFormController)
+
+import TreeviewController from "./treeview_controller"
+application.register("treeview", TreeviewController)

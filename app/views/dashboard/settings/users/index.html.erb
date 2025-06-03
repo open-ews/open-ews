@@ -1,0 +1,43 @@
+<%= content_for(:page_actions) do %>
+  <%= render("shared/new_resource_page_action", path: new_user_invitation_path) %>
+<% end %>
+
+<%= render "dashboard/settings/frame" do %>
+  <div class="card-header">
+    <h2 class="mb-0"><%= title %></h2>
+  </div>
+
+  <div class="table-responsive">
+    <table id="resources" class="table table-vcenter card-table">
+      <thead>
+        <tr role="row">
+          <th>
+            <div class="text">
+              <%= @users.human_attribute_name(:name) %>
+            </div>
+          </th>
+          <th>
+            <div class="text">
+              <%= @users.human_attribute_name(:email) %>
+            </div>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @users.each do |user| %>
+          <%= content_tag_for :tr, user do %>
+            <td>
+              <%= link_to(user.name, dashboard_settings_user_path(user)) %>
+            </td>
+            <td>
+              <%= user.email %>
+            </td>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= render("shared/pagination", resources: @users) %>
+<% end %>

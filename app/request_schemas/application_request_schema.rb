@@ -5,11 +5,12 @@ class ApplicationRequestSchema < Dry::Validation::Contract
 
   option :resource, optional: true
   option :account, optional: true
+  option :phone_number_validator, default: -> { PhoneNumberValidator.new }
 
   delegate :success?, :context, :errors, to: :result
 
   register_macro(:phone_number_format) do
-    key.failure(text: "is invalid") if key? && !Phony.plausible?(value)
+    key.failure(text: "is invalid") if key? && !phone_number_validator.valid?(value)
   end
 
   register_macro(:url_format) do

@@ -1,7 +1,0 @@
-= content_tag_for(:tr, broadcast, role: "row") do
-  %td
-    = link_to(broadcast.id, show_location(broadcast))
-  %td
-    = broadcast.status.humanize
-  %td
-    = local_time(broadcast.created_at)

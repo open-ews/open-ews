@@ -1,6 +1,4 @@
-require_relative "application_responder"
-
-class JSONAPIResponder < ApplicationResponder
+class JSONAPIResponder < ActionController::Responder
   def display(resource, given_options = {})
     serializer_class = options.delete(:serializer_class) || resource.jsonapi_serializer_class
     decorator_class = options.key?(:decorator_class) ? options.fetch(:decorator_class) : resource.decorator_class

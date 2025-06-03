@@ -1,51 +1,118 @@
-<%= page_title(title: title) do %>
-  <%= render(
-    "shared/edit_resource_page_action",
-    path: edit_dashboard_broadcast_path(resource),
-  ) %>
-  <%= render(
-    "shared/destroy_resource_page_action",
-    path: dashboard_broadcast_path(resource),
-  ) %>
+<% content_for(:page_actions) do %>
+  <% state_machine = BroadcastStateMachine.new(@broadcast.status) %>
 
-  <%= render "shared/resource_related_links" do %>
-    <%= related_link_to t(:"titles.notifications.index"),
-    dashboard_broadcast_notifications_path(resource) %>
+  <% if state_machine.may_transition_to?(:running) %>
+    <%= button_to(
+          dashboard_broadcast_state_path(@broadcast, desired_status: "running"),
+          method: :post,
+          class: "btn btn-outline-success",
+          form_class: "d-inline",
+          form: { data: { turbo_confirm: t(:"titles.actions.data_confirm") } }
+        ) do %>
+      <i class="icon ti ti-player-play"></i>
+      <%= t(:"titles.broadcasts.start") %>
+    <% end %>
+
+  <% elsif state_machine.may_transition_to?(:stopped) %>
+    <%= button_to(
+          dashboard_broadcast_state_path(@broadcast, desired_status: "stopped"),
+          method: :post,
+          class: "btn btn-outline-danger",
+          form_class: "d-inline",
+          form: { data: { turbo_confirm: t(:"titles.actions.data_confirm") } }
+        ) do %>
+      <i class="icon ti ti-player-stop-filled"></i>
+      <%= t(:"titles.broadcasts.stop") %>
+    <% end %>
+  <% end %>
+
+  <% if state_machine.updatable? %>
+    <%= render "shared/edit_resource_page_action", path: edit_dashboard_broadcast_path(@broadcast) %>
+
+    <%= render "shared/resource_related_links" do %>
+      <%= render "shared/destroy_resource_page_action", path: dashboard_broadcast_path(@broadcast) %>
+    <% end %>
+  <% else %>
+    <%= render "shared/resource_related_links" do %>
+      <%= related_link_to t(:"titles.notifications"), dashboard_broadcast_notifications_path(@broadcast) %>
+    <% end %>
   <% end %>
 <% end %>
 
-<div class="card-body">
-  <%= show_for(resource) do |f| %>
-    <%= f.attribute :id %>
-    <%= f.attribute :status, value: resource.status.humanize %>
-    <%= f.attribute :audio_file do %>
-      <% if resource.audio_file.attached? %>
-        <%= link_to(resource.audio_file_blob.filename, url_for(resource.audio_file)) %>
+<div class="card">
+  <div class="card-body">
+    <%= show_for(@broadcast) do |f| %>
+      <%= f.attribute :id %>
+      <%= f.attribute :status do %>
+        <%= broadcast_status(@broadcast) %>
+        <% if @broadcast.errored? %>
+          <div class="text-danger"><%= @broadcast.error_message %></div>
+        <% end %>
       <% end %>
-    <% end %>
-    <%= f.attribute :audio_url do %>
-      <% if resource.audio_url.present? %>
-        <%= link_to(resource.audio_url, resource.audio_url) %>
-      <% end %>
-    <% end %>
-    <%= f.attribute :created_at, value: local_time(resource.created_at) %>
-    <%= f.attribute :metadata, value: json_attribute_value(resource.metadata) %>
-  <% end %>
 
-  <div class="card" id="broadcast_summary">
-    <div class="card-body">
-      <div class="card-title">
-        <h5>
-          <%= translate(:"titles.broadcasts.summary") %>
-        </h5>
-        <small>
-          <%= link_to do %>
-            <%= tag.i(class: "fas fa-sync-alt") %>
-            <%= translate(:"titles.actions.refresh") %>
-          <% end %>
-        </small>
-      </div>
-      <%= render("summary") %>
+      <%= f.attribute :audio_file do %>
+        <% if @broadcast.audio_file.attached? %>
+          <%= audio_tag(@broadcast.audio_file, controls: true) %>
+        <% end %>
+      <% end %>
+
+      <%= f.attribute :created_at, value: local_time(@broadcast.created_at) %>
+      <%= f.attribute :updated_at, value: local_time(@broadcast.updated_at) %>
+    <% end %>
+
+    <div class="hr-text">Beneficiary filters</div>
+
+    <div class="row">
+      <div class="col"><label class="form-label">Field</label></div>
+      <div class="col"><label class="form-label">Operator</label></div>
+      <div class="col"><label class="form-label">Value</label></div>
     </div>
+
+    <% filter = BeneficiaryFilterData.new(data: @broadcast.beneficiary_filter, address_data_field_name: CountryAddressData.address_field_name(current_account.iso_country_code)) %>
+
+    <% filter.data.fields.values.each do |field| %>
+      <% next if filter.address_data_field.present? && filter.address_fields.values.include?(field) %>
+      <div class="row mb-3" id="beneficiary_filter_<%= field.name %>">
+        <div class="col">
+          <input class="field-name form-control" type="text" value="<%= field.field_definition.human_name(namespace: current_account.iso_country_code) %>" readonly />
+        </div>
+        <div class="col">
+          <input class="field-operator form-control" type="text" value="<%= field.field_definition.human_operator(field.operator) %>" readonly />
+        </div>
+        <div class="col">
+          <% if field.operator == "between" %>
+            <div class="row">
+              <div class="col">
+                <input class="field-value form-control" type="text" value="<%= field.value[0] %>" readonly />
+              </div>
+              <div class="col">
+                <input class="field-value form-control" type="text" value="<%= field.value[1] %>" readonly />
+              </div>
+            </div>
+          <% elsif field.value.is_a?(Array) %>
+            <select class="input-tags-readonly form-control" readonly multiple>
+              <% field.value.each do |value| %>
+                <option selected><%= field.field_definition.human_value(value) %></option>
+              <% end %>
+            </select>
+          <% else %>
+            <input class="field-value form-control" type="text" value="<%= field.field_definition.human_value(field.value) %>" readonly />
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if filter.address_data_field.present? %>
+      <div class="row" id="beneficiary_filter_<%= filter.address_data_field.name %>">
+        <div class="col">
+          <input class="mb-1 field-name form-control" type="text" value="<%= filter.address_data_field.field_definition.human_name(namespace: current_account.iso_country_code) %>" readonly />
+
+          <div data-controller="treeview"
+               data-treeview-data-value="<%= treeview_address_data.to_json %>"
+               data-treeview-selected-value="<%= Array(filter.address_data_field.value).to_json %>">
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

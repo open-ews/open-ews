@@ -1,0 +1,65 @@
+<header class="navbar navbar-expand-md d-none d-lg-flex d-print-none">
+  <div class="container-xl">
+    <button class="navbar-toggler"
+            type="button"
+            aria-controls="navbar-menu"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbar-menu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="navbar-nav flex-row order-md-last user-dropdown">
+      <div class="d-none d-md-flex">
+        <div class="nav-item">
+          <%= link_to url_for(params: request.query_parameters.merge(theme: 'light')),
+                      class: "nav-link px-0 hide-theme-light",
+                      data: { turbo: false },
+                      title: "Enable light mode" do %>
+            <i class="icon ti ti-sun"></i>
+          <% end %>
+
+          <%= link_to url_for(params: request.query_parameters.merge(theme: 'dark')),
+                      class: "nav-link px-0 hide-theme-dark",
+                      data: { turbo: false },
+                      title: "Enable dark mode" do %>
+            <i class="icon ti ti-moon"></i>
+          <% end %>
+        </div>
+
+        <div class="nav-item dropdown">
+          <a class="language-switcher nav-link px-0"
+             aria-label="Select language"
+             data-bs-original-title="Select language"
+             data-bs-toggle="dropdown">
+            <i class="icon ti ti-language"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <%= button_to(dashboard_locale_path(user: { locale: "en" }),
+                          class: "dropdown-item",
+                          method: :patch) do %>
+              <div class="i icon ti">
+                🇬🇧
+              </div>
+              English
+            <% end %>
+
+            <%= button_to(dashboard_locale_path(user: { locale: "km" }),
+                          class: "dropdown-item",
+                          method: :patch) do %>
+              <div class="i icon ti">
+                🇰🇭
+              </div>
+              ខ្មែរ
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <%= render "layouts/dashboard/account_dropdown" %>
+    </div>
+
+    <div id="navbar-menu"></div>
+  </div>
+</header>

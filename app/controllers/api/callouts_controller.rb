@@ -1,17 +1,28 @@
 module API
   class CalloutsController < API::BaseController
+    def index
+      respond_with(:api, paginate(scope))
+    end
+
+    def create
+      @broadcast = Broadcast.new(account: current_account, channel: :voice, **permitted_params)
+      if @broadcast.audio_url.present?
+        @broadcast.save
+      else
+        @broadcast.errors.add(:audio_url, :blank)
+      end
+
+      respond_with(:api, @broadcast, location: -> { api_callout_path(@broadcast) })
+    end
+
+    def show
+      respond_with(:api, scope.find(params[:id]))
+    end
+
     private
 
-    def find_resources_association_chain
-      association_chain
-    end
-
-    def association_chain
-      current_account.broadcasts.all
-    end
-
-    def filter_class
-      Filter::Resource::Broadcast
+    def scope
+      current_account.broadcasts
     end
 
     def permitted_params
@@ -21,26 +32,6 @@ module API
         metadata: {},
         settings: {}
       )
-    end
-
-    def prepare_resource_for_create
-      resource.channel = "voice"
-    end
-
-    def create_resource
-      if resource.audio_url.present?
-        save_resource
-      else
-        resource.errors.add(:audio_url, :blank)
-      end
-    end
-
-    def show_location(resource)
-      api_callout_path(resource)
-    end
-
-    def resources_path
-      api_callouts_path
     end
   end
 end

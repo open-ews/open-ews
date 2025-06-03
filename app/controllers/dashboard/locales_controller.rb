@@ -1,17 +1,12 @@
 module Dashboard
-  class LocalesController < Dashboard::BaseController
-    private
-
-    def find_resource
-      @resource = current_user
+  class LocalesController < DashboardController
+    def update
+      current_user.update!(permitted_params)
+      redirect_back_or_to(dashboard_root_path)
     end
 
     def permitted_params
-      params.fetch(:user, {}).permit(:locale)
-    end
-
-    def respond_with_updated_resource
-      redirect_back(fallback_location: root_path)
+      params.require(:user).permit(:locale)
     end
   end
 end

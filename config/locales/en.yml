@@ -1,13 +1,16 @@
 ---
 en:
-  activerecord:
-    errors:
-      models:
-        access_token:
-          attributes:
-            base:
-              restrict_destroy_status: Cannot delete record because the destroyer is not the creator
-        delivery_attempt:
-          attributes:
-            base:
-              restrict_destroy_status: Cannot delete record because status is %{status}
+  filter_operators:
+    eq: "Equals"
+    not_eq: "Not equals"
+    contains: "Contains"
+    not_contains: "Not contains"
+    starts_with: "Starts with"
+    gt: "Greater than"
+    gteq: "Greater than or equal"
+    lt: "Less than"
+    lteq: "Less than or equal"
+    between: "Between"
+    is_null: "Is NULL"
+    in: "In"
+    not_in: "Not in"

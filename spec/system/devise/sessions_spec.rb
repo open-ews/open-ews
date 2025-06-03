@@ -8,10 +8,9 @@ RSpec.describe "User sign in" do
 
     fill_in "Email", with: user.email
     fill_in "Password", with: "mysecret"
-    click_on "Sign In"
+    click_on "Log in"
 
     expect(page).to have_text("Signed in successfully.")
-    expect(current_path).to eq(user_root_path)
   end
 
   it "can sign out" do
@@ -20,7 +19,9 @@ RSpec.describe "User sign in" do
     sign_in(user)
     visit dashboard_root_path
 
-    click_on "Sign Out"
+    within(".user-dropdown") do
+      click_on "Sign out"
+    end
 
     expect(page).to have_content("You need to sign in or sign up before continuing")
   end

@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.resource "Beneficiaries"  do
   get "/v1/beneficiaries" do
     FieldDefinitions::BeneficiaryFields.each do |field|
-      with_options scope: [ :filter, field.name.to_sym ] do
+      with_options scope: [ :filter, field.path.to_sym ] do
         parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end
@@ -162,7 +162,7 @@ RSpec.resource "Beneficiaries"  do
         method: :_disabled
       )
     end
-    with_options scope: [:data, :relationships, :groups] do
+    with_options scope: [ :data, :relationships, :groups ] do
       parameter(
         :"data.*.type", "Must be `beneficiary_group`",
         required: false,
@@ -430,7 +430,7 @@ RSpec.resource "Beneficiaries"  do
 
   get "/v1/beneficiaries/stats" do
     FieldDefinitions::BeneficiaryFields.each do |field|
-      with_options scope: [ :filter, field.name.to_sym] do
+      with_options scope: [ :filter, field.path.to_sym ] do
         parameter("$operator", field.description, required: false, method: :_disabled)
       end
     end

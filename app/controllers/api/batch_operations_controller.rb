@@ -1,53 +1,24 @@
 module API
   class BatchOperationsController < API::BaseController
-    respond_to :json
+    def create
+      @batch_operation = scope.where(broadcast_id: params[:callout_id]).new(permitted_params)
+      if @batch_operation.broadcast&.pending?
+        @batch_operation.save
+      else
+        @batch_operation.errors.add(:broadcast, "is not initialized")
+      end
+
+      respond_with(:api, @batch_operation, location: -> { api_batch_operation_path(@batch_operation) })
+    end
 
     private
 
-    def create_resource
-      if resource.broadcast&.pending?
-        save_resource
-      else
-        resource.errors.add(:broadcast, "is not initialized")
-      end
-    end
-
-    def filter_class
-      Filter::Resource::BatchOperation
-    end
-
-    def build_resource_association_chain
-      nested_resources_association_chain
-    end
-
-    def find_resources_association_chain
-      nested_resources_association_chain
-    end
-
-    def nested_resources_association_chain
-      if params[:callout_id]
-        association_chain.where(broadcast_id: params[:callout_id])
-      else
-        association_chain
-      end
-    end
-
-    def association_chain
-      BatchOperation::Base.from_type_param(
-        params[:type]
-      ).where(account_id: current_account.id)
+    def scope
+      current_account.batch_operations
     end
 
     def permitted_params
       params.permit(:metadata_merge_mode, metadata: {}, parameters: {})
-    end
-
-    def show_location(resource)
-      api_batch_operation_path(resource)
-    end
-
-    def resources_path
-      api_batch_operations_path
     end
   end
 end
