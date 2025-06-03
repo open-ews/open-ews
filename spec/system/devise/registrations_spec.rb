@@ -16,4 +16,18 @@ RSpec.describe "Registrations" do
 
     expect(page).to have_content("Your account has been updated successfully.")
   end
+
+  it "can update the users profile" do
+    user = create(:user)
+
+    sign_in(user)
+    visit edit_user_registration_path
+
+    within(".user-profile") do
+      fill_in "Name", with: "John Doe"
+      click_on "Save"
+    end
+
+    expect(page).to have_content("Your account has been updated successfully.")
+  end
 end
