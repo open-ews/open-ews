@@ -55,7 +55,7 @@ RSpec.describe "Broadcasts" do
 
     select("Voice", from: "Channel")
     attach_file("Audio file", file_fixture("test.mp3"))
-    select_filter("ISO country code", operator: "Equals", select: "United States")
+    select_filter("ISO country code", operator: "Equals", select: "United States of America")
     select_filter("ISO region code", operator: "Equals", fill_in: "US-AL")
     select_filter("Administrative division level 2 code", operator: "Equals", fill_in: "001")
     select_filter("Administrative division level 2 name", operator: "Starts with", fill_in: "Autauga")
@@ -67,7 +67,7 @@ RSpec.describe "Broadcasts" do
     within("#beneficiary_filter_iso_country_code") do
       expect(page).to have_field(with: "Country")
       expect(page).to have_field(with: "Equals")
-      expect(page).to have_field(with: "United States")
+      expect(page).to have_field(with: "United States of America")
     end
     within("#beneficiary_filter_iso_region_code") do
       expect(page).to have_field(with: "ISO region code")
