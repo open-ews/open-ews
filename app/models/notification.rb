@@ -19,6 +19,8 @@ class Notification < ApplicationRecord
     state :succeeded
   end
 
+  enumerize :status, in: StateMachine.state_definitions.map(&:name)
+
   def completed?
     completed_at.present?
   end

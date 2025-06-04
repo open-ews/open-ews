@@ -72,7 +72,7 @@ module BatchOperation
           beneficiary_id: beneficiary.id,
           phone_number: beneficiary.phone_number,
           delivery_attempts_count: 1,
-          status: :queued
+          status: :pending
         }
       end
 

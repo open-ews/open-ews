@@ -29,10 +29,10 @@
               <%= link_to(notification.id, dashboard_broadcast_notification_path(notification.broadcast, notification)) %>
             </td>
             <td>
-              <%= link_to_if(notification.beneficiary_id.present?, notification.phone_number, dashboard_beneficiary_path(notification.beneficiary)) %>
+              <%= link_to_if(notification.beneficiary_id.present?, format_phone_number(notification.phone_number), dashboard_beneficiary_path(notification.beneficiary)) %>
             </td>
             <td>
-              <%= notification.status.humanize %>
+              <%= notification_status(notification) %>
             </td>
             <td>
               <%= notification.delivery_attempts_count %>

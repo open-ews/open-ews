@@ -1,7 +1,7 @@
 module Dashboard
   class BeneficiariesController < DashboardController
     def index
-      @beneficiaries = scope.page(params[:page]).without_count
+      @beneficiaries = paginate_resources(scope)
     end
 
     def new

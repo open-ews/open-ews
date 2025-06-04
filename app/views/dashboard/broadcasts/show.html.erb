@@ -34,7 +34,10 @@
     <% end %>
   <% else %>
     <%= render "shared/resource_related_links" do %>
-      <%= related_link_to t(:"titles.notifications"), dashboard_broadcast_notifications_path(@broadcast) %>
+      <%= link_to(dashboard_broadcast_notifications_path(@broadcast), class: "dropdown-item") do %>
+        <i class="icon ti ti-message"></i>
+        <%= t(:"titles.notifications") %>
+      <% end %>
     <% end %>
   <% end %>
 <% end %>

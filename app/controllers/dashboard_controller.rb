@@ -11,6 +11,10 @@ class DashboardController < ApplicationController
 
   private
 
+  def paginate_resources(resources_scope)
+    resources_scope.latest_first.page(params[:page]).without_count
+  end
+
   def set_locale
     I18n.locale = current_user.locale
   end

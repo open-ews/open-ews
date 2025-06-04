@@ -1,7 +1,7 @@
 module Dashboard
   class NotificationsController < DashboardController
     def index
-      @notifications = scope.page(params[:page]).without_count
+      @notifications = paginate_resources(scope)
     end
 
     def show

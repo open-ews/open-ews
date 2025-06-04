@@ -6,4 +6,6 @@ class ApplicationRecord < ActiveRecord::Base
   include TimestampQueryHelpers
 
   primary_abstract_class
+
+  scope :latest_first, -> { order(id: :desc) }
 end

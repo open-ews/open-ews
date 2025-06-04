@@ -30,13 +30,6 @@ module ApplicationHelper
     )
   end
 
-  def related_link_to(title, url, options = {})
-    options[:class] ||= ""
-    options[:class] << " dropdown-item"
-
-    link_to(title, url, options)
-  end
-
   def sidebar_nav(text, path, icon_class:, link_options: {})
     is_active = request.path == path || (path != dashboard_root_path && request.path.start_with?(path))
     content_tag(:li, class: "nav-item #{"active" if is_active}") do
@@ -70,5 +63,41 @@ module ApplicationHelper
       text: I18n.locale == :en ? locality.name_en : locality.name_local,
       children: children
     }
+  end
+
+  def broadcast_status(broadcast)
+    case broadcast.status
+    when "pending", "queued"
+      status_badge(broadcast.status_text, color: "gray", icon: "clock")
+    when "running"
+      status_badge(broadcast.status_text, color: "blue", icon: "hourglass-high")
+    when "stopped"
+      status_badge(broadcast.status_text, color: "yellow", icon: "player-stop-filled")
+    when "completed"
+      status_badge(broadcast.status_text, color: "green", icon: "check")
+    when "errored"
+      status_badge(broadcast.status_text, color: "red", icon: "alert-triangle")
+    end
+  end
+
+  def notification_status(notification)
+    case notification.status
+    when "pending"
+      status_badge(notification.status_text, color: "gray", icon: "clock")
+    when "failed"
+      status_badge(notification.status_text, color: "red", icon: "alert-triangle")
+    when "succeeded"
+      status_badge(notification.status_text, color: "green", icon: "check")
+    end
+  end
+
+  def status_badge(text, color:, icon:)
+    content_tag(:span, class: "badge bg-#{color} text-#{color}-fg") do
+      content_tag(:i, nil, class: "icon ti ti-#{icon}") + text
+    end
+  end
+
+  def format_phone_number(value)
+    Phony.format(value)
   end
 end
