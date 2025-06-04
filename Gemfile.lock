@@ -270,7 +270,6 @@ GEM
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
     ffi (1.17.2)
-    ffi (1.17.2-arm64-darwin)
     file_validators (3.0.0)
       activemodel (>= 3.2)
       mime-types (>= 1.0)
@@ -278,9 +277,6 @@ GEM
     globalid (1.2.1)
       activesupport (>= 6.1)
     google-protobuf (4.31.0)
-      bigdecimal
-      rake (>= 13)
-    google-protobuf (4.31.0-arm64-darwin)
       bigdecimal
       rake (>= 13)
     hashdiff (1.2.0)
@@ -361,8 +357,6 @@ GEM
     nio4r (2.7.4)
     nokogiri (1.18.8)
       mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
-    nokogiri (1.18.8-arm64-darwin)
       racc (~> 1.4)
     okcomputer (1.19.0)
     orm_adapter (0.5.0)
@@ -549,7 +543,6 @@ GEM
     stringio (3.1.7)
     thor (1.3.2)
     thruster (0.1.13)
-    thruster (0.1.13-arm64-darwin)
     timeout (0.4.3)
     turbo-rails (2.0.16)
       actionpack (>= 7.1.0)
@@ -584,7 +577,6 @@ GEM
     zeitwerk (2.7.3)
 
 PLATFORMS
-  arm64-darwin-24
   ruby
 
 DEPENDENCIES
