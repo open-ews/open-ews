@@ -4,7 +4,9 @@ RSpec.describe "Notifications" do
   it "can list all notifications for a broadcast" do
     user = create(:user)
     broadcast = create(:broadcast, account: user.account)
-    notification = create(:notification, broadcast:)
+    notification = create(:notification, :pending, broadcast:)
+    create(:notification, :failed, broadcast:)
+    create(:notification, :succeeded, broadcast:)
     other_notification = create(:notification, broadcast: create(:broadcast, account: user.account))
 
     sign_in(user)
