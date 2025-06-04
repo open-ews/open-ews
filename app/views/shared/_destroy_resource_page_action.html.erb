@@ -1,3 +1,4 @@
 <%= button_to(path, class: "dropdown-item text-danger", form_class: "d-inline", title: "Delete", method: :delete, form: { data: { turbo_confirm: "This action cannot be undone. Are you sure you want to continue?" }}) do %>
+  <i class="icon ti ti-trash"></i>
   Delete
 <% end %>

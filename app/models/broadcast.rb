@@ -13,10 +13,8 @@ class Broadcast < ApplicationRecord
     state :completed
   end
 
-  store_accessor :settings
-  accepts_nested_key_value_fields_for :settings
-
   enumerize :channel, in: [ :voice ]
+  enumerize :status, in: StateMachine.state_definitions.map(&:name)
   validates :channel, presence: true
 
   belongs_to :account

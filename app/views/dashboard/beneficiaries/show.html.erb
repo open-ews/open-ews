@@ -10,7 +10,7 @@
   <div class="card-body">
     <%= show_for(@beneficiary) do |f| %>
       <%= f.attribute :id %>
-      <%= f.attribute :phone_number %>
+      <%= f.attribute :phone_number, value: format_phone_number(@beneficiary.phone_number) %>
       <%= f.attribute :iso_country_code, value: country_name(@beneficiary.iso_country_code) %>
       <%= f.attribute :gender, value: @beneficiary.gender_text %>
       <%= f.attribute :iso_language_code %>

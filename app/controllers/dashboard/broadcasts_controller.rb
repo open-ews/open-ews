@@ -1,7 +1,7 @@
 module Dashboard
   class BroadcastsController < DashboardController
     def index
-      @broadcasts = scope.page(params[:page]).without_count
+      @broadcasts = paginate_resources(scope)
     end
 
     def new

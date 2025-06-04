@@ -14,7 +14,7 @@
       <thead>
         <tr role="row">
           <th>#</th>
-          <% [:phone_number, :gender, :created_at].each do |column| %>
+          <% [:phone_number, :created_at].each do |column| %>
             <th>
               <div class="text">
                 <%= @beneficiaries.human_attribute_name(column) %>
@@ -31,10 +31,7 @@
               <%= link_to(beneficiary.id, dashboard_beneficiary_path(beneficiary)) %>
             </td>
             <td>
-              <%= beneficiary.phone_number %>
-            </td>
-            <td>
-              <%= beneficiary.gender_text %>
+              <%= format_phone_number(beneficiary.phone_number) %>
             </td>
             <td>
               <%= local_time(beneficiary.created_at) %>

@@ -15,8 +15,8 @@ module StateMachine
       def state(name, **options)
         state_definitions << StateDefinition.new(
           name:,
-          transitions_to: Array(options.fetch(:transitions_to, [])).map do |(name, options)|
-            Transition.new(name:, as: (options || {}).fetch(:as, nil))
+          transitions_to: Array(options.fetch(:transitions_to, [])).map do |(transition_name, transition_options)|
+            Transition.new(name: transition_name, as: (transition_options || {}).fetch(:as, nil))
           end,
           initial: options.fetch(:initial, false)
         )

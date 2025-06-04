@@ -10,8 +10,8 @@ RSpec.describe "Beneficiaries" do
     visit dashboard_beneficiaries_path
 
     expect(page).to have_title("Beneficiaries")
-    expect(page).to have_content("85516789111")
-    expect(page).not_to have_content("85510555123")
+    expect(page).to have_content("+855 16 789 111")
+    expect(page).not_to have_content("+855 10 555 123")
   end
 
   it "imports beneficiaries" do
@@ -61,7 +61,7 @@ RSpec.describe "Beneficiaries" do
 
     expect(page).to have_title(/Beneficiary/)
     expect(page).to have_content("Beneficiary was successfully created.")
-    expect(page).to have_content("85516789111")
+    expect(page).to have_content("+855 16 789 111")
     expect(page).to have_content("KH-12")
   end
 
@@ -109,7 +109,7 @@ RSpec.describe "Beneficiaries" do
     click_on("Update Beneficiary")
 
     expect(page).to have_content("Beneficiary was successfully updated.")
-    expect(page).to have_content("85516789111")
+    expect(page).to have_content("+855 16 789 111")
     expect(page).to have_content("Female")
     expect(page).to have_content("khm")
     expect(page).to have_content("KH-12")
