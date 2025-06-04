@@ -3,13 +3,11 @@ module "app" {
 
   api_subdomain         = "api-staging"
   app_subdomain         = "app-staging"
-  cdn_subdomain         = "cdn-staging"
   route53_zone          = data.terraform_remote_state.core.outputs.route53_zone
   internal_route53_zone = data.terraform_remote_state.core.outputs.internal_route53_zone
 
   app_identifier             = "open-ews-staging"
   scfm_subdomain             = "scfm-staging"
-  scfm_cdn_subdomain         = "cdn-scfm-staging"
   scfm_route53_zone          = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_somleng_org
   scfm_internal_route53_zone = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_internal_somleng_org
   app_environment            = "staging"
@@ -18,7 +16,6 @@ module "app" {
   app_image                  = data.terraform_remote_state.core.outputs.app_ecr_repository.this.repository_url
   rds_cluster                = data.terraform_remote_state.core.outputs.rds_cluster
   aws_region                 = var.aws_region
-  cdn_certificate            = data.terraform_remote_state.core_infrastructure.outputs.cdn_certificate
   uploads_bucket             = "uploads-staging.open-ews.org"
   db_name                    = "open_ews_staging"
   webserver_min_tasks        = 0
