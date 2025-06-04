@@ -2,7 +2,7 @@ module Dashboard
   module Settings
     class UsersController < DashboardController
       def index
-        @users = scope.page(params[:page]).without_count
+        @users = paginate_resources(scope)
       end
 
       def show
