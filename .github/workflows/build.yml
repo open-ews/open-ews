@@ -44,7 +44,7 @@ jobs:
           [
             {
               "identifier": "open-ews-staging",
-              "branch": "develop",
+              "branch": "small_dashboard_fixes",
               "environment": "staging",
               "friendly_image_tag": "beta",
               "image_tag": "stag-${{ github.sha }}",
@@ -52,7 +52,7 @@ jobs:
             },
             {
               "identifier": "open-ews",
-              "branch": "master",
+              "branch": "small_dashboard_fixes",
               "environment": "production",
               "friendly_image_tag": "latest",
               "image_tag": "prod-${{ github.sha }}",
