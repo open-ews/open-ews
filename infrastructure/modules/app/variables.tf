@@ -3,12 +3,9 @@ variable "app_environment" {}
 variable "app_image" {}
 variable "aws_region" {}
 variable "uploads_bucket" {}
-variable "cdn_subdomain" {}
 variable "scfm_subdomain" {}
-variable "scfm_cdn_subdomain" {}
 variable "scfm_route53_zone" {}
 variable "scfm_internal_route53_zone" {}
-variable "cdn_certificate" {}
 variable "region" {}
 variable "global_accelerator" {}
 variable "rds_cluster" {}
