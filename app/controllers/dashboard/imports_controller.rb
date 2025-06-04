@@ -1,7 +1,7 @@
 module Dashboard
   class ImportsController < DashboardController
     def index
-      @imports = scope.page(params[:page]).without_count
+      @imports = paginate_resources(scope)
     end
 
     def create
