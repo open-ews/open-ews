@@ -6,4 +6,6 @@ class User < ApplicationRecord
   has_many :imports
 
   enumerize :locale, in: %w[en km]
+
+  validates :name, :email, presence: true
 end

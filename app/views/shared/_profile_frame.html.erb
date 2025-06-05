@@ -1,0 +1,36 @@
+<%= content_for(:page_title) do %>
+  <%= title(controller_name: :user_settings, action_name: :index) %>
+<% end %>
+
+<%= content_for(:submenu_navigation_links) do %>
+  <%= link_to(dashboard_user_profile_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "user_profiles"}") do %>
+    <span class="nav-link-icon">
+      <i class="icon ti ti-user"></i>
+    </span>
+    <span class="nav-link-title">
+      Profile
+    </span>
+  <% end %>
+  <%= link_to(edit_user_registration_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "registrations"}") do %>
+    <span class="nav-link-icon">
+      <i class="icon ti ti-settings"></i>
+    </span>
+    <span class="nav-link-title">
+      Settings
+    </span>
+  <% end %>
+  <%= link_to(dashboard_imports_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "imports"}") do %>
+    <span class="nav-link-icon">
+      <i class="icon ti ti-file-import"></i>
+    </span>
+    <span class="nav-link-title">
+      <%= title(controller_name: :imports, action_name: :index) %>
+    </span>
+  <% end %>
+<% end %>
+
+<%= content_for(:frame_content) do %>
+  <%= yield %>
+<% end %>
+
+<%= render("shared/submenu_frame") %>

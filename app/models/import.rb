@@ -20,6 +20,8 @@ class Import < ApplicationRecord
     state :succeeded
   end
 
+  enumerize :status, in: StateMachine.state_definitions.map(&:name)
+
   private
 
   def state_machine

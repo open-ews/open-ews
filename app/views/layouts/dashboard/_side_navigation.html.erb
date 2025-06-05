@@ -17,12 +17,11 @@
     </div>
 
     <div class="navbar-nav flex-row d-lg-none">
-      <%= render "layouts/dashboard/account_dropdown" %>
+      <%= render("layouts/dashboard/account_dropdown") %>
     </div>
 
     <div id="sidebar-menu" class="collapse navbar-collapse">
       <ul class="navbar-nav pt-lg-3">
-        <%#= sidebar_nav(title(controller_name: :home, action_name: :index), dashboard_root_path, icon_class: "ti ti-home") %>
         <%= sidebar_nav(title(controller_name: :beneficiaries, action_name: :index), dashboard_beneficiaries_path, icon_class: "ti ti-address-book") %>
         <%= sidebar_nav(title(controller_name: :broadcasts, action_name: :index), dashboard_broadcasts_path, icon_class: "ti ti-speakerphone") %>
       </ul>

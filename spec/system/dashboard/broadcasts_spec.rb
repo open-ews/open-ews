@@ -91,6 +91,7 @@ RSpec.describe "Broadcasts" do
     user = create(:user, account:)
     broadcast = create(
       :broadcast,
+      :with_attached_audio,
       account: user.account,
       beneficiary_filter: {
         disability_status: { eq: 'normal' },

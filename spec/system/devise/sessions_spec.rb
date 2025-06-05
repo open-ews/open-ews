@@ -19,7 +19,7 @@ RSpec.describe "User sign in" do
     sign_in(user)
     visit dashboard_root_path
 
-    within(".user-dropdown") do
+    within(".topbar-nav") do
       click_on "Sign out"
     end
 

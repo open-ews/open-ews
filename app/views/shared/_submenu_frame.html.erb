@@ -1,0 +1,14 @@
+<div class="card">
+  <div class="row g-0">
+    <div class="col-12 col-md-2 border-end">
+      <div class="card-body py-0">
+        <div class="list-group list-group-transparent frame-sidebar">
+          <%= yield(:submenu_navigation_links) %>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-10 d-flex flex-column">
+      <%= yield(:frame_content) %>
+    </div>
+  </div>
+</div>

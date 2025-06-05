@@ -8,7 +8,7 @@
         <div class="col">
           <div class="row">
             <div class="col">
-              <%= f.input :audio_file, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") } %>
+              <%= f.input :audio_file, required: f.object.new_record?, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") } %>
             </div>
             <% if @broadcast.object.audio_file.attached? %>
               <div class="col">

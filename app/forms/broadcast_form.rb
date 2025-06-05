@@ -40,7 +40,7 @@ class BroadcastForm
   delegate :id, :new_record?, :persisted?, to: :object
 
   validates :audio_file, presence: true, if: :new_record?
-  validates :channel, :beneficiary_filter, presence: true
+  validates :channel, :beneficiary_filter, presence: true, if: :new_record?
 
   def self.model_name
     ActiveModel::Name.new(self, nil, "Broadcast")
