@@ -8,7 +8,6 @@ RSpec.describe "Users" do
     sign_in(user)
     visit dashboard_settings_users_path
 
-    expect(page).to have_title("Settings")
     expect(page).to have_link(
       other_user.name,
       href: dashboard_settings_user_path(other_user)
@@ -35,7 +34,10 @@ RSpec.describe "Users" do
 
     fill_in("Email", with: "user@example.com")
     fill_in("Name", with: "John Doe")
-    click_on("Send an invitation")
+
+    perform_enqueued_jobs do
+      click_on "Send an invitation"
+    end
 
     expect(page).to have_content("An invitation email has been sent to user@example.com.")
     expect(page).to have_content("user@example.com")

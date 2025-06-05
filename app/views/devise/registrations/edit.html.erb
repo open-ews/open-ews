@@ -1,45 +1,23 @@
-<div class="row">
-  <div class="col">
-    <div class="card user-profile">
-      <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :patch, data: { turbo: false } }) do |f| %>
-        <div class="card-header">
-          <h3 class="card-title">Profile</h3>
-        </div>
-
-        <div class="card-body">
-          <%= f.input :name, required: true %>
-        </div>
-
-        <div class="card-footer text-end">
-          <%= f.button :submit %>
-        </div>
-      <% end %>
+<%= render("shared/profile_frame") do %>
+  <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :patch, data: { turbo: false } }) do |f| %>
+    <div class="card-header">
+      <h3 class="card-title">Settings</h3>
     </div>
-  </div>
 
-  <div class="col">
-    <div class="card user-registration">
-      <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :patch, data: { turbo: false } }) do |f| %>
-        <div class="card-header">
-          <h3 class="card-title">Settings</h3>
-        </div>
+    <div class="card-body">
+      <%= f.input :email, required: true %>
 
-        <div class="card-body">
-          <%= f.input :email, required: true %>
-
-          <%= f.input :current_password,
-                  required: true,
-                  input_html: {
-                    autocomplete: "current-password",
-                  } %>
-          <%= f.input :password, input_html: { autocomplete: "new-password" } %>
-          <%= f.input :password_confirmation, input_html: { autocomplete: "new-password" } %>
-        </div>
-
-        <div class="card-footer text-end">
-          <%= f.button :submit %>
-        </div>
-      <% end %>
+      <%= f.input :current_password,
+              required: true,
+              input_html: {
+                autocomplete: "current-password",
+              } %>
+      <%= f.input :password, input_html: { autocomplete: "new-password" } %>
+      <%= f.input :password_confirmation, input_html: { autocomplete: "new-password" } %>
     </div>
-  </div>
-</div>
+
+    <div class="card-footer text-end">
+      <%= f.button :submit %>
+    </div>
+  <% end %>
+<% end %>

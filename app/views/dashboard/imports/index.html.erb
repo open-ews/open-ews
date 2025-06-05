@@ -1,9 +1,12 @@
-<div class="card">
+<%= render("shared/profile_frame") do %>
+  <div class="card-header">
+    <h2 class="mb-0"><%= title %></h2>
+  </div>
+
   <div class="table-responsive">
     <table id="resources" class="table table-vcenter card-table">
       <thead>
         <tr role="row">
-          <th>#</th>
           <% [:import, :import_type, :status, :error_message, :created_at].each do |column| %>
             <th>
               <div class="text">
@@ -24,7 +27,7 @@
               <%= import.resource_type.humanize %>
             </td>
             <td>
-              <%= import.status.humanize %>
+              <%= import_status(import) %>
             </td>
             <td>
               <%= import.error_message %>
@@ -39,4 +42,4 @@
   </div>
 
   <%= render("shared/pagination", resources: @imports) %>
-</div>
+<% end %>

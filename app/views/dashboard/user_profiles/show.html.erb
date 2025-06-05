@@ -1,0 +1,15 @@
+<%= render("shared/profile_frame") do %>
+  <%= simple_form_for(@user, url: dashboard_user_profile_path, html: { data: { turbo: false } }) do |f| %>
+    <div class="card-header">
+      <h3 class="card-title">Profile</h3>
+    </div>
+
+    <div class="card-body">
+      <%= f.input :name %>
+    </div>
+
+    <div class="card-footer text-end">
+      <%= f.button :submit %>
+    </div>
+  <% end %>
+<% end %>

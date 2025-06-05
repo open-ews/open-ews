@@ -91,8 +91,19 @@ module ApplicationHelper
     end
   end
 
+  def import_status(import)
+    case import.status
+    when "processing"
+      status_badge(import.status_text, color: "gray", icon: "clock")
+    when "failed"
+      status_badge(import.status_text, color: "red", icon: "alert-triangle")
+    when "succeeded"
+      status_badge(import.status_text, color: "green", icon: "check")
+    end
+  end
+
   def status_badge(text, color:, icon:)
-    content_tag(:span, class: "badge bg-#{color} text-#{color}-fg") do
+    content_tag(:span, class: "badge bg-#{color}-lt") do
       content_tag(:i, nil, class: "icon ti ti-#{icon}") + text
     end
   end
