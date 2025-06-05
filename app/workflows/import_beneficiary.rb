@@ -1,9 +1,8 @@
 class ImportBeneficiary < ApplicationWorkflow
   attr_reader :import, :data
 
-  class Error < Errors::ImportError; end
-
   def initialize(import:, data:)
+    super()
     @import = import
     @data = data.with_indifferent_access
   end
@@ -15,7 +14,7 @@ class ImportBeneficiary < ApplicationWorkflow
   private
 
   def create_beneficiary!
-    raise Error.new("Cannot create beneficiaries when import contains 'marked_for_deletion' flags. Remove the 'marked_for_deletion' column and try again") if data.key?(:marked_for_deletion)
+    raise Errors::ImportError.new(code: :import_contains_marked_for_deletion_flags) if data.key?(:marked_for_deletion)
 
     beneficiary = Beneficiary.find_or_initialize_by(
       phone_number: data[:phone_number],
@@ -29,17 +28,17 @@ class ImportBeneficiary < ApplicationWorkflow
     beneficiary.metadata = extract_metadata(data)
 
     address_attributes = {
-      iso_region_code: sanitize(data[:"address_iso_region_code"]),
-      administrative_division_level_2_code: sanitize(data[:"address_administrative_division_level_2_code"]),
-      administrative_division_level_2_name: sanitize(data[:"address_administrative_division_level_2_name"]),
-      administrative_division_level_3_code: sanitize(data[:"address_administrative_division_level_3_code"]),
-      administrative_division_level_3_name: sanitize(data[:"address_administrative_division_level_3_name"]),
-      administrative_division_level_4_code: sanitize(data[:"address_administrative_division_level_4_code"]),
-      administrative_division_level_4_name: sanitize(data[:"address_administrative_division_level_4_name"])
+      iso_region_code: sanitize(data[:address_iso_region_code]),
+      administrative_division_level_2_code: sanitize(data[:address_administrative_division_level_2_code]),
+      administrative_division_level_2_name: sanitize(data[:address_administrative_division_level_2_name]),
+      administrative_division_level_3_code: sanitize(data[:address_administrative_division_level_3_code]),
+      administrative_division_level_3_name: sanitize(data[:address_administrative_division_level_3_name]),
+      administrative_division_level_4_code: sanitize(data[:address_administrative_division_level_4_code]),
+      administrative_division_level_4_name: sanitize(data[:address_administrative_division_level_4_name])
     }.compact
 
     if address_attributes.any?
-      raise Error.new("Beneficiary has multiple addresses") if beneficiary.addresses.many?
+      raise(Errors::ImportError.new(code: :beneficiary_has_multiple_addresses)) if beneficiary.addresses.many?
 
       beneficiary.addresses.none? ? beneficiary.addresses.build(address_attributes) : beneficiary.addresses_attributes = { id: beneficiary.addresses.first.id, **address_attributes }
     end
@@ -47,7 +46,7 @@ class ImportBeneficiary < ApplicationWorkflow
     beneficiary.save!
     beneficiary
   rescue ActiveRecord::RecordInvalid => e
-    raise Error.new(e)
+    raise Errors::ImportError.new(e.message, code: :validation_failed)
   end
 
   def delete_beneficiary!
@@ -56,7 +55,7 @@ class ImportBeneficiary < ApplicationWorkflow
       account: import.account
     )
 
-    raise Error.new("Cannot find phone number") if beneficiary.blank?
+    raise(Errors::ImportError.new(code: :beneficiary_not_found)) if beneficiary.blank?
 
     DeleteBeneficiary.call(beneficiary)
   end
@@ -67,8 +66,8 @@ class ImportBeneficiary < ApplicationWorkflow
 
   def marked_for_deletion?
     return if data[:marked_for_deletion].blank?
-    raise Error.new("'marked_for_deletion' must be set to true'") if data.fetch(:marked_for_deletion).downcase != "true"
-    raise Error.new("must contain only 'phone_number' and 'marked_for_deletion'") if data.keys.difference([ "phone_number", "marked_for_deletion" ]).any?
+    raise(Errors::ImportError.new(code: :invalid_marked_for_deletion_flag)) if data.fetch(:marked_for_deletion).downcase != "true"
+    raise(Errors::ImportError.new(code: :invalid_import_columns)) if data.keys.difference([ "phone_number", "marked_for_deletion" ]).any?
 
     true
   end

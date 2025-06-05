@@ -1,7 +1,7 @@
 class StartBroadcast < ApplicationWorkflow
   attr_reader :broadcast
 
-  class Error < StandardError; end
+  class Error < Errors::ApplicationError; end
 
   delegate :account, :beneficiary_filter, to: :broadcast, private: true
 
@@ -17,11 +17,11 @@ class StartBroadcast < ApplicationWorkflow
       create_notifications
       create_delivery_attempts
 
-      broadcast.error_message = nil
+      broadcast.error_code = nil
       broadcast.transition_to!(:running, touch: :started_at)
     end
   rescue DownloadBroadcastAudioFile::Error, Error => e
-    broadcast.mark_as_errored!(e.message)
+    broadcast.mark_as_errored!(e.code)
   end
 
   private
@@ -31,7 +31,7 @@ class StartBroadcast < ApplicationWorkflow
   end
 
   def create_notifications
-    raise Error, "Account not configured" unless broadcast.account.configured_for_broadcasts?
+    raise(Error.new(code: :account_not_configured_for_channel)) unless broadcast.account.configured_for_broadcasts?
     notifications = []
 
     group_beneficiaries.find_each do |beneficiary|
@@ -42,7 +42,7 @@ class StartBroadcast < ApplicationWorkflow
       notifications << build_notification(beneficiary, priority: 1)
     end
 
-    raise Error, "No beneficiaries match the filters" if notifications.none?
+    raise(Error.new(code: :no_matching_beneficiaries)) if notifications.none?
 
     Notification.upsert_all(notifications)
   end

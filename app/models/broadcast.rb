@@ -47,10 +47,10 @@ class Broadcast < ApplicationRecord
     result
   end
 
-  def mark_as_errored!(message)
+  def mark_as_errored!(error_code)
     transaction do
       state_machine.transition_to!(:errored)
-      update!(error_message: message)
+      update!(error_code:)
     end
   end
 

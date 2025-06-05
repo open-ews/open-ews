@@ -307,6 +307,37 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
+    example "Fail to start a broadcast", document: false do
+      account = create(:account, :configured_for_broadcasts)
+      broadcast = create(
+        :broadcast,
+        :with_attached_audio,
+        status: :pending,
+        account:,
+      )
+
+      set_authorization_header_for(account)
+      perform_enqueued_jobs do
+        do_request(
+          id: broadcast.id,
+          data: {
+            id: broadcast.id,
+            type: :broadcast,
+            attributes: {
+              status: "running"
+            }
+          }
+        )
+      end
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(broadcast.reload).to have_attributes(
+        status: "errored",
+        error_code: "no_matching_beneficiaries"
+      )
+    end
+
     example "Update a broadcast" do
       account = create(:account)
       beneficiary_group = create(:beneficiary_group, account:)

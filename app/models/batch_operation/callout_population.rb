@@ -2,7 +2,7 @@ module BatchOperation
   class CalloutPopulation < Base
     include CustomRoutesHelper["batch_operations"]
 
-    class Error < StandardError; end
+    class Error < Errors::ApplicationError; end
 
     belongs_to :broadcast
 
@@ -24,11 +24,11 @@ module BatchOperation
         create_notifications
         create_delivery_attempts
 
-        broadcast.error_message = nil
+        broadcast.error_code = nil
         broadcast.transition_to!(:running, touch: :started_at)
       end
     rescue DownloadBroadcastAudioFile::Error, Error => e
-      broadcast.mark_as_errored!(e.message)
+      broadcast.mark_as_errored!(e.code)
     end
 
     def contact_filter_metadata
@@ -63,8 +63,8 @@ module BatchOperation
 
     def create_notifications
       beneficiaries = beneficiaries_scope
-      raise Error, "Account not configured" unless broadcast.account.configured_for_broadcasts?
-      raise Error, "No beneficiaries match the filters" if beneficiaries.none?
+      raise(Error.new(code: :account_not_configured_for_channel)) unless broadcast.account.configured_for_broadcasts?
+      raise(Error.new(code: :no_matching_beneficiaries)) if beneficiaries.none?
 
       notifications = beneficiaries.find_each.map do |beneficiary|
         {
