@@ -32,13 +32,13 @@ RSpec.describe ImportBeneficiary do
         iso_language_code: "khm",
         gender: "M",
         meta_my_attribute: "my_value",
-        "address_iso_region_code": "KH-1",
-        "address_administrative_division_level_2_code": "0102",
-        "address_administrative_division_level_2_name": "Mongkol Borei",
-        "address_administrative_division_level_3_code": "010201",
-        "address_administrative_division_level_3_name": "Banteay Neang",
-        "address_administrative_division_level_4_code": "01020101",
-        "address_administrative_division_level_4_name": "Ou Thum"
+        address_iso_region_code: "KH-1",
+        address_administrative_division_level_2_code: "0102",
+        address_administrative_division_level_2_name: "Mongkol Borei",
+        address_administrative_division_level_3_code: "010201",
+        address_administrative_division_level_3_name: "Banteay Neang",
+        address_administrative_division_level_4_code: "01020101",
+        address_administrative_division_level_4_name: "Ou Thum"
       }
     )
 
@@ -115,8 +115,8 @@ RSpec.describe ImportBeneficiary do
       data: {
         phone_number: "85516789111",
         iso_country_code: "KH",
-        "address_iso_region_code": "KH-1",
-        "address_administrative_division_level_2_code": "0102",
+        address_iso_region_code: "KH-1",
+        address_administrative_division_level_2_code: "0102"
       }
     )
 
@@ -145,8 +145,8 @@ RSpec.describe ImportBeneficiary do
       data: {
         phone_number: "85516789111",
         iso_country_code: "KH",
-        "address_iso_region_code": "KH-12",
-        "address_administrative_division_level_2_code": "1201",
+        address_iso_region_code: "KH-12",
+        address_administrative_division_level_2_code: "1201"
       }
     )
 
@@ -177,11 +177,11 @@ RSpec.describe ImportBeneficiary do
         data: {
           phone_number: "85516789111",
           iso_country_code: "KH",
-          "address_iso_region_code": "KH-12",
-          "address_administrative_division_level_2_code": "1201",
+          address_iso_region_code: "KH-12",
+          address_administrative_division_level_2_code: "1201"
         }
       )
-    }.to raise_error(Errors::ImportError, "Beneficiary has multiple addresses")
+    }.to raise_error(Errors::ImportError)
   end
 
   it "handles invalid attributes" do

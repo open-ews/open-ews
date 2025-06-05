@@ -22,7 +22,7 @@ RSpec.describe StartBroadcast do
       audio_url: "https://example.com/cowbell.mp3",
       status: :queued,
       account:,
-      error_message: "existing error message",
+      error_code: "no_matching_beneficiaries",
       beneficiary_filter: {
         gender: { eq: "F" },
         "address.iso_region_code": { eq: "KH-12" }
@@ -34,7 +34,7 @@ RSpec.describe StartBroadcast do
 
     expect(broadcast).to have_attributes(
       status: "running",
-      error_message: be_blank,
+      error_code: be_blank,
       started_at: be_present,
       audio_file: be_attached
     )
@@ -95,8 +95,10 @@ RSpec.describe StartBroadcast do
 
     StartBroadcast.call(broadcast)
 
-    expect(broadcast.status).to eq("errored")
-    expect(broadcast.error_message).to eq("Unable to download audio file")
+    expect(broadcast).to have_attributes(
+      status: "errored",
+      error_code: "audio_download_failed"
+    )
   end
 
   it "marks errored when there are no beneficiaries that match the filters" do
@@ -116,7 +118,7 @@ RSpec.describe StartBroadcast do
     StartBroadcast.call(broadcast)
 
     expect(broadcast.status).to eq("errored")
-    expect(broadcast.error_message).to eq("No beneficiaries match the filters")
+    expect(broadcast.error_code).to eq("no_matching_beneficiaries")
   end
 
   it "marks errored when the account is not yet configured for sending broadcasts" do
@@ -134,7 +136,9 @@ RSpec.describe StartBroadcast do
 
     StartBroadcast.call(broadcast)
 
-    expect(broadcast.status).to eq("errored")
-    expect(broadcast.error_message).to eq("Account not configured")
+    expect(broadcast).to have_attributes(
+      status: "errored",
+      error_code: "account_not_configured_for_channel"
+    )
   end
 end

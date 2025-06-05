@@ -1,0 +1,10 @@
+en:
+  error_codes:
+    no_matching_beneficiaries: "No beneficiaries match the filters"
+    account_not_configured_for_channel: "Account is not configured for this channel"
+    audio_download_failed: "Unable to download audio file"
+    import_contains_marked_for_deletion_flags: "Cannot create beneficiaries when import contains 'marked_for_deletion' flags. Remove the 'marked_for_deletion' column and try again"
+    beneficiary_has_multiple_addresses: "Beneficiary has multiple addresses"
+    beneficiary_not_found: "Beneficiary not found"
+    invalid_marked_for_deletion_flag: "Invalid value for 'marked_for_deletion' flag. Must be true"
+    invalid_import_columns: "Invalid import columns"

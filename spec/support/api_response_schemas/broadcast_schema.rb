@@ -9,6 +9,7 @@ module APIResponseSchema
       required(:beneficiary_filter).maybe(:hash?)
       required(:metadata).maybe(:hash?)
       required(:status).filled(:str?)
+      required(:error_code).maybe(:str?)
       required(:created_at).filled(:str?)
       required(:updated_at).filled(:str?)
     end

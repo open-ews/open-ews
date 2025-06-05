@@ -97,6 +97,10 @@ module ApplicationHelper
     end
   end
 
+  def error_message_for(code)
+    t("error_codes.#{code}", default: code.to_s.humanize)
+  end
+
   def format_phone_number(value)
     Phony.format(value)
   end

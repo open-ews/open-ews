@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_31_055239) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_05_052226) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -146,9 +146,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_31_055239) do
     t.string "audio_url"
     t.string "channel", null: false
     t.jsonb "beneficiary_filter", default: {}, null: false
-    t.string "error_message"
     t.datetime "started_at"
     t.datetime "completed_at"
+    t.string "error_code"
     t.index ["account_id"], name: "index_broadcasts_on_account_id"
     t.index ["status"], name: "index_broadcasts_on_status"
   end
@@ -196,6 +196,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_31_055239) do
     t.bigint "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "error_code"
     t.index ["account_id"], name: "index_imports_on_account_id"
     t.index ["user_id"], name: "index_imports_on_user_id"
   end

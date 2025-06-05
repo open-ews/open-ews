@@ -4,12 +4,14 @@ class ImportCSV < ApplicationWorkflow
   attr_reader :import
 
   def initialize(import)
+    super()
     @import = import
   end
 
   def call
     import_csv
   rescue Errors::ImportError => e
+    import.error_code = e.code
     import.error_message = "Line #{import.error_line}: #{e.message}"
     import.transition_to!(:failed)
   end

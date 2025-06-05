@@ -49,7 +49,7 @@
       <%= f.attribute :status do %>
         <%= broadcast_status(@broadcast) %>
         <% if @broadcast.errored? %>
-          <div class="text-danger"><%= @broadcast.error_message %></div>
+          <div class="text-danger"><%= error_message_for(@broadcast.error_code) %></div>
         <% end %>
       <% end %>
 
