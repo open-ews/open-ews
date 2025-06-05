@@ -3,7 +3,7 @@ class StartBroadcast < ApplicationWorkflow
 
   class Error < Errors::ApplicationError; end
 
-  delegate :account, :beneficiary_filter, to: :broadcast, private: true
+  delegate :account, to: :broadcast, private: true
 
   def initialize(broadcast)
     super()
@@ -62,10 +62,16 @@ class StartBroadcast < ApplicationWorkflow
   end
 
   def filtered_beneficiaries
-    @filtered_beneficiaries ||= FilterScopeQuery.new(
+    return Beneficiary.none if !beneficiary_filter.success? || beneficiary_filter.output.blank?
+
+    FilterScopeQuery.new(
       account.beneficiaries.active,
-      BeneficiaryFilter.new(input_params: beneficiary_filter).output
+      beneficiary_filter.output
     ).apply.where.not(id: group_beneficiaries.select(:id))
+  end
+
+  def beneficiary_filter
+    @beneficiary_filter ||= BeneficiaryFilter.new(input_params: broadcast.beneficiary_filter)
   end
 
   def group_beneficiaries

@@ -17,9 +17,9 @@ class ApplicationRequestSchema < Dry::Validation::Contract
     next unless key?
 
     uri = URI.parse(value)
-    isValid = (uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)) && uri.host.present?
+    is_valid = (uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)) && uri.host.present?
 
-    key.failure(text: "is invalid") unless isValid
+    key.failure(text: "is invalid") unless is_valid
   rescue URI::InvalidURIError
     key.failure(text: "is invalid")
   end

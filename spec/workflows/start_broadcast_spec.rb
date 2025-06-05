@@ -82,6 +82,32 @@ RSpec.describe StartBroadcast do
     )
   end
 
+  it "starts a broadcast with only a beneficiary group" do
+    account = create(:account, :configured_for_broadcasts)
+    beneficiary_group = create(:beneficiary_group, account:)
+    beneficiary_in_group = create(:beneficiary, account:)
+    create(:beneficiary_group_membership, beneficiary_group:, beneficiary: beneficiary_in_group)
+    broadcast = create(:broadcast, :with_attached_audio, account:, status: :queued, beneficiary_groups: [ beneficiary_group ])
+    _other_beneficiary = create(:beneficiary, account:)
+
+    StartBroadcast.call(broadcast)
+
+    expect(broadcast.beneficiaries).to contain_exactly(beneficiary_in_group)
+  end
+
+  it "handles invalid beneficiary filters" do
+    account = create(:account, :configured_for_broadcasts)
+    create(:beneficiary, account:)
+    broadcast = create(:broadcast, :with_attached_audio, account:, status: :queued, beneficiary_filter: { gender: { eq: "Z" } })
+
+    StartBroadcast.call(broadcast)
+
+    expect(broadcast).to have_attributes(
+      status: "errored",
+      beneficiaries: be_empty
+    )
+  end
+
   it "marks errored when the audio file can't be downloaded" do
     account = create(:account, :configured_for_broadcasts)
     broadcast = create(
