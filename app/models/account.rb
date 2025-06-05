@@ -12,6 +12,7 @@ class Account < ApplicationRecord
 
   enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
   validates :iso_country_code, presence: true
+  validates :somleng_account_sid, uniqueness: true, allow_blank: true
 
   def api_key
     access_token.token

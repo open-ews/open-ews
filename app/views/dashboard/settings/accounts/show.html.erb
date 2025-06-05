@@ -1,5 +1,5 @@
 <%= render "dashboard/settings/frame" do %>
-  <%= simple_form_for(current_account, url: dashboard_settings_account_path) do |f| %>
+  <%= simple_form_for(@account, url: dashboard_settings_account_path) do |f| %>
     <div class="card-header">
       <h2 class="mb-0"><%= title %></h2>
     </div>

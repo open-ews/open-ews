@@ -21,4 +21,16 @@ RSpec.describe "Account Settings" do
     expect(page).to have_field("Somleng account sid", with: somleng_account_sid)
     expect(page).to have_field("Somleng auth token", with: somleng_auth_token)
   end
+
+  it "handles validations" do
+    other_account = create(:account, somleng_account_sid: generate(:somleng_account_sid))
+    user = create(:user)
+
+    sign_in(user)
+    visit(dashboard_settings_account_path)
+    fill_in("Somleng account sid", with: other_account.somleng_account_sid)
+    click_on("Save")
+
+    expect(page).to have_content("has already been taken")
+  end
 end
