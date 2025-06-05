@@ -44,4 +44,15 @@ RSpec.describe "User profile" do
     expect(page).to have_content("Your account has been updated successfully.")
     expect(page).to have_field("Email", with: "bobchan@example.com")
   end
+
+  it "handles form validations" do
+    user = create(:user, name: "John Doe")
+
+    sign_in(user)
+    visit dashboard_user_profile_path
+    fill_in("Name", with: "")
+    click_on("Save")
+
+    expect(page).to have_content("Name can't be blank")
+  end
 end

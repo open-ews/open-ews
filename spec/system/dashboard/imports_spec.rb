@@ -4,6 +4,8 @@ RSpec.describe "Imports" do
   it "list imports" do
     user = create(:user, name: "John Doe")
     import = create(:import, :beneficiaries, user:, status: :processing)
+    create(:import, :beneficiaries, user:, status: :failed)
+    create(:import, :beneficiaries, user:, status: :succeeded)
 
     sign_in(user)
     visit dashboard_root_path
