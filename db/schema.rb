@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_05_052226) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_010816) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -214,6 +214,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_052226) do
     t.integer "priority", default: 0, null: false
     t.index ["beneficiary_id"], name: "index_notifications_on_beneficiary_id"
     t.index ["broadcast_id", "beneficiary_id"], name: "index_notifications_on_broadcast_id_and_beneficiary_id", unique: true
+    t.index ["broadcast_id", "id"], name: "index_notifications_on_broadcast_id_and_id", order: { id: :desc }
     t.index ["broadcast_id"], name: "index_notifications_on_broadcast_id"
     t.index ["completed_at"], name: "index_notifications_on_completed_at"
     t.index ["priority"], name: "index_notifications_on_priority"
