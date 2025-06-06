@@ -69,4 +69,14 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
 
     expect(RetryNotificationJob).not_to have_been_enqueued
   end
+
+  it "handles duplicates" do
+    broadcast = create(:broadcast, :running)
+    notification = create(:notification, :pending, broadcast:)
+    delivery_attempt = create(:delivery_attempt, :failed, notification:)
+
+    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
+
+    expect(delivery_attempt).to have_attributes(status: "failed")
+  end
 end

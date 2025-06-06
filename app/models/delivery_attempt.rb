@@ -19,6 +19,10 @@ class DeliveryAttempt < ApplicationRecord
     state :succeeded
   end
 
+  def completed?
+    completed_at.present?
+  end
+
   # NOTE: This is for backward compatibility until we moved to the new API
   def as_json(*)
     result = super

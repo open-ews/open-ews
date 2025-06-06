@@ -2,6 +2,7 @@ class HandleCallStatusCallback < ApplicationWorkflow
   attr_reader :delivery_attempt, :call_status_callback
 
   def initialize(**options)
+    super()
     @delivery_attempt = options.fetch(:delivery_attempt) { DeliveryAttempt.find(options.fetch(:delivery_attempt_id)) }
     @call_status_callback = options.fetch(:call_status_callback) do
       Somleng::Parser::CallStatusCallbackParser.new.parse(options.fetch(:params))

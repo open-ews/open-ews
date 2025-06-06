@@ -2,11 +2,14 @@ class HandleDeliveryAttemptStatusUpdate < ApplicationWorkflow
   attr_reader :delivery_attempt, :status
 
   def initialize(delivery_attempt, status:)
+    super()
     @delivery_attempt = delivery_attempt
     @status = status
   end
 
   def call
+    return if delivery_attempt.completed?
+
     ApplicationRecord.transaction do
       case status
       when "completed"
