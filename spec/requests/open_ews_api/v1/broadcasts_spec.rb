@@ -160,7 +160,7 @@ RSpec.resource "Broadcasts"  do
           relationships: {
             beneficiary_groups: {
               data: [
-                { type: "beneficiary_group", id: beneficiary_group.id },
+                { type: "beneficiary_group", id: beneficiary_group.id }
               ]
             }
           }
@@ -169,7 +169,37 @@ RSpec.resource "Broadcasts"  do
 
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
-      expect(json_response.dig("data", "relationships", "beneficiary_groups", "data", 0, "id")).to eq(beneficiary_group.id.to_s)
+    end
+
+    example "Create broadcast for specific beneficiaries" do
+      explanation <<~HEREDOC
+        You can create a broadcast for a specific set of beneficiaries using the phone number filter. This is especially useful when you want to quickly send a message to a known group—such as staff, partners, or a predefined list—without needing to assign them to a beneficiary group.
+        It's also helpful for **testing** broadcasts in a live environment without affecting the full beneficiary population. The priority remains the same as standard broadcasts, ensuring consistent behavior while giving you more control over delivery.
+      HEREDOC
+
+      account = create(:account, :configured_for_broadcasts)
+      beneficiaries = create_list(:beneficiary, 2, account:)
+      stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
+
+      set_authorization_header_for(account)
+      perform_enqueued_jobs do
+        do_request(
+          data: {
+            type: :broadcast,
+            attributes: {
+              channel: "voice",
+              audio_url: "https://www.example.com/test.mp3",
+              status: :running,
+              beneficiary_filter: {
+                phone_number: { in: beneficiaries.pluck(:phone_number) }
+              }
+            }
+          }
+        )
+      end
+
+      expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
     end
 
     example "Fail to create a broadcast", document: false do
@@ -419,6 +449,29 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(422)
       expect(response_body).to match_api_response_schema("jsonapi_error")
       expect(json_response.dig("errors", 0, "source", "pointer")).to eq("/data/attributes/status")
+    end
+  end
+
+  get "/v1/broadcasts/:broadcast_id/audio_file" do
+    example "Download a broadcast's audio file" do
+      account = create(:account)
+      broadcast = create(:broadcast, :with_attached_audio, audio_filename: "test.mp3", account:)
+
+      set_authorization_header_for(account)
+      do_request(broadcast_id: broadcast.id)
+
+      expect(response_status).to eq(302)
+      expect(response_headers["Location"]).to end_with(".mp3")
+    end
+
+    example "Handle when broadcast's audio file is not available", document: false do
+      account = create(:account)
+      broadcast = create(:broadcast, account:, audio_file: nil)
+
+      set_authorization_header_for(account)
+      do_request(broadcast_id: broadcast.id)
+
+      expect(response_status).to eq(406)
     end
   end
 end

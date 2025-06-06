@@ -94,6 +94,7 @@ RSpec.describe "Broadcasts" do
       :with_attached_audio,
       account: user.account,
       beneficiary_filter: {
+        phone_number: { in: [ "855715100850",  "855715100851" ] },
         disability_status: { eq: 'normal' },
         "address.administrative_division_level_3_code": { in: [ "120101" ] }
       }
@@ -124,6 +125,11 @@ RSpec.describe "Broadcasts" do
       expect(page).to have_field(with: "ISO language code")
       expect(page).to have_field(with: "Equals")
       expect(page).to have_field(with: "khm")
+    end
+    within("#beneficiary_filter_phone_number") do
+      expect(page).to have_field(with: "Phone number")
+      expect(page).to have_field(with: "In")
+      expect(page).to have_select(selected: [ "855715100850",  "855715100851" ])
     end
     within("#beneficiary_filter_administrative_division_level_3_code") do
       expect(page).to have_content("Banteay Meanchey")
