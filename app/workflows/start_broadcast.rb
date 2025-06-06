@@ -32,12 +32,13 @@ class StartBroadcast < ApplicationWorkflow
   end
 
   def prepare_audio_file
-    CopyBlobWithExtension.call(blob, bucket: broadcast.audio_file.blob.service.bucket.name) if storage_service?(:amazon)
+    blob = broadcast.audio_file.blob
+    CopyBlobWithExtension.call(blob, bucket: blob.service.bucket.name) if storage_service?(blob, :amazon)
   end
 
-  def storage_service?(service_name)
+  def storage_service?(blob, service_name)
     raise(ArgumentError, "Unknown storage service name: #{service_name}") unless Rails.application.config.active_storage.service_configurations.key?(service_name.to_s)
-    broadcast.audio_file.blob.service.name.to_sym == service_name.to_sym
+    blob.service.name.to_sym == service_name.to_sym
   end
 
   def create_notifications
