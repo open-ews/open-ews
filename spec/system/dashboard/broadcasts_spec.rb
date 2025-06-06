@@ -21,12 +21,15 @@ RSpec.describe "Broadcasts" do
   it "create a broadcast", :js do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
+    create_beneficiary_group(name: "My group", account:)
+    create_beneficiary_group(name: "My other group", account:)
 
     sign_in(user)
     visit new_dashboard_broadcast_path
 
     select("Voice", from: "Channel")
     attach_file("Audio file", file_fixture("test.mp3"))
+    select_list("My group", "My other group", from: "Beneficiary groups")
     select_filter("Gender", operator: "Equals", select: "Male")
     select_filter(:administrative_division_level_3_code)
     select_tree("Banteay Meanchey", "Mongkol Borei", "Banteay Neang", from: :administrative_division_level_3_code)
@@ -34,6 +37,8 @@ RSpec.describe "Broadcasts" do
     click_on("Create Broadcast")
 
     expect(page).to have_content("Broadcast was successfully created.")
+    expect(page).to have_content("My group")
+    expect(page).to have_content("My other group")
     within("#beneficiary_filter_gender") do
       expect(page).to have_field(with: "Gender")
       expect(page).to have_field(with: "Equals")
@@ -89,20 +94,26 @@ RSpec.describe "Broadcasts" do
   it "update a broadcast", :js do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
+    create_beneficiary_group(name: "My other group", account:)
     broadcast = create(
       :broadcast,
       :with_attached_audio,
+      audio_filename: "test.mp3",
       account: user.account,
+      beneficiary_groups: [ create_beneficiary_group(name: "My group", account:) ],
       beneficiary_filter: {
         phone_number: { in: [ "855715100850",  "855715100851" ] },
         disability_status: { eq: 'normal' },
-        "address.administrative_division_level_3_code": { in: [ "120101" ] }
+        "address.administrative_division_level_3_code": { in: [ "120101" ] },
       }
     )
 
     sign_in(user)
     visit edit_dashboard_broadcast_path(broadcast)
 
+    expect(page).to have_link("test.mp3")
+
+    select_list("My other group", from: "Beneficiary groups")
     select_filter("Gender", operator: "Equals", select: "Male")
     select_filter("Disability status", operator: "Equals", select: "Disabled", enable_filter: false)
     select_filter("ISO language code", operator: "Equals", fill_in: "khm")
@@ -110,7 +121,9 @@ RSpec.describe "Broadcasts" do
 
     click_on "Update Broadcast"
 
-    expect(page).to have_text("Broadcast was successfully updated.")
+    expect(page).to have_content("Broadcast was successfully updated.")
+    expect(page).to have_content("My group")
+    expect(page).to have_content("My other group")
     within("#beneficiary_filter_gender") do
       expect(page).to have_field(with: "Gender")
       expect(page).to have_field(with: "Equals")
@@ -258,5 +271,24 @@ RSpec.describe "Broadcasts" do
 
   def filter_namespace
     "broadcast_beneficiary_filter"
+  end
+
+  def create_beneficiary_group(attributes)
+    beneficiary_group = create(:beneficiary_group, **attributes)
+    create(
+      :beneficiary_group_membership,
+      beneficiary_group: beneficiary_group,
+      beneficiary: create(:beneficiary, account: beneficiary_group.account)
+    )
+    beneficiary_group
+  end
+
+  def select_list(*values, from:)
+    return values.each { select(it, from:) } if Capybara.current_driver == :rack_test
+
+    control_wrapper = find_field(from, visible: false).find(:xpath, "..")
+    control_wrapper.click
+
+    values.each { control_wrapper.find(:xpath, "..//*[text()='#{it}']").click }
   end
 end

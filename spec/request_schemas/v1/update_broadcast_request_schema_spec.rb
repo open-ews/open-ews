@@ -138,6 +138,24 @@ module V1
             data: {
               relationships: {
                 beneficiary_groups: {
+                  data: 11.times.map { |index| { id: index + 1, type: "beneficiary_group" } }
+                }
+              }
+            }
+          },
+          options: {
+            account:,
+            resource: broadcast
+          }
+        )
+      ).not_to have_valid_field(:data, :relationships, :beneficiary_groups, :data, error_message: "size cannot be greater than 10")
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              relationships: {
+                beneficiary_groups: {
                   data: [
                     {
                       id: other_beneficiary_group.id,

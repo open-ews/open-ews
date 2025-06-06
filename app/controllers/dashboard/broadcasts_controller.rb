@@ -5,7 +5,7 @@ module Dashboard
     end
 
     def new
-      @broadcast = BroadcastForm.new
+      @broadcast = BroadcastForm.new(account: current_account)
     end
 
     def create
@@ -19,7 +19,7 @@ module Dashboard
     end
 
     def update
-      @broadcast = BroadcastForm.new(object: scope.find(params[:id]), **permitted_params)
+      @broadcast = BroadcastForm.new(account: current_account, object: scope.find(params[:id]), **permitted_params)
       @broadcast.save
 
       respond_with(:dashboard, @broadcast)
@@ -42,7 +42,7 @@ module Dashboard
     end
 
     def permitted_params
-      params.require(:broadcast).permit(:audio_file, :channel, beneficiary_filter: {})
+      params.require(:broadcast).permit(:audio_file, :channel, beneficiary_groups: [], beneficiary_filter: {})
     end
   end
 end

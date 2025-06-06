@@ -55,4 +55,24 @@ RSpec.describe BroadcastForm do
       }
     )
   end
+
+  it "validates the beneficiary groups length" do
+    account = create(:account)
+    beneficiary_groups = create_list(:beneficiary_group, 11, account:)
+    form = BroadcastForm.new(account:, beneficiary_groups: beneficiary_groups.pluck(:id))
+
+    form.valid?
+
+    expect(form.errors[:beneficiary_groups]).to be_present
+  end
+
+  it "validates the beneficiary groups exist" do
+    account = create(:account)
+
+    form = BroadcastForm.new(account:, beneficiary_groups: [ "0" ])
+
+    form.valid?
+
+    expect(form.errors[:beneficiary_groups]).to be_present
+  end
 end
