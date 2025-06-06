@@ -26,10 +26,10 @@
         <% @notifications.each do |notification| %>
           <%= content_tag_for(:tr, notification) do %>
             <td>
-              <%= link_to(notification.id, dashboard_broadcast_notification_path(notification.broadcast, notification)) %>
+              <%= link_to(notification.id, dashboard_broadcast_notification_path(notification.broadcast_id, notification)) %>
             </td>
             <td>
-              <%= link_to_if(notification.beneficiary_id.present?, format_phone_number(notification.phone_number), dashboard_beneficiary_path(notification.beneficiary)) %>
+              <%= link_to_if(notification.beneficiary_id.present?, format_phone_number(notification.phone_number), dashboard_beneficiary_path(notification.beneficiary_id)) %>
             </td>
             <td>
               <%= notification_status(notification) %>

@@ -2,5 +2,6 @@
 en:
   attributes:
     iso_country_code: Country
+    delivery_attempts_count: Delivery attempts
     kh:
       administrative_division_level_3_code: Commune
