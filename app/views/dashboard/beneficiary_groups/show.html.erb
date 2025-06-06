@@ -1,0 +1,18 @@
+<% content_for(:page_actions) do %>
+  <%= render("shared/edit_resource_page_action", path: edit_dashboard_beneficiary_group_path(@beneficiary_group)) %>
+
+  <%= render "shared/resource_related_links" do %>
+    <%= render("shared/destroy_resource_page_action", path: dashboard_beneficiary_group_path(@beneficiary_group)) %>
+  <% end %>
+<% end %>
+
+<div class="card">
+  <div class="card-body">
+    <%= show_for(@beneficiary_group) do |f| %>
+      <%= f.attribute :id %>
+      <%= f.attribute :name %>
+      <%= f.attribute :created_at, value: local_time(@beneficiary_group.created_at) %>
+      <%= f.attribute :updated_at, value: local_time(@beneficiary_group.updated_at) %>
+    <% end %>
+  </div>
+</div>
