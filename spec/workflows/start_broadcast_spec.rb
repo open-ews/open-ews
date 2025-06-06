@@ -15,11 +15,11 @@ RSpec.describe StartBroadcast do
     create(:beneficiary_group_membership, beneficiary_group: other_beneficiary_group, beneficiary: beneficiary_in_group)
     create(:beneficiary_group_membership, beneficiary_group:, beneficiary: female_beneficiaries.first)
 
-    stub_request(:get, "https://example.com/cowbell.mp3").to_return(status: 200)
+    stub_request(:get, "https://example.com/test.mp3").to_return(status: 200)
 
     broadcast = create(
       :broadcast,
-      audio_url: "https://example.com/cowbell.mp3",
+      audio_url: "https://example.com/test.mp3",
       status: :queued,
       account:,
       error_code: "no_matching_beneficiaries",
@@ -32,7 +32,7 @@ RSpec.describe StartBroadcast do
 
     StartBroadcast.call(broadcast)
 
-    expect(broadcast).to have_attributes(
+    expect(broadcast.reload).to have_attributes(
       status: "running",
       error_code: be_blank,
       started_at: be_present,
@@ -116,7 +116,6 @@ RSpec.describe StartBroadcast do
       status: :queued,
       audio_url: "https://example.com/not-found.mp3",
     )
-
     stub_request(:get, "https://example.com/not-found.mp3").to_return(status: 404)
 
     StartBroadcast.call(broadcast)
@@ -134,17 +133,21 @@ RSpec.describe StartBroadcast do
     broadcast = create(
       :broadcast,
       account:,
-      audio_file: file_fixture("test.mp3"),
+      audio_url: "https://example.com/test.mp3",
       status: :queued,
       beneficiary_filter: {
         gender: { eq: "F" }
       }
     )
+    stub_request(:get, "https://example.com/test.mp3").to_return(status: 200)
 
     StartBroadcast.call(broadcast)
 
-    expect(broadcast.status).to eq("errored")
-    expect(broadcast.error_code).to eq("no_matching_beneficiaries")
+    expect(broadcast.reload).to have_attributes(
+      status: "errored",
+      error_code: "no_matching_beneficiaries",
+      audio_file: be_attached
+    )
   end
 
   it "marks errored when the account is not yet configured for sending broadcasts" do
