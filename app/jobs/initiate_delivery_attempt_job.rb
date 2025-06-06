@@ -59,7 +59,7 @@ class InitiateDeliveryAttemptJob < ApplicationJob
     end
 
     def audio_url
-      AudioURL.new(key: delivery_attempt.broadcast.audio_file.key).url
+      AudioURL.new(key: BlobWithExtension.new(delivery_attempt.broadcast.audio_file.blob).key).url
     end
 
     def notification_phone_number

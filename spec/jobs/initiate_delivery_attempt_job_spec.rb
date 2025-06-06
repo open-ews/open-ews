@@ -9,7 +9,7 @@ RSpec.describe InitiateDeliveryAttemptJob do
         somleng_account_sid: "account-sid",
         somleng_auth_token: "auth-token"
       )
-      broadcast = create(:broadcast, :with_attached_audio, account:)
+      broadcast = create(:broadcast, :with_attached_audio, account:, audio_filename: "test.mp3")
       notification = create(:notification, broadcast:)
       delivery_attempt = create(
         :delivery_attempt,
@@ -33,7 +33,7 @@ RSpec.describe InitiateDeliveryAttemptJob do
           "From" => "1294",
           "StatusCallback" => "https://api.open-ews.org/somleng_webhooks/delivery_attempts/#{delivery_attempt.id}/call_status_callbacks",
           "To" => "855715100999",
-          "Twiml" => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n<Play>https://uploads.open-ews.org/#{broadcast.audio_file.key}</Play>\n</Response>\n",
+          "Twiml" => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n<Play>https://uploads.open-ews.org/#{broadcast.audio_file.key}.mp3</Play>\n</Response>\n",
         ),
         headers: {
           "Authorization" => "Basic #{Base64.strict_encode64('account-sid:auth-token')}"

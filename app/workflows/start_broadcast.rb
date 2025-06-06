@@ -13,6 +13,7 @@ class StartBroadcast < ApplicationWorkflow
   def call
     ApplicationRecord.transaction do
       download_audio_file unless broadcast.audio_file.attached?
+      prepare_audio_file
 
       create_notifications
       create_delivery_attempts
@@ -28,6 +29,11 @@ class StartBroadcast < ApplicationWorkflow
 
   def download_audio_file
     DownloadBroadcastAudioFile.call(broadcast)
+  end
+
+  def prepare_audio_file
+    blob = broadcast.audio_file.blob
+    CopyBlobWithExtension.call(blob, bucket: blob.service.bucket.name) if blob.service.name == :s3
   end
 
   def create_notifications
