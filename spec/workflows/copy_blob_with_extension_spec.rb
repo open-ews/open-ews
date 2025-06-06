@@ -12,8 +12,8 @@ RSpec.describe CopyBlobWithExtension do
         operation_name: :copy_object,
         params: {
           bucket: "my-bucket",
-          copy_source: blob.key,
-          key: end_with(".mp3")
+          copy_source: "my-bucket/#{blob.key}",
+          key: "#{blob.key}.mp3"
         }
       )
     )
