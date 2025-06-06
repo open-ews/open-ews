@@ -22,8 +22,9 @@
 
     <div id="sidebar-menu" class="collapse navbar-collapse">
       <ul class="navbar-nav pt-lg-3">
-        <%= sidebar_nav(title(controller_name: :beneficiaries, action_name: :index), dashboard_beneficiaries_path, icon_class: "ti ti-address-book") %>
         <%= sidebar_nav(title(controller_name: :broadcasts, action_name: :index), dashboard_broadcasts_path, icon_class: "ti ti-speakerphone") %>
+        <%= sidebar_nav(title(controller_name: :beneficiaries, action_name: :index), dashboard_beneficiaries_path, icon_class: "ti ti-address-book") %>
+        <%= sidebar_nav(title(controller_name: :beneficiary_groups, action_name: :index), dashboard_beneficiary_groups_path, icon_class: "ti ti-users-group") %>
       </ul>
     </div>
   </div>

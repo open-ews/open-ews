@@ -1,0 +1,15 @@
+<div class="card col-md-6">
+  <%= simple_form_for [:dashboard, @beneficiary_group] do |f| %>
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <%= f.input :name %>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer text-end">
+      <%= f.button :submit, class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>

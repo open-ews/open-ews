@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     end
 
     resources :beneficiaries
+    resources :beneficiary_groups
     resources :beneficiary_addresses, only: :new
 
     resources :broadcasts do
