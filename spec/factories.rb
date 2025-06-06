@@ -19,7 +19,11 @@ FactoryBot.define do
     pending
 
     trait :with_attached_audio do
-      association :audio_file, factory: :active_storage_attachment, filename: "test.mp3"
+      transient do
+        audio_filename { "test.mp3" }
+      end
+
+      audio_file { association :active_storage_attachment, filename: audio_filename }
     end
 
     trait :pending do
