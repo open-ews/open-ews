@@ -48,6 +48,8 @@ RSpec.describe "Beneficiaries" do
 
   it "creates a new beneficiary", :js do
     user = create(:user)
+    create(:beneficiary_group, name: "My group", account: user.account)
+    create(:beneficiary_group, name: "My other group", account: user.account)
 
     sign_in(user)
     visit dashboard_beneficiaries_path
@@ -55,12 +57,16 @@ RSpec.describe "Beneficiaries" do
 
     fill_in("Phone number", with: "85516789111")
     select("Cambodia", from: "Country")
+    select_list("My group", "My other group", from: "Groups")
     click_on("Add Address")
     fill_in("ISO region code", with: "KH-12")
+
     click_on "Create Beneficiary"
 
-    expect(page).to have_title(/Beneficiary/)
     expect(page).to have_content("Beneficiary was successfully created.")
+    expect(page).to have_title("Beneficiary")
+    expect(page).to have_content("My group")
+    expect(page).to have_content("My other group")
     expect(page).to have_content("+855 16 789 111")
     expect(page).to have_content("KH-12")
   end
@@ -91,11 +97,13 @@ RSpec.describe "Beneficiaries" do
 
   it "update a beneficiary", :js do
     user = create(:user)
+    create(:beneficiary_group, name: "My other group", account: user.account)
     beneficiary = create(
       :beneficiary,
       gender: "M",
       account: user.account,
       phone_number: "85516789111",
+      groups: [ create(:beneficiary_group, name: "My group", account: user.account) ]
     )
 
     sign_in(user)
@@ -104,12 +112,15 @@ RSpec.describe "Beneficiaries" do
     fill_in("Phone number", with: "85516789111")
     select("Female", from: "Gender")
     fill_in("ISO language code", with: "khm")
+    select_list("My other group", from: "Groups")
     click_on("Add Address")
     fill_in("ISO region code", with: "KH-12")
     click_on("Update Beneficiary")
 
     expect(page).to have_content("Beneficiary was successfully updated.")
     expect(page).to have_content("+855 16 789 111")
+    expect(page).to have_content("My group")
+    expect(page).to have_content("My other group")
     expect(page).to have_content("Female")
     expect(page).to have_content("khm")
     expect(page).to have_content("KH-12")

@@ -1,4 +1,4 @@
-class BroadcastForm
+class BroadcastForm < ApplicationForm
   class BeneficiaryFilterForm < ApplicationForm
     class AddressFieldForm < FilterFieldForm; end
 
@@ -17,11 +17,6 @@ class BroadcastForm
     attribute :administrative_division_level_4_code, FormType.new(form: AddressFieldForm)
     attribute :administrative_division_level_4_name, FormType.new(form: AddressFieldForm)
   end
-
-  extend Enumerize
-
-  include ActiveModel::Model
-  include ActiveModel::Attributes
 
   attribute :account
   attribute :channel
