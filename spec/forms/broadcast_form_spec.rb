@@ -65,14 +65,4 @@ RSpec.describe BroadcastForm do
 
     expect(form.errors[:beneficiary_groups]).to be_present
   end
-
-  it "validates the beneficiary groups exist" do
-    account = create(:account)
-
-    form = BroadcastForm.new(account:, beneficiary_groups: [ "0" ])
-
-    form.valid?
-
-    expect(form.errors[:beneficiary_groups]).to be_present
-  end
 end

@@ -39,7 +39,6 @@ class BroadcastForm < ApplicationForm
   validates :audio_file, presence: true, if: :new_record?
   validates :channel, :beneficiary_filter, presence: true, if: :new_record?
   validates :beneficiary_groups, length: { maximum: Broadcast::MAX_BENEFICIARY_GROUPS, allow_blank: true }
-  validate :validate_beneficiary_groups_exist
 
   def self.model_name
     ActiveModel::Name.new(self, nil, "Broadcast")
@@ -74,14 +73,5 @@ class BroadcastForm < ApplicationForm
 
   def beneficiary_groups_options_for_select
     account.beneficiary_groups
-  end
-
-  private
-
-  def validate_beneficiary_groups_exist
-    return if beneficiary_groups.blank?
-    return if beneficiary_groups_options_for_select.where(id: beneficiary_groups).size == beneficiary_groups.size
-
-    errors.add(:beneficiary_groups, :invalid)
   end
 end
