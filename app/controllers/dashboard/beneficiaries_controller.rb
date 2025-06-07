@@ -51,6 +51,7 @@ module Dashboard
         :disability_status,
         :iso_language_code,
         :iso_country_code,
+        group_ids: [],
         addresses_attributes: [
           :id,
           :iso_region_code,

@@ -1,4 +1,4 @@
-<div class="card col-md-6">
+<div class="card">
   <%= simple_form_for [:dashboard, @beneficiary] do |f| %>
     <div class="card-body">
       <div class="row">
@@ -8,21 +8,33 @@
         <div class="col">
           <%= f.input :iso_country_code, as: :country %>
         </div>
-      </div>
-      <div class="row">
         <div class="col">
           <%= f.input :gender %>
         </div>
+      </div>
+      <div class="row">
         <div class="col">
           <%= f.input :iso_language_code %>
         </div>
-      </div>
-      <div class="row">
         <div class="col">
           <%= f.input :date_of_birth, html5: true %>
         </div>
         <div class="col">
           <%= f.input :disability_status %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <%= f.input(
+            :group_ids,
+            collection: current_account.beneficiary_groups,
+            multiple: true,
+            input_html: { class: "list-select" }
+          ) %>
+        </div>
+        <div class="col">
+        </div>
+        <div class="col">
         </div>
       </div>
 

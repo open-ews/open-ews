@@ -17,3 +17,5 @@ en:
       show: Developers
     broadcast_notifications:
       index: "Notifications for broadcast #%{broadcast}"
+    beneficiary_group_memberships:
+      index: "Memberships for&nbsp;%{beneficiary_group}"

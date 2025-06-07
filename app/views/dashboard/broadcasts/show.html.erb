@@ -61,7 +61,7 @@
 
       <%= f.attribute :beneficiary_groups do %>
         <% @broadcast.beneficiary_groups.each do |beneficiary_group| %>
-          <span class="badge bg-default-lt"><%= link_to(beneficiary_group.name, dashboard_beneficiary_group_path(beneficiary_group), target: "_blank") %></span>
+          <span class="badge bg-default-lt"><%= link_to(beneficiary_group.name, dashboard_beneficiary_group_path(beneficiary_group)) %></span>
         <% end %>
       <% end %>
 

@@ -15,6 +15,21 @@ RSpec.describe "Beneficiary Groups" do
     expect(page).not_to have_content("My group 2")
   end
 
+  it "lists all members of a group" do
+    user = create(:user)
+    beneficiary_group = create(:beneficiary_group, name: "My group", account: user.account)
+    create(:beneficiary, phone_number: "855715100999", groups: [ beneficiary_group ], account: user.account)
+
+    sign_in(user)
+    visit(dashboard_beneficiary_group_path(beneficiary_group))
+    click_on("More")
+    click_on("Members")
+
+    expect(page).to have_title("Memberships for My group")
+    expect(page).to have_link("My group", href: dashboard_beneficiary_group_path(beneficiary_group))
+    expect(page).to have_content("+855 71 510 0999")
+  end
+
   it "create a beneficiary group" do
     user = create(:user)
 

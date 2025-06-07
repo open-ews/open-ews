@@ -238,7 +238,7 @@ RSpec.resource "Beneficiary Groups"  do
     example "Fetch a member of a group" do
       account = create(:account)
       group = create(:beneficiary_group, account:)
-      beneficiary = create(:beneficiary)
+      beneficiary = create(:beneficiary, account:)
       create(:beneficiary_group_membership, beneficiary_group: group, beneficiary:)
 
       set_authorization_header_for(group.account)
@@ -294,7 +294,7 @@ RSpec.resource "Beneficiary Groups"  do
     example "Fail to add a beneficiary to a group", document: false do
       account = create(:account)
       group = create(:beneficiary_group, account:)
-      beneficiary = create(:beneficiary)
+      beneficiary = create(:beneficiary, account:)
       create(:beneficiary_group_membership, beneficiary_group: group, beneficiary:)
 
       set_authorization_header_for(account)
@@ -311,7 +311,7 @@ RSpec.resource "Beneficiary Groups"  do
       expect(response_status).to eq(422)
       expect(response_body).to match_api_response_schema("jsonapi_error")
       expect(json_response.dig("errors", 0)).to include(
-        "title" => "is invalid",
+        "title" => "already exists",
         "source" => { "pointer" => "/data/attributes/beneficiary_id" }
       )
     end

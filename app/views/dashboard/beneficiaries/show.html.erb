@@ -17,6 +17,11 @@
       <%= f.attribute :date_of_birth %>
       <%= f.attribute :disability_status, value: @beneficiary.disability_status_text %>
       <%= f.attribute :status, value: @beneficiary.status_text %>
+      <%= f.attribute :groups do %>
+        <% @beneficiary.groups.each do |group| %>
+          <span class="badge bg-default-lt"><%= link_to(group.name, dashboard_beneficiary_group_path(group)) %></span>
+        <% end %>
+      <% end %>
       <%= f.attribute :created_at, value: local_time(@beneficiary.created_at) %>
       <%= f.attribute :updated_at, value: local_time(@beneficiary.updated_at) %>
     <% end %>
