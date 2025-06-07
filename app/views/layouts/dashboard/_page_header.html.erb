@@ -5,7 +5,7 @@
     <div class="row g-2 align-items-center">
       <div class="col">
         <h2 class="page-title">
-          <%= content_for?(:page_title) ? yield(:page_title) : title %>
+          <%= content_for?(:page_header) ? yield(:page_header) : (content_for?(:page_title) ? yield(:page_title) : title) %>
         </h2>
       </div>
 

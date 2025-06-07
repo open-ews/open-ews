@@ -26,7 +26,8 @@ module ApplicationHelper
 
     translate(
       :"titles.#{options.fetch(:controller_name, controller_name)}.#{options.fetch(:action_name, action_name)}",
-      default:
+      default:,
+      **options
     )
   end
 
