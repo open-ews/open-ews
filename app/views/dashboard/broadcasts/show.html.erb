@@ -7,10 +7,10 @@
           method: :post,
           class: "btn btn-outline-success",
           form_class: "d-inline",
-          form: { data: { turbo_confirm: t(:"titles.actions.data_confirm", fallback: "Are you sure?") } }
+          form: { data: { turbo_confirm: t(:"titles.actions.data_confirm", default: "Are you sure?") } }
         ) do %>
       <i class="icon ti ti-player-play"></i>
-      <%= t(:"titles.broadcasts.start", fallback: "Start") %>
+      <%= t(:"titles.broadcasts.start", default: "Start") %>
     <% end %>
 
   <% elsif state_machine.may_transition_to?(:stopped) %>
@@ -19,10 +19,10 @@
           method: :post,
           class: "btn btn-outline-danger",
           form_class: "d-inline",
-          form: { data: { turbo_confirm: t(:"titles.actions.data_confirm", fallback: "Are you sure?") } }
+          form: { data: { turbo_confirm: t(:"titles.actions.data_confirm", default: "Are you sure?") } }
         ) do %>
       <i class="icon ti ti-player-stop-filled"></i>
-      <%= t(:"titles.broadcasts.stop", fallback: "Stop") %>
+      <%= t(:"titles.broadcasts.stop", default: "Stop") %>
     <% end %>
   <% end %>
 
@@ -36,7 +36,7 @@
     <%= render "shared/resource_related_links" do %>
       <%= link_to(dashboard_broadcast_notifications_path(@broadcast), class: "dropdown-item") do %>
         <i class="icon ti ti-message"></i>
-        <%= t(:"titles.notifications", fallback: "Notifications") %>
+        <%= t(:"titles.notifications.index", default: "Notifications") %>
       <% end %>
     <% end %>
   <% end %>

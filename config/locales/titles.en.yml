@@ -14,5 +14,5 @@ en:
       new: Reset Password
     developers:
       show: Developers
-    notifications:
+    broadcast_notifications:
       index: "Notifications for broadcast #%{broadcast}"
