@@ -3,26 +3,26 @@
 
   <% if state_machine.may_transition_to?(:running) %>
     <%= button_to(
-          dashboard_broadcast_state_path(@broadcast, desired_status: "running"),
-          method: :post,
-          class: "btn btn-outline-success",
-          form_class: "d-inline",
-          form: { data: { turbo_confirm: t(:"titles.actions.data_confirm", default: "Are you sure?") } }
-        ) do %>
+      dashboard_broadcast_state_path(@broadcast, desired_status: "running"),
+      method: :post,
+      class: "btn btn-outline-success",
+      form_class: "d-inline",
+      form: { data: { turbo_confirm: title(controller_name: :actions, action_name: :confirm, default: "Are you sure?") } }
+    ) do %>
       <i class="icon ti ti-player-play"></i>
-      <%= t(:"titles.broadcasts.start", default: "Start") %>
+      <%= title(controller_name: :broadcasts, action_name: :start, default: "Start") %>
     <% end %>
 
   <% elsif state_machine.may_transition_to?(:stopped) %>
     <%= button_to(
-          dashboard_broadcast_state_path(@broadcast, desired_status: "stopped"),
-          method: :post,
-          class: "btn btn-outline-danger",
-          form_class: "d-inline",
-          form: { data: { turbo_confirm: t(:"titles.actions.data_confirm", default: "Are you sure?") } }
-        ) do %>
+      dashboard_broadcast_state_path(@broadcast, desired_status: "stopped"),
+      method: :post,
+      class: "btn btn-outline-danger",
+      form_class: "d-inline",
+      form: { data: { turbo_confirm: title(controller_name: :actions, action_name: :confirm, default: "Are you sure?") } }
+    ) do %>
       <i class="icon ti ti-player-stop-filled"></i>
-      <%= t(:"titles.broadcasts.stop", default: "Stop") %>
+      <%= title(controller_name: :broadcasts, action_name: :stop, default: "Stop") %>
     <% end %>
   <% end %>
 
@@ -36,7 +36,7 @@
     <%= render "shared/resource_related_links" do %>
       <%= link_to(dashboard_broadcast_notifications_path(@broadcast), class: "dropdown-item") do %>
         <i class="icon ti ti-message"></i>
-        <%= t(:"titles.notifications.index", default: "Notifications") %>
+        <%= title(controller_name: :notifications, action_name: :index) %>
       <% end %>
     <% end %>
   <% end %>
@@ -64,7 +64,6 @@
           <span class="badge bg-default-lt"><%= link_to(beneficiary_group.name, dashboard_beneficiary_group_path(beneficiary_group), target: "_blank") %></span>
         <% end %>
       <% end %>
-
 
       <%= f.attribute :created_at, value: local_time(@broadcast.created_at) %>
       <%= f.attribute :updated_at, value: local_time(@broadcast.updated_at) %>
