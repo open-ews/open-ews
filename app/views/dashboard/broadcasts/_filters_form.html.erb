@@ -1,0 +1,56 @@
+<%= simple_form_for :filters, url: dashboard_broadcasts_path, method: :get do |f| %>
+  <div class="row">
+    <div class="col"><label class="form-label">Field</label></div>
+    <div class="col"><label class="form-label">Operator</label></div>
+    <div class="col"><label class="form-label">Value</label></div>
+  </div>
+
+  <%= f.simple_fields_for(:status) do |field_form| %>
+    <div class="row">
+      <div class="col">
+        <div class="input-group mb-3">
+          <span class="input-group-text">
+            <input class="form-check-input m-0" checked id="<%= "status_enabled" %>" type="checkbox" />
+          </span>
+          <input class="form-control" type="text" value="Status" readonly />
+        </div>
+      </div>
+
+      <div class="col">
+        <%= field_form.input :operator, label: false, selected: "Equals to", as: :select, collection: ["Equals to"], required: true %>
+      </div>
+
+      <div class="col">
+        <%= field_form.input :value, as: :string, label: false, input_html: { value: "Completed" } %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= f.simple_fields_for(:created_at) do |field_form| %>
+    <div class="row">
+      <div class="col">
+        <div class="input-group mb-3">
+          <span class="input-group-text">
+            <input class="form-check-input m-0" checked id="<%= "created_at_enabled" %>" type="checkbox" />
+          </span>
+          <input class="form-control" type="text" value="Created At" readonly />
+        </div>
+      </div>
+
+      <div class="col">
+        <%= field_form.input :operator, selected: "Greater than", label: false, as: :select, collection: ["Greater than", "Less than"], required: true %>
+      </div>
+
+      <div class="col">
+        <%= field_form.input :value, as: :date, html5: true, label: false %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="row mt-2">
+    <div class="col d-flex justify-content-between">
+      <%= link_to "Clear Filters", dashboard_broadcasts_path %>
+      <%= f.button :submit, "Apply Filters" %>
+    </div>
+  </div>
+<% end %>
