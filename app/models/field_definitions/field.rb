@@ -28,7 +28,7 @@ module FieldDefinitions
       @schema = attributes.fetch(:schema)
       @association = attributes[:association]
       @description = attributes[:description]
-      @read_only = attributes[:read_only] =attributes.fetch(:read_only, false)
+      @read_only = attributes[:read_only] = attributes.fetch(:read_only, false)
       @required = attributes[:required] = attributes.fetch(:required, false)
       @example = attributes[:example]
       @attributes = attributes
