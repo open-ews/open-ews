@@ -1,4 +1,4 @@
-class BroadcastForm
+class BroadcastForm < ApplicationForm
   class BeneficiaryFilterForm < ApplicationForm
     class AddressFieldForm < FilterFieldForm; end
 
@@ -17,11 +17,6 @@ class BroadcastForm
     attribute :administrative_division_level_4_code, FormType.new(form: AddressFieldForm)
     attribute :administrative_division_level_4_name, FormType.new(form: AddressFieldForm)
   end
-
-  extend Enumerize
-
-  include ActiveModel::Model
-  include ActiveModel::Attributes
 
   attribute :account
   attribute :channel
@@ -44,7 +39,6 @@ class BroadcastForm
   validates :audio_file, presence: true, if: :new_record?
   validates :channel, :beneficiary_filter, presence: true, if: :new_record?
   validates :beneficiary_groups, length: { maximum: Broadcast::MAX_BENEFICIARY_GROUPS, allow_blank: true }
-  validate :validate_beneficiary_groups_exist
 
   def self.model_name
     ActiveModel::Name.new(self, nil, "Broadcast")
@@ -56,7 +50,7 @@ class BroadcastForm
       account: broadcast.account,
       channel: broadcast.channel,
       audio_file: broadcast.audio_file,
-      beneficiary_groups: broadcast.beneficiary_groups,
+      beneficiary_groups: broadcast.beneficiary_group_ids,
       beneficiary_filter: BeneficiaryFilterData.new(data: broadcast.beneficiary_filter)
     )
   end
@@ -79,14 +73,5 @@ class BroadcastForm
 
   def beneficiary_groups_options_for_select
     account.beneficiary_groups
-  end
-
-  private
-
-  def validate_beneficiary_groups_exist
-    return if beneficiary_groups.blank?
-    return if beneficiary_groups_options_for_select.where(id: beneficiary_groups).size == beneficiary_groups.size
-
-    errors.add(:beneficiary_groups, :invalid)
   end
 end

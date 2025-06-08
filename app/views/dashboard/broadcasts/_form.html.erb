@@ -17,7 +17,6 @@
             :beneficiary_groups,
             collection: f.object.beneficiary_groups_options_for_select,
             multiple: true,
-            selected: (f.object.beneficiary_groups.pluck(:id) if f.object.persisted?),
             input_html: { class: "list-select" }
           ) %>
         </div>

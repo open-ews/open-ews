@@ -2,6 +2,10 @@
   <%= render("shared/edit_resource_page_action", path: edit_dashboard_beneficiary_group_path(@beneficiary_group)) %>
 
   <%= render "shared/resource_related_links" do %>
+    <%= link_to(dashboard_beneficiary_group_memberships_path(@beneficiary_group), class: "dropdown-item") do %>
+      <i class="icon ti ti-users-group"></i>
+      <%= title(controller_name: :memberships, action_name: :index) %>
+    <% end %>
     <%= render("shared/destroy_resource_page_action", path: dashboard_beneficiary_group_path(@beneficiary_group)) %>
   <% end %>
 <% end %>

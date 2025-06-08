@@ -1,0 +1,43 @@
+<%= content_for(:page_title) do %>
+  <%= title(controller_name: :beneficiary_group_memberships, beneficiary_group: @beneficiary_group.name).html_safe %>
+<% end %>
+
+<%= content_for(:page_header) do %>
+  <%= title(controller_name: :beneficiary_group_memberships, beneficiary_group: link_to(@beneficiary_group.name, dashboard_beneficiary_group_path(@beneficiary_group))).html_safe %>
+<% end %>
+
+<div class="card">
+  <div class="table-responsive">
+    <table id="resources" class="table table-vcenter card-table">
+      <thead>
+        <tr role="row">
+          <% [:beneficiary, :beneficiary_phone_number, :created_at].each do |column| %>
+            <th>
+              <div class="text">
+                <%= @memberships.human_attribute_name(column) %>
+              </div>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @memberships.each do |membership| %>
+          <%= content_tag_for(:tr, membership) do %>
+            <td>
+              <%= link_to(membership.beneficiary_id, dashboard_beneficiary_path(membership.beneficiary_id)) %>
+            </td>
+            <td>
+              <%= format_phone_number(membership.beneficiary.phone_number) %>
+            </td>
+            <td>
+              <%= local_time(membership.created_at) %>
+            </td>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= render("shared/pagination", resources: @memberships) %>
+</div>
