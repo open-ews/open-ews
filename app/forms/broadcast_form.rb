@@ -50,7 +50,7 @@ class BroadcastForm < ApplicationForm
       account: broadcast.account,
       channel: broadcast.channel,
       audio_file: broadcast.audio_file,
-      beneficiary_groups: broadcast.beneficiary_groups,
+      beneficiary_groups: broadcast.beneficiary_group_ids,
       beneficiary_filter: BeneficiaryFilterData.new(data: broadcast.beneficiary_filter)
     )
   end
