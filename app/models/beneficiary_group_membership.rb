@@ -7,7 +7,7 @@ class BeneficiaryGroupMembership < ApplicationRecord
   private
 
   def validate_associations_belong_to_the_same_account
-    return if beneficiary.account == beneficiary_group.account
+    return if beneficiary.account_id == beneficiary_group.account_id
 
     errors.add(:beneficiary_group, :invalid)
   end
