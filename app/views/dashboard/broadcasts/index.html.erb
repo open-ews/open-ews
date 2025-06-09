@@ -9,23 +9,7 @@
    </div>
   </div>
 
-  <div
-    class="offcanvas offcanvas-end w-50"
-    tabindex="-1"
-    id="filters-canvas"
-    aria-labelledby="filters-canvas-label"
-  >
-    <div class="offcanvas-body">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="filters-canvas-label">Filters</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="close"></button>
-      </div>
-
-      <div class="offcanvas-body">
-        <%= render "filters_form" %>
-      </div>
-    </div>
-  </div>
+  <%= render "shared/filter_form", filter_form: @filter_form %>
 
   <div class="table-responsive">
     <table id="resources" class="table table-vcenter card-table">
