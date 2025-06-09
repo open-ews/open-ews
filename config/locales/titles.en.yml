@@ -3,7 +3,7 @@ en:
   titles:
     app_name: OpenEWS
     actions:
-      data_confirm: "Are you sure?"
+      confirm: "Are you sure?"
     sessions:
       new: Sign in
     settings:
@@ -11,6 +11,11 @@ en:
     registrations:
       edit: Edit Profile
     passwords:
-      new: Reset Password
+      new: Forgot your password?
+      edit: Change your password
     developers:
       show: Developers
+    broadcast_notifications:
+      index: "Notifications for broadcast #%{broadcast}"
+    beneficiary_group_memberships:
+      index: "Memberships for&nbsp;%{beneficiary_group}"

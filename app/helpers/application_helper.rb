@@ -4,6 +4,14 @@ module ApplicationHelper
     "https://www.gravatar.com/avatar/#{user_email}?size=200"
   end
 
+  def account_logo(account, **options)
+    if account.logo&.attached?
+      image_tag(account.logo, alt: "#{account.name} Logo", **options)
+    else
+      image_tag("open-ews_landscape_logo.png", options)
+    end
+  end
+
   def country_name(iso_country_code)
     return if iso_country_code.blank?
 
@@ -26,7 +34,8 @@ module ApplicationHelper
 
     translate(
       :"titles.#{options.fetch(:controller_name, controller_name)}.#{options.fetch(:action_name, action_name)}",
-      default:
+      default:,
+      **options
     )
   end
 

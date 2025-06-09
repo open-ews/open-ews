@@ -17,9 +17,11 @@ module V1
 
         optional(:relationships).value(:hash).schema do
           optional(:beneficiary_groups).value(:hash).schema do
-            required(:data).array(:hash) do
-              required(:type).filled(:str?, eql?: "beneficiary_group")
-              required(:id).filled(:int?)
+            required(:data).value(:array, max_size?: Broadcast::MAX_BENEFICIARY_GROUPS).each do
+              schema do
+                required(:type).filled(:str?, eql?: "beneficiary_group")
+                required(:id).filled(:int?)
+              end
             end
           end
         end

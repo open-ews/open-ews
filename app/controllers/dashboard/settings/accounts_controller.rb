@@ -20,6 +20,7 @@ module Dashboard
         params.require(:account).permit(
           :name,
           :iso_country_code,
+          :logo,
           :somleng_account_sid,
           :somleng_auth_token,
           :notification_phone_number

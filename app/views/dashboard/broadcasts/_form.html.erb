@@ -8,14 +8,17 @@
         <div class="col">
           <div class="row">
             <div class="col">
-              <%= f.input :audio_file, required: f.object.new_record?, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") } %>
+              <%= f.input :audio_file, hint: (link_to(@broadcast.object.audio_file.filename, rails_blob_path(@broadcast.object.audio_file)) if @broadcast.object.audio_file.attached?), required: f.object.new_record?, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") } %>
             </div>
-            <% if @broadcast.object.audio_file.attached? %>
-              <div class="col">
-                <%= audio_tag(@broadcast.audio_file, controls: true, class: "mt-3") %>
-              </div>
-            <% end %>
           </div>
+        </div>
+        <div class="col">
+          <%= f.input(
+            :beneficiary_groups,
+            collection: f.object.beneficiary_groups_options_for_select,
+            multiple: true,
+            input_html: { class: "list-select" }
+          ) %>
         </div>
       </div>
 

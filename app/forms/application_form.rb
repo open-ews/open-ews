@@ -1,6 +1,7 @@
 class ApplicationForm
   include ActiveModel::Model
   include ActiveModel::Attributes
+  extend Enumerize
 
   def self.attributes
     attribute_names.each_with_object({}) do |name, result|

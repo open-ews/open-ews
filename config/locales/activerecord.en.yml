@@ -2,6 +2,12 @@
 en:
   attributes:
     iso_country_code: Country
+    group_ids: Groups
     delivery_attempts_count: Delivery attempts
     kh:
       administrative_division_level_3_code: Commune
+
+  activerecord:
+    attributes:
+      beneficiary_group_membership:
+        created_at: Member since

@@ -32,6 +32,9 @@ Rails.application.routes.draw do
     end
 
     resources :beneficiaries
+    resources :beneficiary_groups do
+      resources :memberships, only: :index, controller: "beneficiary_groups/memberships"
+    end
     resources :beneficiary_addresses, only: :new
 
     resources :broadcasts do

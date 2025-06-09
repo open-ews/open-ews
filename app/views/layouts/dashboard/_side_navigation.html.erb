@@ -12,7 +12,7 @@
 
     <div class="navbar-brand">
       <%= link_to dashboard_root_path do %>
-        <%= image_tag("open-ews_landscape_logo.png", class: "navbar-brand-image") %>
+        <%= account_logo(current_account, class: "navbar-brand-image") %>
       <% end %>
     </div>
 
@@ -22,9 +22,14 @@
 
     <div id="sidebar-menu" class="collapse navbar-collapse">
       <ul class="navbar-nav pt-lg-3">
-        <%= sidebar_nav(title(controller_name: :beneficiaries, action_name: :index), dashboard_beneficiaries_path, icon_class: "ti ti-address-book") %>
         <%= sidebar_nav(title(controller_name: :broadcasts, action_name: :index), dashboard_broadcasts_path, icon_class: "ti ti-speakerphone") %>
+        <%= sidebar_nav(title(controller_name: :beneficiaries, action_name: :index), dashboard_beneficiaries_path, icon_class: "ti ti-address-book") %>
+        <%= sidebar_nav(title(controller_name: :beneficiary_groups, action_name: :index), dashboard_beneficiary_groups_path, icon_class: "ti ti-users-group") %>
       </ul>
+    </div>
+
+    <div class="sidebar-footer d-xs-none">
+      <div class="text-center mb-1">Powered by <%= link_to("OpenEWS", "https://www.open-ews.org", style: "text-decoration: none; color: inherit;", target: "_blank") %></div>
     </div>
   </div>
 </aside>

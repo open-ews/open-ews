@@ -1,6 +1,7 @@
 class Broadcast < ApplicationRecord
   AUDIO_CONTENT_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/x-wav].freeze
   CHANNELS = %i[voice].freeze
+  MAX_BENEFICIARY_GROUPS = 10
 
   include MetadataHelpers
 
@@ -15,7 +16,6 @@ class Broadcast < ApplicationRecord
 
   enumerize :channel, in: [ :voice ]
   enumerize :status, in: StateMachine.state_definitions.map(&:name)
-  validates :channel, presence: true
 
   belongs_to :account
   has_many :notifications
@@ -35,6 +35,9 @@ class Broadcast < ApplicationRecord
               allow: AUDIO_CONTENT_TYPES
             },
             if: ->(broadcast) { broadcast.audio_file.attached? }
+
+  validates :channel, presence: true
+  validates :beneficiary_groups, length: { maximum: MAX_BENEFICIARY_GROUPS, allow_blank: true }
 
   delegate :running?, :stopped?, :completed?, :pending?, :queued?, :errored?, :may_transition_to?, :transition_to!, to: :state_machine
 

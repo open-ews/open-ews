@@ -1,4 +1,4 @@
-<h2 class="h2 text-center mb-4"><%= translate(:"titles.user_passwords.edit") %></h2>
+<h2 class="h2 text-center mb-4"><%= title %></h2>
 
 <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, data: { turbo: false } }) do |f| %>
   <%= f.error_notification %>

@@ -6,6 +6,7 @@ RSpec.describe "Passwords" do
 
     visit new_user_password_path
 
+    expect(page).to have_content("Forgot your password?")
     fill_in "Email", with: user.email
     click_on "Send me reset password instructions"
 
@@ -18,6 +19,7 @@ RSpec.describe "Passwords" do
 
     visit edit_user_password_path(reset_password_token: token)
 
+    expect(page).to have_content("Change your password")
     fill_in "New password", with: "12345678"
     fill_in "Confirm your new password", with: "12345678"
     click_on "Change my password"

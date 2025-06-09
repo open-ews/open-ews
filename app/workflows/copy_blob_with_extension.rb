@@ -13,7 +13,7 @@ class CopyBlobWithExtension < ApplicationWorkflow
   def call
     client.copy_object(
       bucket:,
-      copy_source: blob.key,
+      copy_source: "#{bucket}/#{blob.key}",
       key: BlobWithExtension.new(blob).key
     )
   end

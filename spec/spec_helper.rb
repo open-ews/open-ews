@@ -1,6 +1,8 @@
 if ENV.key?("CI")
   require "simplecov"
-  SimpleCov.start
+  SimpleCov.start do
+    enable_coverage_for_eval
+  end
 
   require "simplecov-cobertura"
   SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter

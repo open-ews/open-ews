@@ -1,0 +1,40 @@
+<% content_for(:page_actions) do %>
+  <%= render("shared/new_resource_page_action", path: new_dashboard_beneficiary_group_path) %>
+<% end %>
+
+<div class="card">
+  <div class="table-responsive">
+    <table id="resources" class="table table-vcenter card-table">
+      <thead>
+        <tr role="row">
+          <th>#</th>
+          <% [:name, :created_at].each do |column| %>
+            <th>
+              <div class="text">
+                <%= @beneficiary_groups.human_attribute_name(column) %>
+              </div>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @beneficiary_groups.each do |beneficiary_group| %>
+          <%= content_tag_for(:tr, beneficiary_group) do %>
+            <td>
+              <%= link_to(beneficiary_group.id, dashboard_beneficiary_group_path(beneficiary_group)) %>
+            </td>
+            <td>
+              <%= beneficiary_group.name %>
+            </td>
+            <td>
+              <%= local_time(beneficiary_group.created_at) %>
+            </td>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= render("shared/pagination", resources: @beneficiary_groups) %>
+</div>

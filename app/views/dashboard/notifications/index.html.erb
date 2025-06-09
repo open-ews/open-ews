@@ -1,3 +1,11 @@
+<%= content_for(:page_title) do %>
+  <%= title(controller_name: :broadcast_notifications, broadcast: @broadcast.id) %>
+<% end %>
+
+<%= content_for(:page_header) do %>
+  <%= title(controller_name: :broadcast_notifications, broadcast: link_to(@broadcast.id, dashboard_broadcast_path(@broadcast))).html_safe %>
+<% end %>
+
 <div class="card">
   <div class="table-responsive">
     <table id="resources" class="table table-vcenter card-table">

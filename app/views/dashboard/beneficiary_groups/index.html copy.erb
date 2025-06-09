@@ -1,0 +1,46 @@
+<% content_for(:page_actions) do %>
+  <%= render("shared/new_resource_page_action", path: new_dashboard_beneficiary_path) %>
+<% end %>
+
+<div class="card">
+  <div class="card-header">
+    <div class="card-actions">
+      <%= render("shared/import_action", import_params: { resource_type: "Beneficiary" }, title: "Import Beneficiaries") %>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table id="resources" class="table table-vcenter card-table">
+      <thead>
+        <tr role="row">
+          <th>#</th>
+          <% [:phone_number, :created_at].each do |column| %>
+            <th>
+              <div class="text">
+                <%= @beneficiaries.human_attribute_name(column) %>
+              </div>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @beneficiaries.each do |beneficiary| %>
+          <%= content_tag_for(:tr, beneficiary) do %>
+            <td>
+              <%= link_to(beneficiary.id, dashboard_beneficiary_path(beneficiary)) %>
+            </td>
+            <td>
+              <%= format_phone_number(beneficiary.phone_number) %>
+            </td>
+            <td>
+              <%= local_time(beneficiary.created_at) %>
+            </td>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= render("shared/pagination", resources: @beneficiaries) %>
+</div>
