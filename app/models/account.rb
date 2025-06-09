@@ -1,4 +1,6 @@
 class Account < ApplicationRecord
+  LOGO_CONTENT_TYPES = %w[image/jpg image/png].freeze
+
   has_one :access_token, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
   has_many :users
   has_many :beneficiaries
@@ -13,6 +15,8 @@ class Account < ApplicationRecord
   enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
   validates :iso_country_code, presence: true
   validates :somleng_account_sid, uniqueness: true, allow_blank: true
+
+  has_one_attached :logo
 
   def api_key
     access_token.token
