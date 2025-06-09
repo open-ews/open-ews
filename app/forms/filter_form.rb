@@ -5,6 +5,12 @@ class FilterForm < ApplicationForm
     ActiveModel::Name.new(self, nil, "Filter")
   end
 
+  def self.attribute_definitions
+    attributes.each_with_object({}) do |(name, _attribute_type), result|
+      result[name] = filter_class.__field_collection__.find_by!(name:)
+    end
+  end
+
   def apply(scope)
     FilterScopeQuery.new(scope, normalized_filter_param).apply
   end

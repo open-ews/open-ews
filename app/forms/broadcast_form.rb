@@ -1,5 +1,7 @@
 class BroadcastForm < ApplicationForm
-  class BeneficiaryFilterForm < ApplicationForm
+  class BeneficiaryFilterForm < FilterForm
+    self.filter_class = BeneficiaryFilter
+
     class AddressFieldForm < FilterFieldForm; end
 
     attribute :gender, FormType.new(form: FilterFieldForm)
