@@ -32,7 +32,8 @@
       <%= f.simple_fields_for(:beneficiary_filter, @broadcast.beneficiary_filter) do |filter_form| %>
         <% filter_form.object.class.attributes.each do |attribute_name, attribute_type| %>
           <% field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name: attribute_name) %>
-          <% next if CountryAddressData.supported?(current_account.iso_country_code) && attribute_type.form == BroadcastForm::BeneficiaryFilterForm::AddressFieldForm %>
+          <% next if attribute_name == "status" %>
+          <% next if CountryAddressData.supported?(current_account.iso_country_code) && attribute_type.form == BeneficiaryFilterForm::AddressFieldForm %>
 
           <%= render "shared/filter_field", filter_form:, field_name: attribute_name, field_definition: %>
         <% end %>

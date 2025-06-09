@@ -1,36 +1,30 @@
 module SystemSpecHelpers
-  def fill_in_key_values_for(attribute, with:)
-    with.each_with_index do |(key, value), index|
-      fill_in_key_value_for(
-        attribute,
-        with: { key:, value: },
-        index:
-      )
-      add_key_value_for(attribute)
-    end
-  end
-
-  def fill_in_key_value_for(attribute, with:, index: 0)
-    within("##{attribute}_fields") do
-      page.all("input[placeholder='Key']")[index].set(with[:key]) if with.key?(:key)
-      page.all("input[placeholder='Value']")[index].set(with[:value]) if with.key?(:value)
-    end
-  end
-
-  def remove_key_value_for(attribute, index: 0)
-    within("##{attribute}_fields") do
-      page.all(:xpath, "//a[text()[contains(.,'Remove')]]")[index].click
-    end
-  end
-
-  def add_key_value_for(attribute)
-    within("##{attribute}_fields") do
-      click_link("Add")
-    end
-  end
-
   def have_content_tag_for(model, model_name: nil)
     have_selector("##{model_name || model.class.to_s.underscore.tr('/', '_')}_#{model.id}")
+  end
+
+  def select_filter(name, **options)
+    filter_namespace = options.fetch(:filter_namespace, "filter")
+    filter_id = filter_field_id(name, filter_namespace:)
+
+    within("##{filter_id}") do
+      if options.fetch(:enable_filter, true)
+        check("#{filter_id}_enabled")
+      end
+
+      select(options.fetch(:operator), from: "#{filter_id}_operator") if options[:operator].present?
+
+      value_input_id = "#{filter_id}_value"
+      if options[:select].present?
+        select(options.fetch(:select), from: value_input_id)
+      elsif options[:fill_in].present?
+        fill_in(value_input_id, with: options.fetch(:fill_in))
+      end
+    end
+  end
+
+  def filter_field_id(name, filter_namespace:)
+    [ filter_namespace, name.to_s.parameterize.underscore ].join("_")
   end
 end
 
