@@ -15,6 +15,15 @@
         </div>
       </div>
 
+        <div class="row">
+        <div class="col">
+          <%= f.input :logo, as: :file, input_html: { direct_upload: true, accept: Account::LOGO_CONTENT_TYPES.join(", ") } %>
+        </div>
+
+        <div class="col">
+        </div>
+      </div>
+
       <div class="row">
         <div class="col">
           <%= f.input :somleng_account_sid %>
