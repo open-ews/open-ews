@@ -1,9 +1,14 @@
 require "rails_helper"
 
 RSpec.describe "Broadcasts" do
-  it "list broadcasts" do
+  it "list broadcasts", :js do
     user = create(:user)
-    broadcast = create(
+    pending_broadcast = create(
+      :broadcast,
+      :pending,
+      account: user.account
+    )
+    completed_broadcast = create(
       :broadcast,
       :completed,
       account: user.account
@@ -14,7 +19,16 @@ RSpec.describe "Broadcasts" do
     visit dashboard_broadcasts_path
 
     expect(page).to have_title("Broadcasts")
-    expect(page).to have_content_tag_for(broadcast)
+    expect(page).to have_content_tag_for(pending_broadcast)
+    expect(page).to have_content_tag_for(completed_broadcast)
+    expect(page).not_to have_content_tag_for(other_broadcast)
+
+    click_on "Filters"
+    select_filter("Status", operator: "Equals", select: "Pending")
+    click_on "Apply Filters"
+
+    expect(page).to have_content_tag_for(pending_broadcast)
+    expect(page).not_to have_content_tag_for(completed_broadcast)
     expect(page).not_to have_content_tag_for(other_broadcast)
   end
 
@@ -30,8 +44,8 @@ RSpec.describe "Broadcasts" do
     select("Voice", from: "Channel")
     attach_file("Audio file", file_fixture("test.mp3"))
     select_list("My group", "My other group", from: "Beneficiary groups")
-    select_filter("Gender", operator: "Equals", select: "Male")
-    select_filter(:administrative_division_level_3_code)
+    select_beneficiary_filter("Gender", operator: "Equals", select: "Male")
+    select_beneficiary_filter(:administrative_division_level_3_code)
     select_tree("Banteay Meanchey", "Mongkol Borei", "Banteay Neang", from: :administrative_division_level_3_code)
 
     click_on("Create Broadcast")
@@ -60,10 +74,10 @@ RSpec.describe "Broadcasts" do
 
     select("Voice", from: "Channel")
     attach_file("Audio file", file_fixture("test.mp3"))
-    select_filter("ISO country code", operator: "Equals", select: "United States of America")
-    select_filter("ISO region code", operator: "Equals", fill_in: "US-AL")
-    select_filter("Administrative division level 2 code", operator: "Equals", fill_in: "001")
-    select_filter("Administrative division level 2 name", operator: "Starts with", fill_in: "Autauga")
+    select_beneficiary_filter("ISO country code", operator: "Equals", select: "United States of America")
+    select_beneficiary_filter("ISO region code", operator: "Equals", fill_in: "US-AL")
+    select_beneficiary_filter("Administrative division level 2 code", operator: "Equals", fill_in: "001")
+    select_beneficiary_filter("Administrative division level 2 name", operator: "Starts with", fill_in: "Autauga")
 
     click_on("Create Broadcast")
 
@@ -114,9 +128,9 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_link("test.mp3")
 
     select_list("My other group", from: "Beneficiary groups")
-    select_filter("Gender", operator: "Equals", select: "Male")
-    select_filter("Disability status", operator: "Equals", select: "Disabled", enable_filter: false)
-    select_filter("ISO language code", operator: "Equals", fill_in: "khm")
+    select_beneficiary_filter("Gender", operator: "Equals", select: "Male")
+    select_beneficiary_filter("Disability status", operator: "Equals", select: "Disabled", enable_filter: false)
+    select_beneficiary_filter("ISO language code", operator: "Equals", fill_in: "khm")
     select_tree("Banteay Meanchey", "Mongkol Borei", "Banteay Neang", from: :administrative_division_level_3_code)
 
     click_on "Update Broadcast"
@@ -233,8 +247,13 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_text("No beneficiaries match the filters")
   end
 
+  def select_beneficiary_filter(name, **options)
+    select_filter(name, filter_namespace: "broadcast_beneficiary_filter", **options)
+  end
+
   def select_filter(name, **options)
-    filter_id = filter_id(name)
+    filter_namespace = options.fetch(:filter_namespace, "filter")
+    filter_id = filter_id(name, filter_namespace:)
 
     within("##{filter_id}") do
       if options.fetch(:enable_filter, true)
@@ -253,7 +272,7 @@ RSpec.describe "Broadcasts" do
   end
 
   def select_tree(*values, **options)
-    within("##{filter_id(options.fetch(:from))}") do
+    within("##{filter_id(options.fetch(:from), filter_namespace: "broadcast_beneficiary_filter")}") do
       values.each do
         title = find("a", text: it)
         if it == values.last
@@ -265,12 +284,8 @@ RSpec.describe "Broadcasts" do
     end
   end
 
-  def filter_id(name)
+  def filter_id(name, filter_namespace:)
     [ filter_namespace, name.to_s.parameterize.underscore ].join("_")
-  end
-
-  def filter_namespace
-    "broadcast_beneficiary_filter"
   end
 
   def create_beneficiary_group(attributes)
