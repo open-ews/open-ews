@@ -1,56 +1,80 @@
-<%= simple_form_for :filters, url: dashboard_broadcasts_path, method: :get do |f| %>
+<%= simple_form_for @filter_form, url: dashboard_broadcasts_path, method: :get do |filter_form| %>
   <div class="row">
     <div class="col"><label class="form-label">Field</label></div>
     <div class="col"><label class="form-label">Operator</label></div>
     <div class="col"><label class="form-label">Value</label></div>
   </div>
 
-  <%= f.simple_fields_for(:status) do |field_form| %>
-    <div class="row">
-      <div class="col">
-        <div class="input-group mb-3">
-          <span class="input-group-text">
-            <input class="form-check-input m-0" checked id="<%= "status_enabled" %>" type="checkbox" />
-          </span>
-          <input class="form-control" type="text" value="Status" readonly />
+  <% filter_form.object.class.attributes.each do |attribute_name, attribute_type| %>
+    <% field_definition = FieldDefinitions::BroadcastFields.find_by!(name: attribute_name) %>
+
+    <%= filter_form.simple_fields_for(attribute_name, filter_form.object.attributes[attribute_name]) do |field_form| %>
+      <% element_id = field_form.object_name.parameterize.underscore %>
+      <div class="row" id="<%= element_id %>" data-controller="filter-field">
+        <div class="col">
+          <div class="input-group mb-3">
+            <span class="input-group-text">
+              <input class="form-check-input m-0" id="<%= "#{element_id}_enabled" %>" type="checkbox" <%= "checked" if field_form.object.present? %> data-filter-field-target="toggleElement" data-action="filter-field#toggle" />
+            </span>
+            <input class="form-control" type="text" value="<%= field_definition.human_name(namespace: current_account.iso_country_code) %>" readonly data-filter-field-target="fieldName" />
+          </div>
+        </div>
+
+        <div class="col">
+          <%= field_form.input :operator, label: false, as: :select, collection: field_definition.operator_options_for_select, required: true, input_html: { data: { "filter-field-target": "operator", action: "filter-field#operatorChanged" } } %>
+        </div>
+
+        <div class="col">
+          <div class="value-input hidden">
+            <% base_options = { label: false, required: true, input_html: { data: { "filter-field-target": "value" } } } %>
+            <% case field_definition.schema %>
+            <% when FieldDefinitions::FilterSchema::ListType %>
+              <%= field_form.input(:value, as: :select, collection: field_definition.schema.options_for_select, **base_options) %>
+            <% when FieldDefinitions::FilterSchema::StringType %>
+              <%= field_form.input(:value, as: :string, **base_options.deep_merge(input_html: { class: "w-100", minlength: field_definition.schema.options[:length], maxlength: field_definition.schema.options[:length] })) %>
+            <% when FieldDefinitions::FilterSchema::ValueType %>
+              <% base_options = base_options.deep_merge(input_html: { value: "" }) if field_form.object.present? && field_form.object.value.is_a?(Array) %>
+              <%= field_form.input(:value, as: field_definition.schema.form_value_type, html5: true, **base_options) %>
+            <% end %>
+          </div>
+
+          <% if field_definition.schema.is_a?(FieldDefinitions::FilterSchema::ValueType) %>
+            <% base_options = { label: false, required: true, wrapper: false, input_html: { name: "#{field_form.object_name}[value][]", data: { "filter-field-target": "betweenValue" } } } %>
+            <% existing_field_values = field_form.object&.operator == "between" ? field_form.object.value : [] %>
+            <div class="between-value-input hidden">
+              <div class="row">
+                <div class="col">
+                  <%= field_form.input(:value, as: field_definition.schema.form_value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[0] })) %>
+                </div>
+                <div class="col">
+                  <%= field_form.input(:value, as: field_definition.schema.form_value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[1] })) %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="multi-value-input hidden">
+            <% selected_values = FieldDefinitions::Field::MULTIPLE_SELECTION_OPERATORS.include?(field_form.object&.operator) ? field_form.object.value : [] %>
+            <% base_options = { label: false, required: true, include_hidden: false, multiple: true, selected: selected_values } %>
+            <% if field_definition.schema.is_a?(FieldDefinitions::FilterSchema::ListType) %>
+              <%= field_form.input(:value, as: :select, collection: field_definition.schema.options_for_select, input_html: { class: "list-select", data: { "filter-field-target": "multiValue" } }, **base_options) %>
+            <% else %>
+              <%= field_form.input(:value, as: :select, collection: selected_values, input_html: { class: "input-tags", data: { "filter-field-target": "multiValue" } }, **base_options) %>
+            <% end %>
+          </div>
+
+          <div class="is-null-value-input hidden">
+            <%= field_form.input(:value, label: false, as: :select, required: true, input_html: { data: { "filter-field-target": "isNullValue" } }) %>
+          </div>
         </div>
       </div>
-
-      <div class="col">
-        <%= field_form.input :operator, label: false, selected: "Equals to", as: :select, collection: ["Equals to"], required: true %>
-      </div>
-
-      <div class="col">
-        <%= field_form.input :value, as: :string, label: false, input_html: { value: "Completed" } %>
-      </div>
-    </div>
-  <% end %>
-
-  <%= f.simple_fields_for(:created_at) do |field_form| %>
-    <div class="row">
-      <div class="col">
-        <div class="input-group mb-3">
-          <span class="input-group-text">
-            <input class="form-check-input m-0" checked id="<%= "created_at_enabled" %>" type="checkbox" />
-          </span>
-          <input class="form-control" type="text" value="Created At" readonly />
-        </div>
-      </div>
-
-      <div class="col">
-        <%= field_form.input :operator, selected: "Greater than", label: false, as: :select, collection: ["Greater than", "Less than"], required: true %>
-      </div>
-
-      <div class="col">
-        <%= field_form.input :value, as: :date, html5: true, label: false %>
-      </div>
-    </div>
+    <% end %>
   <% end %>
 
   <div class="row mt-2">
     <div class="col d-flex justify-content-between">
       <%= link_to "Clear Filters", dashboard_broadcasts_path %>
-      <%= f.button :submit, "Apply Filters" %>
+      <%= filter_form.button :submit, "Apply Filters" %>
     </div>
   </div>
 <% end %>

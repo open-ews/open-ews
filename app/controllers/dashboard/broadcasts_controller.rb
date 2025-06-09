@@ -2,6 +2,7 @@ module Dashboard
   class BroadcastsController < DashboardController
     def index
       @broadcasts = paginate_resources(scope)
+      @filter_form = BroadcastFilterForm.new(params.fetch(:filter, {}).permit!)
     end
 
     def new
