@@ -1,51 +1,71 @@
 Rails.application.routes.draw do
-  devise_scope :user do
-    resource(
-      :registration,
-      only: %i[edit update],
-      controller: "users/registrations",
-      as: :user_registration,
-      path: "users"
+  constraints(AppSubdomainConstraint.new) do
+    devise_for(
+      :users,
+      controllers: { invitations: "users/invitations" },
+      skip: [ :invitations, :registrations ]
     )
+
+    devise_scope(:user) do
+      resource(
+        :registration,
+        only: %i[edit update],
+        controller: "users/registrations",
+        as: :user_registration,
+        path: "users"
+      )
+
+      resource(
+        :invitation,
+        only: :update,
+        controller: "devise/invitations",
+        as: :user_invitation,
+        path: "users/invitation"
+      ) do
+        get :accept, action: :edit
+      end
+    end
+
+    scope module: :dashboard, as: :dashboard do
+      namespace :settings do
+        resource :account, only: [ :show, :update ]
+        resource :developer, only: :show
+        resources :users, only: [ :index, :show, :new, :create ]
+
+        root to: "accounts#show"
+      end
+
+      resources :beneficiaries
+      resources :beneficiary_groups do
+        resources :memberships, only: :index, controller: "beneficiary_groups/memberships"
+      end
+      resources :beneficiary_addresses, only: :new
+
+      resources :broadcasts do
+        resource :state, only: :create, controller: "broadcasts/states"
+        resources :notifications, only: %i[ index show ]
+      end
+
+      resource :locale, only: :update
+
+      resources :imports, only: %i[index create]
+      resource :user_profile, only: [ :show, :update ]
+
+      root to: "broadcasts#index"
+    end
   end
 
-  devise_for :users,
-             controllers: { invitations: "users/invitations" },
-             skip: :registrations
+  constraints(subdomain: AppSettings.fetch(:app_subdomain)) do
+    resource :forgot_subdomain, only: [], controller: "users/forgot_subdomain", path: "users" do
+      get   :new,     path: "forgot_subdomain", as: "new"
+      post  :create,  path: "forgot_subdomain"
+    end
 
-  get "dashboard", to: "dashboard/broadcasts#index", as: :user_root
-  root to: "dashboard/broadcasts#index"
+    root to: redirect("/users/forgot_subdomain"), as: :app_root
+  end
 
   namespace :admin do
     mount(PgHero::Engine, at: "pghero")
-  end
-
-  namespace "dashboard" do
-    root to: "broadcasts#index"
-
-    namespace :settings do
-      root to: "accounts#show"
-
-      resource :account, only: [ :show, :update ]
-      resource :developer, only: :show
-      resources :users, only: [ :index, :show ]
-    end
-
-    resources :beneficiaries
-    resources :beneficiary_groups do
-      resources :memberships, only: :index, controller: "beneficiary_groups/memberships"
-    end
-    resources :beneficiary_addresses, only: :new
-
-    resources :broadcasts do
-      resource :state, only: :create, controller: "broadcasts/states"
-      resources :notifications, only: %i[index show]
-    end
-
-    resource :locale, only: :update
-
-    resources :imports, only: %i[index create]
-    resource :user_profile, only: [ :show, :update ]
   end
 
   namespace :v1, module: "api/v1", as: "api_v1", defaults: { format: "json" } do

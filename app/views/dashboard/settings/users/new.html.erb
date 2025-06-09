@@ -1,5 +1,5 @@
 <%= render "dashboard/settings/frame" do %>
-  <%= simple_form_for(resource, as: resource_name, url: invitation_path(resource_name), html: { method: :post, data: { turbo: false } }) do |f| %>
+  <%= simple_form_for(@user, url: dashboard_settings_users_path, html: { method: :post, data: { turbo: false } }) do |f| %>
     <div class="card-header">
       <h2 class="mb-0">Invite User</h2>
     </div>

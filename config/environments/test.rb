@@ -60,6 +60,4 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
-
-  config.time_zone = Rails.configuration.app_settings.fetch(:time_zone)
 end

@@ -5,7 +5,7 @@ RSpec.describe "Users" do
     user = create(:user)
     other_user = create(:user, account: user.account)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_settings_users_path
 
     expect(page).to have_link(
@@ -17,7 +17,7 @@ RSpec.describe "Users" do
   it "can show a user" do
     user = create(:user, name: "John Doe", email: "user@example.com")
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_settings_users_path
     click_on("John Doe")
 
@@ -26,9 +26,9 @@ RSpec.describe "Users" do
   end
 
   it "can invite a user" do
-    user = create(:user)
+    user = create(:user, name: "Bob Chann")
 
-    sign_in(user)
+    account_sign_in(user)
     visit(dashboard_settings_users_path)
     click_on("New")
 
@@ -42,5 +42,6 @@ RSpec.describe "Users" do
     expect(page).to have_content("An invitation email has been sent to user@example.com.")
     expect(page).to have_content("user@example.com")
     expect(page).to have_content("John Doe")
+    expect(page).to have_link("Bob Chann", href: dashboard_settings_user_path(user))
   end
 end

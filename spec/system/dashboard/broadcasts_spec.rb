@@ -10,7 +10,7 @@ RSpec.describe "Broadcasts" do
     )
     other_broadcast = create(:broadcast)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_broadcasts_path
 
     expect(page).to have_title("Broadcasts")
@@ -24,7 +24,7 @@ RSpec.describe "Broadcasts" do
     create_beneficiary_group(name: "My group", account:)
     create_beneficiary_group(name: "My other group", account:)
 
-    sign_in(user)
+    account_sign_in(user)
     visit new_dashboard_broadcast_path
 
     select("Voice", from: "Channel")
@@ -55,7 +55,7 @@ RSpec.describe "Broadcasts" do
     account = create(:account, iso_country_code: "US")
     user = create(:user, account:)
 
-    sign_in(user)
+    account_sign_in(user)
     visit new_dashboard_broadcast_path
 
     select("Voice", from: "Channel")
@@ -108,7 +108,7 @@ RSpec.describe "Broadcasts" do
       }
     )
 
-    sign_in(user)
+    account_sign_in(user)
     visit edit_dashboard_broadcast_path(broadcast)
 
     expect(page).to have_link("test.mp3")
@@ -158,7 +158,7 @@ RSpec.describe "Broadcasts" do
     user = create(:user)
     broadcast = create(:broadcast, account: user.account)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_broadcast_path(broadcast)
 
     click_on "Delete"
@@ -182,7 +182,7 @@ RSpec.describe "Broadcasts" do
       }
     )
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_broadcast_path(broadcast)
 
     perform_enqueued_jobs do
@@ -198,7 +198,7 @@ RSpec.describe "Broadcasts" do
     user = create(:user, account:)
     broadcast = create(:broadcast, :running, account:)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_broadcast_path(broadcast)
 
     click_on "Stop"
@@ -222,7 +222,7 @@ RSpec.describe "Broadcasts" do
       }
     )
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_broadcast_path(broadcast)
 
     perform_enqueued_jobs do

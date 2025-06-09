@@ -4,6 +4,7 @@ RSpec.describe "User sign in" do
   it "can sign in" do
     user = create(:user, password: "mysecret")
 
+    set_app_host(user.account)
     visit new_user_session_path
 
     fill_in "Email", with: user.email
@@ -16,7 +17,7 @@ RSpec.describe "User sign in" do
   it "can sign out" do
     user = create(:user)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_root_path
 
     within(".topbar-nav") do

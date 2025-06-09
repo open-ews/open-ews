@@ -10,9 +10,15 @@ en:
       index: Settings
     registrations:
       edit: Edit Profile
+    forgot_subdomain:
+      new: Forgot your subdomain?
     passwords:
       new: Forgot your password?
+      create: Forgot your password?
       edit: Change your password
+    confirmations:
+      show: Resend confirmation instructions
+      create: Resend confirmation instructions
     developers:
       show: Developers
     broadcast_notifications:

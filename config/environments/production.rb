@@ -110,7 +110,5 @@ Rails.application.configure do
 
   config.action_mailer.deliver_later_queue_name = config.active_job.default_queue_name
 
-  config.time_zone = Rails.configuration.app_settings.fetch(:time_zone)
-
   config.skylight.probes << "active_job"
 end

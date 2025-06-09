@@ -7,7 +7,7 @@ RSpec.describe "Account Settings" do
     somleng_account_sid = generate(:somleng_account_sid)
     somleng_auth_token = generate(:auth_token)
 
-    sign_in(user)
+    account_sign_in(user)
     visit(dashboard_root_path)
 
     within(".topbar-nav") do
@@ -26,7 +26,7 @@ RSpec.describe "Account Settings" do
     expect(page).to have_text("Account was successfully updated.")
     expect(page).to have_field("Name", with: "Test Account")
     expect(page).to have_select("Country", selected: "Cambodia")
-    expect(page).to have_css("img[alt='Test Account Logo']")
+    expect(page).to have_image(alt: "Test Account Logo")
     expect(page).to have_field("Somleng account sid", with: somleng_account_sid)
     expect(page).to have_field("Somleng auth token", with: somleng_auth_token)
   end
@@ -35,7 +35,7 @@ RSpec.describe "Account Settings" do
     other_account = create(:account, somleng_account_sid: generate(:somleng_account_sid))
     user = create(:user)
 
-    sign_in(user)
+    account_sign_in(user)
     visit(dashboard_settings_account_path)
     fill_in("Somleng account sid", with: other_account.somleng_account_sid)
     click_on("Save")

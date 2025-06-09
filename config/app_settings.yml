@@ -1,8 +1,8 @@
 default: &default
-  time_zone: "UTC"
+  app_subdomain: <%= ENV.fetch("APP_SUBDOMAIN", "app") %>
+  api_subdomain: <%= ENV.fetch("API_SUBDOMAIN", "api") %>
   mailer_sender: <%= ENV.fetch("MAILER_SENDER", "no-reply@somleng.org") %>
   app_url_host: <%= ENV.fetch("APP_URL_HOST", "https://app.open-ews.org") %>
-  api_subdomain: <%= ENV.fetch("API_SUBDOMAIN", "api") %>
   aws_sqs_high_priority_queue_name: <%= ENV.fetch("AWS_SQS_HIGH_PRIORITY_QUEUE_NAME", "high-priority") %>
   aws_sqs_default_queue_name: <%= ENV.fetch("AWS_SQS_DEFAULT_QUEUE_NAME", "default") %>
   aws_sqs_low_priority_queue_name: <%= ENV.fetch("AWS_SQS_LOW_PRIORITY_QUEUE_NAME", "low-priority") %>
@@ -22,13 +22,13 @@ production: &production
 
 staging:
   <<: *production
-  app_url_host: "https://app-staging.open-ews.org"
-  api_subdomain: "api-staging"
+  app_url_host: <%= ENV.fetch("APP_URL_HOST", "https://app-staging.open-ews.org") %>
+  api_subdomain: <%= ENV.fetch("API_SUBDOMAIN", "api-staging") %>
 
 development: &development
   <<: *default
-  app_url_host: "http://localhost:3000"
+  app_url_host: "http://app.lvh.me:3000"
 
 test:
   <<: *development
-  app_url_host: "https://app.open-ews.org"
+  app_url_host: "http://app.lvh.me"

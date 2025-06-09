@@ -1,0 +1,19 @@
+<p>
+  Hi <%= @user.name %>!
+</p>
+
+<p>
+  You recently requested help accessing your OpenEWS account. Your OpenEWS subdomain is:
+</p>
+
+<p>
+  <%= link_to(dashboard_root_url(host: @user.account.subdomain_host), dashboard_root_url(host: @user.account.subdomain_host)) %>
+</p>
+
+<p>
+  You can log in directly using the link above.
+</p>
+
+<p class="text-muted">
+  If you didn't request this, please ignore this email.
+</p>

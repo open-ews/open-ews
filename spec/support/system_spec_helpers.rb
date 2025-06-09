@@ -1,36 +1,28 @@
 module SystemSpecHelpers
-  def fill_in_key_values_for(attribute, with:)
-    with.each_with_index do |(key, value), index|
-      fill_in_key_value_for(
-        attribute,
-        with: { key:, value: },
-        index:
-      )
-      add_key_value_for(attribute)
-    end
+  def account_sign_in(user)
+    set_app_host(user.account)
+    sign_in(user)
   end
 
-  def fill_in_key_value_for(attribute, with:, index: 0)
-    within("##{attribute}_fields") do
-      page.all("input[placeholder='Key']")[index].set(with[:key]) if with.key?(:key)
-      page.all("input[placeholder='Value']")[index].set(with[:value]) if with.key?(:value)
-    end
+  def set_app_host(account)
+    Capybara.app_host = "http://#{account.subdomain_host}"
   end
 
-  def remove_key_value_for(attribute, index: 0)
-    within("##{attribute}_fields") do
-      page.all(:xpath, "//a[text()[contains(.,'Remove')]]")[index].click
-    end
-  end
-
-  def add_key_value_for(attribute)
-    within("##{attribute}_fields") do
-      click_link("Add")
-    end
+  def have_image(alt:)
+    have_css("img[alt='#{alt}']")
   end
 
   def have_content_tag_for(model, model_name: nil)
     have_selector("##{model_name || model.class.to_s.underscore.tr('/', '_')}_#{model.id}")
+  end
+
+  def select_list(*values, from:)
+    return values.each { select(it, from:) } if Capybara.current_driver == :rack_test
+
+    control_wrapper = find_field(from, visible: false).find(:xpath, "..")
+    control_wrapper.click
+
+    values.each { control_wrapper.find(:xpath, "..//*[text()='#{it}']").click }
   end
 end
 
