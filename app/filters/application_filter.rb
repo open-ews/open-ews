@@ -1,8 +1,8 @@
 class ApplicationFilter < ApplicationRequestSchema
-  class_attribute :__field_collection__
+  class_attribute :field_collection
 
   def self.has_fields(field_collection)
-    self.__field_collection__ = field_collection
+    self.field_collection = field_collection
 
     params do
       field_collection.each do |field|
@@ -34,7 +34,7 @@ class ApplicationFilter < ApplicationRequestSchema
 
     filters.map do |(filter, condition)|
       operator, value = condition.first
-      field_definition = __field_collection__.find_by!(path: filter)
+      field_definition = field_collection.find_by!(path: filter)
 
       FilterField.new(field_definition:, operator:, value:)
     end

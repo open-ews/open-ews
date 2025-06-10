@@ -1,7 +1,7 @@
 class FilterFormType < FormType
   attr_reader :field_definitions, :filter_data
 
-  def initialize(field_definitions:, filter_data:, **)
+  def initialize(field_definitions:, filter_data: nil, **)
     @field_definitions = field_definitions
     @filter_data = filter_data
     super(**)

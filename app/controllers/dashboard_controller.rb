@@ -22,4 +22,8 @@ class DashboardController < ApplicationController
   def current_account
     current_user.account
   end
+
+  def filter_param
+    params.fetch(:filter, {}).permit!
+  end
 end

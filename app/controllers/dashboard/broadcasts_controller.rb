@@ -1,7 +1,8 @@
 module Dashboard
   class BroadcastsController < DashboardController
     def index
-      @broadcasts = paginate_resources(scope)
+      @filter_form = BroadcastFilterForm.new(filter_param)
+      @broadcasts = paginate_resources(@filter_form.apply(scope))
     end
 
     def new

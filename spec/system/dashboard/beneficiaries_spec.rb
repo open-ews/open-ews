@@ -1,9 +1,10 @@
 require "rails_helper"
 
 RSpec.describe "Beneficiaries" do
-  it "lists all beneficiaries" do
+  it "lists all beneficiaries", :js do
     user = create(:user)
-    _beneficiary = create(:beneficiary, phone_number: "85516789111", account: user.account)
+    _active_beneficiary = create(:beneficiary, phone_number: "85516789111", status: :active, account: user.account)
+    _disabled_beneficiary = create(:beneficiary, phone_number: "85510888888", status: :disabled, account: user.account)
     _other_beneficiary = create(:beneficiary, phone_number: "85510555123")
 
     account_sign_in(user)
@@ -11,6 +12,15 @@ RSpec.describe "Beneficiaries" do
 
     expect(page).to have_title("Beneficiaries")
     expect(page).to have_content("+855 16 789 111")
+    expect(page).to have_content("+855 10 888 888")
+    expect(page).not_to have_content("+855 10 555 123")
+
+    click_on "Filters"
+    select_filter("Status", operator: "Equals", select: "Active")
+    click_on "Apply Filters"
+
+    expect(page).to have_content("+855 16 789 111")
+    expect(page).not_to have_content("+855 10 888 888")
     expect(page).not_to have_content("+855 10 555 123")
   end
 

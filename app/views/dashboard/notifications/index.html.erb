@@ -7,6 +7,14 @@
 <% end %>
 
 <div class="card">
+  <div class="card-header">
+    <div class="card-actions">
+      <%= render("shared/filters_button", filter_form: @filter_form) %>
+   </div>
+  </div>
+
+  <%= render "shared/filter_form", filter_form: @filter_form %>
+
   <div class="table-responsive">
     <table id="resources" class="table table-vcenter card-table">
       <thead>
