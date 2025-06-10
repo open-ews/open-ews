@@ -8,6 +8,8 @@ variable "global_accelerator" {}
 variable "rds_cluster" {}
 variable "api_subdomain" {}
 variable "app_subdomain" {}
+variable "cdn_subdomain" {}
+variable "cdn_certificate" {}
 variable "route53_zone" {}
 variable "internal_route53_zone" {}
 variable "legacy_app_route53_zone" {}

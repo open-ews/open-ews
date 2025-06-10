@@ -9,3 +9,15 @@ module "ssl_certificate" {
   ]
   route53_zone = aws_route53_zone.this
 }
+
+module "cdn_certificate" {
+  source = "../modules/ssl_certificate"
+
+  domain_name               = "*.open-ews.org"
+  subject_alternative_names = []
+  route53_zone              = aws_route53_zone.this
+
+  providers = {
+    aws = aws.us-east-1
+  }
+}

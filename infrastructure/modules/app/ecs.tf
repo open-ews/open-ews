@@ -81,6 +81,10 @@ locals {
     {
       name  = "AUDIO_HOST",
       value = "https://${aws_s3_bucket.uploads.id}"
+    },
+    {
+      name  = "ASSET_HOST",
+      value = aws_route53_record.cdn.fqdn
     }
   ]
 

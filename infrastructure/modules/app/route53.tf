@@ -69,3 +69,15 @@ resource "aws_route53_record" "uploads" {
     evaluate_target_health = true
   }
 }
+
+resource "aws_route53_record" "cdn" {
+  zone_id = var.route53_zone.zone_id
+  name    = var.cdn_subdomain
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.app.domain_name
+    zone_id                = aws_cloudfront_distribution.app.hosted_zone_id
+    evaluate_target_health = true
+  }
+}
