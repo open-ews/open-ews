@@ -1,16 +1,25 @@
 require "rails_helper"
 
 RSpec.describe "Beneficiary Groups" do
-  it "lists all beneficiary groups" do
+  it "lists all beneficiary groups", :js do
     user = create(:user)
     create(:beneficiary_group, name: "My group 1", account: user.account)
-    create(:beneficiary_group, name: "My group 2")
+    create(:beneficiary_group, name: "My group 2", account: user.account)
+    create(:beneficiary_group, name: "My group 3")
 
     account_sign_in(user)
     visit dashboard_root_path
     click_on("Beneficiary groups")
 
     expect(page).to have_title("Beneficiary groups")
+    expect(page).to have_content("My group 1")
+    expect(page).to have_content("My group 2")
+    expect(page).not_to have_content("My group 3")
+
+    click_on "Filters"
+    select_filter("Name", operator: "Equals", fill_in: "My group 1")
+    click_on "Apply Filters"
+
     expect(page).to have_content("My group 1")
     expect(page).not_to have_content("My group 2")
   end

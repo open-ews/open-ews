@@ -1,7 +1,8 @@
 module Dashboard
   class BeneficiaryGroupsController < DashboardController
     def index
-      @beneficiary_groups = paginate_resources(scope)
+      @filter_form = BeneficiaryGroupFilterForm.new(filter_param)
+      @beneficiary_groups = paginate_resources(@filter_form.apply(scope))
     end
 
     def new
