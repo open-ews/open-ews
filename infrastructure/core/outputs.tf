@@ -14,3 +14,8 @@ output "rds_cluster" {
   value     = module.rds_cluster
   sensitive = true
 }
+
+output "cdn_certificate" {
+  value     = module.cdn_certificate.this
+  sensitive = true
+}
