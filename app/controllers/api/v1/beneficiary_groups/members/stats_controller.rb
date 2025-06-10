@@ -2,7 +2,7 @@ module API
   module V1
     module BeneficiaryGroups
       module Members
-        class StatsController < API::V1::BaseController
+        class StatsController < APIController
           def index
             validate_request_schema(
               with: ::V1::BeneficiaryStatsRequestSchema,

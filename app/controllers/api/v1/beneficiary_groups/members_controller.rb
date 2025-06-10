@@ -1,7 +1,7 @@
 module API
   module V1
     module BeneficiaryGroups
-      class MembersController < API::V1::BaseController
+      class MembersController < APIController
         def index
           apply_filters(scope, with: BeneficiaryFilter)
         end

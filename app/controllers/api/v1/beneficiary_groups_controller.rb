@@ -1,6 +1,6 @@
 module API
   module V1
-    class BeneficiaryGroupsController < BaseController
+    class BeneficiaryGroupsController < APIController
       def index
         apply_filters(scope.includes(include_parameter(only: :members)), with: BeneficiaryGroupFilter)
       end

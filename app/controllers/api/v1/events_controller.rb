@@ -1,6 +1,6 @@
 module API
   module V1
-    class EventsController < BaseController
+    class EventsController < APIController
       def index
         apply_filters(scope, with: EventFilter)
       end

@@ -2,7 +2,7 @@ module API
   module V1
     module Broadcasts
       module Notifications
-        class StatsController < BaseController
+        class StatsController < APIController
           def index
             validate_request_schema(
               with: ::V1::NotificationStatsRequestSchema,
