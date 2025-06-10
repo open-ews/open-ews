@@ -1,14 +1,14 @@
 class UserForm < ApplicationForm
+  attribute :object, default: -> { User.new }
   attribute :name
   attribute :email
-  attribute :user, default: -> { User.new }
   attribute :account
   attribute :inviter
 
   validates :name, :email, presence: true
   validates :email, email_uniqueness: true, email_format: true, allow_blank: true
 
-  delegate :persisted?, :id, to: :user
+  delegate :persisted?, :id, to: :object
 
   def self.model_name
     ActiveModel::Name.new(self, nil, "User")
@@ -17,7 +17,7 @@ class UserForm < ApplicationForm
   def save
     return false if invalid?
 
-    User.invite!(
+    self.object = User.invite!(
       {
         name:,
         email:,
