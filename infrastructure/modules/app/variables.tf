@@ -3,7 +3,6 @@ variable "app_environment" {}
 variable "app_image" {}
 variable "aws_region" {}
 variable "uploads_bucket" {}
-variable "somleng_route53_zone" {}
 variable "region" {}
 variable "global_accelerator" {}
 variable "rds_cluster" {}
@@ -11,6 +10,8 @@ variable "api_subdomain" {}
 variable "app_subdomain" {}
 variable "route53_zone" {}
 variable "internal_route53_zone" {}
+variable "legacy_app_route53_zone" {}
+variable "legacy_app_subdomain" {}
 
 variable "webserver_container_port" {
   default = 80

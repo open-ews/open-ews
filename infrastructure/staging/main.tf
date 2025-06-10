@@ -1,11 +1,12 @@
 module "app" {
   source = "../modules/app"
 
-  api_subdomain         = "api-staging"
-  app_subdomain         = "app-staging"
-  route53_zone          = data.terraform_remote_state.core.outputs.route53_zone
-  internal_route53_zone = data.terraform_remote_state.core.outputs.internal_route53_zone
-  somleng_route53_zone  = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_somleng_org
+  api_subdomain           = "api-staging"
+  app_subdomain           = "app-staging"
+  route53_zone            = data.terraform_remote_state.core.outputs.route53_zone
+  internal_route53_zone   = data.terraform_remote_state.core.outputs.internal_route53_zone
+  legacy_app_route53_zone = data.terraform_remote_state.core_infrastructure.outputs.route53_zone_somleng_org
+  legacy_app_subdomain    = "scfm-staging"
 
   app_identifier      = "open-ews-staging"
   app_environment     = "staging"
