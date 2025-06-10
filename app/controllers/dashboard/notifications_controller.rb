@@ -1,7 +1,8 @@
 module Dashboard
   class NotificationsController < DashboardController
     def index
-      @notifications = paginate_resources(scope)
+      @filter_form = NotificationFilterForm.new(filter_param)
+      @notifications = paginate_resources(@filter_form.apply(scope))
     end
 
     def show
