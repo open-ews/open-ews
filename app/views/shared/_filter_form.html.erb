@@ -18,7 +18,8 @@
           <div class="col"><label class="form-label">Value</label></div>
         </div>
 
-        <% filter_form.object.class.attribute_definitions.each do |attribute_name, field_definition| %>
+        <% filter_form.object.class.attributes.each do |attribute_name, _attribute_type| %>
+          <% field_definition = filter_form.object.filter_class.field_collection.find_by!(name: attribute_name) %>
           <%= render "shared/filter_field", filter_form:, field_name: attribute_name, field_definition: %>
         <% end %>
 
