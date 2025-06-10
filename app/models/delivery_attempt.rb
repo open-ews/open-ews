@@ -6,9 +6,6 @@ class DeliveryAttempt < ApplicationRecord
   belongs_to :broadcast
 
   delegate :account, to: :broadcast
-
-  include MetadataHelpers
-
   delegate :initiated?, :transition_to!, :may_transition_to?, to: :state_machine
 
   class StateMachine < StateMachine::ActiveRecord
@@ -21,14 +18,6 @@ class DeliveryAttempt < ApplicationRecord
 
   def completed?
     completed_at.present?
-  end
-
-  # NOTE: This is for backward compatibility until we moved to the new API
-  def as_json(*)
-    result = super
-    result["msisdn"] = result.delete("phone_number")
-    result["contact_id"] = result.delete("beneficiary_id")
-    result
   end
 
   private

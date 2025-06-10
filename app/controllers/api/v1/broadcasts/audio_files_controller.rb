@@ -1,7 +1,7 @@
 module API
   module V1
     module Broadcasts
-      class AudioFilesController < API::V1::BaseController
+      class AudioFilesController < APIController
         include ActiveStorage::SetCurrent
 
         def show

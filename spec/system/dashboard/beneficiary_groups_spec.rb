@@ -6,7 +6,7 @@ RSpec.describe "Beneficiary Groups" do
     create(:beneficiary_group, name: "My group 1", account: user.account)
     create(:beneficiary_group, name: "My group 2")
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_root_path
     click_on("Beneficiary groups")
 
@@ -20,7 +20,7 @@ RSpec.describe "Beneficiary Groups" do
     beneficiary_group = create(:beneficiary_group, name: "My group", account: user.account)
     create(:beneficiary, phone_number: "855715100999", groups: [ beneficiary_group ], account: user.account)
 
-    sign_in(user)
+    account_sign_in(user)
     visit(dashboard_beneficiary_group_path(beneficiary_group))
     click_on("More")
     click_on("Members")
@@ -33,7 +33,7 @@ RSpec.describe "Beneficiary Groups" do
   it "create a beneficiary group" do
     user = create(:user)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_beneficiary_groups_path
     click_on "New"
 
@@ -47,7 +47,7 @@ RSpec.describe "Beneficiary Groups" do
   it "handles form validations" do
     user = create(:user)
 
-    sign_in(user)
+    account_sign_in(user)
     visit new_dashboard_beneficiary_group_path
 
     fill_in("Name", with: "")
@@ -60,7 +60,7 @@ RSpec.describe "Beneficiary Groups" do
     user = create(:user)
     beneficiary_group = create(:beneficiary_group, name: "My group", account: user.account)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_beneficiary_group_path(beneficiary_group)
     click_on("Edit")
     fill_in("Name", with: "My new group")
@@ -75,7 +75,7 @@ RSpec.describe "Beneficiary Groups" do
     beneficiary_group = create(:beneficiary_group, account: user.account)
     create(:beneficiary_group_membership, beneficiary_group:, beneficiary: create(:beneficiary, account: user.account))
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_beneficiary_group_path(beneficiary_group)
     click_on "Delete"
 

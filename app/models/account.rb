@@ -26,6 +26,11 @@ class Account < ApplicationRecord
     somleng_account_sid.present? && somleng_auth_token.present? && notification_phone_number.present?
   end
 
+  def subdomain_host
+    uri = Addressable::URI.parse(Rails.application.routes.url_helpers.dashboard_root_url(subdomain: "#{subdomain}.#{AppSettings.fetch(:app_subdomain)}"))
+    uri.port.present? ? "#{uri.host}:#{uri.port}" : uri.host
+  end
+
   private
 
   def set_default_settings

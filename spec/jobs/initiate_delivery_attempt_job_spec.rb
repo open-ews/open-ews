@@ -31,7 +31,7 @@ RSpec.describe InitiateDeliveryAttemptJob do
       ).with(
         body: URI.encode_www_form(
           "From" => "1294",
-          "StatusCallback" => "https://api.open-ews.org/somleng_webhooks/delivery_attempts/#{delivery_attempt.id}/call_status_callbacks",
+          "StatusCallback" => Rails.application.routes.url_helpers.somleng_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt, subdomain: "api"),
           "To" => "855715100999",
           "Twiml" => "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Response>\n<Play>https://uploads.open-ews.org/#{broadcast.audio_file.key}.mp3</Play>\n</Response>\n",
         ),

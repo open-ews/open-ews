@@ -1,0 +1,27 @@
+<%= content_for(:title) do %>
+  <%= @user.account.name %> Account URL
+<% end %>
+
+<%= content_for(:logo) do %>
+  <%= account_logo(@user.account, class: "ax-center my-10 w-24") %>
+<% end %>
+
+<p>
+  Hi <%= @user.name %>!
+</p>
+
+<p>
+  You recently requested help accessing your account. Your account URL is:
+</p>
+
+<p>
+  <%= link_to(dashboard_root_url(host: @user.account.subdomain_host), dashboard_root_url(host: @user.account.subdomain_host)) %>
+</p>
+
+<p>
+  You can log in directly using the link above.
+</p>
+
+<p class="text-muted">
+  If you didn't request this, please ignore this email.
+</p>

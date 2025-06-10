@@ -1,6 +1,6 @@
 module API
   module V1
-    class BroadcastsController < BaseController
+    class BroadcastsController < APIController
       def index
         apply_filters(scope.includes(include_parameter(only: [ :beneficiary_groups ])), with: BroadcastFilter)
       end

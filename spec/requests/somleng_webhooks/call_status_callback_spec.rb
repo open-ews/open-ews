@@ -18,12 +18,12 @@ RSpec.describe "Call Status Callbacks" do
 
     perform_enqueued_jobs do
       post(
-        somleng_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt),
+        somleng_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt, subdomain: AppSettings.fetch(:api_subdomain)),
         params: request_body,
         headers: {
           "X-Twilio-Signature" => build_somleng_signature(
             auth_token: account.somleng_auth_token,
-            url: somleng_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt),
+            url: somleng_webhooks_delivery_attempt_call_status_callbacks_url(delivery_attempt, subdomain: AppSettings.fetch(:api_subdomain)),
             params: request_body
           )
         }

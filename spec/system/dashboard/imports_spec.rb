@@ -7,7 +7,7 @@ RSpec.describe "Imports" do
     create(:import, :beneficiaries, user:, status: :failed)
     create(:import, :beneficiaries, user:, status: :succeeded)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_root_path
 
     within(".topbar-nav") do

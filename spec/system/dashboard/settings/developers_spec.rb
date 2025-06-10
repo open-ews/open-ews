@@ -6,7 +6,7 @@ RSpec.describe "Developer Settings" do
     create(:access_token, account:)
     user = create(:user, account:)
 
-    sign_in(user)
+    account_sign_in(user)
     visit(dashboard_settings_developer_path)
 
     expect(page).to have_field("API key", with: account.api_key)

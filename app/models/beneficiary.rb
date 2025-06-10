@@ -1,6 +1,4 @@
 class Beneficiary < ApplicationRecord
-  include MetadataHelpers
-
   attribute :phone_number, :phone_number
   attribute :address_administrative_division_codes, :string, array: true
 
@@ -22,15 +20,4 @@ class Beneficiary < ApplicationRecord
   validates :iso_language_code, length: { is: 3, allow_blank: true }
 
   accepts_nested_attributes_for :addresses, allow_destroy: true, reject_if: :all_blank
-
-  def self.jsonapi_serializer_class
-    BeneficiarySerializer
-  end
-
-  # NOTE: This is for backward compatibility until we moved to the new API
-  def as_json(*)
-    result = super
-    result["msisdn"] = result.delete("phone_number")
-    result
-  end
 end

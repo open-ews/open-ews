@@ -1,7 +1,7 @@
 module API
   module V1
     module Broadcasts
-      class NotificationsController < API::V1::BaseController
+      class NotificationsController < APIController
         def index
           apply_filters(notifications_scope, with: NotificationFilter)
         end

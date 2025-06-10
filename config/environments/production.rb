@@ -46,10 +46,6 @@ Rails.application.configure do
       params: event.payload[:params].except(*exceptions)
     }
   end
-  config.lograge.logger = Appsignal::Logger.new(
-    "web",
-    format: Appsignal::Logger::LOGFMT
-  )
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
@@ -82,7 +78,8 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  config.lograge.formatter = Lograge::Formatters::Json.new
+
 
   # Use a different logger for distributed setups.
   # require "syslog/logger"
@@ -109,8 +106,6 @@ Rails.application.configure do
   config.action_mailer.ses_v2_settings = { region: Rails.configuration.app_settings.fetch(:aws_ses_region) }
 
   config.action_mailer.deliver_later_queue_name = config.active_job.default_queue_name
-
-  config.time_zone = Rails.configuration.app_settings.fetch(:time_zone)
 
   config.skylight.probes << "active_job"
 end
