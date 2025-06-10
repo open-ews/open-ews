@@ -1,6 +1,6 @@
 <%= filter_form.simple_fields_for(field_name, filter_form.object.attributes[field_name]) do |field_form| %>
   <% element_id = field_form.object_name.parameterize.underscore %>
-  <div class="row" id="<%= element_id %>" data-controller="filter-field">
+  <div class="row filter-field" id="<%= element_id %>" data-controller="filter-field">
     <div class="col">
       <div class="input-group mb-3">
         <span class="input-group-text">

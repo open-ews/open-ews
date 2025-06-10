@@ -6,6 +6,7 @@ RSpec.configure do |config|
 
     Capybara.app_host = AppSettings.fetch(:app_url_host)
     Capybara.server = :puma, { Silent: true }
+    Capybara.disable_animation = true
   end
 
   config.before(:each, :js, type: :system) do

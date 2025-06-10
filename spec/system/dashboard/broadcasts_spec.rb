@@ -44,9 +44,9 @@ RSpec.describe "Broadcasts" do
     select("Voice", from: "Channel")
     attach_file("Audio file", file_fixture("test.mp3"))
     select_list("My group", "My other group", from: "Beneficiary groups")
-    select_beneficiary_filter("Gender", operator: "Equals", select: "Male")
-    select_beneficiary_filter(:administrative_division_level_3_code)
-    select_tree("Banteay Meanchey", "Mongkol Borei", "Banteay Neang", from: :administrative_division_level_3_code)
+    select_filter("Gender", operator: "Equals", select: "Male")
+    select_filter("Commune")
+    select_tree("Banteay Meanchey", "Mongkol Borei", "Banteay Neang")
 
     click_on("Create Broadcast")
 
@@ -74,10 +74,10 @@ RSpec.describe "Broadcasts" do
 
     select("Voice", from: "Channel")
     attach_file("Audio file", file_fixture("test.mp3"))
-    select_beneficiary_filter("ISO country code", operator: "Equals", select: "United States of America")
-    select_beneficiary_filter("ISO region code", operator: "Equals", fill_in: "US-AL")
-    select_beneficiary_filter("Administrative division level 2 code", operator: "Equals", fill_in: "001")
-    select_beneficiary_filter("Administrative division level 2 name", operator: "Starts with", fill_in: "Autauga")
+    select_filter("Country", operator: "Equals", select: "United States of America")
+    select_filter("ISO region code", operator: "Equals", fill_in: "US-AL")
+    select_filter("Administrative division level 2 code", operator: "Equals", fill_in: "001")
+    select_filter("Administrative division level 2 name", operator: "Starts with", fill_in: "Autauga")
 
     click_on("Create Broadcast")
 
@@ -128,10 +128,10 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_link("test.mp3")
 
     select_list("My other group", from: "Beneficiary groups")
-    select_beneficiary_filter("Gender", operator: "Equals", select: "Male")
-    select_beneficiary_filter("Disability status", operator: "Equals", select: "Disabled", enable_filter: false)
-    select_beneficiary_filter("ISO language code", operator: "Equals", fill_in: "khm")
-    select_tree("Banteay Meanchey", "Mongkol Borei", "Banteay Neang", from: :administrative_division_level_3_code)
+    select_filter("Gender", operator: "Equals", select: "Male")
+    select_filter("Disability status", operator: "Equals", select: "Disabled")
+    select_filter("ISO language code", operator: "Equals", fill_in: "khm")
+    select_tree("Banteay Meanchey", "Mongkol Borei", "Banteay Neang")
 
     click_on "Update Broadcast"
 
@@ -247,12 +247,8 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_text("No beneficiaries match the filters")
   end
 
-  def select_beneficiary_filter(name, **options)
-    select_filter(name, filter_namespace: "broadcast_beneficiary_filter", **options)
-  end
-
-  def select_tree(*values, **options)
-    within("##{filter_field_id(options.fetch(:from), filter_namespace: "broadcast_beneficiary_filter")}") do
+  def select_tree(*values)
+    within("#broadcast_beneficiary_filter_administrative_division_level_3_code") do
       values.each do
         title = find("a", text: it)
         if it == values.last
