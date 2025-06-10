@@ -1,6 +1,6 @@
 module API
   module V1
-    class AddressesController < BaseController
+    class AddressesController < APIController
       def index
         respond_with_resource(beneficiary.addresses)
       end

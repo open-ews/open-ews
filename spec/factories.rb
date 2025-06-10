@@ -183,7 +183,8 @@ FactoryBot.define do
   end
 
   factory :account do
-    name { "PIN 1294" }
+    name { "NCDM" }
+    sequence(:subdomain) { |n| "ncdm#{n}" }
     iso_country_code { "KH" }
 
     trait :configured_for_broadcasts do
@@ -191,14 +192,23 @@ FactoryBot.define do
       somleng_auth_token { generate(:auth_token) }
       notification_phone_number { "1294" }
     end
+
+    trait :with_logo do
+      association :logo, factory: :active_storage_attachment, filename: "account_logo.jpg"
+    end
   end
 
   factory :user do
     account
     email
+    confirmed
     name { "John Doe" }
     password { "secret123" }
     password_confirmation { password }
+
+    trait :confirmed do
+      confirmed_at { Time.current }
+    end
   end
 
   factory :access_token do

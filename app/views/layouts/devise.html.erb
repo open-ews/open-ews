@@ -18,8 +18,12 @@
   <body>
     <div class="page page-center">
       <div class="container container-tight py-4">
-        <div class="text-center mb-4">
-          <%= image_tag "open-ews_landscape_logo.png", class: "w-50" %>
+        <div class="text-center mb-4 account-logo">
+          <% if app_request.account_subdomain_request? %>
+            <%= account_logo(current_account, class: "img-fluid mx-auto px-5 my-3 d-block w-50") %>
+          <% else %>
+            <%= image_tag("open-ews_landscape_logo.png", class: "img-fluid mx-auto px-5 my-3 d-block w-50") %>
+          <% end %>
         </div>
 
         <div class="card card-md">
@@ -30,3 +34,6 @@
           </div>
         </div>
       </div>
+    </div>
+  </body>
+</html>

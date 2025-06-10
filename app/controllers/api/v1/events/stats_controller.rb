@@ -1,7 +1,7 @@
 module API
   module V1
     module Events
-      class StatsController < BaseController
+      class StatsController < APIController
         def index
           validate_request_schema(
             with: ::V1::EventStatsRequestSchema,

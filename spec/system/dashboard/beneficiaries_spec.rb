@@ -7,7 +7,7 @@ RSpec.describe "Beneficiaries" do
     _disabled_beneficiary = create(:beneficiary, phone_number: "85510888888", status: :disabled, account: user.account)
     _other_beneficiary = create(:beneficiary, phone_number: "85510555123")
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_beneficiaries_path
 
     expect(page).to have_title("Beneficiaries")
@@ -27,7 +27,7 @@ RSpec.describe "Beneficiaries" do
   it "imports beneficiaries" do
     user = create(:user)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_beneficiaries_path
     click_on("Import")
     attach_file("File", file_fixture("beneficiaries.csv"))
@@ -47,7 +47,7 @@ RSpec.describe "Beneficiaries" do
   it "fails to import beneficiaries" do
     user = create(:user)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_beneficiaries_path
     click_on("Import")
     attach_file("File", file_fixture("test.mp3"))
@@ -61,7 +61,7 @@ RSpec.describe "Beneficiaries" do
     create(:beneficiary_group, name: "My group", account: user.account)
     create(:beneficiary_group, name: "My other group", account: user.account)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_beneficiaries_path
     click_on "New"
 
@@ -85,7 +85,7 @@ RSpec.describe "Beneficiaries" do
     user = create(:user)
     create(:beneficiary, phone_number: "85516789111", account: user.account)
 
-    sign_in(user)
+    account_sign_in(user)
     visit new_dashboard_beneficiary_path
     fill_in "Phone number", with: "85516789111"
     select "Cambodia", from: "Country"
@@ -98,7 +98,7 @@ RSpec.describe "Beneficiaries" do
     user = create(:user)
     beneficiary = create(:beneficiary, account: user.account)
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_beneficiary_path(beneficiary)
     click_on "Delete"
 
@@ -116,7 +116,7 @@ RSpec.describe "Beneficiaries" do
       groups: [ create(:beneficiary_group, name: "My group", account: user.account) ]
     )
 
-    sign_in(user)
+    account_sign_in(user)
     visit dashboard_beneficiary_path(beneficiary)
     click_on("Edit")
     fill_in("Phone number", with: "85516789111")

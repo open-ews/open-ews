@@ -3,8 +3,6 @@ class Broadcast < ApplicationRecord
   CHANNELS = %i[voice].freeze
   MAX_BENEFICIARY_GROUPS = 10
 
-  include MetadataHelpers
-
   class StateMachine < StateMachine::ActiveRecord
     state :pending, initial: true, transitions_to: :queued
     state :queued, transitions_to: [ :running, :errored ]
@@ -42,13 +40,6 @@ class Broadcast < ApplicationRecord
   delegate :running?, :stopped?, :completed?, :pending?, :queued?, :errored?, :may_transition_to?, :transition_to!, to: :state_machine
 
   before_create :set_default_status
-
-  # TODO: Remove this after we removed the old API
-  def as_json(*)
-    result = super(except: [ "channel", "beneficiary_filter" ])
-    result["status"] = "initialized" if result["status"] == "pending" || result["status"] == "queued"
-    result
-  end
 
   def mark_as_errored!(error_code)
     transaction do

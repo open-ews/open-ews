@@ -1,6 +1,6 @@
 module API
   module V1
-    class AccountsController < BaseController
+    class AccountsController < APIController
       def show
         respond_with_resource(current_account)
       end

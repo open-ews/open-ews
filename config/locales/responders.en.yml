@@ -1,7 +1,11 @@
----
 en:
   flash:
     dashboard:
+      settings:
+        users:
+          create:
+            notice: "An invitation email has been sent to %{email}."
+
       broadcasts:
         states:
           create:

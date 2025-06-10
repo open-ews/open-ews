@@ -25,10 +25,6 @@ gem "rails-i18n", "~> 8.0.0"
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
-gem "aasm", github: "aasm/aasm"
-gem "after_commit_everywhere"
-gem "api-pagination", github: "davidcelis/api-pagination"
-gem "appsignal"
 gem "aws-sdk-cloudwatch"
 gem "aws-sdk-rails"
 gem "aws-sdk-s3", require: false
@@ -36,12 +32,12 @@ gem "aws-sdk-sqs"
 gem "aws-actionmailer-ses"
 gem "active_storage_validations"
 gem "bootsnap", require: false
+gem "bootstrap-email", "1.5.1"
 gem "countries"
 gem "country_select"
 gem "cursor_paginator"
 gem "csv"
 gem "devise"
-gem "devise-async"
 gem "devise_invitable"
 gem "doorkeeper"
 gem "dry-validation"
@@ -69,7 +65,6 @@ gem "twilio-ruby"
 gem "tzinfo-data"
 
 group :development, :test do
-  gem "brakeman", require: false
   gem "pry"
   gem "rspec_api_documentation", github: "zipmark/rspec_api_documentation"
   gem "rspec-rails"
@@ -90,7 +85,6 @@ group :test do
   gem "factory_bot_rails"
   gem "rails-controller-testing"
   gem "selenium-webdriver"
-  gem "shoulda-matchers"
   gem "simplecov"
   gem "simplecov-cobertura"
   gem "webmock"

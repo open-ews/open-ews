@@ -19,7 +19,7 @@ Rails.application.configure do
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.asset_host = Rails.configuration.app_settings.fetch(:asset_url_host)
+  config.asset_host = Rails.configuration.app_settings.fetch(:asset_host)
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
@@ -46,10 +46,6 @@ Rails.application.configure do
       params: event.payload[:params].except(*exceptions)
     }
   end
-  config.lograge.logger = Appsignal::Logger.new(
-    "web",
-    format: Appsignal::Logger::LOGFMT
-  )
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
@@ -82,7 +78,8 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  config.lograge.formatter = Lograge::Formatters::Json.new
+
 
   # Use a different logger for distributed setups.
   # require "syslog/logger"
@@ -109,8 +106,6 @@ Rails.application.configure do
   config.action_mailer.ses_v2_settings = { region: Rails.configuration.app_settings.fetch(:aws_ses_region) }
 
   config.action_mailer.deliver_later_queue_name = config.active_job.default_queue_name
-
-  config.time_zone = Rails.configuration.app_settings.fetch(:time_zone)
 
   config.skylight.probes << "active_job"
 end

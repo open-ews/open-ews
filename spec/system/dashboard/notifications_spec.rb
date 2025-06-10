@@ -9,7 +9,7 @@ RSpec.describe "Notifications" do
     succeeded_notification = create(:notification, :succeeded, broadcast:)
     other_notification = create(:notification, broadcast: create(:broadcast, account: user.account))
 
-    sign_in(user)
+    account_sign_in(user)
     visit(dashboard_broadcast_path(broadcast))
 
     click_on("More")
@@ -36,7 +36,7 @@ RSpec.describe "Notifications" do
     broadcast = create(:broadcast, account: user.account)
     notification = create(:notification, broadcast:)
 
-    sign_in(user)
+    account_sign_in(user)
     visit(dashboard_broadcast_notifications_path(broadcast))
     click_on(notification.id.to_s)
 
