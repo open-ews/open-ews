@@ -512,8 +512,6 @@ GEM
       aws-sdk-core (>= 2)
       concurrent-ruby
       thor
-    shoulda-matchers (6.5.0)
-      activesupport (>= 5.2.0)
     show_for (0.8.1)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
@@ -626,7 +624,6 @@ DEPENDENCIES
   selenium-webdriver
   sentry-rails
   shoryuken
-  shoulda-matchers
   show_for
   simple_form
   simplecov

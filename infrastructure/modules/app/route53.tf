@@ -35,26 +35,14 @@ resource "aws_route53_record" "api_internal" {
 }
 
 resource "aws_route53_record" "scfm_app" {
-  zone_id = var.scfm_route53_zone.zone_id
-  name    = var.scfm_subdomain
+  zone_id = var.somleng_route53_zone.zone_id
+  name    = "scfm"
   type    = "A"
 
   alias {
     name                   = var.global_accelerator.dns_name
     zone_id                = var.global_accelerator.hosted_zone_id
     evaluate_target_health = true
-  }
-}
-
-resource "aws_route53_record" "scfm_app_internal" {
-  zone_id = var.scfm_internal_route53_zone.zone_id
-  name    = var.scfm_subdomain
-  type    = "A"
-
-  alias {
-    name                   = var.region.internal_load_balancer.this.dns_name
-    zone_id                = var.region.internal_load_balancer.this.zone_id
-    evaluate_target_health = false
   }
 }
 

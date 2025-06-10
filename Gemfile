@@ -85,7 +85,6 @@ group :test do
   gem "factory_bot_rails"
   gem "rails-controller-testing"
   gem "selenium-webdriver"
-  gem "shoulda-matchers"
   gem "simplecov"
   gem "simplecov-cobertura"
   gem "webmock"

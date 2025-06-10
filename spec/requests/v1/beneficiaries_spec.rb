@@ -553,6 +553,20 @@ RSpec.resource "Beneficiaries"  do
 
       expect(response_status).to eq(400)
     end
+
+    example "Handles too many results", document: false do
+      stub_const("StatsQuery::MAX_RESULTS", 2)
+      account = create(:account)
+      create(:beneficiary, account:, iso_country_code: "KH")
+      create(:beneficiary, account:, iso_country_code: "VN")
+      create(:beneficiary, account:, iso_country_code: "AU")
+
+      set_authorization_header_for(account)
+      do_request(group_by: [ "iso_country_code" ])
+
+      expect(response_status).to eq(400)
+      expect(response_body).to match_api_response_schema("jsonapi_error")
+    end
   end
 
   delete "/v1/beneficiaries/:id" do

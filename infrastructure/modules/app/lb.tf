@@ -43,7 +43,6 @@ resource "aws_lb_listener_rule" "webserver" {
   condition {
     host_header {
       values = [
-        aws_route53_record.scfm_app.fqdn,
         aws_route53_record.app.fqdn,
         aws_route53_record.api.fqdn
       ]
@@ -68,7 +67,6 @@ resource "aws_lb_listener_rule" "webserver_internal" {
   condition {
     host_header {
       values = [
-        aws_route53_record.scfm_app_internal.fqdn,
         aws_route53_record.api_internal.fqdn
       ]
     }

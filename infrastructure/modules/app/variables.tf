@@ -3,9 +3,7 @@ variable "app_environment" {}
 variable "app_image" {}
 variable "aws_region" {}
 variable "uploads_bucket" {}
-variable "scfm_subdomain" {}
-variable "scfm_route53_zone" {}
-variable "scfm_internal_route53_zone" {}
+variable "somleng_route53_zone" {}
 variable "region" {}
 variable "global_accelerator" {}
 variable "rds_cluster" {}
