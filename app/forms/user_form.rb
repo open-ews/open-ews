@@ -14,19 +14,10 @@ class UserForm < ApplicationForm
     ActiveModel::Name.new(self, nil, "User")
   end
 
-  def self.initialize_with(user)
-    new(
-      user:,
-      account: user.account,
-      name: user.name,
-      email: user.email
-    )
-  end
-
   def save
     return false if invalid?
 
-    self.user = User.invite!(
+    User.invite!(
       {
         name:,
         email:,

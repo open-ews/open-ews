@@ -44,4 +44,16 @@ RSpec.describe "Users" do
     expect(page).to have_content("John Doe")
     expect(page).to have_link("Bob Chann", href: dashboard_settings_user_path(user))
   end
+
+  it "handles form validations" do
+    user = create(:user)
+
+    account_sign_in(user)
+    visit(new_dashboard_settings_user_path)
+
+    click_on "Send an invitation"
+
+    expect(page).to have_content("Name can't be blank")
+    expect(page).to have_content("Email can't be blank")
+  end
 end

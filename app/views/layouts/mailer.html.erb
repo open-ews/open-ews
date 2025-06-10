@@ -9,7 +9,7 @@
   </head>
     <body class="bg-light">
       <div class="container">
-        <%= image_tag("open-ews_landscape_logo.png", class: "ax-center my-10 w-24") %>
+        <%= content_for?(:logo) ? yield(:logo) : image_tag("open-ews_landscape_logo.png", class: "ax-center my-10 w-24") %>
         <div class="card p-6 p-lg-10 space-y-4">
           <% if content_for?(:title) %>
             <h1 class="h3 fw-700 ax-center">
