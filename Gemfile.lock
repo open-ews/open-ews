@@ -1,17 +1,4 @@
 GIT
-  remote: https://github.com/aasm/aasm.git
-  revision: 2f9e0ca98f44a407dfe8746a96264c22c4b052ca
-  specs:
-    aasm (5.5.0)
-      concurrent-ruby (~> 1.0)
-
-GIT
-  remote: https://github.com/davidcelis/api-pagination.git
-  revision: 277ac97db62d2461144fa03b4d1bea6c65c27b06
-  specs:
-    api-pagination (6.0.0)
-
-GIT
   remote: https://github.com/heartcombo/responders.git
   revision: 9bdc60dfbfa8001641c1c4df7bc73c3fc2a4cf41
   specs:
@@ -117,12 +104,6 @@ GEM
       uri (>= 0.13.1)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    after_commit_everywhere (1.6.0)
-      activerecord (>= 4.2)
-      activesupport
-    appsignal (4.5.15)
-      logger
-      rack (>= 2.0.0)
     ast (2.4.3)
     aws-actionmailer-ses (1.0.0)
       actionmailer (>= 7.1.0)
@@ -172,8 +153,6 @@ GEM
       nokogiri (~> 1.6)
       premailer (~> 1.7)
       sass-embedded (~> 1.53)
-    brakeman (7.0.2)
-      racc
     builder (3.3.0)
     capybara (3.40.0)
       addressable
@@ -595,11 +574,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aasm!
   active_storage_validations
-  after_commit_everywhere
-  api-pagination!
-  appsignal
   aws-actionmailer-ses
   aws-sdk-cloudwatch
   aws-sdk-rails
@@ -607,7 +582,6 @@ DEPENDENCIES
   aws-sdk-sqs
   bootsnap
   bootstrap-email (= 1.5.1)
-  brakeman
   capybara
   countries
   country_select

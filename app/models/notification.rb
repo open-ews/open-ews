@@ -1,6 +1,4 @@
 class Notification < ApplicationRecord
-  include MetadataHelpers
-
   attribute :phone_number, :phone_number
 
   belongs_to :broadcast
@@ -27,16 +25,6 @@ class Notification < ApplicationRecord
 
   def max_delivery_attempts_reached?
     delivery_attempts_count >= account.max_delivery_attempts_for_notification
-  end
-
-  # NOTE: This is for backward compatibility until we moved to the new API
-  def as_json(*)
-    result = super
-    result["msisdn"] = result.delete("phone_number")
-    result["contact_id"] = result.delete("beneficiary_id")
-    result["phone_calls_count"] = result.delete("delivery_attempts_count")
-    result["answered"] = result.delete("status") == "succeeded"
-    result
   end
 
   private

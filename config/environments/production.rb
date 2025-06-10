@@ -46,10 +46,6 @@ Rails.application.configure do
       params: event.payload[:params].except(*exceptions)
     }
   end
-  config.lograge.logger = Appsignal::Logger.new(
-    "web",
-    format: Appsignal::Logger::LOGFMT
-  )
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
@@ -82,7 +78,8 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  config.lograge.formatter = Lograge::Formatters::Json.new
+
 
   # Use a different logger for distributed setups.
   # require "syslog/logger"

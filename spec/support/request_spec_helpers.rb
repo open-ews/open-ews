@@ -20,11 +20,7 @@ end
 RSpec.configure do |config|
   config.include(RequestSpecHelpers, type: :request)
 
-  config.define_derived_metadata(file_path: %r{spec/requests/scfm_api/}) do |metadata|
-    metadata[:document] = false
-  end
-
-  config.define_derived_metadata(file_path: %r{spec/requests/open_ews_api/}) do |metadata|
+  config.define_derived_metadata(file_path: %r{spec/requests/v1/}) do |metadata|
     metadata[:jsonapi] = true
   end
 end
