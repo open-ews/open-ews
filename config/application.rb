@@ -49,3 +49,5 @@ module OpenEWS
     config.action_mailer.default_url_options = { host: config.app_settings.fetch(:app_url_host) }
   end
 end
+
+require "simple_form_components"
