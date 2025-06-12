@@ -37,7 +37,7 @@ RSpec.describe "Account Settings" do
 
     account_sign_in(user)
     visit(dashboard_settings_account_path)
-    fill_in("Subdomain", with: "other-alerting-authority")
+    fill_in("Subdomain", with: "Other Alerting Authority")
 
     click_on("Save")
 

@@ -13,10 +13,6 @@ class Account < ApplicationRecord
   before_create :set_default_settings
 
   enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
-  validates :name, presence: true
-  validates :iso_country_code, presence: true
-  validates :somleng_account_sid, uniqueness: true, allow_blank: true
-  validates :subdomain, presence: true, uniqueness: true
 
   has_one_attached :logo
 

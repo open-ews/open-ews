@@ -1,7 +1,12 @@
 class FormDataType < ActiveRecord::Type::String
   def cast(value)
-    return value unless value.is_a?(Array)
-
-    value.reject(&:blank?)
+    case value
+    when Array
+      value.reject(&:blank?)
+    when String
+      value.presence
+    else
+      value
+    end
   end
 end

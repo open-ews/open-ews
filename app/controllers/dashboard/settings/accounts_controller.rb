@@ -4,12 +4,12 @@ module Dashboard
       self.raise_on_open_redirects = false
 
       def show
-        @account = current_account
+        @account = AccountForm.initialize_with(current_account)
       end
 
       def update
-        @account = current_account
-        if @account.update(permitted_params)
+        @account = AccountForm.new(object: current_account, **permitted_params)
+        if @account.save
           respond_with(@account, location: dashboard_settings_account_url(host: @account.subdomain_host))
         else
           render :show
@@ -21,7 +21,7 @@ module Dashboard
       def permitted_params
         params.require(:account).permit(
           :name,
-          :iso_country_code,
+          :country,
           :logo,
           :somleng_account_sid,
           :somleng_auth_token,
