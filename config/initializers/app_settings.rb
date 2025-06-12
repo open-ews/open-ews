@@ -1,5 +1,9 @@
 class AppSettings
   class << self
+    def app_uri
+      Addressable::URI.parse(fetch(:app_url_host))
+    end
+
     def fetch(...)
       config.fetch(...)
     end

@@ -1,5 +1,5 @@
 <%= render "dashboard/settings/frame" do %>
-  <%= simple_form_for(@account, url: dashboard_settings_account_path) do |f| %>
+  <%= simple_form_for(@account, url: dashboard_settings_account_path, wrapper: :input_group) do |f| %>
     <div class="card-header">
       <h2 class="mb-0"><%= title %></h2>
     </div>
@@ -36,6 +36,23 @@
       <div class="row">
         <div class="col-md-6">
           <%= f.input :notification_phone_number %>
+        </div>
+      </div>
+
+      <div class="card border-danger mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Danger Zone</h5>
+          <div class="row">
+            <div class="col-md-6">
+              <%=
+                f.input(
+                  :subdomain,
+                  hint: "Updating your subdomain will affect other signed in users.",
+                  append: ".#{AppSettings.app_uri.host}"
+                )
+              %>
+            </div>
+          </div>
         </div>
       </div>
 

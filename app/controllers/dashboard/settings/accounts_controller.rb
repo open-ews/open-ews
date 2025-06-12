@@ -1,6 +1,8 @@
 module Dashboard
   module Settings
     class AccountsController < DashboardController
+      self.raise_on_open_redirects = false
+
       def show
         @account = current_account
       end
@@ -8,7 +10,7 @@ module Dashboard
       def update
         @account = current_account
         if @account.update(permitted_params)
-          respond_with(@account, location: dashboard_settings_account_path)
+          respond_with(@account, location: dashboard_settings_account_url(host: @account.subdomain_host))
         else
           render :show
         end
@@ -23,7 +25,8 @@ module Dashboard
           :logo,
           :somleng_account_sid,
           :somleng_auth_token,
-          :notification_phone_number
+          :notification_phone_number,
+          :subdomain
         )
       end
     end
