@@ -15,6 +15,7 @@
       <%= f.attribute :delivery_attempts_count %>
       <%= f.attribute :status, value: notification_status(@notification) %>
       <%= f.attribute :created_at, value: local_time(@notification.created_at) %>
+      <%= f.attribute :updated_at, value: local_time(@notification.updated_at) %>
     <% end %>
   </div>
 </div>

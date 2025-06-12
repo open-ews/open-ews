@@ -24,6 +24,7 @@ RSpec.describe "Notifications" do
 
     click_on "Filters"
     select_filter("Status", operator: "Equals", select: "Succeeded")
+    select_filter("Phone number", operator: "Equals", fill_in: succeeded_notification.beneficiary.phone_number)
     click_on "Apply Filters"
 
     expect(page).to have_content_tag_for(succeeded_notification)
