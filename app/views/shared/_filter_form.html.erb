@@ -1,35 +1,6 @@
-<div
-  class="offcanvas offcanvas-end w-50"
-  tabindex="-1"
-  id="filters-canvas"
-  aria-labelledby="filters-canvas-label"
->
-  <div class="offcanvas-body">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="filters-canvas-label">Filters</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="close"></button>
-    </div>
-
-    <div class="offcanvas-body overflow-visible">
-      <%= simple_form_for filter_form, url: url_for(action: :index), method: :get do |filter_form| %>
-        <div class="row">
-          <div class="col"><label class="form-label">Field</label></div>
-          <div class="col"><label class="form-label">Operator</label></div>
-          <div class="col"><label class="form-label">Value</label></div>
-        </div>
-
-        <% filter_form.object.class.attributes.each do |attribute_name, _attribute_type| %>
-          <% field_definition = filter_form.object.filter_class.field_collection.find_by!(name: attribute_name) %>
-          <%= render "shared/filter_field", filter_form:, field_name: attribute_name, field_definition: %>
-        <% end %>
-
-        <div class="row mt-2">
-          <div class="col d-flex justify-content-between">
-            <%= link_to "Clear Filters", url_for(action: :index) %>
-            <%= filter_form.button :submit, "Apply Filters" %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-</div>
+<%= render "shared/filter_form/form", filter_form: filter_form do |f| %>
+  <% filter_form.class.attributes.each do |attribute_name, _attribute_type| %>
+    <% field_definition = filter_form.filter_class.field_collection.find_by!(name: attribute_name) %>
+    <%= render "shared/filter_form/field", filter_form: f, field_name: attribute_name, field_definition: %>
+  <% end %>
+<% end %>
