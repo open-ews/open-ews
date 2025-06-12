@@ -40,7 +40,7 @@ class AccountForm < ApplicationForm
 
     object.name = name
     object.iso_country_code = country
-    object.logo = logo
+    object.logo = logo if logo.present?
     object.somleng_account_sid = somleng_account_sid
     object.somleng_auth_token = somleng_auth_token
     object.notification_phone_number = notification_phone_number
