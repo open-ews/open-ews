@@ -79,4 +79,17 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
 
     expect(delivery_attempt).to have_attributes(status: "failed")
   end
+
+  it "always schedules the delivery attempt to be retried" do
+    broadcast = create(:broadcast, :stopped)
+    notification = create(:notification, :failed, broadcast:)
+    delivery_attempt = create(:delivery_attempt, :initiated, notification:)
+
+    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
+
+    expect(delivery_attempt).to have_attributes(status: "failed")
+    expect(notification).to have_attributes(status: "failed")
+    expect(broadcast).to have_attributes(status: "stopped")
+    expect(RetryNotificationJob).to have_been_enqueued
+  end
 end
