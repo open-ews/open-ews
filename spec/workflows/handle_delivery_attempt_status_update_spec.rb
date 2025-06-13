@@ -80,7 +80,19 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
     expect(delivery_attempt).to have_attributes(status: "failed")
   end
 
-  it "always schedules the delivery attempt to be retried" do
+  it "handles notifications that have already succeeded" do
+    broadcast = create(:broadcast, :completed)
+    notification = create(:notification, :succeeded, broadcast:)
+    delivery_attempt = create(:delivery_attempt, :initiated, notification:)
+
+    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "completed")
+
+    expect(delivery_attempt).to have_attributes(status: "succeeded")
+    expect(notification).to have_attributes(status: "succeeded")
+    expect(broadcast).to have_attributes(status: "completed")
+  end
+
+  it "handles notifications that have already failed" do
     broadcast = create(:broadcast, :stopped)
     notification = create(:notification, :failed, broadcast:)
     delivery_attempt = create(:delivery_attempt, :initiated, notification:)
