@@ -1,188 +1,100 @@
-resource "aws_cloudwatch_metric_alarm" "worker_queue_size_alarm_high" {
-  alarm_name          = "${var.app_identifier}-queue-size-alarm-high"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = 1
-  threshold           = 1000
-
-  metric_query {
-    id = "e1"
-    return_data = true
-    expression = "m1 + m2 + m3"
-    label = "Number of Messages"
-  }
-
-  metric_query {
-    id = "m1"
-    return_data = false
-    label = "Number of default priority messages"
-    metric {
-      namespace           = "AWS/SQS"
-      metric_name         = "ApproximateNumberOfMessagesVisible"
-      period              = 300 # Wait this number of seconds before triggering the alarm (smallest available)
-      stat           = "Sum"
-      dimensions = {
-        QueueName = aws_sqs_queue.default.name
-      }
-    }
-  }
-
-  metric_query {
-    id = "m2"
-    return_data = false
-    label = "Number of scheduler messages"
-    metric {
-      namespace           = "AWS/SQS"
-      metric_name         = "ApproximateNumberOfMessagesVisible"
-      period              = 300 # Wait this number of seconds before triggering the alarm (smallest available)
-      stat           = "Sum"
-      dimensions = {
-        QueueName = aws_sqs_queue.scheduler.name
-      }
-    }
-  }
-
-  metric_query {
-    id = "m3"
-    return_data = false
-    label = "Number of high priority messages"
-    metric {
-      namespace           = "AWS/SQS"
-      metric_name         = "ApproximateNumberOfMessagesVisible"
-      period              = 300 # Wait this number of seconds before triggering the alarm (smallest available)
-      stat           = "Sum"
-      dimensions = {
-        QueueName = aws_sqs_queue.high_priority.name
-      }
-    }
-  }
-
-  metric_query {
-    id = "m4"
-    return_data = false
-    label = "Number of low priority messages"
-    metric {
-      namespace           = "AWS/SQS"
-      metric_name         = "ApproximateNumberOfMessagesVisible"
-      period              = 300 # Wait this number of seconds before triggering the alarm (smallest available)
-      stat           = "Sum"
-      dimensions = {
-        QueueName = aws_sqs_queue.low_priority.name
-      }
-    }
-  }
-
-  alarm_actions       = [aws_appautoscaling_policy.worker_up.arn]
-}
-
-resource "aws_cloudwatch_metric_alarm" "worker_queue_size_alarm_low" {
-  alarm_name          = "${var.app_identifier}-queue-size-alarm-low"
-  comparison_operator = "LessThanOrEqualToThreshold"
-  evaluation_periods  = 1
-  threshold           = 500
-
-  metric_query {
-    id = "e1"
-    return_data = true
-    expression = "m1 + m2 + m3"
-    label = "Number of Messages"
-  }
-
-  metric_query {
-    id = "m1"
-    return_data = false
-    label = "Number of default priority messages"
-    metric {
-      namespace           = "AWS/SQS"
-      metric_name         = "ApproximateNumberOfMessagesVisible"
-      period              = 300
-      stat           = "Sum"
-      dimensions = {
-        QueueName = aws_sqs_queue.default.name
-      }
-    }
-  }
-
-  metric_query {
-    id = "m2"
-    return_data = false
-    label = "Number of scheduler messages"
-    metric {
-      namespace           = "AWS/SQS"
-      metric_name         = "ApproximateNumberOfMessagesVisible"
-      period              = 300
-      stat           = "Sum"
-      dimensions = {
-        QueueName = aws_sqs_queue.scheduler.name
-      }
-    }
-  }
-
-  metric_query {
-    id = "m3"
-    return_data = false
-    label = "Number of high priority messages"
-    metric {
-      namespace           = "AWS/SQS"
-      metric_name         = "ApproximateNumberOfMessagesVisible"
-      period              = 300
-      stat           = "Sum"
-      dimensions = {
-        QueueName = aws_sqs_queue.high_priority.name
-      }
-    }
-  }
-
-  metric_query {
-    id = "m4"
-    return_data = false
-    label = "Number of low priority messages"
-    metric {
-      namespace           = "AWS/SQS"
-      metric_name         = "ApproximateNumberOfMessagesVisible"
-      period              = 300
-      stat           = "Sum"
-      dimensions = {
-        QueueName = aws_sqs_queue.low_priority.name
-      }
-    }
-  }
-
-  alarm_actions       = [aws_appautoscaling_policy.worker_down.arn]
-}
-
-resource "aws_appautoscaling_policy" "worker_up" {
-  name               = "worker-scale-up"
+resource "aws_appautoscaling_policy" "worker_queue_size" {
+  name               = "${var.app_identifier}-queue-size"
   service_namespace  = aws_appautoscaling_target.worker_scale_target.service_namespace
   resource_id        = aws_appautoscaling_target.worker_scale_target.resource_id
   scalable_dimension = aws_appautoscaling_target.worker_scale_target.scalable_dimension
+  policy_type        = "TargetTrackingScaling"
 
-  step_scaling_policy_configuration {
-    adjustment_type         = "ChangeInCapacity"
-    cooldown                = 300 # Don't run another autoscaling event for this number of seconds
-    metric_aggregation_type = "Average"
+  target_tracking_scaling_policy_configuration {
+    customized_metric_specification {
+      metrics {
+        id          = "backlogPerWorker"
+        label       = "Backlog per worker instance"
+        expression  = "totalMessages / IF((runningCapacity - 1) > 0, (runningCapacity - 1), 1)"
+        return_data = true
+      }
 
-    step_adjustment {
-      metric_interval_lower_bound = 0
-      scaling_adjustment          = 1
+      metrics {
+        id          = "totalMessages"
+        label       = "Total number of messages"
+        expression  = "lowPriorityMessages + defaultPriorityMessages + highPriorityMessages"
+        return_data = false
+      }
+
+      metrics {
+        id          = "runningCapacity"
+        label       = "Number of running instances in ASG"
+        return_data = false
+
+        metric_stat {
+          metric {
+            metric_name = "GroupInServiceInstances"
+            namespace   = "AWS/AutoScaling"
+
+            dimensions {
+              name  = "AutoScalingGroupName"
+              value = module.container_instances.autoscaling_group.name
+            }
+          }
+          stat = "Sum"
+        }
+      }
+
+      metrics {
+        id          = "lowPriorityMessages"
+        label       = "Number of low priority messages"
+        return_data = false
+        metric_stat {
+          metric {
+            namespace   = "AWS/SQS"
+            metric_name = "ApproximateNumberOfMessagesVisible"
+            dimensions {
+              name  = "QueueName"
+              value = aws_sqs_queue.low_priority.name
+            }
+          }
+          stat = "Sum"
+        }
+      }
+
+      metrics {
+        id          = "defaultPriorityMessages"
+        label       = "Number of default priority messages"
+        return_data = false
+        metric_stat {
+          metric {
+            namespace   = "AWS/SQS"
+            metric_name = "ApproximateNumberOfMessagesVisible"
+            dimensions {
+              name  = "QueueName"
+              value = aws_sqs_queue.default.name
+            }
+          }
+          stat = "Sum"
+        }
+      }
+
+      metrics {
+        id          = "highPriorityMessages"
+        label       = "Number of high priority messages"
+        return_data = false
+        metric_stat {
+          metric {
+            namespace   = "AWS/SQS"
+            metric_name = "ApproximateNumberOfMessagesVisible"
+            dimensions {
+              name  = "QueueName"
+              value = aws_sqs_queue.high_priority.name
+            }
+          }
+          stat = "Sum"
+        }
+      }
     }
-  }
-}
 
-resource "aws_appautoscaling_policy" "worker_down" {
-  name               = "worker-scale-down"
-  service_namespace  = aws_appautoscaling_target.worker_scale_target.service_namespace
-  resource_id        = aws_appautoscaling_target.worker_scale_target.resource_id
-  scalable_dimension = aws_appautoscaling_target.worker_scale_target.scalable_dimension
-
-  step_scaling_policy_configuration {
-    adjustment_type         = "ChangeInCapacity"
-    cooldown                = 300
-    metric_aggregation_type = "Average"
-
-    step_adjustment {
-      metric_interval_upper_bound = 0
-      scaling_adjustment          = -1
-    }
+    target_value       = 300
+    scale_in_cooldown  = 300
+    scale_out_cooldown = 60
   }
 }
 
@@ -214,8 +126,8 @@ resource "aws_appautoscaling_policy" "webserver_policy" {
       predefined_metric_type = "ECSServiceAverageCPUUtilization"
     }
 
-    target_value = 75
-    scale_in_cooldown = 300
+    target_value       = 75
+    scale_in_cooldown  = 300
     scale_out_cooldown = 60
   }
 }
