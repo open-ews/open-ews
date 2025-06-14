@@ -27,7 +27,7 @@ module Dashboard
     end
 
     def show
-      @broadcast = scope.find(params[:id])
+      @broadcast = BroadcastDecorator.new(scope.find(params[:id]))
     end
 
     def destroy
