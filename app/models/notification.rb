@@ -7,7 +7,7 @@ class Notification < ApplicationRecord
   has_many :delivery_attempts
 
   delegate :account, to: :broadcast
-  delegate :transition_to!, to: :state_machine
+  delegate :transition_to!, :transition_to, to: :state_machine
 
   before_create :set_phone_number
 

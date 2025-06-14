@@ -37,7 +37,7 @@ class Broadcast < ApplicationRecord
   validates :channel, presence: true
   validates :beneficiary_groups, length: { maximum: MAX_BENEFICIARY_GROUPS, allow_blank: true }
 
-  delegate :running?, :stopped?, :completed?, :pending?, :queued?, :errored?, :may_transition_to?, :transition_to!, to: :state_machine
+  delegate :running?, :stopped?, :completed?, :pending?, :queued?, :errored?, :may_transition_to?, :transition_to!, :transition_to, to: :state_machine
 
   before_create :set_default_status
 
