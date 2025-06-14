@@ -15,12 +15,12 @@ class HandleDeliveryAttemptStatusUpdate < ApplicationWorkflow
       case status
       when "completed"
         delivery_attempt.transition_to!(:succeeded, touch: :completed_at)
-        complete_notification!(:succeeded)
-        complete_broadcast!
+        complete_notification(:succeeded)
+        complete_broadcast
       when "busy", "no-answer", "failed", "canceled"
         if notification.max_delivery_attempts_reached?
-          complete_notification!(:failed)
-          complete_broadcast!
+          complete_notification(:failed)
+          complete_broadcast
         else
           RetryNotificationJob.set(wait: 15.minutes).perform_later(notification)
         end
@@ -40,15 +40,11 @@ class HandleDeliveryAttemptStatusUpdate < ApplicationWorkflow
     delivery_attempt.broadcast
   end
 
-  def complete_notification!(status)
-    notification.transition_to!(status, touch: :completed_at)
-  rescue StateMachine::Machine::InvalidStateTransitionError => e
-    logger.warn(e.message)
+  def complete_notification(status)
+    notification.transition_to(status, touch: :completed_at)
   end
 
-  def complete_broadcast!
-    broadcast.transition_to!(:completed, touch: :completed_at) if broadcast.notifications.where(status: :pending).none?
-  rescue StateMachine::Machine::InvalidStateTransitionError => e
-    logger.warn(e.message)
+  def complete_broadcast
+    broadcast.transition_to(:completed, touch: :completed_at) if broadcast.notifications.where(status: :pending).none?
   end
 end
