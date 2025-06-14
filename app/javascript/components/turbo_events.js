@@ -10,9 +10,13 @@ const initializeLocalTime = (scope) => {
     })
 }
 
-const initializeTooltips = (scope) => {
+const initializeBootstrapComponents = (scope) => {
   scope.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => {
     new tabler.bootstrap.Tooltip(element)
+  })
+
+  scope.querySelectorAll('[data-bs-toggle="popover"]').forEach((element) => {
+    new tabler.bootstrap.Popover(element)
   })
 }
 
@@ -38,7 +42,7 @@ const initializeTomSelect = (scope) => {
 
 const initializeJSComponents = (scope = document) => {
   initializeLocalTime(scope)
-  initializeTooltips(scope)
+  initializeBootstrapComponents(scope)
   initializeTomSelect(scope)
 }
 
