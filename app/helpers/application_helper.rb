@@ -1,4 +1,25 @@
 module ApplicationHelper
+  NOTIFICATION_STATUSES = {
+    pending: { color: "gray-200", icon: "clock" },
+    failed: { color: "red", icon: "alert-triangle" },
+    succeeded: { color: "green", icon: "check" }
+  }.freeze
+
+  BROADCAST_STATUSES = {
+    pending: { color: "gray-200", icon: "clock" },
+    queued: { color: "gray-200", icon: "clock" },
+    running: { color: "blue", icon: "hourglass-high" },
+    stopped: { color: "yellow", icon: "player-stop-filled" },
+    completed: { color: "green", icon: "check" },
+    errored: { color: "red", icon: "alert-triangle" }
+  }.freeze
+
+  IMPORT_STATUSES = {
+    processing: { color: "gray-200", icon: "clock" },
+    failed: { color: "red", icon: "alert-triangle" },
+    succeeded: { color: "green", icon: "check" }
+  }.freeze
+
   def user_profile_image_url(user)
     user_email = Digest::MD5.hexdigest(user.email)
     "https://www.gravatar.com/avatar/#{user_email}?size=200"
@@ -75,40 +96,36 @@ module ApplicationHelper
   end
 
   def broadcast_status(broadcast)
-    case broadcast.status
-    when "pending", "queued"
-      status_badge(broadcast.status_text, color: "gray", icon: "clock")
-    when "running"
-      status_badge(broadcast.status_text, color: "blue", icon: "hourglass-high")
-    when "stopped"
-      status_badge(broadcast.status_text, color: "yellow", icon: "player-stop-filled")
-    when "completed"
-      status_badge(broadcast.status_text, color: "green", icon: "check")
-    when "errored"
-      status_badge(broadcast.status_text, color: "red", icon: "alert-triangle")
-    end
+    status = BROADCAST_STATUSES[broadcast.status.to_sym]
+    status_badge(
+      broadcast.status_text,
+      color: status.fetch(:color),
+      icon: status.fetch(:icon)
+    )
   end
 
   def notification_status(notification)
-    case notification.status
-    when "pending"
-      status_badge(notification.status_text, color: "gray", icon: "clock")
-    when "failed"
-      status_badge(notification.status_text, color: "red", icon: "alert-triangle")
-    when "succeeded"
-      status_badge(notification.status_text, color: "green", icon: "check")
-    end
+    status = NOTIFICATION_STATUSES[notification.status.to_sym]
+
+    status_badge(
+      notification.status_text,
+      color: status.fetch(:color),
+      icon: status.fetch(:icon)
+    )
+  end
+
+  def notification_status_color(status)
+    NOTIFICATION_STATUSES[status.to_sym].fetch(:color)
   end
 
   def import_status(import)
-    case import.status
-    when "processing"
-      status_badge(import.status_text, color: "gray", icon: "clock")
-    when "failed"
-      status_badge(import.status_text, color: "red", icon: "alert-triangle")
-    when "succeeded"
-      status_badge(import.status_text, color: "green", icon: "check")
-    end
+    status = IMPORT_STATUSES[import.status.to_sym]
+
+    status_badge(
+      import.status_text,
+      color: status.fetch(:color),
+      icon: status.fetch(:icon)
+    )
   end
 
   def status_badge(text, color:, icon:)
