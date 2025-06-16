@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_12_060602) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_16_074300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -190,6 +190,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_12_060602) do
     t.index ["type"], name: "index_events_on_type"
   end
 
+  create_table "exports", force: :cascade do |t|
+    t.string "name", null: false
+    t.bigint "user_id", null: false
+    t.bigint "account_id", null: false
+    t.string "resource_type", null: false
+    t.integer "progress_percentage", default: 0, null: false
+    t.jsonb "filter_params", default: {}, null: false
+    t.string "status", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_exports_on_account_id"
+    t.index ["user_id"], name: "index_exports_on_user_id"
+  end
+
   create_table "imports", force: :cascade do |t|
     t.string "resource_type", null: false
     t.string "status", null: false
@@ -335,6 +349,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_12_060602) do
   add_foreign_key "delivery_attempts", "broadcasts"
   add_foreign_key "delivery_attempts", "notifications"
   add_foreign_key "events", "accounts", on_delete: :cascade
+  add_foreign_key "exports", "accounts", on_delete: :cascade
+  add_foreign_key "exports", "users", on_delete: :cascade
   add_foreign_key "imports", "accounts", on_delete: :cascade
   add_foreign_key "imports", "users", on_delete: :cascade
   add_foreign_key "notifications", "beneficiaries", on_delete: :nullify
