@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Exports" do
-  it "exports a resource type", :js, :selenium_chrome do
+  it "exports a resource type" do
     user = create(:user)
     pending_broadcast = create(
       :broadcast,

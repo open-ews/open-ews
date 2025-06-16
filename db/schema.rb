@@ -197,7 +197,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_16_074300) do
     t.string "resource_type", null: false
     t.integer "progress_percentage", default: 0, null: false
     t.jsonb "filter_params", default: {}, null: false
-    t.string "status", null: false
+    t.datetime "completed_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_exports_on_account_id"
