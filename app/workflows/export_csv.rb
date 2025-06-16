@@ -44,7 +44,7 @@ class ExportCSV < ApplicationWorkflow
 
   def records
     FilterScopeQuery.new(
-      resource_class,
+      resources_scope,
       filter_class.new(input_params: export.filter_params).output
     ).apply
   end
@@ -55,6 +55,10 @@ class ExportCSV < ApplicationWorkflow
 
   def serializer_class
     @serializer_class ||= resource_class.csv_serializer_class
+  end
+
+  def resources_scope
+    resource_class.where(account: export.account)
   end
 
   def resource_class
