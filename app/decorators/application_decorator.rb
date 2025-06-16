@@ -1,14 +1,10 @@
 class ApplicationDecorator < SimpleDelegator
-  def self.model_name
-    decorated_class.model_name
-  end
+  class << self
+    delegate :model_name, :human_attribute_name, to: :decorated_class
 
-  def self.human_attribute_name(*)
-    decorated_class.human_attribute_name(*)
-  end
-
-  def self.decorated_class
-    name.delete_suffix("Decorator").constantize
+    def decorated_class
+      name.delete_suffix("Decorator").safe_constantize
+    end
   end
 
   def object

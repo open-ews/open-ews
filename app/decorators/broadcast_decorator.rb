@@ -10,7 +10,7 @@ class BroadcastDecorator < ApplicationDecorator
 
   def notification_stats_percentage
     notification_stats.transform_values do |count|
-      ((count.to_f / total_notifications_count) * 100).round
+      (count.to_f / total_notifications_count) * 100
     end
   end
 

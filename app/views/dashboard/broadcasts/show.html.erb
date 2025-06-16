@@ -80,7 +80,7 @@
                 >
                   <span class="legend me-2 bg-<%= notification_status_color(status) %>"></span>
                   <span><%= status.to_s.humanize %></span>
-                  <span class="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary"><%= percentage %>%</span>
+                  <span class="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary"><%= number_to_percentage(percentage, precision: 0, strip_insignificant_zeros: true) %></span>
                 </div>
               <% end %>
             </div>
