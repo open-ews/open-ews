@@ -21,10 +21,6 @@ module SimpleSerializer
     end
   end
 
-  def as_hash
-    as_json
-  end
-
   def as_csv
     headers.map do |header|
       value = as_json[header.to_sym]

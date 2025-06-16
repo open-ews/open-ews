@@ -32,5 +32,13 @@ RSpec.describe "Exports" do
     end
 
     expect(page).to have_content("Your export is being processed")
+
+    click_on "Exports"
+    click_on "Download"
+
+    expect(page.response_headers["Content-Type"]).to eq("text/csv")
+    csv = CSV.parse(page.body, headers: true)
+    expect(csv.count).to eq(1)
+    expect(csv.first["id"]).to eq(pending_broadcast.id.to_s)
   end
 end
