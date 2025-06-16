@@ -32,13 +32,14 @@
               <% if export.completed? %>
                 <%= link_to "Download", rails_blob_path(export.file, disposition: "attachment") %>
               <% elsif export.progress_percentage.positive? %>
+                <% percentage = number_to_percentage(export.progress_percentage, precision: 0, strip_insignificant_zeros: true) %>
                 <div class="progress"
                   data-bs-toggle="popover"
-                  data-bs-content="<%= export.progress_percentage %>%"
+                  data-bs-content="<%= percentage %>"
                   data-bs-placement="top"
                   data-bs-trigger="hover"
                 >
-                  <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: <%= export.progress_percentage %>%;"></div>
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: <%= percentage %>"></div>
                 </div>
               <% else %>
                 <%= status_badge("Queued", color: "gray-200", icon: "clock") %>
