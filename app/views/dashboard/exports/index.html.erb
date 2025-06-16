@@ -1,0 +1,54 @@
+<%= render("shared/profile_frame") do %>
+  <div class="card-header">
+    <h2 class="mb-0"><%= title %></h2>
+  </div>
+
+  <div class="table-responsive">
+    <table id="resources" class="table table-vcenter card-table">
+      <thead>
+        <tr role="row">
+          <% [:name, :resource_type, :created_at, :status].each do |column| %>
+            <th>
+              <div class="text">
+                <%= @exports.human_attribute_name(column) %>
+              </div>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @exports.each do |export| %>
+          <%= content_tag_for :tr, export, role: "row" do %>
+            <td><%= export.name %></td>
+            <td>
+              <%= export.resource_type.humanize %>
+            </td>
+            <td>
+              <%= local_time(export.created_at) %>
+            </td>
+
+            <td>
+              <% if export.completed? %>
+                <%= link_to "Download", rails_blob_path(export.file, disposition: "attachment") %>
+              <% elsif export.progress_percentage.positive? %>
+                <div class="progress"
+                  data-bs-toggle="popover"
+                  data-bs-content="<%= export.progress_percentage %>%"
+                  data-bs-placement="top"
+                  data-bs-trigger="hover"
+                >
+                  <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: <%= export.progress_percentage %>%;"></div>
+                </div>
+              <% else %>
+                <%= status_badge("Queued", color: "gray-200", icon: "clock") %>
+              <% end %>
+            </td>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= render("shared/pagination", resources: @exports) %>
+<% end %>

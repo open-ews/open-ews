@@ -27,7 +27,9 @@ RSpec.describe "Exports" do
     expect(page).to have_content_tag_for(pending_broadcast)
     expect(page).not_to have_content_tag_for(completed_broadcast)
 
-    click_on "Export"
+    perform_enqueued_jobs do
+      click_on "Export"
+    end
 
     expect(page).to have_content("Your export is being processed")
   end

@@ -27,6 +27,15 @@
       <%= title(controller_name: :imports, action_name: :index) %>
     </span>
   <% end %>
+
+  <%= link_to(dashboard_exports_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "exports"}") do %>
+    <span class="nav-link-icon">
+      <i class="icon ti ti-file-export"></i>
+    </span>
+    <span class="nav-link-title">
+      <%= title(controller_name: :exports, action_name: :index) %>
+    </span>
+  <% end %>
 <% end %>
 
 <%= content_for(:frame_content) do %>

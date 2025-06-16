@@ -254,4 +254,16 @@ FactoryBot.define do
       association :file, factory: :active_storage_attachment, filename: "beneficiaries.csv"
     end
   end
+
+  factory :export do
+    user
+    account { user.account }
+    resource_type { "Broadcast" }
+    filter_params { {} }
+
+    trait :completed do
+      completed_at { Time.current }
+      progress_percentage { 100 }
+    end
+  end
 end

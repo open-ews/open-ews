@@ -7,7 +7,6 @@ class Export < ApplicationRecord
   has_one_attached :file
 
   before_create :set_default_values
-  validates :file, presence: true, attached: true, content_type: "text/csv", if: :completed?
 
   def completed?
     completed_at.present?

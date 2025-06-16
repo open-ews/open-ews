@@ -1,5 +1,9 @@
 module Dashboard
-  class ExportsController < ApplicationController
+  class ExportsController < DashboardController
+    def index
+      @exports = current_user.exports.latest_first.page(params[:page])
+    end
+
     def create
       @export = build_export
 
