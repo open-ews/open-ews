@@ -7,13 +7,10 @@ module Dashboard
     def create
       @export = build_export
 
-      if @export.save
-        ExecuteWorkflowJob.perform_later(ExportCSV.to_s, @export)
-        flash[:notice] = "<span>Your export is being processed. You can view its status from the #{helpers.link_to('Exports', dashboard_exports_path)} page.</span>"
-      else
-        flash[:alert] = "Failed to create export: #{@export.errors.full_messages.to_sentence}"
-      end
+      @export.save!
+      ExecuteWorkflowJob.perform_later(ExportCSV.to_s, @export)
 
+      flash[:notice] = "<span>Your export is being processed. You can view its status from the #{helpers.link_to('Exports', dashboard_exports_path)} page.</span>"
       redirect_back_or_to(dashboard_exports_path)
     end
 

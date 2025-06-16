@@ -264,6 +264,8 @@ FactoryBot.define do
     trait :completed do
       completed_at { Time.current }
       progress_percentage { 100 }
+
+      association :file, factory: :active_storage_attachment, filename: "beneficiaries.csv"
     end
   end
 end
