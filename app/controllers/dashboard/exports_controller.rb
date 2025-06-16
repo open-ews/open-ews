@@ -22,7 +22,26 @@ module Dashboard
     end
 
     def permitted_params
-      params.require(:export).permit(:resource_type, :filter_params)
+      result = params.require(:export).permit(:resource_type, filter_params: {})
+
+      if result.key?(:filter_params)
+        result[:filter_params] = normalized_filter_params(
+          result.fetch(:resource_type),
+          result.fetch(:filter_params)
+        )
+      end
+
+      result
+    end
+
+    def normalized_filter_params(resource_type, filter_params)
+      filter_form_class = filter_form(resource_type)
+      filter_form = filter_form_class.new(filter_params)
+      filter_form.normalized_filter_params
+    end
+
+    def filter_form(resource_type)
+      "#{resource_type}FilterForm".constantize
     end
   end
 end

@@ -6,19 +6,16 @@ class FilterForm < ApplicationForm
   end
 
   def apply(scope)
-    FilterScopeQuery.new(scope, normalized_filter_param).apply
+    FilterScopeQuery.new(
+      scope,
+      filter_class.new(input_params: normalized_filter_params).output
+    ).apply
   end
 
-  private
-
-  def normalized_filter_param
-    serialized_filters = FilterFormType.new(
+  def normalized_filter_params
+    FilterFormType.new(
       form: self.class,
       field_definitions: filter_class.field_collection
     ).serialize(self)
-
-    filter_class.new(
-      input_params: serialized_filters
-    ).output
   end
 end
