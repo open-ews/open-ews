@@ -77,6 +77,9 @@ group :development do
   gem "rubocop-performance"
   gem "rubocop-rails-omakase", require: false
   gem "rubocop-rspec", require: false
+
+  # Enhanced LSP support for Ruby and RSpec in VSCode
+  gem "ruby-lsp-rspec", require: false
 end
 
 group :test do
