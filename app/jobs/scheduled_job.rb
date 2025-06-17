@@ -23,7 +23,7 @@ class ScheduledJob < ApplicationJob
   def update_delivery_attempts
     delivery_attempts_with_unknown_status.find_each do |delivery_attempt|
       UpdateDeliveryAttemptStatusJob.perform_later(delivery_attempt)
-      delivery_attempt.touch(:status_update_queued_at)
+      delivery_attempt.update_columns(status_update_queued_at: Time.current)
     end
   end
 
