@@ -1,7 +1,7 @@
 default: &default
   app_subdomain: <%= ENV.fetch("APP_SUBDOMAIN", "app") %>
   api_subdomain: <%= ENV.fetch("API_SUBDOMAIN", "api") %>
-  mailer_sender: <%= ENV.fetch("MAILER_SENDER", "no-reply@somleng.org") %>
+  mailer_sender: <%= ENV.fetch("MAILER_SENDER", "no-reply@open-ews.org") %>
   app_url_host: <%= ENV.fetch("APP_URL_HOST", "https://app.open-ews.org") %>
   asset_host: <%= ENV.fetch("ASSET_HOST", "https://app.open-ews.org") %>
   aws_sqs_high_priority_queue_name: <%= ENV.fetch("AWS_SQS_HIGH_PRIORITY_QUEUE_NAME", "high-priority") %>
