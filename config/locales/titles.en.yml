@@ -25,3 +25,4 @@ en:
       index: "Notifications for broadcast #%{broadcast}"
     beneficiary_group_memberships:
       index: "Memberships for&nbsp;%{beneficiary_group}"
+    no_records: "No records found."
