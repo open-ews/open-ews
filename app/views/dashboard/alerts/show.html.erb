@@ -1,0 +1,71 @@
+<div class="card">
+  <div class="card-body">
+    <%= show_for(@alert) do |f| %>
+      <%= f.attribute :id %>
+      <%= f.attribute :event do %>
+        <%= status_badge(@alert.event.humanize, color: alert_badge(@alert.event).color, icon: alert_badge(@alert.event).icon) %>
+      <% end %>
+      <%= f.attribute :urgency do %>
+        <%= status_badge(@alert.urgency.humanize, color: alert_badge(@alert.urgency).color, icon: alert_badge(@alert.urgency).icon) %>
+      <% end %>
+      <%= f.attribute :headline %>
+      <%= f.attribute :description %>
+      <%= f.attribute :instruction %>
+
+      <%= f.attribute :severity do %>
+        <%= status_badge(@alert.severity.humanize, color: alert_badge(@alert.severity).color, icon: alert_badge(@alert.severity).icon) %>
+      <% end %>
+      <%= f.attribute :created_at, value: local_time(@alert.created_at) %>
+    <% end %>
+
+    <div class="hr-text">Broadcasts</div>
+
+    <div class="table-responsive">
+      <table id="resources" class="table table-vcenter card-table">
+        <thead>
+          <tr role="row">
+            <th>#</th>
+            <% ["Operator", "Channel", "Status", "Progress"].each do |column| %>
+              <th>
+                <div class="text">
+                  <%= column %>
+                </div>
+              </th>
+            <% end %>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @broadcasts.each do |broadcast| %>
+            <tr>
+              <td>
+                <%= broadcast.id  %>
+              </td>
+              <td>
+                <%= broadcast.operator  %>
+              </td>
+              <td>
+                <%= status_badge(broadcast.channel.upcase, color: alert_badge(broadcast.channel).color, icon: alert_badge(broadcast.channel).icon) %>
+              </td>
+              <td>
+                <%= status_badge(broadcast.status.humanize, color: alert_badge(broadcast.status).color, icon: alert_badge(broadcast.status).icon) %>
+              </td>
+              <td>
+
+                <% percentage = number_to_percentage(broadcast.progress_percentage, precision: 0, strip_insignificant_zeros: true) %>
+                <div class="progress"
+                  data-bs-toggle="popover"
+                  data-bs-content="<%= percentage %>"
+                  data-bs-placement="top"
+                  data-bs-trigger="hover"
+                >
+                  <div class="progress-bar <%= broadcast.progress_percentage == 100 ? "bg-success" : "bg-blue" %> progress-bar-striped progress-bar-animated" style="width: <%= percentage %>"></div>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
