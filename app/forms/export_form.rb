@@ -71,8 +71,4 @@ class ExportForm < ApplicationForm
       self.scoped_to = { account_id: account.id }
     end
   end
-
-  def resources_scope
-    resource_type.constantize
-  end
 end
