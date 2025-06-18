@@ -27,6 +27,8 @@ Rails.application.routes.draw do
     end
 
     scope module: :dashboard, as: :dashboard do
+      resources :alerts, only: [ :index, :show, :new, :create ]
+
       namespace :settings do
         resource :account, only: [ :show, :update ]
         resource :developer, only: :show

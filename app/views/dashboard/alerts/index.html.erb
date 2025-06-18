@@ -1,0 +1,47 @@
+<% content_for(:page_actions) do %>
+  <%= render("shared/new_resource_page_action", path: new_dashboard_alert_path) %>
+<% end %>
+
+<div class="card">
+  <div class="table-responsive">
+    <table id="resources" class="table table-vcenter card-table">
+      <thead>
+        <tr role="row">
+          <th>#</th>
+          <% ["Event", "Headline", "Urgency", "Severity", "Created at"].each do |column| %>
+            <th>
+              <div class="text">
+                <%= column %>
+              </div>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @alerts.each do |alert| %>
+          <tr>
+            <td>
+              <%= link_to(alert.id, dashboard_alert_path(alert.id)) %>
+            </td>
+            <td>
+              <%= status_badge(alert.event.humanize, color: alert_badge(alert.event).color, icon: alert_badge(alert.event).icon) %>
+            </td>
+            <td>
+              <%= alert.headline %>
+            </td>
+            <td>
+              <%= status_badge(alert.urgency.humanize, color: alert_badge(alert.urgency).color, icon: alert_badge(alert.urgency).icon) %>
+            </td>
+            <td>
+              <%= status_badge(alert.severity.humanize, color: alert_badge(alert.severity).color, icon: alert_badge(alert.severity).icon) %>
+            </td>
+            <td>
+              <%= local_time(alert.created_at) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
