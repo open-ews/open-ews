@@ -66,5 +66,21 @@ module SimpleSerializer
         end
       end
     end
+
+    def has_associations(*names)
+      names.each do |name|
+        associations << name.to_s.to_sym
+      end
+    end
+
+    def associations
+      @associations ||= begin
+        if superclass.respond_to?(:associations)
+          superclass.associations.dup
+        else
+          []
+        end
+      end
+    end
   end
 end

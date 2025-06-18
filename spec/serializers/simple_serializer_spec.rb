@@ -4,6 +4,9 @@ RSpec.describe SimpleSerializer do
   serializer_class = Class.new do
     include SimpleSerializer
 
+    has_associations :foo, :bar
+    has_associations :baz
+
     attributes :name, :email, :created_at, :updated_at
 
     timestamp_attributes :created_at
@@ -18,6 +21,12 @@ RSpec.describe SimpleSerializer do
 
     attribute :array_attr do |object|
       [ object.name, object.email ]
+    end
+  end
+
+  describe "#associations" do
+    it "returns the associations" do
+      expect(serializer_class.associations).to eq([ :foo, :bar, :baz ])
     end
   end
 

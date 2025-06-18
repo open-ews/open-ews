@@ -58,7 +58,7 @@ class ExportCSV < ApplicationWorkflow
   end
 
   def resources_scope
-    resource_class.where(export.scoped_to)
+    resource_class.where(export.scoped_to).includes(serializer_class.associations)
   end
 
   def resource_class
