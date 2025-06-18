@@ -19,10 +19,6 @@ variable "webserver_container_port" {
   default = 80
 }
 
-variable "aws_ses_region" {
-  default = "us-east-1"
-}
-
 variable "app_port" {
   default = 3000
 }
