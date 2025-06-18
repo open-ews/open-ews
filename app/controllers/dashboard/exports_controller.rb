@@ -7,7 +7,7 @@ module Dashboard
     def create
       ExportForm.new(user: current_user, **permitted_params).save!
 
-      flash[:notice] = "<span>Your export is being processed. You can view its status from the #{helpers.link_to('Exports', dashboard_exports_path)} page.</span>"
+      flash[:notice] = t("flash.dashboard.exports.create.notice_html", exports_path: helpers.link_to("Exports", dashboard_exports_path))
       redirect_back_or_to(dashboard_exports_path)
     end
 

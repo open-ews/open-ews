@@ -10,3 +10,6 @@ en:
         states:
           create:
             notice: "Broadcast was successfully updated."
+      exports:
+        create:
+          notice_html: "<span>Your export is being processed. You can view its status from the %{exports_path} page.</span>"
