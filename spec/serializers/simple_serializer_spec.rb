@@ -62,7 +62,7 @@ RSpec.describe SimpleSerializer do
           object.created_at.utc.iso8601,
           object.updated_at.utc.iso8601,
           { name: "John Doe", email: "john.doe@example.com" }.to_json,
-          "John Doe, john.doe@example.com"
+          [ "John Doe", "john.doe@example.com" ].to_json
         ]
       )
     end

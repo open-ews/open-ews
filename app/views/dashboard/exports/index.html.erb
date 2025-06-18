@@ -22,7 +22,7 @@
           <%= content_tag_for :tr, export, role: "row" do %>
             <td><%= export.name %></td>
             <td>
-              <%= export.resource_type.humanize %>
+              <%= export.resource_type.text %>
             </td>
             <td>
               <%= local_time(export.created_at) %>

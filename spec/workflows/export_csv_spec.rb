@@ -45,7 +45,7 @@ RSpec.describe ExportCSV do
         expect(exported_broadcast["audio_url"]).to eq("https://example.com/audio.mp3")
         expect(JSON.parse(exported_broadcast["beneficiary_filter"])).to eq({ "gender" => { "eq" => "F" } })
         expect(exported_broadcast["error_code"]).to be_nil
-        expect(exported_broadcast["beneficiary_groups"]).to eq("Group 1, Group 2")
+        expect(exported_broadcast["beneficiary_groups"]).to eq('["Group 1","Group 2"]')
       end
     end
 

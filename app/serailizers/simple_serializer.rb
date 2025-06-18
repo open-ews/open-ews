@@ -26,10 +26,8 @@ module SimpleSerializer
       value = as_json[header.to_sym]
 
       case value
-      when Hash
+      when Hash, Array
         value.to_json
-      when Array
-        value.join(", ")
       else
         value
       end
