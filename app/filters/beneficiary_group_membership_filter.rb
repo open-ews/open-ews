@@ -1,0 +1,3 @@
+class BeneficiaryGroupMembershipFilter < ApplicationFilter
+  has_fields FieldDefinitions::BeneficiaryGroupMembershipFields
+end

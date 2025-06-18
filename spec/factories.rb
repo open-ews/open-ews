@@ -259,6 +259,7 @@ FactoryBot.define do
     user
     account { user.account }
     resource_type { "Broadcast" }
+    scoped_to { { account_id: account.id } }
     filter_params { {} }
 
     trait :completed do

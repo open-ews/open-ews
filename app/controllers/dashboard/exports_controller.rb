@@ -14,7 +14,7 @@ module Dashboard
     private
 
     def permitted_params
-      params.require(:export).permit(:resource_type, filter_params: {})
+      params.require(:export).permit(:resource_type, :scoped_id, filter_params: {})
     end
   end
 end

@@ -195,6 +195,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_16_074300) do
     t.bigint "user_id", null: false
     t.bigint "account_id", null: false
     t.string "resource_type", null: false
+    t.jsonb "scoped_to", null: false
     t.integer "progress_percentage", default: 0, null: false
     t.jsonb "filter_params", default: {}, null: false
     t.datetime "completed_at"

@@ -7,6 +7,17 @@
 <% end %>
 
 <div class="card">
+  <div class="card-header">
+    <div class="card-actions">
+      <%= render("shared/filters_button", filter_form: @filter_form) %>
+      <%= render(
+        "shared/export_action",
+        disabled: @memberships.empty?,
+        export_params: { resource_type: "BeneficiaryGroupMembership", scoped_id: @beneficiary_group.id }
+      ) %>
+   </div>
+  </div>
+
   <div class="table-responsive">
     <table id="resources" class="table table-vcenter card-table">
       <thead>

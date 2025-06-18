@@ -58,7 +58,7 @@ class ExportCSV < ApplicationWorkflow
   end
 
   def resources_scope
-    resource_class.where(account: export.account)
+    resource_class.where(export.scoped_to)
   end
 
   def resource_class
