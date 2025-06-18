@@ -3,7 +3,7 @@ module Dashboard
     class MembershipsController < DashboardController
       def index
         @filter_form = BeneficiaryGroupMembershipFilterForm.new(filter_param)
-        @memberships = paginate_resources(@filter_form.apply(scope))
+        @memberships = paginate_resources(@filter_form.apply(scope.includes(:beneficiary).includes(:beneficiary)))
       end
 
       private

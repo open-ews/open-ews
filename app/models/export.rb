@@ -1,5 +1,11 @@
 class Export < ApplicationRecord
-  enumerize :resource_type, in: %w[Beneficiary BeneficiaryGroup Broadcast Notification]
+  enumerize :resource_type, in: %w[
+    Beneficiary
+    BeneficiaryGroup
+    BeneficiaryGroupMembership
+    Broadcast
+    Notification
+  ]
 
   belongs_to :user
   belongs_to :account
