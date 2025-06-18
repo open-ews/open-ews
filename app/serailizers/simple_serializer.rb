@@ -34,7 +34,7 @@ module SimpleSerializer
     end
   end
 
-  def headers
+  def heaeers
     self.class.serialized_attributes.keys.map(&:to_s)
   end
 
