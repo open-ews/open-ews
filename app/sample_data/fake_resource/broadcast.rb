@@ -51,10 +51,6 @@ module FakeResource
           )
         ]
       end
-
-      def find(id)
-        all.find(-> { raise(ActiveRecord::RecordNotFound) }) { it.id == id }
-      end
     end
   end
 end
