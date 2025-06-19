@@ -6,46 +6,30 @@
   <div class="card-header">
     <div class="card-actions">
       <%= render("shared/filters_button", filter_form: @filter_form) %>
+      <%= render(
+        "shared/export_action",
+        disabled: @broadcasts.empty?,
+        export_params: { resource_type: "Broadcast" }
+      ) %>
    </div>
   </div>
 
   <%= render "shared/filter_form", filter_form: @filter_form %>
 
-  <div class="table-responsive">
-    <table id="resources" class="table table-vcenter card-table">
-      <thead>
-        <tr role="row">
-          <th>#</th>
-          <% [:channel, :status, :created_at].each do |column| %>
-            <th>
-              <div class="text">
-                <%= @broadcasts.human_attribute_name(column) %>
-              </div>
-            </th>
-          <% end %>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% @broadcasts.each do |broadcast| %>
-          <%= content_tag_for(:tr, broadcast, role: "row") do %>
-            <td>
-              <%= link_to(broadcast.id, dashboard_broadcast_path(broadcast)) %>
-            </td>
-            <td>
-              <%= broadcast.channel.humanize %>
-            </td>
-            <td>
-              <%= broadcast_status(broadcast) %>
-            </td>
-            <td>
-              <%= local_time(broadcast.created_at) %>
-            </td>
-          <% end %>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+  <%= render("shared/table_data", collection: @broadcasts, headers: [:id, :channel, :status, :created_at]) do |broadcast| %>
+    <td>
+      <%= link_to(broadcast.id, dashboard_broadcast_path(broadcast)) %>
+    </td>
+    <td>
+      <%= broadcast.channel.humanize %>
+    </td>
+    <td>
+      <%= broadcast_status(broadcast) %>
+    </td>
+    <td>
+      <%= local_time(broadcast.created_at) %>
+    </td>
+  <% end %>
 
   <%= render("shared/pagination", resources: @broadcasts) %>
 </div>

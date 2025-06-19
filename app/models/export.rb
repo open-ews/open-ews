@@ -1,0 +1,27 @@
+class Export < ApplicationRecord
+  enumerize :resource_type, in: %w[
+    Beneficiary
+    BeneficiaryGroup
+    BeneficiaryGroupMembership
+    Broadcast
+    Notification
+  ]
+
+  belongs_to :user
+  belongs_to :account
+
+  has_one_attached :file
+
+  before_create :set_default_values
+  validates :scoped_to, presence: true
+
+  def completed?
+    completed_at.present?
+  end
+
+  private
+
+  def set_default_values
+    self.name ||= format("%s_%s.csv", resource_type.tableize, Time.current.strftime("%Y%m%d%H%M%S"))
+  end
+end

@@ -7,43 +7,27 @@
     <div class="card-actions">
       <%= render("shared/filters_button", filter_form: @filter_form) %>
       <%= render("shared/import_action", import_params: { resource_type: "Beneficiary" }, title: "Import Beneficiaries") %>
+      <%= render(
+        "shared/export_action",
+        disabled: @beneficiaries.empty?,
+        export_params: { resource_type: "Beneficiary" }
+      ) %>
     </div>
   </div>
 
   <%= render "filter_form", filter_form: @filter_form %>
 
-  <div class="table-responsive">
-    <table id="resources" class="table table-vcenter card-table">
-      <thead>
-        <tr role="row">
-          <th>#</th>
-          <% [:phone_number, :created_at].each do |column| %>
-            <th>
-              <div class="text">
-                <%= @beneficiaries.human_attribute_name(column) %>
-              </div>
-            </th>
-          <% end %>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% @beneficiaries.each do |beneficiary| %>
-          <%= content_tag_for(:tr, beneficiary) do %>
-            <td>
-              <%= link_to(beneficiary.id, dashboard_beneficiary_path(beneficiary)) %>
-            </td>
-            <td>
-              <%= format_phone_number(beneficiary.phone_number) %>
-            </td>
-            <td>
-              <%= local_time(beneficiary.created_at) %>
-            </td>
-          <% end %>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+  <%= render("shared/table_data", collection: @beneficiaries, headers: [:id, :phone_number, :created_at]) do |beneficiary| %>
+    <td>
+      <%= link_to(beneficiary.id, dashboard_beneficiary_path(beneficiary)) %>
+    </td>
+    <td>
+      <%= format_phone_number(beneficiary.phone_number) %>
+    </td>
+    <td>
+      <%= local_time(beneficiary.created_at) %>
+    </td>
+  <% end %>
 
   <%= render("shared/pagination", resources: @beneficiaries) %>
 </div>

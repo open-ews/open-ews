@@ -5,6 +5,7 @@ class User < ApplicationRecord
 
   belongs_to :account
   has_many :imports
+  has_many :exports
 
   enumerize :locale, in: %w[en km]
 

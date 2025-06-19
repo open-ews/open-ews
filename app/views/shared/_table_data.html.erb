@@ -1,0 +1,29 @@
+<div class="table-responsive">
+  <table id="resources" class="table table-vcenter card-table">
+    <thead>
+      <tr role="row">
+        <% headers.each do |column| %>
+          <th>
+            <div class="text">
+              <%= column == :id ? "#" : collection.human_attribute_name(column) %>
+            </div>
+          </th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% collection.each do |resource| %>
+        <%= content_tag_for(:tr, resource) do %>
+          <%= yield(resource) %>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<% if collection.empty? %>
+  <div class="text-muted d-flex justify-content-center align-items-center h-50" style="min-height: 45px;">
+    <em><%= t("titles.no_records") %></em>
+  </div>
+<% end %>

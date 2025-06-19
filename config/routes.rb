@@ -51,6 +51,7 @@ Rails.application.routes.draw do
       resource :locale, only: :update
 
       resources :imports, only: %i[index create]
+      resources :exports, only: %i[index create]
       resource :user_profile, only: [ :show, :update ]
 
       root to: "broadcasts#index"

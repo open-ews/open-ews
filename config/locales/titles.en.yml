@@ -4,6 +4,8 @@ en:
     app_name: OpenEWS
     actions:
       confirm: "Are you sure?"
+      no_filters_export: "You haven't selected any filters. Are you sure you still want to export all records?"
+      download: "Download"
     sessions:
       new: Sign in
     settings:
@@ -25,3 +27,4 @@ en:
       index: "Notifications for broadcast #%{broadcast}"
     beneficiary_group_memberships:
       index: "Memberships for&nbsp;%{beneficiary_group}"
+    no_records: "No records found."

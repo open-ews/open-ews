@@ -7,37 +7,14 @@
     <h2 class="mb-0"><%= title %></h2>
   </div>
 
-  <div class="table-responsive">
-    <table id="resources" class="table table-vcenter card-table">
-      <thead>
-        <tr role="row">
-          <th>
-            <div class="text">
-              <%= @users.human_attribute_name(:name) %>
-            </div>
-          </th>
-          <th>
-            <div class="text">
-              <%= @users.human_attribute_name(:email) %>
-            </div>
-          </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% @users.each do |user| %>
-          <%= content_tag_for :tr, user do %>
-            <td>
-              <%= link_to(user.name, dashboard_settings_user_path(user)) %>
-            </td>
-            <td>
-              <%= user.email %>
-            </td>
-          <% end %>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+  <%= render("shared/table_data", collection: @users, headers: [:name, :email]) do |user| %>
+    <td>
+      <%= link_to(user.name, dashboard_settings_user_path(user)) %>
+    </td>
+    <td>
+      <%= user.email %>
+    </td>
+  <% end %>
 
   <%= render("shared/pagination", resources: @users) %>
 <% end %>

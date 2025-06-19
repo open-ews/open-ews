@@ -1,0 +1,35 @@
+<%= render("shared/profile_frame") do %>
+  <div class="card-header">
+    <h2 class="mb-0"><%= title %></h2>
+  </div>
+
+  <%= render("shared/table_data", collection: @exports, headers: [:name, :resource_type, :created_at, :status]) do |export| %>
+    <td><%= export.name %></td>
+    <td>
+      <%= export.resource_type.text %>
+    </td>
+    <td>
+      <%= local_time(export.created_at) %>
+    </td>
+
+    <td>
+      <% if export.completed? %>
+        <%= link_to t("titles.actions.download"), rails_blob_path(export.file, disposition: "attachment") %>
+      <% elsif export.progress_percentage.positive? %>
+        <% percentage = number_to_percentage(export.progress_percentage, precision: 0, strip_insignificant_zeros: true) %>
+        <div class="progress"
+          data-bs-toggle="popover"
+          data-bs-content="<%= percentage %>"
+          data-bs-placement="top"
+          data-bs-trigger="hover"
+        >
+          <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: <%= percentage %>"></div>
+        </div>
+      <% else %>
+        <%= status_badge("Queued", color: "gray-200", icon: "clock") %>
+      <% end %>
+    </td>
+  <% end %>
+
+  <%= render("shared/pagination", resources: @exports) %>
+<% end %>
