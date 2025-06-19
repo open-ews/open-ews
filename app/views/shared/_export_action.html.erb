@@ -10,7 +10,7 @@
     class: "btn",
     method: :post,
     disabled: disabled,
-    form: { data: { turbo_confirm: ("You haven't selected any filters. Are you sure you still want to export all records?" if filter_params.blank?) }}
+    form: { data: { turbo_confirm: (t("titles.actions.no_filters_export") if filter_params.blank?) }}
     ) do %>
     <i class="icon ti ti-file-export"></i> Export
   <% end %>

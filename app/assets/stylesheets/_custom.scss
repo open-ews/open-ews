@@ -23,10 +23,10 @@
 .card > .table-responsive {
   border-top-left-radius: var(--tblr-border-radius-lg);
   border-top-right-radius: var(--tblr-border-radius-lg);
+}
 
-  .card-table tbody tr:last-child {
-    border-bottom: transparent;
-  }
+.card-table tbody tr:last-child {
+  border-bottom: transparent;
 }
 
 .account-logo img {
