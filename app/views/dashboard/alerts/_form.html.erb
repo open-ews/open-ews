@@ -1,0 +1,32 @@
+<div class="card">
+  <%= simple_form_for(@alert, url: dashboard_alerts_path) do |f| %>
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <%= f.input :event, prompt: true %>
+        </div>
+        <div class="col">
+          <%= f.input :urgency, prompt: true %>
+        </div>
+        <div class="col">
+          <%= f.input :severity, prompt: true %>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <%= f.input :headline %>
+        </div>
+        <div class="col">
+          <%= f.input :description, as: :text, input_html: { rows: 2 } %>
+        </div>
+        <div class="col">
+          <%= f.input :instruction, as: :text, input_html: { rows: 10 } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer text-end">
+      <%= f.button :submit, "Create Alert", class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+</div>
