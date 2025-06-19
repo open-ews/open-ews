@@ -1,7 +1,7 @@
 module Dashboard
   class ExportsController < DashboardController
     def index
-      @exports = current_user.exports.latest_first.page(params[:page])
+      @exports = paginate_resources(scope)
     end
 
     def create
@@ -15,6 +15,10 @@ module Dashboard
 
     def permitted_params
       params.require(:export).permit(:resource_type, :scoped_id, filter_params: {})
+    end
+
+    def scope
+      current_user.exports
     end
   end
 end

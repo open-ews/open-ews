@@ -13,6 +13,7 @@ class Export < ApplicationRecord
   has_one_attached :file
 
   before_create :set_default_values
+  validates :scoped_to, presence: true
 
   def completed?
     completed_at.present?

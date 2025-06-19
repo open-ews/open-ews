@@ -24,7 +24,8 @@ class ExportCSV < ApplicationWorkflow
       ApplicationRecord.uncached do
         total_records = records.count
         records.find_each.with_index do |record, index|
-          export.update!(progress_percentage: (index + 1) * 100 / total_records) if (index % 500).zero?
+          progress_percentage = (index + 1) * 100 / total_records
+          export.update!(progress_percentage:) if (index % 500).zero?
 
           csv << serializer_class.new(record.decorated).as_csv
         end

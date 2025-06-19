@@ -14,7 +14,7 @@
 
     <td>
       <% if export.completed? %>
-        <%= link_to "Download", rails_blob_path(export.file, disposition: "attachment") %>
+        <%= link_to t("titles.actions.download"), rails_blob_path(export.file, disposition: "attachment") %>
       <% elsif export.progress_percentage.positive? %>
         <% percentage = number_to_percentage(export.progress_percentage, precision: 0, strip_insignificant_zeros: true) %>
         <div class="progress"
