@@ -28,7 +28,7 @@ class ExportForm < ApplicationForm
     export = build_export
     export.save!
 
-    ExecuteWorkflowJob.perform_later(ExportCSV.to_s, export)
+    ExportCSVJob.perform_later(export)
 
     true
   end
