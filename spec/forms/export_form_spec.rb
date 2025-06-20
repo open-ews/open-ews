@@ -20,7 +20,7 @@ RSpec.describe ExportForm, type: :model do
     expect(export.resource_type).to eq("Broadcast")
     expect(export.scoped_to).to eq({ "account_id" => user.account.id })
     expect(export.filter_params).to eq({ "status" => { "eq" => "pending" } })
-    expect(ExecuteWorkflowJob).to have_been_enqueued.with(ExportCSV.to_s, export)
+    expect(ExportCSVJob).to have_been_enqueued.with(export)
   end
 
   it "creates an export for nested resource type" do
@@ -37,7 +37,7 @@ RSpec.describe ExportForm, type: :model do
     expect(result).to be_truthy
     expect(export.resource_type).to eq("Notification")
     expect(export.scoped_to).to eq({ "broadcast_id" => broadcast.id })
-    expect(ExecuteWorkflowJob).to have_been_enqueued.with(ExportCSV.to_s, export)
+    expect(ExportCSVJob).to have_been_enqueued.with(export)
   end
 
   it "raises an error if the scoped id is not valid" do

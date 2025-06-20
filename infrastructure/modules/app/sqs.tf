@@ -1,3 +1,7 @@
+locals {
+  sqs_max_receive_count = 15
+}
+
 resource "aws_sqs_queue" "default" {
   name                       = "${var.app_identifier}-default"
   redrive_policy             = "{\"deadLetterTargetArn\":\"${aws_sqs_queue.dead_letter.arn}\",\"maxReceiveCount\":15}"
@@ -15,6 +19,12 @@ resource "aws_sqs_queue" "low_priority" {
   name                       = "${var.app_identifier}-low-priority"
   redrive_policy             = "{\"deadLetterTargetArn\":\"${aws_sqs_queue.dead_letter.arn}\",\"maxReceiveCount\":15}"
   visibility_timeout_seconds = var.sqs_visibility_timeout_seconds
+}
+
+resource "aws_sqs_queue" "long_running" {
+  name                       = "${var.app_identifier}-long-running"
+  redrive_policy             = "{\"deadLetterTargetArn\":\"${aws_sqs_queue.dead_letter.arn}\",\"maxReceiveCount\":${local.sqs_max_receive_count}}"
+  visibility_timeout_seconds = 3600
 }
 
 resource "aws_sqs_queue" "dead_letter" {

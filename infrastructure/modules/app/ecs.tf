@@ -43,6 +43,10 @@ locals {
       value = aws_sqs_queue.scheduler.name
     },
     {
+      name  = "AWS_SQS_LONG_RUNNING_QUEUE_NAME",
+      value = aws_sqs_queue.long_running.name
+    },
+    {
       name  = "AWS_DEFAULT_REGION",
       value = var.aws_region
     },
