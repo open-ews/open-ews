@@ -8,7 +8,7 @@ RSpec.describe "Alerts" do
     visit dashboard_alerts_path
 
     expect(page).to have_title("Alerts")
-    expect(page).to have_content("Air raid")
+    expect(page).to have_content("Flood")
   end
 
   it "create a new alert" do
