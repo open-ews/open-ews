@@ -26,16 +26,6 @@ module FakeResource
       def all
         @alerts ||= [
           Alert.new(
-            id: "3",
-            event: "air_raid",
-            headline: "Air raid warning for Bahawalpur",
-            description: "An immediate evacuation of Bahawalpur is required due to an imminent air raid.",
-            instruction: "Everyone in Bahawalpur should quickly, yet safely, go to Multan by vehicle via route N5 to Sawi Masjid. Do not block access roads or tracks. Do not take personal belongings other than critical medication and personal documents. Provide pets and other livestock with food and water. Stay out of the evacuation zone until it has been announced it is safe for you to return. Persons in areas not listed for evacuation should remain in place, and stay alert for changing conditions. Listen to the media for further instruction from local authorities.",
-            urgency: "immediate",
-            severity: "extreme",
-            created_at: Time.current
-          ),
-          Alert.new(
             id: "2",
             event: "flood",
             headline: "Flood warning for Punjab",
