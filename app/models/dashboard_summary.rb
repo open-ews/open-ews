@@ -1,49 +1,45 @@
 class DashboardSummary
   attr_reader :account
 
+  class Stats
+    attr_reader :scope
+
+    def initialize(scope)
+      @scope = scope
+    end
+
+    def total_count
+      @total_count ||= scope.count
+    end
+
+    def new_count
+      @new_count ||= scope.where(created_at: 1.month.ago..).count
+    end
+
+    def new_count_percentage
+      return 0 if total_count.zero?
+
+      (new_count.to_f / total_count) * 100
+    end
+  end
+
   def initialize(account)
     @account = account
   end
 
-  def total_beneficiaries
-    @total_beneficiaries ||= account.beneficiaries.count
+  def beneficiaries_stats
+    @beneficiaries_stats ||= Stats.new(account.beneficiaries)
   end
 
-  def new_beneficiaries_from_last_month
-    account.beneficiaries.where(created_at: 1.month.ago..).count
+  def notifications_stats
+    @notifications_stats ||= Stats.new(account.notifications.where(status: :succeeded))
   end
 
-  def new_beneficiaries_from_last_month_percentage
-    return 0 if total_beneficiaries.zero?
-
-    (new_beneficiaries_from_last_month.to_f / total_beneficiaries) * 100
+  def broadcasts_stats
+    @broadcasts_stats ||= Stats.new(account.broadcasts)
   end
 
-  def total_succeeded_notifications
-    @total_succeeded_notifications ||= account.notifications.where(status: :succeeded).count
-  end
-
-  def new_succeeded_notifications_from_last_month
-    account.notifications.where(status: :succeeded, created_at: 1.month.ago..).count
-  end
-
-  def new_succeeded_notifications_from_last_month_percentage
-    return 0 if total_succeeded_notifications.zero?
-
-    (new_succeeded_notifications_from_last_month.to_f / total_succeeded_notifications) * 100
-  end
-
-  def total_broadcasts
-    @total_broadcasts ||= account.broadcasts.count
-  end
-
-  def new_broadcasts_from_last_month
-    account.broadcasts.where(created_at: 1.month.ago..).count
-  end
-
-  def new_broadcasts_from_last_month_percentage
-    return 0 if total_broadcasts.zero?
-
-    (new_broadcasts_from_last_month.to_f / total_broadcasts) * 100
+  def recent_broadcasts
+    @recent_broadcasts ||= account.broadcasts.order(created_at: :desc).where(status: [ :running, :stopped, :completed ]).limit(3)
   end
 end
