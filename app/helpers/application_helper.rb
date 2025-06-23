@@ -49,6 +49,9 @@ module ApplicationHelper
   end
 
   def title(**options)
+    # Supported nested controller names
+    controller_name = controller_path.gsub("/", ".")
+
     default = options.fetch(:controller_name, controller_name).to_s
     default = default.singularize if options.fetch(:action_name, action_name).to_s != "index"
     default = default.to_s.humanize

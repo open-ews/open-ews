@@ -1,0 +1,239 @@
+<div class="row">
+  <div class="col-sm-6 col-lg-4 mb-2">
+    <div class="card">
+      <div class="card-body">
+        <div class="subheader">Total Beneficiaries <i class="ti ti-address-book fs-3"></i></div>
+        <div class="d-flex align-items-baseline">
+          <div class="h1 mb-0 me-2"><%= number_with_delimiter(@dashboard_summary.total_beneficiaries) %></div>
+          <div class="me-auto">
+            <span class="text-green d-inline-flex align-items-center lh-1">
+              <%= number_to_percentage(@dashboard_summary.new_beneficiaries_from_last_month_percentage, precision: 0, strip_insignificant_zeros: true) %>
+              <i class="ti ti-trending-up icon"></i>
+            </span>
+          </div>
+        </div>
+        <div class="text-secondary mt-2"><%= number_with_delimiter(@dashboard_summary.new_beneficiaries_from_last_month) %> beneficiaries added from last month</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-lg-4 mb-2">
+    <div class="card">
+      <div class="card-body">
+        <div class="subheader">Total Notifications Sent <i class="ti ti-message fs-3"></i></div>
+        <div class="d-flex align-items-baseline">
+          <div class="h1 mb-0 me-2"><%= number_with_delimiter(@dashboard_summary.total_succeeded_notifications) %></div>
+          <div class="me-auto">
+            <span class="text-green d-inline-flex align-items-center lh-1">
+              <%= number_to_percentage(@dashboard_summary.new_succeeded_notifications_from_last_month_percentage, precision: 0, strip_insignificant_zeros: true) %>
+              <i class="ti ti-trending-up icon"></i>
+            </span>
+          </div>
+        </div>
+        <div class="text-secondary mt-2"><%= number_with_delimiter(@dashboard_summary.new_succeeded_notifications_from_last_month) %> notifications sent successfully from last month</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-lg-4 mb-2">
+    <div class="card">
+      <div class="card-body">
+        <div class="subheader">Total Broadcasts <i class="ti ti-speakerphone fs-3"></i></div>
+        <div class="d-flex align-items-baseline">
+          <div class="h1 mb-0 me-2"><%= number_with_delimiter(@dashboard_summary.total_broadcasts) %></div>
+          <div class="me-auto">
+            <span class="text-green d-inline-flex align-items-center lh-1">
+              <%= number_to_percentage(@dashboard_summary.new_broadcasts_from_last_month_percentage, precision: 0, strip_insignificant_zeros: true) %>
+              <i class="ti ti-trending-up icon"></i>
+            </span>
+          </div>
+        </div>
+        <div class="text-secondary mt-2"><%= number_with_delimiter(@dashboard_summary.new_broadcasts_from_last_month) %> broadcasts created from last month</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <% broadcast = BroadcastDecorator.new(current_account.broadcasts.last) %>
+          <div class="notification-stats mt-3">
+            <div class="progress progress-separated mb-3">
+              <% broadcast.notification_stats_percentage.each do |status, percentage| %>
+                <% count = broadcast.notification_stats[status] %>
+                <div
+                  class="progress-bar bg-<%= notification_status_color(status) %>"
+                  role="progressbar"
+                  data-bs-toggle="popover"
+                  data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(broadcast.total_notifications_count)} notifications" %>"
+                  data-bs-placement="top"
+                  data-bs-trigger="hover"
+                  style="width: <%= percentage %>%">
+                </div>
+              <% end %>
+            </div>
+
+            <div class="row">
+              <% broadcast.notification_stats_percentage.each do |status, percentage| %>
+                <% count = broadcast.notification_stats[status] %>
+                <div class="col-auto d-flex align-items-center pe-2"
+                  data-bs-toggle="popover"
+                  data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(broadcast.total_notifications_count)} notifications" %>"
+                  data-bs-placement="top"
+                  data-bs-trigger="hover"
+                >
+                  <span class="legend me-2 bg-<%= notification_status_color(status) %>"></span>
+                  <span><%= status.to_s.humanize %></span>
+                  <span class="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary"><%= number_to_percentage(percentage, precision: 0, strip_insignificant_zeros: true) %></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <% broadcast = BroadcastDecorator.new(current_account.broadcasts.last) %>
+          <div class="notification-stats mt-3">
+            <div class="progress progress-separated mb-3">
+              <% broadcast.notification_stats_percentage.each do |status, percentage| %>
+                <% count = broadcast.notification_stats[status] %>
+                <div
+                  class="progress-bar bg-<%= notification_status_color(status) %>"
+                  role="progressbar"
+                  data-bs-toggle="popover"
+                  data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(broadcast.total_notifications_count)} notifications" %>"
+                  data-bs-placement="top"
+                  data-bs-trigger="hover"
+                  style="width: <%= percentage %>%">
+                </div>
+              <% end %>
+            </div>
+
+            <div class="row">
+              <% broadcast.notification_stats_percentage.each do |status, percentage| %>
+                <% count = broadcast.notification_stats[status] %>
+                <div class="col-auto d-flex align-items-center pe-2"
+                  data-bs-toggle="popover"
+                  data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(broadcast.total_notifications_count)} notifications" %>"
+                  data-bs-placement="top"
+                  data-bs-trigger="hover"
+                >
+                  <span class="legend me-2 bg-<%= notification_status_color(status) %>"></span>
+                  <span><%= status.to_s.humanize %></span>
+                  <span class="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary"><%= number_to_percentage(percentage, precision: 0, strip_insignificant_zeros: true) %></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <% broadcast = BroadcastDecorator.new(current_account.broadcasts.last) %>
+          <div class="notification-stats mt-3">
+            <div class="progress progress-separated mb-3">
+              <% broadcast.notification_stats_percentage.each do |status, percentage| %>
+                <% count = broadcast.notification_stats[status] %>
+                <div
+                  class="progress-bar bg-<%= notification_status_color(status) %>"
+                  role="progressbar"
+                  data-bs-toggle="popover"
+                  data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(broadcast.total_notifications_count)} notifications" %>"
+                  data-bs-placement="top"
+                  data-bs-trigger="hover"
+                  style="width: <%= percentage %>%">
+                </div>
+              <% end %>
+            </div>
+
+            <div class="row">
+              <% broadcast.notification_stats_percentage.each do |status, percentage| %>
+                <% count = broadcast.notification_stats[status] %>
+                <div class="col-auto d-flex align-items-center pe-2"
+                  data-bs-toggle="popover"
+                  data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(broadcast.total_notifications_count)} notifications" %>"
+                  data-bs-placement="top"
+                  data-bs-trigger="hover"
+                >
+                  <span class="legend me-2 bg-<%= notification_status_color(status) %>"></span>
+                  <span><%= status.to_s.humanize %></span>
+                  <span class="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary"><%= number_to_percentage(percentage, precision: 0, strip_insignificant_zeros: true) %></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Notifications Sent in the last 12 months</h3>
+      </div>
+      <div class="card-body">
+        <div id="chart-notifications-growth" style="height: 300px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Dummy data for notifications growth
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const notificationCounts = [120, 180, 50, 100, 280, 450, 200, 520, 300, 750, 240, 120];
+
+    const options = {
+      chart: {
+        type: 'line',
+        height: 300,
+        toolbar: {
+          show: false
+        }
+      },
+      series: [{
+        name: 'Notifications',
+        data: notificationCounts
+      }],
+      xaxis: {
+        categories: months
+      },
+      yaxis: {
+        title: {
+          text: 'Number of Notifications'
+        }
+      },
+      stroke: {
+        curve: 'smooth',
+        width: 3
+      },
+      colors: ['#206bc4'],
+      grid: {
+        borderColor: '#e6e6e6'
+      },
+      tooltip: {
+        y: {
+          formatter: function(val) {
+            return val + ' notifications';
+          }
+        }
+      }
+    };
+
+    const chart = new ApexCharts(document.querySelector("#chart-notifications-growth"), options);
+    chart.render();
+  });
+</script>
+
