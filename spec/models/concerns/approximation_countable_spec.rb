@@ -23,8 +23,4 @@ RSpec.describe ApproximationCountable do
       expect(count).to eq(2)
     end
   end
-
-  def autovacuum_analyze
-    ApplicationRecord.connection.execute("ANALYZE")
-  end
 end

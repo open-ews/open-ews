@@ -1,6 +1,67 @@
 require "rails_helper"
 
 RSpec.describe DashboardSummary do
+  describe DashboardSummary::Stats do
+    describe "#total_count" do
+      it "returns the total number of items" do
+        account = create(:account)
+        create_list(:beneficiary, 2, account:)
+
+        autovacuum_analyze
+        stats = DashboardSummary::Stats.new(account.beneficiaries)
+
+        expect(stats.total_count).to eq(2)
+      end
+    end
+
+    describe "#new_count" do
+      it "returns the number of items created in the last month" do
+        freeze_time do
+          account = create(:account)
+          create_list(:beneficiary, 2, account:, created_at: 1.month.ago)
+          create_list(:beneficiary, 3, account:, created_at: 2.months.ago)
+
+          autovacuum_analyze
+          stats = DashboardSummary::Stats.new(account.beneficiaries)
+
+          expect(stats.new_count).to eq(2)
+        end
+      end
+    end
+
+    describe "#new_count_percentage" do
+      it "returns the percentage of items created in the last month" do
+        freeze_time do
+          account = create(:account)
+          create_list(:beneficiary, 2, account:, created_at: 1.month.ago)
+          create_list(:beneficiary, 8, account:, created_at: 2.months.ago)
+
+          autovacuum_analyze
+          stats = DashboardSummary::Stats.new(account.beneficiaries)
+
+          expect(stats.new_count_percentage).to eq(20)
+        end
+      end
+    end
+  end
+
+  describe "#recent_broadcasts" do
+    it "returns the recent broadcasts" do
+      account = create(:account)
+      running_broadcast_1 = create(:broadcast, :running, account:)
+      running_broadcast_2 = create(:broadcast, :running, account:)
+      stopped_broadcast = create(:broadcast, :stopped, account:)
+      _completed_broadcast = create(:broadcast, :completed, account:)
+      _errored_broadcast = create(:broadcast, :errored, account:)
+      _queued_broadcast = create(:broadcast, :queued, account:)
+
+      autovacuum_analyze
+      stats = DashboardSummary.new(account).recent_broadcasts
+
+      expect(stats).to eq([ running_broadcast_2, running_broadcast_1, stopped_broadcast ])
+    end
+  end
+
   describe "#last_12_months_notifications_stats" do
     it "returns the number of notifications created in the last 12 months" do
       account = create(:account)
