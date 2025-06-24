@@ -4,7 +4,7 @@
           stats: @dashboard_summary.beneficiaries_stats,
           header_title: "Total Beneficiaries",
           icon_name: "address-book",
-          description: "#{"beneficiary".pluralize(@dashboard_summary.beneficiaries_stats.new_count)} added from last month" %>
+          description: "#{"beneficiary".pluralize(@dashboard_summary.beneficiaries_stats.new_count)} added last month" %>
   </div>
 
   <div class="col-sm-6 col-lg-4 mb-2 notifications-stats">
@@ -12,7 +12,7 @@
           stats: @dashboard_summary.notifications_stats,
           header_title: "Total Notifications Sent",
           icon_name: "message",
-          description: "#{"notification".pluralize(@dashboard_summary.notifications_stats.new_count)} sent from last month" %>
+          description: "#{"notification".pluralize(@dashboard_summary.notifications_stats.new_count)} sent last month" %>
   </div>
 
   <div class="col-sm-6 col-lg-4 mb-2 broadcasts-stats">
@@ -20,7 +20,7 @@
           stats: @dashboard_summary.broadcasts_stats,
           header_title: "Total Broadcasts",
           icon_name: "speakerphone",
-          description: "#{"broadcast".pluralize(@dashboard_summary.broadcasts_stats.new_count)} created from last month" %>
+          description: "#{"broadcast".pluralize(@dashboard_summary.broadcasts_stats.new_count)} created last month" %>
   </div>
 </div>
 

@@ -48,17 +48,17 @@ RSpec.describe DashboardSummary do
   describe "#recent_broadcasts" do
     it "returns the recent broadcasts" do
       account = create(:account)
-      running_broadcast_1 = create(:broadcast, :running, account:)
+      _running_broadcast_1 = create(:broadcast, :running, account:)
       running_broadcast_2 = create(:broadcast, :running, account:)
       stopped_broadcast = create(:broadcast, :stopped, account:)
-      _completed_broadcast = create(:broadcast, :completed, account:)
+      completed_broadcast = create(:broadcast, :completed, account:)
       _errored_broadcast = create(:broadcast, :errored, account:)
       _queued_broadcast = create(:broadcast, :queued, account:)
 
       autovacuum_analyze
       stats = DashboardSummary.new(account).recent_broadcasts
 
-      expect(stats).to eq([ running_broadcast_2, running_broadcast_1, stopped_broadcast ])
+      expect(stats).to eq([ completed_broadcast, stopped_broadcast, running_broadcast_2 ])
     end
   end
 

@@ -39,18 +39,9 @@ class DashboardSummary
     @broadcasts_stats ||= Stats.new(account.broadcasts)
   end
 
-  # Returns recent broadcasts ordered by priority:
-  # Running > Stopped > Completed
   def recent_broadcasts
     @recent_broadcasts ||= account.broadcasts
       .where(status: [ :running, :stopped, :completed ])
-      .order(
-        Arel.sql("CASE
-          WHEN broadcasts.status = 'running' THEN 1
-          WHEN broadcasts.status = 'stopped' THEN 2
-          WHEN broadcasts.status = 'completed' THEN 3
-        END"),
-      )
       .latest_first
       .limit(3)
       .map(&:decorated)
