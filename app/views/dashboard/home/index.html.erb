@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-sm-6 col-lg-4 mb-2 beneficiary-stats">
+    <%= render "dashboard/home/stats",
+          stats: @dashboard_summary.beneficiaries_stats,
+          header_title: "Total Beneficiaries",
+          icon_name: "address-book",
+          description: "#{"beneficiary".pluralize(@dashboard_summary.beneficiaries_stats.new_count)} added from last month" %>
+  </div>
+
+  <div class="col-sm-6 col-lg-4 mb-2 notifications-stats">
+    <%= render "dashboard/home/stats",
+          stats: @dashboard_summary.notifications_stats,
+          header_title: "Total Notifications Sent",
+          icon_name: "message",
+          description: "#{"notification".pluralize(@dashboard_summary.notifications_stats.new_count)} sent from last month" %>
+  </div>
+
+  <div class="col-sm-6 col-lg-4 mb-2 broadcasts-stats">
+    <%= render "dashboard/home/stats",
+          stats: @dashboard_summary.broadcasts_stats,
+          header_title: "Total Broadcasts",
+          icon_name: "speakerphone",
+          description: "#{"broadcast".pluralize(@dashboard_summary.broadcasts_stats.new_count)} created from last month" %>
+  </div>
+</div>
+
+<div class="row">
+  <% @dashboard_summary.recent_broadcasts.each do |broadcast| %>
+    <div class="col">
+      <%= render "dashboard/home/broadcast", broadcast: broadcast %>
+    </div>
+  <% end %>
+</div>
+
+<%= render "dashboard/home/notifications_chart", notifications_stats: @dashboard_summary.last_12_months_notifications_stats %>

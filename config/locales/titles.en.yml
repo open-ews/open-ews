@@ -6,6 +6,9 @@ en:
       confirm: "Are you sure?"
       no_filters_export: "You haven't selected any filters. Are you sure you still want to export all records?"
       download: "Download"
+    dashboard:
+      home:
+        index: Dashboard
     sessions:
       new: Sign in
     settings:

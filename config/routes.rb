@@ -54,7 +54,7 @@ Rails.application.routes.draw do
       resources :exports, only: %i[index create]
       resource :user_profile, only: [ :show, :update ]
 
-      root to: "broadcasts#index"
+      root to: "home#index"
     end
   end
 

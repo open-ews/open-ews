@@ -5,13 +5,13 @@
 import { application } from "./application"
 
 import BeneficiaryAddressesFilterFieldController from "./beneficiary_addresses_filter_field_controller"
-application.register(
-  "beneficiary-addresses-filter-field",
-  BeneficiaryAddressesFilterFieldController
-)
+application.register("beneficiary-addresses-filter-field", BeneficiaryAddressesFilterFieldController)
 
 import FilterFieldController from "./filter_field_controller"
 application.register("filter-field", FilterFieldController)
+
+import NotificationsStatsChartController from "./notifications_stats_chart_controller"
+application.register("notifications-stats-chart", NotificationsStatsChartController)
 
 import RemoveNestedFormController from "./remove_nested_form_controller"
 application.register("remove-nested-form", RemoveNestedFormController)
