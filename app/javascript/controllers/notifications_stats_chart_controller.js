@@ -5,9 +5,12 @@ export default class extends Controller {
   static values = {
     months: Array,
     notificationCounts: Array,
+    title: String,
   }
 
   connect() {
+    const numberFormatter = new Intl.NumberFormat()
+
     const options = {
       chart: {
         type: "line",
@@ -18,7 +21,7 @@ export default class extends Controller {
       },
       series: [
         {
-          name: "Notifications",
+          name: this.titleValue,
           data: this.notificationCountsValue,
         },
       ],
@@ -27,7 +30,12 @@ export default class extends Controller {
       },
       yaxis: {
         title: {
-          text: "Number of Notifications",
+          text: this.titleValue,
+        },
+        labels: {
+          formatter: function (val) {
+            return numberFormatter.format(val)
+          },
         },
       },
       stroke: {
@@ -44,7 +52,7 @@ export default class extends Controller {
         },
         y: {
           formatter: function (val) {
-            return val + " notifications"
+            return numberFormatter.format(val)
           },
         },
       },
