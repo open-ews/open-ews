@@ -78,18 +78,18 @@ RSpec.describe DashboardSummary do
 
         expect(stats).to eq(
           {
-            "2024-01" => { name: "Jan", count: 12 },
-            "2024-02" => { name: "Feb", count: 0 },
-            "2024-03" => { name: "Mar", count: 0 },
-            "2024-04" => { name: "Apr", count: 0 },
-            "2024-05" => { name: "May", count: 0 },
-            "2024-06" => { name: "Jun", count: 0 },
-            "2024-07" => { name: "Jul", count: 0 },
-            "2024-08" => { name: "Aug", count: 10 },
-            "2024-09" => { name: "Sep", count: 0 },
-            "2024-10" => { name: "Oct", count: 0 },
-            "2024-11" => { name: "Nov", count: 0 },
-            "2024-12" => { name: "Dec", count: 8 }
+            "2024-01" => { name: "Jan 2024", count: 12 },
+            "2024-02" => { name: "Feb 2024", count: 0 },
+            "2024-03" => { name: "Mar 2024", count: 0 },
+            "2024-04" => { name: "Apr 2024", count: 0 },
+            "2024-05" => { name: "May 2024", count: 0 },
+            "2024-06" => { name: "Jun 2024", count: 0 },
+            "2024-07" => { name: "Jul 2024", count: 0 },
+            "2024-08" => { name: "Aug 2024", count: 10 },
+            "2024-09" => { name: "Sep 2024", count: 0 },
+            "2024-10" => { name: "Oct 2024", count: 0 },
+            "2024-11" => { name: "Nov 2024", count: 0 },
+            "2024-12" => { name: "Dec 2024", count: 8 }
           }
         )
       end
