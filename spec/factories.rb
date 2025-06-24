@@ -30,6 +30,14 @@ FactoryBot.define do
       status { :pending }
     end
 
+    trait :queued do
+      status { :queued }
+    end
+
+    trait :errored do
+      status { :errored }
+    end
+
     trait :stopped do
       with_beneficiary_filter
       status { :stopped }
