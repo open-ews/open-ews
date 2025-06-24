@@ -9,7 +9,7 @@ class DashboardSummary
     end
 
     def total_count
-      @total_count ||= scope.count
+      @total_count ||= scope.approximate_count
     end
 
     def new_count
@@ -40,6 +40,32 @@ class DashboardSummary
   end
 
   def recent_broadcasts
-    @recent_broadcasts ||= account.broadcasts.order(created_at: :desc).where(status: [ :running, :stopped, :completed ]).limit(3)
+    @recent_broadcasts ||= account.broadcasts
+      .where(status: [ :running, :stopped, :completed ])
+      .latest_first
+      .limit(3)
+      .map(&:decorated)
+  end
+
+  def last_12_months_notifications_stats
+    @last_12_months_notifications_stats ||= begin
+      actual_data = account.notifications
+        .where(status: :succeeded, created_at: 12.months.ago.beginning_of_month..)
+        .group("DATE_TRUNC('month', notifications.created_at)")
+        .count
+        .transform_keys { |month| month.strftime("%Y-%m") }
+
+      # Generate all 12 months with zero counts (oldest to newest)
+      12.downto(1).each_with_object({}) do |i, result|
+        month = i.months.ago.beginning_of_month
+        month_with_year = month.strftime("%Y-%m")
+        month_name = I18n.l(month, format: "%b")
+
+        result[month_with_year] = {
+          name: month_name,
+          count: actual_data.fetch(month_with_year, 0)
+        }
+      end
+    end
   end
 end
