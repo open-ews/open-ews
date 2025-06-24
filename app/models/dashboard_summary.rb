@@ -59,7 +59,7 @@ class DashboardSummary
       12.downto(1).each_with_object({}) do |i, result|
         month = i.months.ago.beginning_of_month
         month_with_year = month.strftime("%Y-%m")
-        month_name = I18n.l(month, format: "%b")
+        month_name = I18n.l(month, format: "%b %Y")
 
         result[month_with_year] = {
           name: month_name,

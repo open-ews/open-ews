@@ -1,52 +1,18 @@
 ---
 km:
-  activemodel:
-    attributes:
-      broadcast_summary:
-        busy_calls: Busy calls
-        completed_calls: Completed calls
-        failed_calls: Failed calls
-        not_answered_calls: Not answered calls
-        notifications_count: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-        notifications_still_to_be_called: Participants still to be called
-      key_value_field:
-        key: Key
-        value: Value
-    models:
-      event/base:
-        one: Event
-        other: Events
   activerecord:
     attributes:
       access_token:
-        permissions: សិទិ្ធ
         token: API key
       account:
         platform_provider_name: Platform provider
       phone_call:
         remote_call_id: Remote call sid
     models:
-      access_token:
-        one: API key
-        other: API keys
-      beneficiary:
-        one: សមាជិកទំនាក់ទំនង
-        other: សមាជិកទំនាក់ទំនង
-      broadcast:
-        one: សេចក្ដីប្រកាស
-        other: សេចក្ដីប្រកាស
-      notification:
-        one: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-        other: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-      delivery_attempt:
-        one: កំណត់ត្រាការហៅចេញ
-        other: កំណត់ត្រាការហៅចេញ
-      notification:
-        one: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-        other: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
-      user:
-        one: អ្នកប្រីប្រាស់
-        other: អ្នកប្រីប្រាស់
+      beneficiary: សមាជិកទំនាក់ទំនង
+      broadcast: សេចក្ដីប្រកាស
+      notification: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
+      user: អ្នកប្រីប្រាស់
   attributes:
     locations: ទីតាំង
     gender: ភេទ

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Dashboard::Home", type: :system do
+RSpec.describe "Home", type: :system do
   it "renders the dashboard" do
     account = create(:account)
     user = create(:user, account:)
@@ -18,7 +18,7 @@ RSpec.describe "Dashboard::Home", type: :system do
     expect(page).to have_content("Total Broadcasts")
     expect(page).to have_content("Total Notifications Sent")
     expect(page).to have_content("Total Beneficiaries")
-    expect(page).to have_content("Notifications Sent in the last 12 months")
+    expect(page).to have_content("Notifications sent in the last 12 months")
 
     within ".beneficiary-stats .total-count" do
       expect(page).to have_content("15")
