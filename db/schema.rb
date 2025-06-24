@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_17_075644) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_24_124359) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -237,6 +237,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_17_075644) do
     t.index ["broadcast_id"], name: "index_notifications_on_broadcast_id"
     t.index ["completed_at"], name: "index_notifications_on_completed_at"
     t.index ["priority"], name: "index_notifications_on_priority"
+    t.index ["status", "created_at", "broadcast_id"], name: "index_notifications_on_status_and_created_at_and_broadcast_id"
     t.index ["status"], name: "index_notifications_on_status"
   end
 
