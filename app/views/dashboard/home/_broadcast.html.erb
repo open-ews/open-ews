@@ -1,0 +1,38 @@
+<div class="card">
+  <div class="card-body">
+    <div class="notification-stats">
+      <div class="subheader"><%= link_to "Broadcast ##{broadcast.id}", dashboard_broadcast_path(broadcast), class: "text-decoration-none text-secondary" %></div>
+
+      <div class="progress progress-separated my-3">
+        <% broadcast.notification_stats_percentage.each do |status, percentage| %>
+          <% count = broadcast.notification_stats[status] %>
+          <div
+            class="progress-bar bg-<%= notification_status_color(status) %>"
+            role="progressbar"
+            data-bs-toggle="popover"
+            data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(broadcast.total_notifications_count)} notifications" %>"
+            data-bs-placement="top"
+            data-bs-trigger="hover"
+            style="width: <%= percentage %>%">
+          </div>
+        <% end %>
+      </div>
+
+      <div class="row">
+        <% broadcast.notification_stats_percentage.each do |status, percentage| %>
+          <% count = broadcast.notification_stats[status] %>
+          <div class="col-auto d-flex align-items-center pe-2"
+            data-bs-toggle="popover"
+            data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(broadcast.total_notifications_count)} notifications" %>"
+            data-bs-placement="top"
+            data-bs-trigger="hover"
+          >
+            <span class="legend me-2 bg-<%= notification_status_color(status) %>"></span>
+            <span><%= status.to_s.humanize %></span>
+            <span class="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary"><%= number_to_percentage(percentage, precision: 0, strip_insignificant_zeros: true) %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
