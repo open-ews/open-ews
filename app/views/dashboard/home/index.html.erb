@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-sm-6 col-lg-4 mb-2">
+  <div class="col-sm-6 col-lg-4 mb-2 beneficiary-stats">
     <%= render "dashboard/home/stats",
           stats: @dashboard_summary.beneficiaries_stats,
           header_title: "Total Beneficiaries",
@@ -7,7 +7,7 @@
           description: "#{"beneficiary".pluralize(@dashboard_summary.beneficiaries_stats.new_count)} added from last month" %>
   </div>
 
-  <div class="col-sm-6 col-lg-4 mb-2">
+  <div class="col-sm-6 col-lg-4 mb-2 notifications-stats">
     <%= render "dashboard/home/stats",
           stats: @dashboard_summary.notifications_stats,
           header_title: "Total Notifications Sent",
@@ -15,7 +15,7 @@
           description: "#{"notification".pluralize(@dashboard_summary.notifications_stats.new_count)} sent from last month" %>
   </div>
 
-  <div class="col-sm-6 col-lg-4 mb-2">
+  <div class="col-sm-6 col-lg-4 mb-2 broadcasts-stats">
     <%= render "dashboard/home/stats",
           stats: @dashboard_summary.broadcasts_stats,
           header_title: "Total Broadcasts",
