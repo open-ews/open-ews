@@ -10,6 +10,9 @@ module FakeResource
     attribute :channel
     attribute :status
     attribute :progress_percentage, :integer, default: 0
+    attribute :created_at
+    attribute :started_at
+    attribute :completed_at
 
     enumerize :channel, in: [ :sms ]
     enumerize :status, in: [ :pending, :in_progress, :completed ]
@@ -34,6 +37,7 @@ module FakeResource
             channel: "sms",
             status: "in_progress",
             progress_percentage: 75,
+            started_at: 23.hours.ago
           ),
           Broadcast.new(
             id: "2",
@@ -41,13 +45,16 @@ module FakeResource
             channel: "sms",
             status: "in_progress",
             progress_percentage: 90,
+            started_at: 23.hours.ago
           ),
           Broadcast.new(
             id: "1",
             operator: "Telenor",
             channel: "sms",
             status: "completed",
-            progress_percentage: 100
+            progress_percentage: 100,
+            started_at: 23.hours.ago,
+            completed_at: 22.hours.ago
           )
         ]
       end

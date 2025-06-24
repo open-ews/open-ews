@@ -3,7 +3,9 @@ class FeatureFlag
     1 => [ :alerts ],
     1297 => [ :alerts ],
     1198 => [ :alerts ],
-    1300 => [ :alerts ]
+    1300 => [ :alerts ],
+    1331 => [ :alerts ],
+    1332 => [ :alerts ]
   }
 
   class << self

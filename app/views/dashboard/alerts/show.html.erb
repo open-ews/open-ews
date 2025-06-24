@@ -8,6 +8,9 @@
       <%= f.attribute :urgency do %>
         <%= status_badge(@alert.urgency.humanize, color: alert_badge(@alert.urgency).color, icon: alert_badge(@alert.urgency).icon) %>
       <% end %>
+      <%= f.attribute :language %>
+      <%= f.attribute :area_description %>
+      <%= f.attribute :locations %>
       <%= f.attribute :headline %>
       <%= f.attribute :description %>
       <%= f.attribute :instruction %>
@@ -25,7 +28,7 @@
         <thead>
           <tr role="row">
             <th>#</th>
-            <% ["Operator", "Channel", "Status", "Progress"].each do |column| %>
+            <% ["Operator", "Channel", "Status", "Progress", "Started at", "Completed at", "Actions"].each do |column| %>
               <th>
                 <div class="text">
                   <%= column %>
@@ -51,7 +54,6 @@
                 <%= status_badge(broadcast.status.humanize, color: alert_badge(broadcast.status).color, icon: alert_badge(broadcast.status).icon) %>
               </td>
               <td>
-
                 <% percentage = number_to_percentage(broadcast.progress_percentage, precision: 0, strip_insignificant_zeros: true) %>
                 <div class="progress"
                   data-bs-toggle="popover"
@@ -61,6 +63,19 @@
                 >
                   <div class="progress-bar <%= broadcast.progress_percentage == 100 ? "bg-success" : "bg-blue" %> progress-bar-striped progress-bar-animated" style="width: <%= percentage %>"></div>
                 </div>
+              </td>
+              <td>
+                <%= local_time(broadcast.started_at) %>
+              </td>
+              <td>
+                <%= local_time(broadcast.completed_at) %>
+              </td>
+              <td>
+                <% if broadcast.status.pending? %>
+                  <%= button_to("#", class: "btn btn-outline-danger", title: "Cancel", data: { turbo_confirm: "Are you sure you want to cancel the broadcast?" }) do %>
+                    <i class="icon ti ti-alert-triangle"></i> Cancel
+                  <% end %>
+                <% end %>
               </td>
             </tr>
           <% end %>

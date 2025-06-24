@@ -42,8 +42,8 @@ module Dashboard
         Badge.new(color: "blue", icon: "umbrella-2")
       when "earthquake"
         Badge.new(color: "orange", icon: "buildings")
-      when "air_raid"
-        Badge.new(color: "red", icon: "plane")
+      when "heat"
+        Badge.new(color: "red", icon: "temperature-sun")
       when "sms"
         Badge.new(color: "green", icon: "message")
       when "pending"
