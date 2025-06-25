@@ -15,6 +15,7 @@ RSpec.describe "Home", type: :system do
     account_sign_in(user)
     visit dashboard_root_path
 
+    expect(page).to have_title("Dashboard")
     expect(page).to have_content("Total Broadcasts")
     expect(page).to have_content("Total Notifications Sent")
     expect(page).to have_content("Total Beneficiaries")

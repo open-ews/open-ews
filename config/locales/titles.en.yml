@@ -6,9 +6,8 @@ en:
       confirm: "Are you sure?"
       no_filters_export: "You haven't selected any filters. Are you sure you still want to export all records?"
       download: "Download"
-    dashboard:
-      home:
-        index: Dashboard
+    home:
+      index: Dashboard
     sessions:
       new: Sign in
     settings:
@@ -22,7 +21,7 @@ en:
       create: Forgot your password?
       edit: Change your password
     confirmations:
-      show: Resend confirmation instructions
+      new: Resend confirmation instructions
       create: Resend confirmation instructions
     developers:
       show: Developers

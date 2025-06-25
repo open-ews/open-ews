@@ -14,6 +14,7 @@ RSpec.describe "Invitations" do
     open_email("johndoe@example.com")
     visit_full_link_in_email("Accept invitation")
 
+    expect(page).to have_title("Set your password")
     expect(page).to have_image(alt: "My Alerting Authority Logo")
     fill_in("Password", with: "password123")
     fill_in("Password confirmation", with: "password123")

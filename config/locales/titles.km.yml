@@ -2,8 +2,6 @@
 km:
   titles:
     app_name: OpenEWS
-    home:
-      index: Dashboard
     broadcasts:
       index: សេចក្ដីប្រកាស
     beneficiaries:

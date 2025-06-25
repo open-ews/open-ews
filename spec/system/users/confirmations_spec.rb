@@ -8,6 +8,8 @@ RSpec.describe "Confirmations" do
     visit(new_user_session_path)
 
     click_on "Didn't receive confirmation instructions?"
+
+    expect(page).to have_title("Resend confirmation instructions")
     fill_in("Email", with: "user@example.com")
     perform_enqueued_jobs do
       click_on("Resend confirmation instructions")

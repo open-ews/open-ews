@@ -9,6 +9,7 @@ RSpec.describe "Passwords" do
 
     click_on "Forgot your password?"
 
+    expect(page).to have_title("Forgot your password?")
     fill_in("Email", with: "user@example.com")
     perform_enqueued_jobs do
       click_on("Send me reset password instructions")
