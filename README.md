@@ -4,6 +4,7 @@
   </a>
 </h1>
 
+[![DPG Badge](https://img.shields.io/badge/Verified-DPG-3333AB?logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iMzEiIGhlaWdodD0iMzMiIHZpZXdCb3g9IjAgMCAzMSAzMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE0LjIwMDggMjEuMzY3OEwxMC4xNzM2IDE4LjAxMjRMMTEuNTIxOSAxNi40MDAzTDEzLjk5MjggMTguNDU5TDE5LjYyNjkgMTIuMjExMUwyMS4xOTA5IDEzLjYxNkwxNC4yMDA4IDIxLjM2NzhaTTI0LjYyNDEgOS4zNTEyN0wyNC44MDcxIDMuMDcyOTdMMTguODgxIDUuMTg2NjJMMTUuMzMxNCAtMi4zMzA4MmUtMDVMMTEuNzgyMSA1LjE4NjYyTDUuODU2MDEgMy4wNzI5N0w2LjAzOTA2IDkuMzUxMjdMMCAxMS4xMTc3TDMuODQ1MjEgMTYuMDg5NUwwIDIxLjA2MTJMNi4wMzkwNiAyMi44Mjc3TDUuODU2MDEgMjkuMTA2TDExLjc4MjEgMjYuOTkyM0wxNS4zMzE0IDMyLjE3OUwxOC44ODEgMjYuOTkyM0wyNC44MDcxIDI5LjEwNkwyNC42MjQxIDIyLjgyNzdMMzAuNjYzMSAyMS4wNjEyTDI2LjgxNzYgMTYuMDg5NUwzMC42NjMxIDExLjExNzdMMjQuNjI0MSA5LjM1MTI3WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==)](https://digitalpublicgoods.net/r/openews)
 [![Build](https://github.com/open-ews/open-ews/actions/workflows/build.yml/badge.svg)](https://github.com/open-ews/open-ews/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/open-ews/open-ews/graph/badge.svg?token=f9n8FQJUcK)](https://codecov.io/gh/open-ews/open-ews)
 [![View performance data on Skylight](https://badges.skylight.io/status/YxPzpqwXsqPx.svg)](https://oss.skylight.io/app/applications/YxPzpqwXsqPx)
@@ -16,29 +17,49 @@ The [EWS4All](https://www.un.org/en/climatechange/early-warnings-for-all) initia
 
 > Every person on Earth to be protected by early warning systems within by 2027.
 
-We will help to achieve this goal building and [certifying](https://www.digitalpublicgoods.net/submission-guide) OpenEWS - the world's first Open Source Emergency Warning System Dissemination Platform.
+We're helping to achieve this goal by building and [certifying](https://digitalpublicgoods.net/r/openews) OpenEWS - the world's first Open Source Emergency Warning System Dissemination Platform.
 
-OpenEWS is intended to be used by Governments and/or NGOs acting on behalf of Governments to disseminate warning messages to beneficiaries in case of a natural disaster or other public health emergency.
+🏛️ OpenEWS is intended to be used by alerting authorities to disseminate warning messages to beneficiaries in case of a natural disaster or other public emergency. It's actively being used by the following alerting authorities:
 
-OpenEWS is:
+### 🇰🇭 Cambodia
+National Committee for Disaster Management (NCDM)
+NCDM is the central agency responsible for disaster risk management in Cambodia. It uses OpenEWS to disseminate alerts across the country via SMS and other channels.
 
-- 👯‍♀️ Aesthetically Beautiful
-- 🧘 Easy to use
-- ញ Localizable
-- 🛜 Interoperable
-- 💖 Free and Open Source
-- ✅ DPG Certified
+### 🇱🇦 Laos
+Department of Meteorology and Hydrology (DMH)
+DMH is the national authority for weather forecasting and hydrological monitoring in Laos. It uses OpenEWS to issue timely warnings about severe weather events to at-risk communities.
 
-## OpenEWS 💖 Somleng
+## 🌟 Features
 
-In order to deliver the emergency warning messages to the beneficiaries OpenEWS will connect to Somleng out of the box. [Somleng](https://github.com/somleng/somleng) (Part of the Somleng Project) is an Open Source, [DPG Certified](https://www.digitalpublicgoods.net/registry#:~:text=Somleng), Telco-as-a-Service (TaaS) and Communications-Platform-as-a-Service (CPaaS).
+- 👯‍♀️ **Aesthetically Beautiful**
+  OpenEWS is designed with a modern and intuitive user interface that’s clean, accessible, and easy on the eyes, helping users focus on what matters: saving lives.
 
-Local Mobile Network Operators (MNOs) can use Somleng to deliver EWS messages to beneficiaries on their networks via the following channels.
+- 🧘 **Easy to Use**
+  Whether you're a disaster management official or a local responder, OpenEWS is built to be straightforward and user-friendly, with minimal training required.
 
-- 📲 Voice Alerts (IVR)
-- 💬 SMS
-- 🗼 Cell Broadcast
+- 🗣️ **Localizable**
+  OpenEWS supports localization, allowing the platform to be fully translated and adapted to any language, including right-to-left and non-Latin scripts like Khmer and Lao.
 
+- 🛜 **Interoperable**
+  OpenEWS integrates easily with mobile network operators, government databases, and early warning protocols. It is designed to be API-driven and works across diverse communication channels including SMS, IVR, and Cell Broadcast.
+
+- 💖 **Free and Open Source**
+  Built under the permissive MIT License, OpenEWS is fully open-source. Anyone can inspect, use, and contribute to the codebase, no vendor lock-in, no hidden costs.
+
+- ✅ **DPG Certified**
+  OpenEWS meets the [Digital Public Goods](https://digitalpublicgoods.net/) Standard and is [certified](https://digitalpublicgoods.net/r/openews) as a Digital Public Good. This ensures the platform adheres to key principles like privacy, openness, and do-no-harm.
+
+## 📡 Message Delivery via Somleng
+
+OpenEWS integrates seamlessly with [Somleng](https://github.com/somleng/somleng) right out of the box to deliver emergency warning messages to beneficiaries.
+
+[Somleng](https://github.com/somleng/somleng) is an open-source, [DPG Certified](https://digitalpublicgoods.net/r/somleng) Telco-as-a-Service (TaaS) and Communications Platform-as-a-Service (CPaaS). It enables low-cost, scalable communication infrastructure—especially in low-resource settings.
+
+Local Mobile Network Operators (MNOs) can use Somleng to distribute Early Warning System (EWS) alerts across the following channels:
+
+- 📲 **Voice Alerts (IVR)** – Interactive voice calls to inform and instruct.
+- 💬 **SMS** – Text-based warnings in local languages.
+- 🗼 **Cell Broadcast** – Area-based alerts sent to all phones in a coverage zone.
 
 ## 🚀 Getting Started (Local Development with Docker)
 
@@ -96,7 +117,7 @@ After the command runs, it will output:
 Once the services are up, open your browser and navigate to:
 
 ```
-http://localhost:3000
+http://my-alerting-authority.app.lvh.me:3000
 ```
 
 You should see the OpenEWS application running and you can login with the credentials from the output above.
