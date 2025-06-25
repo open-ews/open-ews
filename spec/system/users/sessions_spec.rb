@@ -7,6 +7,8 @@ RSpec.describe "User sign in" do
     set_app_host(user.account)
     visit new_user_session_path
 
+    expect(page).to have_title("Sign in")
+
     fill_in "Email", with: user.email
     fill_in "Password", with: "mysecret"
     click_on "Log in"
