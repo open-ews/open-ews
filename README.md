@@ -10,7 +10,7 @@
 
 The world's first Open Source Emergency Warning System Dissemination Platform.
 
-![somleng-ews-dissemination-dashboard-drawing](https://github.com/user-attachments/assets/cfcb0480-dbaa-48b4-91c1-3b24af3ca985)
+![somleng-ews-dissemination-dashboard-drawing](https://github.com/user-attachments/assets/f4bfe9b5-855b-4c9a-b41f-f8a1e81d1ea6)
 
 The [EWS4All](https://www.un.org/en/climatechange/early-warnings-for-all) initiative calls for:
 
