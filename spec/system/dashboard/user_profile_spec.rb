@@ -8,6 +8,7 @@ RSpec.describe "User profile" do
     visit dashboard_root_path
     navigate_to_user_profile_settings_for(user, section: "Profile")
 
+    attach_file("Avatar", file_fixture("user_avatar.webp"))
     fill_in("Name", with: "Bob Chann")
     click_on("Save")
 
@@ -61,6 +62,7 @@ RSpec.describe "User profile" do
       click_on(user.name)
       click_on("Profile")
     end
+
     within(".frame-sidebar") do
       click_on(section)
     end
