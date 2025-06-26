@@ -21,8 +21,12 @@ module ApplicationHelper
   }.freeze
 
   def user_profile_image_url(user)
-    user_email = Digest::MD5.hexdigest(user.email)
-    "https://www.gravatar.com/avatar/#{user_email}?size=200"
+    if user.avatar.attached?
+      url_for(user.avatar)
+    else
+      user_email = Digest::MD5.hexdigest(user.email)
+      "https://www.gravatar.com/avatar/#{user_email}?size=200"
+    end
   end
 
   def account_logo(account, **options)
