@@ -47,6 +47,7 @@ export default class extends Controller {
         borderColor: "#e6e6e6",
       },
       tooltip: {
+        theme: "dark",
         x: {
           show: false,
         },
