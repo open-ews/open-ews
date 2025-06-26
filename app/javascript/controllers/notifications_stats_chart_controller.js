@@ -58,7 +58,11 @@ export default class extends Controller {
       },
     }
 
-    const chart = new ApexCharts(this.element, options)
-    chart.render()
+    this.chart = new ApexCharts(this.element, options)
+    this.chart.render()
+  }
+
+  disconnect() {
+    this.chart.destroy()
   }
 }
