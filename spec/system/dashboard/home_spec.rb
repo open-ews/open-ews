@@ -11,7 +11,7 @@ RSpec.describe "Home", type: :system do
     create_list(:notification, 2, broadcast: running_broadcast, status: :succeeded)
     create_list(:notification, 3, broadcast: running_broadcast, status: :pending)
 
-    autovacuum_analyze
+    db_analyze
     account_sign_in(user)
     visit dashboard_root_path
 
