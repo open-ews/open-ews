@@ -16,7 +16,7 @@ module Dashboard
     private
 
     def permitted_params
-      params.require(:user).permit(:name, :avatar)
+      params.require(:user).permit(:name, :language, :avatar)
     end
   end
 end

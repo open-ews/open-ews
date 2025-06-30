@@ -14,6 +14,7 @@ km:
       notification: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
       user: អ្នកប្រីប្រាស់
   attributes:
+    name: ឈ្មោះ
     locations: ទីតាំង
     gender: ភេទ
     disability_status: សិទិ្ធបានបង្រៀន

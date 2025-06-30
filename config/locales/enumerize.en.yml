@@ -4,3 +4,7 @@ en:
       gender:
         M: "Male"
         F: "Female"
+      language:
+        km: ខ្មែរ
+        en: English
+        lo: ລາວ
