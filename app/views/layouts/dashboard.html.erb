@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<%= current_user.locale %>" data-bs-theme="<%= cookies[:theme] %>">
+<html lang="<%= current_user.language %>" data-bs-theme="<%= cookies[:theme] %>">
   <head>
     <title>
       OpenEWS - <%= content_for?(:page_title) ? yield(:page_title) : title %>

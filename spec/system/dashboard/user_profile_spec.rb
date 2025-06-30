@@ -8,11 +8,13 @@ RSpec.describe "User profile" do
     visit dashboard_root_path
     navigate_to_user_profile_settings_for(user, section: "Profile")
 
-    attach_file("Avatar", file_fixture("user_avatar.webp"))
     fill_in("Name", with: "Bob Chann")
+    select("ខ្មែរ", from: "Language")
+    attach_file("Avatar", file_fixture("user_avatar.webp"))
     click_on("Save")
 
     expect(page).to have_content("User was successfully updated.")
+    expect(page).to have_content("ឈ្មោះ")
     within(".topbar-nav") do
       expect(page).to have_content("Bob Chann")
     end

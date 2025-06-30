@@ -16,7 +16,7 @@ module Users
     end
 
     def set_locale
-      I18n.locale = current_user.locale
+      I18n.locale = current_user.language
     end
   end
 end

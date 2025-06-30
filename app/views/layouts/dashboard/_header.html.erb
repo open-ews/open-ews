@@ -27,34 +27,6 @@
             <i class="icon ti ti-moon"></i>
           <% end %>
         </div>
-
-        <div class="nav-item dropdown">
-          <a class="language-switcher nav-link px-0"
-             aria-label="Select language"
-             data-bs-original-title="Select language"
-             data-bs-toggle="dropdown">
-            <i class="icon ti ti-language"></i>
-          </a>
-          <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-            <%= button_to(dashboard_locale_path(user: { locale: "en" }),
-                          class: "dropdown-item",
-                          method: :patch) do %>
-              <div class="i icon ti">
-                🇬🇧
-              </div>
-              English
-            <% end %>
-
-            <%= button_to(dashboard_locale_path(user: { locale: "km" }),
-                          class: "dropdown-item",
-                          method: :patch) do %>
-              <div class="i icon ti">
-                🇰🇭
-              </div>
-              ខ្មែរ
-            <% end %>
-          </div>
-        </div>
       </div>
 
       <%= render "layouts/dashboard/account_dropdown" %>

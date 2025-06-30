@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_24_124359) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_30_055741) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -326,7 +326,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_24_124359) do
     t.integer "invitation_limit"
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
-    t.string "locale", default: "en", null: false
+    t.string "language", default: "en", null: false
     t.string "name", null: false
     t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["email"], name: "index_users_on_email", unique: true
