@@ -1,5 +1,5 @@
 module DBHelpers
-  def autovacuum_analyze
+  def db_analyze
     ApplicationRecord.connection.execute("ANALYZE")
   end
 end

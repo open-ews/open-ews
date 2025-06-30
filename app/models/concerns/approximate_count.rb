@@ -1,4 +1,4 @@
-  module ApproximationCountable
+  module ApproximateCount
     extend ActiveSupport::Concern
 
     class_methods do

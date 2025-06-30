@@ -7,7 +7,7 @@ RSpec.describe DashboardSummary do
         account = create(:account)
         create_list(:beneficiary, 2, account:)
 
-        autovacuum_analyze
+        db_analyze
         stats = DashboardSummary::Stats.new(account.beneficiaries)
 
         expect(stats.total_count).to eq(2)
@@ -21,7 +21,7 @@ RSpec.describe DashboardSummary do
           create_list(:beneficiary, 2, account:, created_at: 1.month.ago)
           create_list(:beneficiary, 3, account:, created_at: 2.months.ago)
 
-          autovacuum_analyze
+          db_analyze
           stats = DashboardSummary::Stats.new(account.beneficiaries)
 
           expect(stats.new_count).to eq(2)
@@ -36,7 +36,7 @@ RSpec.describe DashboardSummary do
           create_list(:beneficiary, 2, account:, created_at: 1.month.ago)
           create_list(:beneficiary, 8, account:, created_at: 2.months.ago)
 
-          autovacuum_analyze
+          db_analyze
           stats = DashboardSummary::Stats.new(account.beneficiaries)
 
           expect(stats.new_count_percentage).to eq(20)
@@ -55,7 +55,7 @@ RSpec.describe DashboardSummary do
       _errored_broadcast = create(:broadcast, :errored, account:)
       _queued_broadcast = create(:broadcast, :queued, account:)
 
-      autovacuum_analyze
+      db_analyze
       stats = DashboardSummary.new(account).recent_broadcasts
 
       expect(stats).to eq([ completed_broadcast, stopped_broadcast, running_broadcast_2 ])

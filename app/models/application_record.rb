@@ -3,7 +3,7 @@ class ApplicationRecord < ActiveRecord::Base
 
   include SerializableResource
   include DecoratableResource
-  include ApproximationCountable
+  include ApproximateCount
 
   primary_abstract_class
 
