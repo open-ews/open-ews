@@ -3,5 +3,6 @@ class DailyJob < ApplicationJob
 
   def perform
     PgHero.clean_query_stats
+    ApplicationRecord.connection.execute("ANALYZE")
   end
 end
