@@ -6,8 +6,8 @@ class User < ApplicationRecord
          :confirmable, reconfirmable: true
 
   belongs_to :account
-  has_many :imports
-  has_many :exports
+  has_many :imports, dependent: :destroy
+  has_many :exports, dependent: :destroy
 
   has_one_attached :avatar
 

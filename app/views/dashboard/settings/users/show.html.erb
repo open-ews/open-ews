@@ -1,4 +1,11 @@
 <%= render "dashboard/settings/frame" do %>
+  <% content_for(:page_actions) do %>
+    <%= render "shared/resource_related_links" do %>
+      <%= render("shared/destroy_resource_page_action", path: dashboard_settings_user_path(@user)) %>
+    <% end %>
+  <% end %>
+
+
   <div class="card-header">
     <h2 class="mb-0"><%= title %></h2>
   </div>

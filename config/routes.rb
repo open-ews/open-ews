@@ -32,7 +32,7 @@ Rails.application.routes.draw do
       namespace :settings do
         resource :account, only: [ :show, :update ]
         resource :developer, only: :show
-        resources :users, only: [ :index, :show, :new, :create ]
+        resources :users, only: [ :index, :show, :new, :create, :destroy ]
 
         root to: "accounts#show"
       end

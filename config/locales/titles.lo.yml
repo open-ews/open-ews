@@ -6,6 +6,9 @@ lo:
       filters: ການກັ່ນຕອງ
       export: ສົ່ງອອກ
       import: ນຳເຂົ້າ
+      delete: ລຶບ
+      more: ເພີ່ມເຕີມ
+      sign_out: ອອກຈາກລະບົບ
     home:
       index: ໜ້າຄວບຄຸມ
     exports:
