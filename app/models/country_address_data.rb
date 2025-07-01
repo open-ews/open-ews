@@ -2,7 +2,8 @@ module CountryAddressData
   Locality = Data.define(:value, :name_en, :name_local, :subdivisions)
 
   SETTINGS = {
-    KH: :administrative_division_level_3_code
+    KH: :administrative_division_level_3_code,
+    LA: :administrative_division_level_2_code
   }
 
   def self.address_field_name(iso_country_code)
