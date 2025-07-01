@@ -2,6 +2,13 @@
 km:
   titles:
     app_name: OpenEWS
+    actions:
+      new: ថ្មី
+      filters: តម្រង
+      export: នាំចេញ
+      import: នាំចូល
+      delete: លុប
+      more: បន្ថែម
     home:
       index: ទំព័រដើម
     broadcasts:

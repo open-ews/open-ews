@@ -45,6 +45,21 @@ RSpec.describe "Users" do
     expect(page).to have_link("Bob Chann", href: dashboard_settings_user_path(user))
   end
 
+  it "delete a user" do
+    user = create(:user)
+    other_user = create(:user, name: "John Cena", account: user.account)
+    create(:export, user: other_user)
+    create(:import, user: other_user)
+
+    account_sign_in(user)
+    visit dashboard_settings_user_path(other_user)
+    click_on "More"
+    click_on "Delete"
+
+    expect(page).to have_text("User was successfully destroyed.")
+    expect(page).to have_no_content("John Cena")
+  end
+
   it "handles form validations" do
     user = create(:user)
 

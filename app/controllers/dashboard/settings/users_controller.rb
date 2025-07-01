@@ -19,6 +19,12 @@ module Dashboard
         respond_with(@user, location: -> { dashboard_settings_user_path(@user) })
       end
 
+      def destroy
+        @user = scope.find(params[:id])
+        @user.destroy
+        respond_with(@user, location: dashboard_settings_users_path)
+      end
+
       private
 
       def scope
