@@ -64,6 +64,16 @@ module ApplicationHelper
     )
   end
 
+  def action(name, **options)
+    default = name.to_s.humanize
+
+    translate(
+      :"titles.actions.#{name}",
+      default:,
+      **options
+    )
+  end
+
   def sidebar_nav(text, path, icon_class:, link_options: {})
     is_active = request.path == path || (path != dashboard_root_path && request.path.start_with?(path))
     content_tag(:li, class: "nav-item #{"active" if is_active}") do
