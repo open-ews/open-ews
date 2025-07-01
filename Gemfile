@@ -31,6 +31,7 @@ gem "aws-sdk-s3", require: false
 gem "aws-sdk-sqs"
 gem "aws-actionmailer-ses"
 gem "active_storage_validations"
+gem "baan"
 gem "bootsnap", require: false
 gem "bootstrap-email", "1.5.1"
 gem "countries"
