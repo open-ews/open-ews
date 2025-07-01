@@ -1,7 +1,7 @@
 <%= render("shared/profile_frame") do %>
   <%= simple_form_for(@user, url: dashboard_user_profile_path, html: { data: { turbo: false } }) do |f| %>
     <div class="card-header">
-      <h3 class="card-title">Profile</h3>
+      <h3 class="card-title"><%= title(controller_name: :profiles, action: :show) %></h3>
     </div>
 
     <div class="card-body">

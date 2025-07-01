@@ -8,7 +8,7 @@
       <i class="icon ti ti-user"></i>
     </span>
     <span class="nav-link-title">
-      Profile
+      <%= title(controller_name: :profiles, action_name: :show) %>
     </span>
   <% end %>
   <%= link_to(edit_user_registration_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "registrations"}") do %>
@@ -16,7 +16,7 @@
       <i class="icon ti ti-settings"></i>
     </span>
     <span class="nav-link-title">
-      Settings
+      <%= title(controller_name: :settings, action_name: :index) %>
     </span>
   <% end %>
   <%= link_to(dashboard_imports_path, class: "list-group-item list-group-item-action d-flex align-items-center #{"active" if controller_name == "imports"}") do %>

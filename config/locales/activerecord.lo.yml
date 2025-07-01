@@ -1,0 +1,31 @@
+---
+lo:
+  attributes:
+    iso_country_code: ປະເທດ
+    created_at: ຖືກສ້າງເມື່ອ
+    group_ids: ກຸ່ມ
+    status: ສະຖານະ
+    channel: ຊ່ອງທາງ
+    name: ຊື່
+    language: ພາສາ
+    country: ປະເທດ
+    gender: ເພດ
+    disability_status: ສະຖານະຄວາມພິການ
+    date_of_birth: ວັນເດືອນປີເກີດ
+    iso_language_code: ພາສາ
+    phone_number: ໝາຍເລກໂທລະສັບ
+    password: ລະຫັດຜ່ານ
+    current_password: ລະຫັດຜ່ານປະຈຸບັນ
+    password_confirmation: ຢືນຢັນລະຫັດຜ່ານ
+    resource_type: ປະເພດຊັບພະຍາກອນ
+    la:
+      iso_region_code: ແຂວງ
+      administrative_division_level_2_code: ເມືອງ
+
+  activerecord:
+    models:
+      broadcast: ອອກອາກາດ
+      beneficiary: ຜູ້ໄດ້ຮັບຜົນປະໂຫຍດ
+      notification: ການແຈ້ງເຕືອນ
+      beneficiary_group: ກຸ່ມຜູ້ໄດ້ຮັບຜົນປະໂຫຍດ
+      user: ຜູ້ໃຊ້ງານ
