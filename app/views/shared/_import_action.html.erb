@@ -1,5 +1,5 @@
 <button type="button" class="btn" title="Import" data-bs-toggle="modal" data-bs-target="#importModal">
-  <i class="icon ti ti-file-import"></i> Import
+  <i class="icon ti ti-file-import"></i> <%= action(:import) %>
 </button>
 
 <%= simple_form_for [:dashboard, Import.new(import_params)], html: { class: "d-inline-block" } do |f| %>

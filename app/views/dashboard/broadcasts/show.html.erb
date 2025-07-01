@@ -7,7 +7,7 @@
       method: :post,
       class: "btn btn-outline-success",
       form_class: "d-inline",
-      form: { data: { turbo_confirm: title(controller_name: :actions, action_name: :confirm, default: "Are you sure?") } }
+      form: { data: { turbo_confirm: action(:confirm, default: "Are you sure?") } }
     ) do %>
       <i class="icon ti ti-player-play"></i>
       <%= title(controller_name: :broadcasts, action_name: :start, default: "Start") %>
@@ -19,7 +19,7 @@
       method: :post,
       class: "btn btn-outline-danger",
       form_class: "d-inline",
-      form: { data: { turbo_confirm: title(controller_name: :actions, action_name: :confirm, default: "Are you sure?") } }
+      form: { data: { turbo_confirm: action(:confirm, default: "Are you sure?") } }
     ) do %>
       <i class="icon ti ti-player-stop-filled"></i>
       <%= title(controller_name: :broadcasts, action_name: :stop, default: "Stop") %>

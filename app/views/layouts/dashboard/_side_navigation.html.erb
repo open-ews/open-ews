@@ -22,7 +22,7 @@
 
     <div id="sidebar-menu" class="collapse navbar-collapse">
       <ul class="navbar-nav pt-lg-3">
-        <%= sidebar_nav(title(controller_name: :dashboard, action_name: :index), dashboard_root_path, icon_class: "ti ti-home") %>
+        <%= sidebar_nav(title(controller_name: :home, action_name: :index), dashboard_root_path, icon_class: "ti ti-home") %>
         <% if FeatureFlag.enabled_for?(current_user, :alerts) %>
           <%= sidebar_nav(title(controller_name: :alerts, action_name: :index), dashboard_alerts_path, icon_class: "ti ti-sos") %>
         <% end %>

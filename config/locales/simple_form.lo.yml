@@ -1,0 +1,6 @@
+---
+lo:
+  helpers:
+    submit:
+      create: ສ້າງ %{model}
+      update: ບັນທຶກ

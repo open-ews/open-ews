@@ -1,0 +1,6 @@
+lo:
+  enumerize:
+    defaults:
+      gender:
+        M: "ເພດຊາຍ"
+        F: "ຜູ້ຍິງ"
