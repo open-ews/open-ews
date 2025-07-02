@@ -8,6 +8,8 @@ RSpec.describe "Notifications" do
     failed_notification = create(:notification, :failed, broadcast:)
     succeeded_notification = create(:notification, :succeeded, broadcast:)
     other_notification = create(:notification, broadcast: create(:broadcast, account: user.account))
+    notification_without_beneficiary = create(:notification, broadcast:)
+    notification_without_beneficiary.beneficiary.destroy
 
     account_sign_in(user)
     visit(dashboard_broadcast_path(broadcast))
@@ -20,6 +22,7 @@ RSpec.describe "Notifications" do
     expect(page).to have_content_tag_for(pending_notification)
     expect(page).to have_content_tag_for(failed_notification)
     expect(page).to have_content_tag_for(succeeded_notification)
+    expect(page).to have_content_tag_for(notification_without_beneficiary)
     expect(page).not_to have_content_tag_for(other_notification)
 
     click_on "Filters"

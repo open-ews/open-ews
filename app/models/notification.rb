@@ -2,12 +2,14 @@ class Notification < ApplicationRecord
   attribute :phone_number, :phone_number
 
   belongs_to :broadcast
-  belongs_to :beneficiary
+  belongs_to :beneficiary, optional: true
 
   has_many :delivery_attempts
 
   delegate :account, to: :broadcast
   delegate :transition_to!, :transition_to, to: :state_machine
+
+  validates :beneficiary, presence: true, on: :create
 
   before_create :set_phone_number
 
