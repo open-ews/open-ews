@@ -21,9 +21,10 @@ FactoryBot.define do
     trait :with_attached_audio do
       transient do
         audio_filename { "test.mp3" }
+        active_storage_service { "test" }
       end
 
-      audio_file { association :active_storage_attachment, filename: audio_filename }
+      audio_file { association :active_storage_attachment, filename: audio_filename, service_name: active_storage_service }
     end
 
     trait :pending do
@@ -226,6 +227,7 @@ FactoryBot.define do
   factory :active_storage_attachment, class: "ActiveStorage::Blob" do
     transient do
       filename { "test.mp3" }
+      service_name { "test" }
     end
 
     initialize_with do
@@ -233,6 +235,10 @@ FactoryBot.define do
         io: File.open("#{RSpec.configuration.file_fixture_path}/#{filename}"),
         filename:
       )
+    end
+
+    after(:create) do |blob, evaluator|
+      blob.update_columns(service_name: evaluator.service_name)
     end
   end
 
