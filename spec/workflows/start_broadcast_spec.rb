@@ -82,6 +82,15 @@ RSpec.describe StartBroadcast do
     )
   end
 
+  it "copies the audio file with an extension" do
+    broadcast = create(:broadcast, :queued, :with_attached_audio, active_storage_service: :amazon)
+    allow(CopyBlobWithExtension).to receive(:call)
+
+    StartBroadcast.call(broadcast)
+
+    expect(CopyBlobWithExtension).to have_received(:call).with(broadcast.audio_file.blob, bucket: "uploads.open-ews.org")
+  end
+
   it "starts a broadcast with only a beneficiary group" do
     account = create(:account, :configured_for_broadcasts)
     beneficiary_group = create(:beneficiary_group, account:)

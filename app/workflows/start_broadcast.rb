@@ -11,7 +11,7 @@ class StartBroadcast < ApplicationWorkflow
   end
 
   def call
-    prepare_audio_file unless broadcast.audio_file.attached?
+    prepare_audio_file
 
     ApplicationRecord.transaction do
       create_notifications
@@ -26,12 +26,8 @@ class StartBroadcast < ApplicationWorkflow
 
   private
 
-  def download_audio_file
-    DownloadBroadcastAudioFile.call(broadcast)
-  end
-
   def prepare_audio_file
-    DownloadBroadcastAudioFile.call(broadcast)
+    DownloadBroadcastAudioFile.call(broadcast) unless broadcast.audio_file.attached?
     blob = broadcast.audio_file.blob
     CopyBlobWithExtension.call(blob, bucket: blob.service.bucket.name) if storage_service?(blob, :amazon)
   end
