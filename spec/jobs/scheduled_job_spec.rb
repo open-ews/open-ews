@@ -105,4 +105,16 @@ RSpec.describe ScheduledJob do
     expect(UpdateDeliveryAttemptStatusJob).to have_been_enqueued.with(in_progress_queued_for_fetch_expired_delivery_attempt)
     expect(in_progress_delivery_attempt.reload.status_update_queued_at).to be_present
   end
+
+  it "completes broadcasts" do
+    broadcast = create(:broadcast, :running)
+    create(:notification, :succeeded, broadcast:)
+
+    ScheduledJob.perform_now
+
+    expect(broadcast.reload).to have_attributes(
+      status: "completed",
+      completed_at: be_present
+    )
+  end
 end
