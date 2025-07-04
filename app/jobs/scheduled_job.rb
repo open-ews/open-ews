@@ -7,6 +7,7 @@ class ScheduledJob < ApplicationJob
     end
 
     update_delivery_attempts
+    complete_broadcasts
   end
 
   private
@@ -26,6 +27,12 @@ class ScheduledJob < ApplicationJob
     end
 
     delivery_attempts_with_unknown_status.update_all(status_update_queued_at: Time.current)
+  end
+
+  def complete_broadcasts
+    Broadcast.where(status: :running).find_each do |broadcast|
+      broadcast.transition_to(:completed, touch: :completed_at) if broadcast.notifications.where(status: :pending).none?
+    end
   end
 
   def delivery_attempts_with_unknown_status
