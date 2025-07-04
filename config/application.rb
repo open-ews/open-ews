@@ -47,6 +47,8 @@ module OpenEWS
     config.active_job.default_queue_name = config.app_settings.fetch(:aws_sqs_default_queue_name)
     Rails.application.routes.default_url_options[:host] = config.app_settings.fetch(:app_url_host)
     config.action_mailer.default_url_options = { host: config.app_settings.fetch(:app_url_host) }
+
+    config.exceptions_app = self.routes
   end
 end
 
