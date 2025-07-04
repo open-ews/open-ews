@@ -46,13 +46,13 @@ RSpec.describe "Users" do
   end
 
   it "delete a user" do
-    user = create(:user)
-    other_user = create(:user, name: "John Cena", account: user.account)
-    create(:export, user: other_user)
-    create(:import, user: other_user)
+    user_to_delete = create(:user, name: "John Cena")
+    user = create(:user, invited_by: user_to_delete, account: user_to_delete.account)
+    create(:export, user: user_to_delete)
+    create(:import, user: user_to_delete)
 
     account_sign_in(user)
-    visit dashboard_settings_user_path(other_user)
+    visit dashboard_settings_user_path(user_to_delete)
     click_on "More"
     click_on "Delete"
 
