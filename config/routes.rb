@@ -104,4 +104,11 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  match "/:status_code",
+    to: "errors#show",
+    via: :all,
+    constraints: {
+      status_code: /#{ErrorsController::STATUS_CODES.join('|')}/
+    }
 end
