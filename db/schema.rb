@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_30_055741) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_04_072626) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -364,5 +364,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_30_055741) do
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_applications", "accounts", column: "owner_id"
   add_foreign_key "users", "accounts"
-  add_foreign_key "users", "users", column: "invited_by_id"
+  add_foreign_key "users", "users", column: "invited_by_id", on_delete: :nullify
 end
