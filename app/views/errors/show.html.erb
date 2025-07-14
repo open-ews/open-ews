@@ -1,8 +1,8 @@
-<% content_for :page_title, t("errors.#{@status_code}.title") %>
+<% content_for :page_title, t("errors.#{status_code}.title") %>
 
 <div class="empty">
   <div class="empty-image mb-3">
-    <%= image_tag "errors/#{@status_code}.svg" %>
+    <%= image_tag "errors/#{status_code}.svg" %>
   </div>
 
   <h1 class="empty-title">
@@ -10,7 +10,7 @@
   </h1>
 
   <p class="empty-subtitle text-secondary">
-    <%= t("errors.#{@status_code}.subtitle") %>
+    <%= t("errors.#{status_code}.subtitle") %>
   </p>
 
   <div class="empty-action">
