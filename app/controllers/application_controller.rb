@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  allow_browser versions: :modern
+  allow_browser versions: :modern, block: :handle_outdated_browser
   respond_to :html
 
   protect_from_forgery with: :exception
@@ -15,5 +15,9 @@ class ApplicationController < ActionController::Base
 
   def app_request
     AppRequest.new(request)
+  end
+
+  def handle_outdated_browser
+    render "errors/show", status: 406, locals: { status_code: 406 }
   end
 end
