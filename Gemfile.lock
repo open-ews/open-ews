@@ -363,7 +363,7 @@ GEM
       htmlentities (>= 4.0.0)
     prettyprint (0.2.0)
     prism (1.4.0)
-    propshaft (1.2.0)
+    propshaft (1.2.1)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
       rack
