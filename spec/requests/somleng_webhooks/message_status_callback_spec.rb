@@ -45,10 +45,10 @@ RSpec.describe "Message Status Callbacks" do
   def build_request_body(**options)
     {
       MessageSid: options.fetch(:message_sid) { SecureRandom.uuid },
-      From: options.fetch(:from) { "+85510202101" },
-      To: options.fetch(:to) { "1294" },
+      From: options.fetch(:from),
+      To: options.fetch(:to),
       MessageStatus: options.fetch(:message_status) { "delivered" },
-      AccountSid: options.fetch(:account_sid) { SecureRandom.uuid },
+      AccountSid: options.fetch(:account_sid),
       ApiVersion: options.fetch(:api_version) { "2010-04-01" }
     }.compact
   end
