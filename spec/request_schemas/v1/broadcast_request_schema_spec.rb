@@ -2,6 +2,40 @@ require "rails_helper"
 
 module V1
   RSpec.describe BroadcastRequestSchema, type: :request_schema do
+    it "validates the channel" do
+      account = create(:account, :supported_channels => ["voice"])
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "voice"
+              }
+            }
+          },
+          options: {
+            account:
+          }
+        )
+      ).to have_valid_field(:data, :attributes, :channel)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "sms"
+              }
+            }
+          },
+          options: {
+            account:
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :channel, error_message: "is not supported")
+    end
+
     it "validates the beneficiary filter" do
       expect(
         validate_schema(

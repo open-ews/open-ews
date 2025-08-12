@@ -14,13 +14,15 @@ class BroadcastForm < ApplicationForm
 
   attribute :object, default: -> { Broadcast.new }
 
-  enumerize :channel, in: Broadcast.channel.values, default: :voice
+  enumerize :channel, in: Broadcast.channel.values, default: ->(form) { form.supported_channels.first }
 
   delegate :id, :new_record?, :persisted?, to: :object
+  delegate :supported_channels, to: :account
 
   validates :audio_file, presence: true, if: -> { new_record? && channel == "voice" }
   validates :message, presence: true, if: -> { channel == "sms" }
-  validates :channel, :beneficiary_filter, presence: true, if: :new_record?
+  validates :channel, presence: true, inclusion: { in: ->(form) { form.supported_channels } }, if: :new_record?
+  validates :beneficiary_filter, presence: true, if: :new_record?
   validates :beneficiary_groups, length: { maximum: Broadcast::MAX_BENEFICIARY_GROUPS, allow_blank: true }
 
   def self.model_name
@@ -42,7 +44,7 @@ class BroadcastForm < ApplicationForm
   def save
     return false if invalid?
 
-    object.channel = channel if new_record?
+    object.channel = channel if new_record? && channel.present?
     object.message = message.presence if channel == "sms"
     object.audio_file = audio_file if audio_file.present?
     object.account ||= account
@@ -58,5 +60,9 @@ class BroadcastForm < ApplicationForm
 
   def beneficiary_groups_options_for_select
     account.beneficiary_groups
+  end
+
+  def channel_options_for_select
+    BroadcastForm.channel.values.select { supported_channels.include?(it) }.map { [it.text, it] }
   end
 end

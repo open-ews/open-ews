@@ -204,6 +204,7 @@ FactoryBot.define do
     name { "NCDM" }
     sequence(:subdomain) { |n| "ncdm#{n}" }
     iso_country_code { "KH" }
+    supported_channels { [ "voice", "sms" ] }
 
     trait :configured_for_broadcasts do
       somleng_account_sid { generate(:somleng_account_sid) }

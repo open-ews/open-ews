@@ -9,7 +9,8 @@ class ApplicationSeeder
     account = Account.first_or_create!(
       name: ACCOUNT_NAME,
       iso_country_code: ACCOUNT_COUNTRY,
-      subdomain: ACCOUNT_SUBDOMAIN
+      subdomain: ACCOUNT_SUBDOMAIN,
+      supported_channels: Broadcast.channel.values
     )
     access_token = account.access_token || account.create_access_token!
 

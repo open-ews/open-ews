@@ -45,6 +45,10 @@ module V1
       next key.failure("is not allowed") if value.present? && attributes[:channel] != "sms"
     end
 
+    attribute_rule(:channel) do
+      key.failure("is not supported") if key? && account.supported_channels.exclude?(value)
+    end
+
     attribute_rule(:audio_url).validate(:url_format)
 
     relationship_rule(:beneficiary_groups).validate(:beneficiary_groups)

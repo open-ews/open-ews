@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_12_035430) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_12_132724) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -27,6 +27,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_035430) do
     t.integer "max_delivery_attempts_for_notification", null: false
     t.citext "iso_country_code", null: false
     t.citext "subdomain", null: false
+    t.string "supported_channels", default: [], null: false, array: true
     t.index ["somleng_account_sid"], name: "index_accounts_on_somleng_account_sid", unique: true
     t.index ["subdomain"], name: "index_accounts_on_subdomain", unique: true
   end

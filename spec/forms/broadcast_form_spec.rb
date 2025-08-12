@@ -93,4 +93,31 @@ RSpec.describe BroadcastForm do
 
     expect(form.errors[:beneficiary_groups]).to be_present
   end
+
+  it "validates the channel" do
+    account = create(:account, supported_channels: ["sms"])
+    form = BroadcastForm.new(account:, channel: "voice")
+
+    form.valid?
+
+    expect(form.errors[:channel]).to be_present
+  end
+
+  it "validates the audio file presence for voice broadcasts" do
+    account = create(:account)
+    form = BroadcastForm.new(account:, channel: "voice")
+
+    form.valid?
+
+    expect(form.errors[:audio_file]).to be_present
+  end
+
+  it "validates the message presence for SMS broadcasts" do
+    account = create(:account)
+    form = BroadcastForm.new(account:, channel: "sms")
+
+    form.valid?
+
+    expect(form.errors[:message]).to be_present
+  end
 end

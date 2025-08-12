@@ -14,7 +14,8 @@ RSpec.describe ApplicationSeeder do
         have_attributes(
           email: "user@example.com"
         )
-      )
+      ),
+      supported_channels: contain_exactly("voice", "sms")
     )
 
     seeder.seed!
