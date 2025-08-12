@@ -1,5 +1,5 @@
 <div class="card">
-  <%= simple_form_for([:dashboard, @broadcast], html: { novalidate: true, data: { controller: :broadcasts, broadcasts_message_segment_warning_threshold_value: 1 } }) do |f| %>
+  <%= simple_form_for([:dashboard, @broadcast], html: { data: { controller: :broadcasts, broadcasts_message_segment_warning_threshold_value: 1 } }) do |f| %>
     <div class="card-body">
       <div class="row">
         <div class="col">
