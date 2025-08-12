@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_12_132724) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_12_160523) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -154,6 +154,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_132724) do
     t.string "error_code"
     t.text "message"
     t.index ["account_id"], name: "index_broadcasts_on_account_id"
+    t.index ["channel"], name: "index_broadcasts_on_channel"
     t.index ["status"], name: "index_broadcasts_on_status"
   end
 
