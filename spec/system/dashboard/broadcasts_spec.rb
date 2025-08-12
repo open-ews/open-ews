@@ -65,6 +65,22 @@ RSpec.describe "Broadcasts" do
     end
   end
 
+  it "create an SMS broadcast", :js do
+    account = create(:account, iso_country_code: "KH")
+    user = create(:user, account:)
+
+    account_sign_in(user)
+    visit new_dashboard_broadcast_path
+    select("SMS", from: "Channel")
+    fill_in("Message", with: "Test message")
+    select_filter("Gender", operator: "Equals", select: "Male")
+    click_on("Create Broadcast")
+
+    expect(page).to have_content("Broadcast was successfully created.")
+    expect(page).to have_content("SMS")
+    expect(page).to have_content("Test message")
+  end
+
   it "create a broadcast from an unsupported country", :js do
     account = create(:account, iso_country_code: "US")
     user = create(:user, account:)

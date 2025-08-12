@@ -21,6 +21,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "ISO"
   inflect.acronym "CSV"
   inflect.acronym "TwiML"
+  inflect.acronym "SMS"
 
   # Country codes
   inflect.acronym "KH"

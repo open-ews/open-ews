@@ -7,6 +7,9 @@ import { application } from "./application"
 import BeneficiaryAddressesFilterFieldController from "./beneficiary_addresses_filter_field_controller"
 application.register("beneficiary-addresses-filter-field", BeneficiaryAddressesFilterFieldController)
 
+import BroadcastsController from "./broadcasts_controller"
+application.register("broadcasts", BroadcastsController)
+
 import FilterFieldController from "./filter_field_controller"
 application.register("filter-field", FilterFieldController)
 

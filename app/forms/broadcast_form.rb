@@ -2,6 +2,7 @@ class BroadcastForm < ApplicationForm
   attribute :account
   attribute :channel
   attribute :audio_file
+  attribute :message
   attribute :beneficiary_groups, FilledArrayType.new
   attribute :beneficiary_filter,
             FilterFormType.new(
@@ -13,11 +14,12 @@ class BroadcastForm < ApplicationForm
 
   attribute :object, default: -> { Broadcast.new }
 
-  enumerize :channel, in: Broadcast::CHANNELS, default: :voice
+  enumerize :channel, in: Broadcast.channel.values, default: :voice
 
   delegate :id, :new_record?, :persisted?, to: :object
 
-  validates :audio_file, presence: true, if: :new_record?
+  validates :audio_file, presence: true, if: -> { new_record? && channel == "voice" }
+  validates :message, presence: true, if: -> { channel == "sms" }
   validates :channel, :beneficiary_filter, presence: true, if: :new_record?
   validates :beneficiary_groups, length: { maximum: Broadcast::MAX_BENEFICIARY_GROUPS, allow_blank: true }
 
@@ -29,6 +31,7 @@ class BroadcastForm < ApplicationForm
     new(
       object: broadcast,
       account: broadcast.account,
+      message: broadcast.message,
       channel: broadcast.channel,
       audio_file: broadcast.audio_file,
       beneficiary_groups: broadcast.beneficiary_group_ids,
@@ -40,6 +43,7 @@ class BroadcastForm < ApplicationForm
     return false if invalid?
 
     object.channel = channel
+    object.message = message.presence if channel == "sms"
     object.audio_file = audio_file if audio_file.present?
     object.account ||= account
     object.beneficiary_group_ids = beneficiary_groups

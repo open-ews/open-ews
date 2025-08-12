@@ -103,7 +103,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Create and start a broadcast" do
+    example "Create and start a voice broadcast" do
       account = create(:account, :configured_for_broadcasts)
       create(:beneficiary_address, beneficiary: create(:beneficiary, gender: "M", account:), iso_region_code: "KH-1")
       stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
@@ -132,6 +132,41 @@ RSpec.resource "Broadcasts"  do
         "channel" => "voice",
         "status" => "queued",
         "audio_url" => "https://www.example.com/test.mp3",
+        "beneficiary_filter" => {
+          "gender" => { "eq" => "M" },
+          "address.iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }
+        }
+      )
+    end
+
+    example "Create and start an SMS broadcast" do
+      account = create(:account, :configured_for_broadcasts)
+      create(:beneficiary_address, beneficiary: create(:beneficiary, gender: "M", account:), iso_region_code: "KH-1")
+
+      set_authorization_header_for(account)
+      perform_enqueued_jobs do
+        do_request(
+          data: {
+            type: :broadcast,
+            attributes: {
+              channel: "sms",
+              message: "Test message",
+              status: :running,
+              beneficiary_filter: {
+                gender: { eq: "M" },
+                "address.iso_region_code" => { in: [ "KH-1", "KH-2" ] }
+              }
+            }
+          }
+        )
+      end
+
+      expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(json_response.dig("data", "attributes")).to include(
+        "channel" => "sms",
+        "status" => "queued",
+        "message" => "Test message",
         "beneficiary_filter" => {
           "gender" => { "eq" => "M" },
           "address.iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }

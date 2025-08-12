@@ -1,6 +1,5 @@
 class Broadcast < ApplicationRecord
   AUDIO_CONTENT_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/x-wav].freeze
-  CHANNELS = %i[voice].freeze
   MAX_BENEFICIARY_GROUPS = 10
 
   class StateMachine < StateMachine::ActiveRecord
@@ -12,7 +11,7 @@ class Broadcast < ApplicationRecord
     state :completed
   end
 
-  enumerize :channel, in: [ :voice ]
+  enumerize :channel, in: [ :voice, :sms ]
   enumerize :status, in: StateMachine.state_definitions.map(&:name)
 
   belongs_to :account
