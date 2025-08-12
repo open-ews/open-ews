@@ -35,7 +35,7 @@ class BroadcastForm < ApplicationForm
       account: broadcast.account,
       message: broadcast.message,
       channel: broadcast.channel,
-      audio_file: broadcast.audio_file,
+      audio_file: broadcast.audio_file.blob,
       beneficiary_groups: broadcast.beneficiary_group_ids,
       beneficiary_filter: BeneficiaryFilterData.new(data: broadcast.beneficiary_filter)
     )
@@ -46,7 +46,7 @@ class BroadcastForm < ApplicationForm
 
     object.channel = channel if new_record? && channel.present?
     object.message = message.presence if channel == "sms"
-    object.audio_file = audio_file if audio_file.present?
+    object.audio_file = audio_file if channel == "voice"
     object.account ||= account
     object.beneficiary_group_ids = beneficiary_groups
     object.beneficiary_filter = FilterFormType.new(

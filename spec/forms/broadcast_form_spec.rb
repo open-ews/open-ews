@@ -75,7 +75,7 @@ RSpec.describe BroadcastForm do
     )
   end
 
-  it "handles updates" do
+  it "ensures the channel cannot be updated" do
     broadcast = create(:broadcast, :voice)
     form = BroadcastForm.new(account: broadcast.account, object: broadcast, channel: "sms")
 
