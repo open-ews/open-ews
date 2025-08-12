@@ -47,7 +47,7 @@ RSpec.describe "Message Status Callbacks" do
       MessageSid: options.fetch(:message_sid) { SecureRandom.uuid },
       From: options.fetch(:from),
       To: options.fetch(:to),
-      MessageStatus: options.fetch(:message_status) { "delivered" },
+      MessageStatus: options.fetch(:message_status),
       AccountSid: options.fetch(:account_sid),
       ApiVersion: options.fetch(:api_version) { "2010-04-01" }
     }.compact
