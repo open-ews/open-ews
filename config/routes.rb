@@ -101,6 +101,7 @@ Rails.application.routes.draw do
     namespace :somleng_webhooks do
       resources :delivery_attempts, only: [] do
         resources :call_status_callbacks, only: :create
+        resources :message_status_callbacks, only: :create
       end
     end
   end

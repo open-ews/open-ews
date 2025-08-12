@@ -1,0 +1,16 @@
+module Somleng
+  module Parser
+    class CallResourceParser
+      def parse(response)
+        Somleng::Resource.new(
+          sid: response.sid,
+          to: response.to,
+          from: response.from,
+          account_sid: response.account_sid,
+          status: response.status,
+          call_duration: (response.duration.to_i if response.duration.present?)
+        )
+      end
+    end
+  end
+end

@@ -2,7 +2,7 @@ class InitiateDeliveryAttemptJob < ApplicationJob
   class Handler
     class AudioNotAttachedError < StandardError; end
 
-    attr_reader :delivery_attempt, :somleng_client, :twiml_builder, :status_callback_url
+    attr_reader :delivery_attempt, :somleng_client, :twiml_builder
 
     def initialize(delivery_attempt, **options)
       @delivery_attempt = delivery_attempt
@@ -13,29 +13,20 @@ class InitiateDeliveryAttemptJob < ApplicationJob
         )
       end
       @twiml_builder = options.fetch(:twiml_builder) { TwiMLBuilder.new }
-      @status_callback_url = options.fetch(:status_callback_url) do
-        Rails.application.routes.url_helpers.somleng_webhooks_delivery_attempt_call_status_callbacks_url(
-          delivery_attempt,
-          subdomain: AppSettings.fetch(:api_subdomain)
-        )
-      end
     end
 
     def perform
       return if delivery_attempt.initiated?
-      raise(AudioNotAttachedError, "Audio file not attached") unless delivery_attempt.broadcast.audio_file.attached?
 
-      delivery_attempt.transaction do
-        response = initiate_call
-        delivery_attempt.transition_to!(:initiated)
-        update_metadata!(
-          somleng_call_sid: response.sid
-        )
-        delivery_attempt.save!
+      if delivery_attempt.broadcast.channel.voice?
+        raise(AudioNotAttachedError, "Audio file not attached") unless delivery_attempt.broadcast.audio_file.attached?
+        initiate_delivery_attempt { initiate_call }
+      elsif delivery_attempt.broadcast.channel.sms?
+        initiate_delivery_attempt { send_message }
       end
     rescue Somleng::Client::RestError => e
       delivery_attempt.transaction do
-        HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
+        HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status_update: DeliveryAttemptStatusUpdate.new(channel: delivery_attempt.broadcast.channel, status: "errored"))
         update_metadata!(
           somleng_error_message: e.message,
           notification_phone_number:
@@ -45,12 +36,38 @@ class InitiateDeliveryAttemptJob < ApplicationJob
 
     private
 
+    def initiate_delivery_attempt(&block)
+      delivery_attempt.transaction do
+        response = block.call
+        delivery_attempt.transition_to!(:initiated)
+        update_metadata!(
+          somleng_resource_sid: response.sid
+        )
+        delivery_attempt.save!
+      end
+    end
+
+    def send_message
+      somleng_client.create_message(
+        to: delivery_attempt.phone_number,
+        from: notification_phone_number,
+        body: delivery_attempt.broadcast.message,
+        status_callback: Rails.application.routes.url_helpers.somleng_webhooks_delivery_attempt_message_status_callbacks_url(
+          delivery_attempt,
+          subdomain: AppSettings.fetch(:api_subdomain)
+        )
+      )
+    end
+
     def initiate_call
       somleng_client.create_call(
         to: delivery_attempt.phone_number,
         from: notification_phone_number,
         twiml: build_twiml,
-        status_callback: status_callback_url
+        status_callback: Rails.application.routes.url_helpers.somleng_webhooks_delivery_attempt_call_status_callbacks_url(
+          delivery_attempt,
+          subdomain: AppSettings.fetch(:api_subdomain)
+        )
       )
     end
 

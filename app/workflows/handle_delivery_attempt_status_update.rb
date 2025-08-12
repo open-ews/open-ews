@@ -1,10 +1,10 @@
 class HandleDeliveryAttemptStatusUpdate < ApplicationWorkflow
-  attr_reader :delivery_attempt, :status, :logger
+  attr_reader :delivery_attempt, :status_update, :logger
 
-  def initialize(delivery_attempt, status:, **options)
+  def initialize(delivery_attempt, status_update:, **options)
     super()
     @delivery_attempt = delivery_attempt
-    @status = status
+    @status_update = status_update
     @logger = options.fetch(:logger, Rails.logger)
   end
 
@@ -12,12 +12,14 @@ class HandleDeliveryAttemptStatusUpdate < ApplicationWorkflow
     return if delivery_attempt.completed?
 
     ApplicationRecord.transaction do
-      case status
+      delivery_attempt.metadata["somleng_status"] = status_update.status
+
+      case status_update.desired_status
       when "completed"
         delivery_attempt.transition_to!(:succeeded, touch: :completed_at)
         complete_notification(:succeeded)
         complete_broadcast
-      when "busy", "no-answer", "failed", "canceled"
+      when "failed"
         if notification.max_delivery_attempts_reached?
           complete_notification(:failed)
           complete_broadcast

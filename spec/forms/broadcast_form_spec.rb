@@ -84,4 +84,13 @@ RSpec.describe BroadcastForm do
 
     expect(form.errors[:beneficiary_groups]).to be_present
   end
+
+  it "validates channel cannot be updated" do
+    broadcast = create(:broadcast)
+    form = BroadcastForm.new(account: broadcast.account, object: broadcast, channel: "sms")
+
+    form.valid?
+
+    expect(form.errors[:channel]).to be_present
+  end
 end

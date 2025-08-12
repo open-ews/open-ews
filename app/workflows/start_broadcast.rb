@@ -11,7 +11,7 @@ class StartBroadcast < ApplicationWorkflow
   end
 
   def call
-    prepare_audio_file
+    prepare_audio_file if broadcast.channel.voice?
 
     ApplicationRecord.transaction do
       create_notifications

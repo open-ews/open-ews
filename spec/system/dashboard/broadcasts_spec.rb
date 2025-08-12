@@ -121,7 +121,7 @@ RSpec.describe "Broadcasts" do
     end
   end
 
-  it "update a broadcast", :js do
+  it "update a broadcast", :js, :selenium_chrome do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
     create_beneficiary_group(name: "My other group", account:)
@@ -142,6 +142,7 @@ RSpec.describe "Broadcasts" do
     visit edit_dashboard_broadcast_path(broadcast)
 
     expect(page).to have_link("test.mp3")
+    expect(page).to have_select("Channel", disabled: true)
 
     select_list("My other group", from: "Beneficiary groups")
     select_filter("Gender", operator: "Equals", select: "Male")
