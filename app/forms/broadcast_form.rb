@@ -21,7 +21,6 @@ class BroadcastForm < ApplicationForm
   validates :audio_file, presence: true, if: -> { new_record? && channel == "voice" }
   validates :message, presence: true, if: -> { channel == "sms" }
   validates :channel, :beneficiary_filter, presence: true, if: :new_record?
-  validates :channel, absence: true, if: -> { object.persisted? }
   validates :beneficiary_groups, length: { maximum: Broadcast::MAX_BENEFICIARY_GROUPS, allow_blank: true }
 
   def self.model_name
@@ -43,7 +42,7 @@ class BroadcastForm < ApplicationForm
   def save
     return false if invalid?
 
-    object.channel = channel if channel.present?
+    object.channel = channel if new_record?
     object.message = message.presence if channel == "sms"
     object.audio_file = audio_file if audio_file.present?
     object.account ||= account

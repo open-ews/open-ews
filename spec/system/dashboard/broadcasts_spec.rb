@@ -121,7 +121,7 @@ RSpec.describe "Broadcasts" do
     end
   end
 
-  it "update a broadcast", :js, :selenium_chrome do
+  it "update a broadcast", :js do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
     create_beneficiary_group(name: "My other group", account:)

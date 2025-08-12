@@ -14,7 +14,7 @@ class ApplicationRequestSchema < Dry::Validation::Contract
   end
 
   register_macro(:url_format) do
-    next unless key?
+    next unless value.present?
 
     uri = URI.parse(value)
     is_valid = (uri.is_a?(URI::HTTP) || uri.is_a?(URI::HTTPS)) && uri.host.present?

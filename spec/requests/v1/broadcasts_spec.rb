@@ -254,8 +254,8 @@ RSpec.resource "Broadcasts"  do
 
       expect(response_status).to eq(422)
       expect(response_body).to match_api_response_schema("jsonapi_error")
-      expect(json_response.dig("errors", 0, "source", "pointer")).to eq("/data/attributes/audio_url")
-      expect(json_response.dig("errors", 1, "source", "pointer")).to eq("/data/attributes/beneficiary_filter")
+      expect(json_response.dig("errors", 0, "source", "pointer")).to eq("/data/attributes/beneficiary_filter")
+      expect(json_response.dig("errors", 1, "source", "pointer")).to eq("/data/attributes/audio_url")
     end
   end
 
