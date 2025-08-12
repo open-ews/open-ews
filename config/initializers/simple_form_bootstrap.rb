@@ -55,6 +55,7 @@ SimpleForm.setup do |config|
     b.use :input, class: "form-control", error_class: "is-invalid"
     b.use :full_error, wrap_with: { class: "invalid-feedback" }
     b.use :hint, wrap_with: { class: "form-text" }
+    b.use :warning, wrap_with: { class: "input-warning form-text text-warning" }
   end
 
   # vertical input for boolean

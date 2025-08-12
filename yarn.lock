@@ -1111,6 +1111,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"grapheme-splitter@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "grapheme-splitter@npm:1.0.4"
+  checksum: 10c0/108415fb07ac913f17040dc336607772fcea68c7f495ef91887edddb0b0f5ff7bc1d1ab181b125ecb2f0505669ef12c9a178a3bbd2dd8e042d8c5f1d7c90331a
+  languageName: node
+  linkType: hard
+
 "has-flag@npm:^3.0.0":
   version: 3.0.0
   resolution: "has-flag@npm:3.0.0"
@@ -1613,6 +1620,7 @@ __metadata:
     postcss: "npm:^8.5.3"
     postcss-cli: "npm:^11.0.0"
     sass: "npm:^1.85.1"
+    sms-segments-calculator: "npm:^1.2.0"
     tom-select: "npm:^2.4.3"
   languageName: unknown
   linkType: soft
@@ -1914,6 +1922,15 @@ __metadata:
   version: 4.2.0
   resolution: "smart-buffer@npm:4.2.0"
   checksum: 10c0/a16775323e1404dd43fabafe7460be13a471e021637bc7889468eb45ce6a6b207261f454e4e530a19500cc962c4cc5348583520843b363f4193cee5c00e1e539
+  languageName: node
+  linkType: hard
+
+"sms-segments-calculator@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "sms-segments-calculator@npm:1.2.0"
+  dependencies:
+    grapheme-splitter: "npm:^1.0.4"
+  checksum: 10c0/96e901cf1527254522acf375198e2d7585d51398a82fa9a269e1dec3658080c5fc2ea04f0544f7cd958ef742cbc21aadc445bad783b67b5003bb11dce91878f2
   languageName: node
   linkType: hard
 

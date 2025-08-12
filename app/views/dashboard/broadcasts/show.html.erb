@@ -109,7 +109,7 @@
 
       <% if @broadcast.channel.sms? %>
         <%= f.attribute :message do %>
-          <%= text_area_tag(:message, @broadcast.message, rows: 10, class: "form-control w-100", readonly: true) %>
+          <%= text_area_tag(:message, @broadcast.message, rows: 4, class: "form-control w-100", readonly: true) %>
         <% end %>
       <% end %>
     <% end %>

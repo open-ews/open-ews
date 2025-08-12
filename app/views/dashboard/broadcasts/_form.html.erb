@@ -1,5 +1,5 @@
 <div class="card">
-  <%= simple_form_for([:dashboard, @broadcast], html: { data: { controller: :broadcasts } }) do |f| %>
+  <%= simple_form_for([:dashboard, @broadcast], html: { novalidate: true, data: { controller: :broadcasts, broadcasts_message_segment_warning_threshold_value: 1 } }) do |f| %>
     <div class="card-body">
       <div class="row">
         <div class="col">
@@ -9,7 +9,13 @@
           <%= f.input :audio_file, hint: (link_to(@broadcast.object.audio_file.filename, rails_blob_path(@broadcast.object.audio_file)) if @broadcast.object.audio_file.attached?), required: f.object.new_record?, as: :file, input_html: { direct_upload: true, accept: Broadcast::AUDIO_CONTENT_TYPES.join(", ") }  %>
         </div>
         <div class="col" data-broadcasts-target="messageInput">
-          <%= f.input :message, as: :text, required: f.object.new_record?, input_html: { rows: 10 } %>
+          <%= f.input(
+            :message,
+            as: :text,
+            required: f.object.new_record?,
+            warning: "Message exceeds single-segment limit.",
+            input_html: { rows: 4, data: { action: "broadcasts#checkSegments" } }
+          ) %>
         </div>
         <div class="col">
           <%= f.input(
