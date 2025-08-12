@@ -6,9 +6,7 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
     notification = create(:notification, :pending, broadcast:)
     delivery_attempt = create(:delivery_attempt, :initiated, notification:)
 
-    HandleDeliveryAttemptStatusUpdate.call(
-      delivery_attempt, status_update: build_status_update(desired_status: "completed")
-    )
+    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "completed")
 
     expect(delivery_attempt).to have_attributes(
       status: "succeeded",
@@ -31,7 +29,7 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
       notification = create(:notification, :pending, broadcast:)
       delivery_attempt = create(:delivery_attempt, :initiated, notification:)
 
-      HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status_update: build_status_update(desired_status: "failed"))
+      HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
 
       expect(delivery_attempt).to have_attributes(
         status: "failed",
@@ -54,7 +52,7 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
     notification = create(:notification, :pending, broadcast:)
     delivery_attempt = create(:delivery_attempt, :initiated, notification:)
 
-    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status_update: build_status_update(desired_status: "failed"))
+    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
 
     expect(delivery_attempt).to have_attributes(
       status: "failed",
@@ -77,7 +75,7 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
     notification = create(:notification, :pending, broadcast:)
     delivery_attempt = create(:delivery_attempt, :failed, notification:)
 
-    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status_update: build_status_update(desired_status: "failed"))
+    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
 
     expect(delivery_attempt).to have_attributes(status: "failed")
   end
@@ -87,7 +85,7 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
     notification = create(:notification, :succeeded, broadcast:)
     delivery_attempt = create(:delivery_attempt, :initiated, notification:)
 
-    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status_update: build_status_update(desired_status: "completed"))
+    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "completed")
 
     expect(delivery_attempt).to have_attributes(status: "succeeded")
     expect(notification).to have_attributes(status: "succeeded")
@@ -99,20 +97,11 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
     notification = create(:notification, :failed, broadcast:)
     delivery_attempt = create(:delivery_attempt, :initiated, notification:)
 
-    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status_update: build_status_update(desired_status: "failed"))
+    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
 
     expect(delivery_attempt).to have_attributes(status: "failed")
     expect(notification).to have_attributes(status: "failed")
     expect(broadcast).to have_attributes(status: "stopped")
     expect(RetryNotificationJob).to have_been_enqueued
-  end
-
-  def build_status_update(**options)
-    instance_double(
-      DeliveryAttemptStatusUpdate,
-      desired_status: "completed",
-      status: "completed",
-      **options
-    )
   end
 end

@@ -26,7 +26,7 @@ class InitiateDeliveryAttemptJob < ApplicationJob
       end
     rescue Somleng::Client::RestError => e
       delivery_attempt.transaction do
-        HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status_update: DeliveryAttemptStatusUpdate.new(channel: delivery_attempt.broadcast.channel, status: "errored"))
+        HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
         update_metadata!(
           somleng_error_message: e.message,
           notification_phone_number:

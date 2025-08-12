@@ -111,8 +111,7 @@ RSpec.describe InitiateDeliveryAttemptJob do
         completed_at: be_present,
         metadata: {
           "somleng_error_message" => be_present,
-          "notification_phone_number" => "1294",
-          "somleng_status" => "errored"
+          "notification_phone_number" => "1294"
         }
       )
       expect(RetryNotificationJob).to have_been_enqueued.with(notification)

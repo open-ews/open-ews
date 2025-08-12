@@ -26,14 +26,14 @@ class UpdateDeliveryAttemptStatusJob < ApplicationJob
       end
 
       delivery_attempt.transaction do
+        UpdateDeliveryAttempt.call(delivery_attempt, somleng_resource: response)
         HandleDeliveryAttemptStatusUpdate.call(
           delivery_attempt,
-          status_update: DeliveryAttemptStatusUpdate.new(
+          status: DeliveryAttemptStatusUpdate.new(
             channel: delivery_attempt.broadcast.channel,
             status: response.status
-          )
+          ).desired_status
         )
-        delivery_attempt.metadata["call_duration"] = response.call_duration if response.call_duration.present?
         delivery_attempt.status_update_queued_at = nil
         delivery_attempt.save!
       end

@@ -10,13 +10,13 @@ class HandleStatusCallback < ApplicationWorkflow
   end
 
   def call
-    delivery_attempt.metadata["call_duration"] = resource.call_duration if resource.call_duration.present?
+    UpdateDeliveryAttempt.call(delivery_attempt, somleng_resource: resource)
     HandleDeliveryAttemptStatusUpdate.call(
       delivery_attempt,
-      status_update: DeliveryAttemptStatusUpdate.new(
+      status: DeliveryAttemptStatusUpdate.new(
         channel: delivery_attempt.broadcast.channel,
         status: resource.status
-      )
+      ).desired_status
     )
   end
 end
