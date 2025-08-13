@@ -2,6 +2,40 @@ require "rails_helper"
 
 module V1
   RSpec.describe BroadcastRequestSchema, type: :request_schema do
+    it "validates the channel" do
+      account = create(:account, :supported_channels => ["voice"])
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "voice"
+              }
+            }
+          },
+          options: {
+            account:
+          }
+        )
+      ).to have_valid_field(:data, :attributes, :channel)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "sms"
+              }
+            }
+          },
+          options: {
+            account:
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :channel, error_message: "is not supported")
+    end
+
     it "validates the beneficiary filter" do
       expect(
         validate_schema(
@@ -87,6 +121,86 @@ module V1
           }
         )
       ).not_to have_valid_schema(error_message: "Account not configured")
+    end
+
+    it "validates voice broadcasts" do
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "voice",
+                audio_url: "https://www.example.com/test.mp3"
+              }
+            }
+          }
+        )
+      ).to have_valid_field(:data, :attributes, :audio_url)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "voice",
+              }
+            }
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :audio_url, error_message: "is missing")
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "sms",
+                audio_url: "https://www.example.com/test.mp3"
+              }
+            }
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :audio_url, error_message: "is not allowed")
+    end
+
+    it "validates SMS broadcasts" do
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "sms",
+                message: "Test message"
+              }
+            }
+          }
+        )
+      ).to have_valid_field(:data, :attributes, :message)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "sms"
+              }
+            }
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :message, error_message: "is missing")
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channel: "voice",
+                message: "Test message"
+              }
+            }
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :message, error_message: "is not allowed")
     end
 
     def validate_schema(input_params:, options: {})

@@ -17,7 +17,7 @@ class HandleDeliveryAttemptStatusUpdate < ApplicationWorkflow
         delivery_attempt.transition_to!(:succeeded, touch: :completed_at)
         complete_notification(:succeeded)
         complete_broadcast
-      when "busy", "no-answer", "failed", "canceled"
+      when "failed"
         if notification.max_delivery_attempts_reached?
           complete_notification(:failed)
           complete_broadcast

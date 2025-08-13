@@ -14,6 +14,7 @@ class Account < ApplicationRecord
   before_create :set_default_settings
 
   enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
+  enumerize :supported_channels, in: Broadcast.channel.values, multiple: true
 
   has_one_attached :logo
 

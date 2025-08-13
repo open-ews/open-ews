@@ -9,13 +9,35 @@ module Somleng
     end
 
     def create_call(...)
-      rest_client.calls.create(...)
-    rescue Twilio::REST::RestError => e
-      raise RestError.new(e.message)
+      make_request(parser: Somleng::Parser::CallResourceParser.new) do
+        rest_client.calls.create(...)
+      end
+    end
+
+    def create_message(...)
+      make_request(parser: Somleng::Parser::MessageResourceParser.new) do
+        rest_client.messages.create(...)
+      end
     end
 
     def fetch_call(call_sid)
-      rest_client.calls(call_sid).fetch
+      make_request(parser: Somleng::Parser::CallResourceParser.new) do
+        rest_client.calls(call_sid).fetch
+      end
+    end
+
+    def fetch_message(message_sid)
+      make_request(parser: Somleng::Parser::MessageResourceParser.new) do
+        rest_client.messages(message_sid).fetch
+      end
+    end
+
+    private
+
+    def make_request(parser:)
+      parser.parse(yield)
+    rescue Twilio::REST::RestError => e
+      raise RestError.new(e.message)
     end
   end
 end

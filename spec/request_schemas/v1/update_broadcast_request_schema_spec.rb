@@ -3,9 +3,10 @@ require "rails_helper"
 module V1
   RSpec.describe UpdateBroadcastRequestSchema, type: :request_schema do
     it "validates the audio_url" do
-      broadcast = create(:broadcast, status: :pending)
-      started_broadcast = create(:broadcast, :running)
-      stopped_broadcast = create(:broadcast, :stopped)
+      broadcast = create(:broadcast, :pending, :voice)
+      started_broadcast = create(:broadcast, :running, :voice)
+      stopped_broadcast = create(:broadcast, :stopped, :voice)
+      sms_broadcast = create(:broadcast, :pending, :sms)
 
       expect(
         validate_schema(input_params: { data: { attributes: {} } }, options: { resource: broadcast })
@@ -26,6 +27,37 @@ module V1
       expect(
         validate_schema(input_params: { data: { attributes: { audio_url: "http://example.com/sample.mp3" } } }, options: { resource: stopped_broadcast })
       ).not_to have_valid_field(:data, :attributes, :audio_url)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { audio_url: "http://example.com/sample.mp3" } } }, options: { resource: sms_broadcast })
+      ).not_to have_valid_field(:data, :attributes, :audio_url)
+    end
+
+    it "validates the message" do
+      broadcast = create(:broadcast, :pending, :sms)
+      started_broadcast = create(:broadcast, :running, :sms)
+      stopped_broadcast = create(:broadcast, :stopped, :sms)
+      voice_broadcast = create(:broadcast, :pending, :voice)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: {} } }, options: { resource: broadcast })
+      ).to have_valid_field(:data, :attributes, :message)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { message: "Test message" } } }, options: { resource: broadcast })
+      ).to have_valid_field(:data, :attributes, :message)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { message: "Test message" } } }, options: { resource: started_broadcast })
+      ).not_to have_valid_field(:data, :attributes, :message)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { message: "Test message" } } }, options: { resource: stopped_broadcast })
+      ).not_to have_valid_field(:data, :attributes, :message)
+
+      expect(
+        validate_schema(input_params: { data: { attributes: { message: "Test message" } } }, options: { resource: voice_broadcast })
+      ).not_to have_valid_field(:data, :attributes, :message)
     end
 
     it "validates the beneficiary_filter" do
@@ -198,8 +230,9 @@ module V1
     end
 
     it "handles post processing" do
-      pending_broadcast = create(:broadcast, status: :pending)
-      errored_broadcast = create(:broadcast, status: :errored)
+      pending_broadcast = create(:broadcast, :pending, :voice)
+      errored_broadcast = create(:broadcast, :errored, :voice)
+      sms_broadcast = create(:broadcast, :pending, :sms)
 
       result = validate_schema(
         input_params: {
@@ -235,6 +268,24 @@ module V1
       expect(result).to include(
         desired_status: :queued,
         audio_url: "http://example.com/sample.mp3"
+      )
+
+      result = validate_schema(
+        input_params: {
+          data: {
+            id: sms_broadcast.id,
+            attributes: {
+              status: "running",
+              message: "Updated test message"
+            }
+          }
+        },
+        options: { resource: sms_broadcast }
+      ).output
+
+      expect(result).to include(
+        desired_status: :queued,
+        message: "Updated test message"
       )
     end
 

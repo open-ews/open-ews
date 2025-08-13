@@ -32,14 +32,16 @@ RSpec.describe "Broadcasts" do
     expect(page).not_to have_content_tag_for(other_broadcast)
   end
 
-  it "create a broadcast", :js do
-    account = create(:account, iso_country_code: "KH")
+  it "create a voice broadcast", :js do
+    account = create(:account, iso_country_code: "KH", supported_channels: ["voice"])
     user = create(:user, account:)
     create_beneficiary_group(name: "My group", account:)
     create_beneficiary_group(name: "My other group", account:)
 
     account_sign_in(user)
     visit new_dashboard_broadcast_path
+
+    expect(page).to have_select("Channel", options: ["Voice"])
 
     select("Voice", from: "Channel")
     attach_file("Audio file", file_fixture("test.mp3"))
@@ -63,6 +65,22 @@ RSpec.describe "Broadcasts" do
       expect(page).to have_content("Mongkol Borei")
       expect(page).to have_content("Banteay Neang")
     end
+  end
+
+  it "create an SMS broadcast", :js do
+    account = create(:account, iso_country_code: "KH")
+    user = create(:user, account:)
+
+    account_sign_in(user)
+    visit new_dashboard_broadcast_path
+    select("SMS", from: "Channel")
+    fill_in("Message", with: "Test message")
+    select_filter("Gender", operator: "Equals", select: "Male")
+    click_on("Create Broadcast")
+
+    expect(page).to have_content("Broadcast was successfully created.")
+    expect(page).to have_content("SMS")
+    expect(page).to have_content("Test message")
   end
 
   it "create a broadcast from an unsupported country", :js do
@@ -126,6 +144,7 @@ RSpec.describe "Broadcasts" do
     visit edit_dashboard_broadcast_path(broadcast)
 
     expect(page).to have_link("test.mp3")
+    expect(page).to have_select("Channel", disabled: true)
 
     select_list("My other group", from: "Beneficiary groups")
     select_filter("Gender", operator: "Equals", select: "Male")

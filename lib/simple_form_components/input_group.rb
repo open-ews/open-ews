@@ -4,6 +4,13 @@ module SimpleFormComponents
     def append(_wrapper_options = nil)
       template.content_tag(:span, options[:append], class: "input-group-text")
     end
+
+    def warning(_wrapper_options = nil)
+      return if options[:warning].blank?
+
+      template.content_tag(:i, nil, class: "icon ti ti-exclamation-circle") + " " +
+      template.content_tag(:span, options[:warning])
+    end
   end
 end
 

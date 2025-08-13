@@ -7,7 +7,8 @@ module V1
         required(:type).filled(:str?, eql?: "broadcast")
         required(:attributes).value(:hash).schema do
           required(:channel).filled(:str?, included_in?: Broadcast.channel.values)
-          required(:audio_url).filled(:string)
+          optional(:audio_url).maybe(:str?)
+          optional(:message).maybe(:str?)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
           optional(:status).filled(:str?, eql?: "running")
           optional(:metadata).value(:hash)
@@ -32,6 +33,20 @@ module V1
       next if key? || relationships.key?(:beneficiary_groups)
 
       key.failure("is missing")
+    end
+
+    attribute_rule(:audio_url) do |attributes:, **|
+      next key.failure("is missing") if value.blank? && attributes[:channel] == "voice"
+      next key.failure("is not allowed") if value.present? && attributes[:channel] != "voice"
+    end
+
+    attribute_rule(:message) do |attributes:, **|
+      next key.failure("is missing") if value.blank? && attributes[:channel] == "sms"
+      next key.failure("is not allowed") if value.present? && attributes[:channel] != "sms"
+    end
+
+    attribute_rule(:channel) do
+      key.failure("is not supported") if key? && account.supported_channels.exclude?(value)
     end
 
     attribute_rule(:audio_url).validate(:url_format)

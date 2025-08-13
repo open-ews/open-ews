@@ -10,6 +10,7 @@ module V1
         required(:type).filled(:str?, eql?: "broadcast")
         required(:attributes).value(:hash).schema do
           optional(:audio_url).filled(:string)
+          optional(:message).filled(:string)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
           optional(:status).filled(included_in?: VALID_STATES)
           optional(:metadata).value(:hash)
@@ -40,9 +41,14 @@ module V1
 
     attribute_rule(:audio_url) do
       next unless key?
-      next if broadcast_state_machine.updatable?
+      next key.failure("cannot be updated after broadcast started") unless broadcast_state_machine.updatable?
+      next key.failure("is not allowed") if value.present? && resource.channel != "voice"
+    end
 
-      key.failure("cannot be updated after broadcast started")
+    attribute_rule(:message) do
+      next unless key?
+      next key.failure("cannot be updated after broadcast started") unless broadcast_state_machine.updatable?
+      next key.failure("is not allowed") if value.present? && resource.channel != "sms"
     end
 
     attribute_rule(:status).validate(:broadcast_status)

@@ -15,7 +15,7 @@ FactoryBot.define do
 
   factory :broadcast do
     account
-    channel { "voice" }
+    voice
     pending
 
     trait :with_attached_audio do
@@ -25,6 +25,15 @@ FactoryBot.define do
       end
 
       audio_file { association :active_storage_attachment, filename: audio_filename, service_name: active_storage_service }
+    end
+
+    trait :voice do
+      channel { "voice" }
+    end
+
+    trait :sms do
+      channel { "sms" }
+      message { "Test message" }
     end
 
     trait :pending do
@@ -195,6 +204,7 @@ FactoryBot.define do
     name { "NCDM" }
     sequence(:subdomain) { |n| "ncdm#{n}" }
     iso_country_code { "KH" }
+    supported_channels { [ "voice", "sms" ] }
 
     trait :configured_for_broadcasts do
       somleng_account_sid { generate(:somleng_account_sid) }

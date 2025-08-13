@@ -88,11 +88,7 @@
         <% end %>
       <% end %>
 
-      <%= f.attribute :audio_file do %>
-        <% if @broadcast.audio_file.attached? %>
-          <%= audio_tag(@broadcast.audio_file, controls: true) %>
-        <% end %>
-      <% end %>
+      <%= f.attribute :channel, value: @broadcast.channel_text %>
 
       <%= f.attribute :beneficiary_groups do %>
         <% @broadcast.beneficiary_groups.each do |beneficiary_group| %>
@@ -102,6 +98,20 @@
 
       <%= f.attribute :created_at, value: local_time(@broadcast.created_at) %>
       <%= f.attribute :updated_at, value: local_time(@broadcast.updated_at) %>
+
+      <% if @broadcast.channel.voice? %>
+        <%= f.attribute :audio_file do %>
+          <% if @broadcast.audio_file.attached? %>
+            <%= audio_tag(@broadcast.audio_file, controls: true) %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <% if @broadcast.channel.sms? %>
+        <%= f.attribute :message do %>
+          <%= text_area_tag(:message, @broadcast.message, rows: 4, class: "form-control w-100", readonly: true) %>
+        <% end %>
+      <% end %>
     <% end %>
 
     <div class="hr-text">Beneficiary filters</div>

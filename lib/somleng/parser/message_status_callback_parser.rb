@@ -1,14 +1,14 @@
 module Somleng
   module Parser
-    class CallStatusCallbackParser
+    class MessageStatusCallbackParser
       def parse(payload)
         Somleng::Resource.new(
-          sid: payload.fetch("CallSid"),
+          sid: payload.fetch("MessageSid"),
           to: payload.fetch("To"),
           from: payload.fetch("From"),
           account_sid: payload.fetch("AccountSid"),
-          status: payload.fetch("CallStatus"),
-          call_duration: payload.fetch("CallDuration").to_i
+          status: payload.fetch("MessageStatus"),
+          call_duration: nil
         )
       end
     end
