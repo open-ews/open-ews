@@ -55,33 +55,6 @@ resource "aws_lb_listener_rule" "webserver" {
   }
 }
 
-resource "aws_lb_listener_rule" "legacy_app_redirect" {
-  priority = var.app_environment == "production" ? 21 : 121
-
-  listener_arn = var.region.public_load_balancer.https_listener.arn
-
-  action {
-    type = "redirect"
-
-    redirect {
-      host        = aws_route53_record.app.fqdn
-      status_code = "HTTP_301"
-    }
-  }
-
-  condition {
-    host_header {
-      values = [
-        aws_route53_record.legacy_app.fqdn
-      ]
-    }
-  }
-
-  lifecycle {
-    ignore_changes = [action]
-  }
-}
-
 resource "aws_lb_listener_rule" "webserver_internal" {
   priority = var.app_environment == "production" ? 40 : 140
 
