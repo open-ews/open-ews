@@ -12,8 +12,6 @@ variable "cdn_subdomain" {}
 variable "cdn_certificate" {}
 variable "route53_zone" {}
 variable "internal_route53_zone" {}
-variable "legacy_app_route53_zone" {}
-variable "legacy_app_subdomain" {}
 
 variable "webserver_container_port" {
   default = 80
