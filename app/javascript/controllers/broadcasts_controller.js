@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-const { SegmentedMessage } = require("sms-segments-calculator")
+import { SegmentedMessage } from "sms-segments-calculator"
 
 // Connects to data-controller="broadcasts"
 export default class extends Controller {
