@@ -1,5 +1,21 @@
-resource "aws_security_group" "db" {
+resource "aws_security_group" "db_old" {
   name   = "scfm"
+  vpc_id = var.region.vpc.vpc_id
+
+  ingress {
+    from_port = var.db_port
+    to_port   = var.db_port
+    protocol  = "TCP"
+    self      = true
+  }
+
+  tags = {
+    Name = "aurora-${var.identifier}"
+  }
+}
+
+resource "aws_security_group" "db" {
+  name   = var.identifier
   vpc_id = var.region.vpc.vpc_id
 
   ingress {
@@ -25,7 +41,7 @@ resource "aws_ssm_parameter" "db_master_password" {
 }
 
 resource "aws_db_subnet_group" "db" {
-  name        = var.identifier
+  name        = "scfmv2"
   description = "For Aurora cluster ${var.identifier}"
   subnet_ids  = var.region.vpc.database_subnets
 
@@ -42,7 +58,7 @@ resource "aws_rds_cluster" "db" {
   allow_major_version_upgrade     = true
   master_username                 = "somleng"
   master_password                 = aws_ssm_parameter.db_master_password.value
-  vpc_security_group_ids          = [aws_security_group.db.id]
+  vpc_security_group_ids          = [aws_security_group.db.id, aws_security_group.db_old.id]
   skip_final_snapshot             = true
   storage_encrypted               = true
   enabled_cloudwatch_logs_exports = ["postgresql"]
