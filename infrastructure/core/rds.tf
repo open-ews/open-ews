@@ -1,6 +1,6 @@
 module "rds_cluster" {
   source = "../modules/rds_cluster"
 
-  identifier = "scfmv2"
+  identifier = "open-ews"
   region     = local.region
 }
