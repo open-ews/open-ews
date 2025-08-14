@@ -38,7 +38,7 @@ resource "aws_rds_cluster" "db" {
   cluster_identifier              = var.identifier
   engine                          = "aurora-postgresql"
   engine_mode                     = "provisioned"
-  engine_version                  = "17.4"
+  engine_version                  = "17.5"
   allow_major_version_upgrade     = true
   master_username                 = "somleng"
   master_password                 = aws_ssm_parameter.db_master_password.value
