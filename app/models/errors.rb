@@ -22,7 +22,8 @@ module Errors
       Error.new(code: :beneficiary_has_multiple_addresses),
       Error.new(code: :invalid_marked_for_deletion_flag),
       Error.new(code: :invalid_import_columns),
-      Error.new(code: :validation_failed)
+      Error.new(code: :validation_failed),
+      Error.new(code: :invalid_audio_file)
     ].freeze
 
     def self.find(code)
