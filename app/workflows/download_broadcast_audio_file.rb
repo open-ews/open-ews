@@ -17,5 +17,8 @@ class DownloadBroadcastAudioFile < ApplicationWorkflow
     broadcast.save!
   rescue OpenURI::HTTPError, URI::InvalidURIError, Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Socket::ResolutionError
     raise(Error.new(code: :audio_download_failed))
+  rescue ActiveRecord::RecordInvalid
+    broadcast.audio_file.purge
+    raise(Error.new(code: :invalid_audio_file))
   end
 end

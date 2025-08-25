@@ -135,6 +135,24 @@ RSpec.describe StartBroadcast do
     )
   end
 
+  it "marks errored when the audio file is an invalid format" do
+    account = create(:account, :configured_for_broadcasts)
+    broadcast = create(
+      :broadcast,
+      account:,
+      status: :queued,
+      audio_url: "https://example.com/test.txt",
+    )
+    stub_request(:get, "https://example.com/test.txt").to_return(status: 200, body: "This is not a valid audio file.")
+
+    StartBroadcast.call(broadcast)
+
+    expect(broadcast).to have_attributes(
+      status: "errored",
+      error_code: "invalid_audio_file"
+    )
+  end
+
   it "marks errored when there are no beneficiaries that match the filters" do
     account = create(:account, :configured_for_broadcasts)
     _male_beneficiary = create(:beneficiary, account:, gender: "M")
