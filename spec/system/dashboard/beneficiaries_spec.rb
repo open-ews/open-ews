@@ -94,6 +94,34 @@ RSpec.describe "Beneficiaries" do
     expect(page).to have_text("Phone number has already been taken")
   end
 
+  it "show a beneficiary" do
+    user = create(:user)
+    beneficiary = create(
+      :beneficiary,
+      iso_country_code: "KH",
+      account: user.account,
+      metadata: {
+        baz: 123,
+        foo: "bar"
+      }
+    )
+    create(
+      :beneficiary_address,
+      beneficiary:,
+      iso_region_code: "KH-12",
+      administrative_division_level_2_code: "1202",
+      administrative_division_level_2_name: "Doun Penh"
+    )
+
+    account_sign_in(user)
+    visit dashboard_beneficiary_path(beneficiary)
+
+    expect(page).to have_content("KH-12")
+    expect(page).to have_content("1202")
+    expect(page).to have_content("Doun Penh")
+    expect(page).to have_field(with: JSON.pretty_generate(beneficiary.metadata))
+  end
+
   it "delete a beneficiary" do
     user = create(:user)
     beneficiary = create(:beneficiary, account: user.account)
