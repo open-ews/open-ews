@@ -11,6 +11,8 @@ class StartBroadcast < ApplicationWorkflow
   end
 
   def call
+    return unless broadcast.queued?
+
     prepare_audio_file if broadcast.channel.voice?
 
     ApplicationRecord.transaction do
