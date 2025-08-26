@@ -197,4 +197,12 @@ RSpec.describe StartBroadcast do
       error_code: "account_not_configured_for_channel"
     )
   end
+
+  it "handles broadcasts that are not queued" do
+    broadcast = create(:broadcast, :errored)
+
+    StartBroadcast.call(broadcast)
+
+    expect(broadcast.reload).to be_errored
+  end
 end
