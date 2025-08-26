@@ -22,8 +22,15 @@
           <span class="badge bg-default-lt"><%= link_to(group.name, dashboard_beneficiary_group_path(group)) %></span>
         <% end %>
       <% end %>
+
       <%= f.attribute :created_at, value: local_time(@beneficiary.created_at) %>
       <%= f.attribute :updated_at, value: local_time(@beneficiary.updated_at) %>
+
+      <%= f.attribute :metadata do %>
+        <% if @beneficiary.metadata.present? %>
+          <%= text_area_tag(:metadata, JSON.pretty_generate(@beneficiary.metadata), rows: 4, class: "form-control w-100", readonly: true) %>
+        <% end %>
+      <% end %>
     <% end %>
 
     <% if @beneficiary.addresses.present? %>

@@ -22,5 +22,6 @@ RSpec.describe ApplicationSeeder do
 
     expect(Account.count).to eq(1)
     expect(User.count).to eq(1)
+    expect(Beneficiary.count).to eq(1)
   end
 end

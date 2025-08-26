@@ -13,8 +13,16 @@ class ApplicationSeeder
       supported_channels: Broadcast.channel.values
     )
     access_token = account.access_token || account.create_access_token!
-
     user = create_user(account:)
+    beneficiary = create_beneficiary(
+      account:,
+      iso_country_code: ACCOUNT_COUNTRY,
+      phone_number: "+85512345678",
+      metadata: {
+        created_by: "application_seeder"
+      }
+    )
+
     puts(<<~INFO)
       Dashboard URL:    http://#{ACCOUNT_SUBDOMAIN}.app.lvh.me:3000
       User Email:       #{user.email}
@@ -25,6 +33,17 @@ class ApplicationSeeder
   end
 
   private
+
+  def create_beneficiary(**params)
+    existing_beneficiary = Beneficiary.find_by(
+      phone_number: params.fetch(:phone_number),
+      account: params.fetch(:account)
+    )
+
+    return existing_beneficiary if existing_beneficiary.present?
+
+    Beneficiary.create!(**params)
+  end
 
   def create_user(**params)
     existing_user = User.find_by(email: USER_EMAIL)
