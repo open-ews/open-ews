@@ -3,6 +3,7 @@ en:
   titles:
     app_name: OpenEWS
     actions:
+      start_broadcast: "You are about to start a broadcast. This will reach approximately %{count}. Do you want to proceed?"
       confirm: "Are you sure?"
       no_filters_export: "You haven't selected any filters. Are you sure you still want to export all records?"
       download: "Download"

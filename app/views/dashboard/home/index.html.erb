@@ -1,35 +1,35 @@
 <div class="row">
   <div class="col-sm-6 col-lg-4 mb-2 beneficiary-stats">
-    <%= render "dashboard/home/stats",
+    <%= render "stats",
           stats: @dashboard_summary.beneficiaries_stats,
           header_title: "Total Beneficiaries",
           icon_name: "address-book",
-          description: "#{pluralize(number_with_delimiter(@dashboard_summary.beneficiaries_stats.new_count), Beneficiary.model_name.human)} added last month" %>
+          description: "#{pluralize_model(@dashboard_summary.beneficiaries_stats.new_count, Beneficiary.model_name)} added last month" %>
   </div>
 
   <div class="col-sm-6 col-lg-4 mb-2 notifications-stats">
-    <%= render "dashboard/home/stats",
+    <%= render "stats",
           stats: @dashboard_summary.notifications_stats,
           header_title: "Total Notifications Sent",
           icon_name: "message",
-          description: "#{pluralize(number_with_delimiter(@dashboard_summary.notifications_stats.new_count), Notification.model_name.human)} sent last month" %>
+          description: "#{pluralize_model(@dashboard_summary.notifications_stats.new_count, Notification.model_name)} sent last month" %>
   </div>
 
   <div class="col-sm-6 col-lg-4 mb-2 broadcasts-stats">
-    <%= render "dashboard/home/stats",
+    <%= render "stats",
           stats: @dashboard_summary.broadcasts_stats,
           header_title: "Total Broadcasts",
           icon_name: "speakerphone",
-          description: "#{pluralize(number_with_delimiter(@dashboard_summary.broadcasts_stats.new_count), Broadcast.model_name.human)} sent last month" %>
+          description: "#{pluralize_model(@dashboard_summary.broadcasts_stats.new_count, Broadcast.model_name)} sent last month" %>
   </div>
 </div>
 
 <div class="row">
   <% @dashboard_summary.recent_broadcasts.each do |broadcast| %>
     <div class="col">
-      <%= render "dashboard/home/broadcast", broadcast: broadcast %>
+      <%= render "broadcast", broadcast: broadcast %>
     </div>
   <% end %>
 </div>
 
-<%= render "dashboard/home/notifications_chart", notifications_stats: @dashboard_summary.last_12_months_notifications_stats %>
+<%= render "notifications_chart", notifications_stats: @dashboard_summary.last_12_months_notifications_stats %>

@@ -1,19 +1,25 @@
 <% content_for(:page_actions) do %>
-  <% state_machine = BroadcastStateMachine.new(@broadcast.status) %>
-
-  <% if state_machine.may_transition_to?(:running) %>
+  <% if @broadcast.state_machine.may_transition_to?(:running) %>
     <%= button_to(
       dashboard_broadcast_state_path(@broadcast, desired_status: "running"),
       method: :post,
       class: "btn btn-outline-success",
       form_class: "d-inline",
-      form: { data: { turbo_confirm: action(:confirm, default: "Are you sure?") } }
+      form: {
+        data: {
+          turbo_confirm: action(
+            :start_broadcast,
+            count: @broadcast.approximate_beneficiaries,
+            default: "Are you sure?"
+          )
+        }
+      }
     ) do %>
       <i class="icon ti ti-player-play"></i>
       <%= title(controller_name: :broadcasts, action_name: :start, default: "Start") %>
     <% end %>
 
-  <% elsif state_machine.may_transition_to?(:stopped) %>
+  <% elsif @broadcast.state_machine.may_transition_to?(:stopped) %>
     <%= button_to(
       dashboard_broadcast_state_path(@broadcast, desired_status: "stopped"),
       method: :post,
@@ -26,7 +32,7 @@
     <% end %>
   <% end %>
 
-  <% if state_machine.updatable? %>
+  <% if @broadcast.state_machine.updatable? %>
     <%= render "shared/edit_resource_page_action", path: edit_dashboard_broadcast_path(@broadcast) %>
 
     <%= render "shared/resource_related_links" do %>
@@ -52,40 +58,38 @@
           <div class="text-danger"><%= error_message_for(@broadcast.error_code) %></div>
         <% end %>
 
-        <% if @broadcast.notifications.any? %>
-          <div class="notification-stats mt-3">
-            <div class="progress progress-separated mb-3">
-              <% @broadcast.notification_stats_percentage.each do |status, percentage| %>
-                <% count = @broadcast.notification_stats[status] %>
-                <div
-                  class="progress-bar bg-<%= notification_status_color(status) %>"
-                  role="progressbar"
-                  data-bs-toggle="popover"
-                  data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(@broadcast.total_notifications_count)} notifications" %>"
-                  data-bs-placement="top"
-                  data-bs-trigger="hover"
-                  style="width: <%= percentage %>%">
-                </div>
-              <% end %>
-            </div>
-
-            <div class="row">
-              <% @broadcast.notification_stats_percentage.each do |status, percentage| %>
-                <% count = @broadcast.notification_stats[status] %>
-                <div class="col-auto d-flex align-items-center pe-2"
-                  data-bs-toggle="popover"
-                  data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(@broadcast.total_notifications_count)} notifications" %>"
-                  data-bs-placement="top"
-                  data-bs-trigger="hover"
-                >
-                  <span class="legend me-2 bg-<%= notification_status_color(status) %>"></span>
-                  <span><%= status.to_s.humanize %></span>
-                  <span class="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary"><%= number_to_percentage(percentage, precision: 0, strip_insignificant_zeros: true) %></span>
-                </div>
-              <% end %>
-            </div>
+        <div class="notification-stats mt-3">
+          <div class="progress progress-separated mb-3">
+            <% @broadcast.notification_stats_percentage.each do |status, percentage| %>
+              <% count = @broadcast.notification_stats[status] %>
+              <div
+                class="progress-bar bg-<%= notification_status_color(status) %>"
+                role="progressbar"
+                data-bs-toggle="popover"
+                data-bs-content="<%= "#{number_with_delimiter(count)} of #{pluralize_model(@broadcast.total_notifications_count, Notification.model_name)}" %>"
+                data-bs-placement="top"
+                data-bs-trigger="hover"
+                style="width: <%= percentage %>%">
+              </div>
+            <% end %>
           </div>
-        <% end %>
+
+          <div class="row">
+            <% @broadcast.notification_stats_percentage.each do |status, percentage| %>
+              <% count = @broadcast.notification_stats[status] %>
+              <div class="col-auto d-flex align-items-center pe-2"
+                data-bs-toggle="popover"
+                data-bs-content="<%= "#{number_with_delimiter(count)} of #{pluralize_model(@broadcast.total_notifications_count, Notification.model_name)}" %>"
+                data-bs-placement="top"
+                data-bs-trigger="hover"
+              >
+                <span class="legend me-2 bg-<%= notification_status_color(status) %>"></span>
+                <span><%= status.to_s.humanize %></span>
+                <span class="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary"><%= number_to_percentage(percentage, precision: 0, strip_insignificant_zeros: true) %></span>
+              </div>
+            <% end %>
+          </div>
+        </div>
       <% end %>
 
       <%= f.attribute :channel, value: @broadcast.channel_text %>

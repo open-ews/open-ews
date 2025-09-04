@@ -13,7 +13,7 @@
             class="progress-bar bg-<%= notification_status_color(status) %>"
             role="progressbar"
             data-bs-toggle="popover"
-            data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(broadcast.total_notifications_count)} notifications" %>"
+            data-bs-content="<%= "#{number_with_delimiter(count)} of #{pluralize_model(broadcast.total_notifications_count, Notification.model_name)}" %>"
             data-bs-placement="top"
             data-bs-trigger="hover"
             style="width: <%= percentage %>%">
@@ -26,7 +26,7 @@
           <% count = broadcast.notification_stats[status] %>
           <div class="col-auto d-flex align-items-center pe-2"
             data-bs-toggle="popover"
-            data-bs-content="<%= "#{number_with_delimiter(count)} of #{number_with_delimiter(broadcast.total_notifications_count)} notifications" %>"
+            data-bs-content="<%= "#{number_with_delimiter(count)} of #{pluralize_model(broadcast.total_notifications_count, Notification.model_name)}" %>"
             data-bs-placement="top"
             data-bs-trigger="hover"
           >
