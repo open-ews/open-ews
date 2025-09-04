@@ -24,6 +24,14 @@ RSpec.describe ApplicationHelper do
           formatter: ->(count) { ActiveSupport::NumberHelper.number_to_human(count) }
         )
       ).to eq("1.25 million beneficiaries")
+
+      expect(
+        helper.pluralize_model(
+          1,
+          Beneficiary.model_name,
+          formatter: ->(count) { ActiveSupport::NumberHelper.number_to_human(count) }
+        )
+      ).to eq("1 beneficiary")
     end
   end
 end
