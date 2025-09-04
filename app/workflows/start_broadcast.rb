@@ -1,13 +1,15 @@
 class StartBroadcast < ApplicationWorkflow
-  attr_reader :broadcast
+  attr_reader :broadcast, :broadcast_preview
 
   class Error < Errors::ApplicationError; end
 
   delegate :account, to: :broadcast, private: true
+  delegate :filtered_beneficiaries, :group_beneficiaries, to: :broadcast_preview, private: true
 
-  def initialize(broadcast)
+  def initialize(broadcast, **options)
     super()
     @broadcast = broadcast
+    @broadcast_preview = options.fetch(:broadcast_preview) { BroadcastPreview.new(broadcast) }
   end
 
   def call
@@ -68,23 +70,6 @@ class StartBroadcast < ApplicationWorkflow
     end
 
     DeliveryAttempt.upsert_all(delivery_attempts)
-  end
-
-  def filtered_beneficiaries
-    return Beneficiary.none if !beneficiary_filter.success? || beneficiary_filter.output.blank?
-
-    FilterScopeQuery.new(
-      account.beneficiaries.active,
-      beneficiary_filter.output
-    ).apply.where.not(id: group_beneficiaries.select(:id))
-  end
-
-  def beneficiary_filter
-    @beneficiary_filter ||= BeneficiaryFilter.new(input_params: broadcast.beneficiary_filter)
-  end
-
-  def group_beneficiaries
-    broadcast.group_beneficiaries.active
   end
 
   def build_notification(beneficiary, **params)

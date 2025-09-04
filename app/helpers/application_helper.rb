@@ -148,6 +148,10 @@ module ApplicationHelper
     end
   end
 
+  def pluralize_model(count, model_name, formatter: ->(count) { number_with_delimiter(count) })
+    pluralize(formatter.call(count), model_name.human).downcase
+  end
+
   def error_message_for(code)
     t("error_codes.#{code}", default: code.to_s.humanize)
   end
