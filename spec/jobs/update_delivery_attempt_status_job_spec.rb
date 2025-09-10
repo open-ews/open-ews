@@ -11,7 +11,8 @@ RSpec.describe UpdateDeliveryAttemptStatusJob do
       notification:,
       metadata: {
         "somleng_resource_sid" => "call-sid"
-      }
+      },
+      status_update_queued_at: Time.current
     )
     stub_somleng_request(response: { body: { "status" => "completed", "duration" => "87" }.to_json })
 
@@ -29,6 +30,34 @@ RSpec.describe UpdateDeliveryAttemptStatusJob do
     )
   end
 
+  it "handles incomplete statuses" do
+    account = create(:account)
+    broadcast = create(:broadcast, :running, :voice, account:)
+    notification = create(:notification, broadcast:)
+    delivery_attempt = create(
+      :delivery_attempt,
+      :initiated,
+      notification:,
+      metadata: {
+        "somleng_resource_sid" => "call-sid"
+      },
+      status_update_queued_at: Time.current
+    )
+    stub_somleng_request(response: { body: { "status" => "queued"}.to_json })
+
+    UpdateDeliveryAttemptStatusJob.perform_now(delivery_attempt)
+
+    expect(delivery_attempt).to have_attributes(
+      metadata: {
+        "somleng_resource_sid" => "call-sid",
+        "somleng_status" => "queued"
+      },
+      status: "initiated",
+      completed_at: be_blank,
+      status_update_queued_at: nil
+    )
+  end
+
   it "updates the status of a SMS delivery attempt" do
     account = create(:account)
     broadcast = create(:broadcast, :running, :sms, account:)
@@ -39,7 +68,8 @@ RSpec.describe UpdateDeliveryAttemptStatusJob do
       notification:,
       metadata: {
         "somleng_resource_sid" => "message-sid"
-      }
+      },
+      status_update_queued_at: Time.current
     )
     stub_somleng_request(response: { body: { "status" => "delivered" }.to_json })
 
@@ -48,7 +78,7 @@ RSpec.describe UpdateDeliveryAttemptStatusJob do
     expect(delivery_attempt).to have_attributes(
       metadata: {
         "somleng_resource_sid" => "message-sid",
-        "somleng_status" => "delivered",
+        "somleng_status" => "delivered"
       },
       status: "succeeded",
       completed_at: be_present,
