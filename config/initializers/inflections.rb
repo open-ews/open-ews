@@ -27,3 +27,10 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "KH"
   inflect.acronym "LA"
 end
+
+[ :km, :lo ].each do |locale|
+  ActiveSupport::Inflector.inflections(locale) do |inflect|
+    inflect.plural(/^(.*)$/u, '\1')
+    inflect.singular(/^(.*)$/u, '\1')
+  end
+end

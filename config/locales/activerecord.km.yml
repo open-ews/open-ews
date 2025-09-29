@@ -1,13 +1,6 @@
 ---
 km:
   activerecord:
-    attributes:
-      access_token:
-        token: API key
-      account:
-        platform_provider_name: Platform provider
-      phone_call:
-        remote_call_id: Remote call sid
     models:
       beneficiary: សមាជិកទំនាក់ទំនង
       broadcast: សេចក្ដីប្រកាស

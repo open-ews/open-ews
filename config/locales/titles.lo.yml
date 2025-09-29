@@ -25,6 +25,8 @@ lo:
       index: ກຸ່ມຜູ້ໄດ້ຮັບຜົນປະໂຫຍດ
     profiles:
       show: ຂໍ້ມູນສ່ວນຕົວ
+    notifications:
+      index: ການແຈ້ງເຕືອນ
     settings:
       index: ການຕັ້ງຄ່າ
     no_records: ບໍ່ພົບການບັນທຶກ
