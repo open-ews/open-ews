@@ -72,7 +72,8 @@ RSpec.describe "Call Status Callbacks" do
       CallStatus: options.fetch(:call_status) { "ringing" },
       AccountSid: options.fetch(:account_sid) { SecureRandom.uuid },
       CallDuration: options.fetch(:call_duration) { nil },
-      ApiVersion: options.fetch(:api_version) { "2010-04-01" }
+      ApiVersion: options.fetch(:api_version) { "2010-04-01" },
+      SipResponseCode: options.fetch(:sip_response_code) { "200" }
     }.compact
   end
 

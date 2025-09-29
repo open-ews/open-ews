@@ -8,6 +8,8 @@ class DeliveryAttempt < ApplicationRecord
   delegate :account, to: :broadcast
   delegate :initiated?, :transition_to!, :may_transition_to?, to: :state_machine
 
+  enumerize :error_code, in: [ :phone_number_unreachable ]
+
   class StateMachine < StateMachine::ActiveRecord
     state :created, initial: true, transitions_to: :queued
     state :queued, transitions_to: [ :initiated, :failed ]
