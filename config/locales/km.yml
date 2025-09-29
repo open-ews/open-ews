@@ -14,3 +14,16 @@ km:
     is_null: "មិនមាន"
     in: "នៅក្នុង"
     not_in: "មិននៅក្នុង"
+  past_participles:
+    registered: "ចុះឈ្មោះ"
+    delivered: "ផ្ញើ"
+    issued: "ចេញផ្សាយ"
+  statuses:
+    failed: "បរាជ័យ"
+    succeeded: "ជោគជ័យ"
+    pending: "កំពុងរង់ចាំ"
+  units:
+    day: "ថ្ងៃ"
+    month: "ខែ"
+    year: "ឆ្នាំ"
+  count_of_total: "%{count} នៃ %{total}"

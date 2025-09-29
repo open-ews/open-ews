@@ -13,7 +13,7 @@ class DashboardSummary
     end
 
     def new_count
-      @new_count ||= scope.where(created_at: 1.month.ago..).count
+      @new_count ||= scope.where(created_at: 30.days.ago..).count
     end
 
     def new_count_percentage

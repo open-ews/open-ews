@@ -2,7 +2,7 @@
   <div class="col">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Notifications sent in the last 12 months</h3>
+        <h3 class="card-title"><%=t("dashboard_summary.notifications_chart_title", model_name: titleize_model(Notification.model_name)) %></h3>
       </div>
       <div class="card-body">
         <div id="notifications-stats-chart"
@@ -10,7 +10,7 @@
              data-controller="notifications-stats-chart"
              data-notifications-stats-chart-months-value="<%= notifications_stats.values.pluck(:name).to_json %>"
              data-notifications-stats-chart-notification-counts-value="<%= notifications_stats.values.pluck(:count).to_json %>"
-             data-notifications-stats-chart-title-value="<%= Notification.model_name.human(count: 2, default: Notification.model_name.human.pluralize) %>">
+             data-notifications-stats-chart-title-value="<%= titleize_model(Notification.model_name) %>">
         </div>
       </div>
     </div>

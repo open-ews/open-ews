@@ -17,9 +17,11 @@ RSpec.describe "Home" do
 
     expect(page).to have_title("Dashboard")
     expect(page).to have_content("Total Broadcasts")
-    expect(page).to have_content("Total Notifications Sent")
+    expect(page).to have_content("Total Notifications")
     expect(page).to have_content("Total Beneficiaries")
-    expect(page).to have_content("Notifications sent in the last 12 months")
+    expect(page).to have_content("Notifications delivered in the last 12 months")
+    expect(page).to have_content("12 notifications were delivered in the last 30 days")
+    expect(page).to have_content("2 broadcasts were issued in the last 30 days")
 
     within ".beneficiary-stats .total-count" do
       expect(page).to have_content("15")
