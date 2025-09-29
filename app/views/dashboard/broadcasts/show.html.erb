@@ -66,8 +66,7 @@
                 class="progress-bar bg-<%= notification_status_color(status) %>"
                 role="progressbar"
                 data-bs-toggle="popover"
-                data-bs-content="<%= "#{number_with_delimiter(count)} of #{pluralize_model(@broadcast.total_notifications_count, Notification.model_name)}" %>"
-                data-bs-placement="top"
+                data-bs-content="<%= count_of_total(count, total: pluralize_model(@broadcast.total_notifications_count, Notification.model_name)) %>"
                 data-bs-trigger="hover"
                 style="width: <%= percentage %>%">
               </div>
@@ -79,12 +78,13 @@
               <% count = @broadcast.notification_stats[status] %>
               <div class="col-auto d-flex align-items-center pe-2"
                 data-bs-toggle="popover"
-                data-bs-content="<%= "#{number_with_delimiter(count)} of #{pluralize_model(@broadcast.total_notifications_count, Notification.model_name)}" %>"
+                data-bs-content="<%= count_of_total(count, total: pluralize_model(@broadcast.total_notifications_count, Notification.model_name)) %>"
+                data-bs-trigger="hover"
                 data-bs-placement="top"
                 data-bs-trigger="hover"
               >
                 <span class="legend me-2 bg-<%= notification_status_color(status) %>"></span>
-                <span><%= status.to_s.humanize %></span>
+                <span><%= t("statuses.#{status}", default: status.to_s.humanize) %></span>
                 <span class="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary"><%= number_to_percentage(percentage, precision: 0, strip_insignificant_zeros: true) %></span>
               </div>
             <% end %>
