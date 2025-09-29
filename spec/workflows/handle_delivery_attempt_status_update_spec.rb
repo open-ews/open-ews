@@ -70,6 +70,32 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
     expect(RetryNotificationJob).not_to have_been_enqueued
   end
 
+  it "handles unreachable beneficiaries" do
+    account = create(:account)
+    broadcast = create(:broadcast, :running, account:)
+    beneficiary = create(:beneficiary, account:)
+    notification = create(:notification, :pending, broadcast:, beneficiary:)
+    delivery_attempt = create(:delivery_attempt, :initiated, error_code: :phone_number_unreachable, notification:)
+
+    HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
+
+    expect(delivery_attempt).to have_attributes(
+      status: "failed",
+      completed_at: be_present
+    )
+    expect(notification).to have_attributes(
+      status: "failed",
+      completed_at: be_present
+    )
+    expect(broadcast).to have_attributes(
+      status: "completed",
+      completed_at: be_present
+    )
+
+    expect(RetryNotificationJob).not_to have_been_enqueued
+    expect(ExecuteWorkflowJob).to have_been_enqueued.with(DeleteBeneficiary.to_s, beneficiary)
+  end
+
   it "handles duplicates" do
     broadcast = create(:broadcast, :running)
     notification = create(:notification, :pending, broadcast:)
