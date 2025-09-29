@@ -17,7 +17,6 @@ RSpec.describe UpdateDeliveryAttempt do
     )
   end
 
-
   it "sets the error code from the sip response code" do
     delivery_attempt = create(:delivery_attempt)
     somleng_resource = build_somleng_resource(sip_response_code: "404")
@@ -31,8 +30,6 @@ RSpec.describe UpdateDeliveryAttempt do
       )
     )
   end
-
-
 
   def build_somleng_resource(params = {})
     instance_double(
