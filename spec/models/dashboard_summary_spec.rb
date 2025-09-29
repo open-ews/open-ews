@@ -15,13 +15,13 @@ RSpec.describe DashboardSummary do
     end
 
     describe "#new_count" do
-      it "returns the number of items created in the last month" do
+      it "returns the number of items created in the 30 days" do
         freeze_time do
           account = create(:account)
-          create_list(:beneficiary, 2, account:, created_at: 1.month.ago)
-          create_list(:beneficiary, 3, account:, created_at: 2.months.ago)
-
+          create_list(:beneficiary, 2, account:, created_at: 30.days.ago)
+          create_list(:beneficiary, 3, account:, created_at: 31.days.ago)
           db_analyze
+
           stats = DashboardSummary::Stats.new(account.beneficiaries)
 
           expect(stats.new_count).to eq(2)
@@ -30,13 +30,13 @@ RSpec.describe DashboardSummary do
     end
 
     describe "#new_count_percentage" do
-      it "returns the percentage of items created in the last month" do
+      it "returns the percentage of items created in the 30 days" do
         freeze_time do
           account = create(:account)
-          create_list(:beneficiary, 2, account:, created_at: 1.month.ago)
-          create_list(:beneficiary, 8, account:, created_at: 2.months.ago)
-
+          create_list(:beneficiary, 2, account:, created_at: 30.days.ago)
+          create_list(:beneficiary, 8, account:, created_at: 31.days.ago)
           db_analyze
+
           stats = DashboardSummary::Stats.new(account.beneficiaries)
 
           expect(stats.new_count_percentage).to eq(20)

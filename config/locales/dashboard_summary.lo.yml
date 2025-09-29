@@ -1,0 +1,6 @@
+lo:
+  dashboard_summary:
+    notifications_chart_title: "%{model_name}ສົ່ງເສົາໃນ12ເດືອນທີ່ຜ່ານມາ"
+    stats:
+      title: "ຈຳນວນ%{model_name}ທັງຫມົດ"
+      description: "%{model_name}ຖືກ%{action}ໃນ%{period}ທີ່ຜ່ານມາ"

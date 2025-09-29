@@ -14,3 +14,16 @@ lo:
     is_null: "ເປັນຄ່າຫວ່າງ"
     in: "ຢູ່ໃນ"
     not_in: "ບໍ່ຢູ່ໃນ"
+  past_participles:
+    registered: "ເຈົາທະບຽນ"
+    delivered: "ສົ່ງເສົາ"
+    issued: "ອອກຈາກ"
+  statuses:
+    failed: "ລົ້ມເຫລວ"
+    succeeded: "ສຳເລັດ"
+    pending: "ກຳລັງລໍຖ້າ"
+  units:
+    day: "ມື້"
+    month: "ເດືອນ"
+    year: "ປີ"
+  count_of_total: "%{count} ຈາກ %{total}"

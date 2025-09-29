@@ -1,26 +1,32 @@
 <div class="row">
   <div class="col-sm-6 col-lg-4 mb-2 beneficiary-stats">
-    <%= render "stats",
-          stats: @dashboard_summary.beneficiaries_stats,
-          header_title: "Total Beneficiaries",
-          icon_name: "address-book",
-          description: "#{pluralize_model(@dashboard_summary.beneficiaries_stats.new_count, Beneficiary.model_name)} added last month" %>
+    <%= render(
+      "stats",
+      stats: @dashboard_summary.beneficiaries_stats,
+      header_title: t("dashboard_summary.stats.title", model_name: titleize_model(Beneficiary.model_name)),
+      icon_name: "address-book",
+      description: dashboard_summary_description(@dashboard_summary.beneficiaries_stats.new_count, Beneficiary.model_name, past_participle: "registered", time_period: 30, unit: "day")
+    ) %>
   </div>
 
   <div class="col-sm-6 col-lg-4 mb-2 notifications-stats">
-    <%= render "stats",
-          stats: @dashboard_summary.notifications_stats,
-          header_title: "Total Notifications Sent",
-          icon_name: "message",
-          description: "#{pluralize_model(@dashboard_summary.notifications_stats.new_count, Notification.model_name)} sent last month" %>
+    <%= render(
+      "stats",
+      stats: @dashboard_summary.notifications_stats,
+      header_title: t("dashboard_summary.stats.title", model_name: titleize_model(Notification.model_name)),
+      icon_name: "message",
+      description: dashboard_summary_description(@dashboard_summary.notifications_stats.new_count, Notification.model_name, past_participle: "delivered", time_period: 30, unit: "day")
+    ) %>
   </div>
 
   <div class="col-sm-6 col-lg-4 mb-2 broadcasts-stats">
-    <%= render "stats",
-          stats: @dashboard_summary.broadcasts_stats,
-          header_title: "Total Broadcasts",
-          icon_name: "speakerphone",
-          description: "#{pluralize_model(@dashboard_summary.broadcasts_stats.new_count, Broadcast.model_name)} sent last month" %>
+    <%= render(
+      "stats",
+      stats: @dashboard_summary.broadcasts_stats,
+      header_title: t("dashboard_summary.stats.title", model_name: titleize_model(Broadcast.model_name)),
+      icon_name: "speakerphone",
+      description: dashboard_summary_description(@dashboard_summary.broadcasts_stats.new_count, Broadcast.model_name, past_participle: "issued", time_period: 30, unit: "day")
+    ) %>
   </div>
 </div>
 

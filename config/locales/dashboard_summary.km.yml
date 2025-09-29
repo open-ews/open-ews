@@ -1,0 +1,6 @@
+km:
+  dashboard_summary:
+    notifications_chart_title: "%{model_name}ត្រូវបានផ្ញើក្នុង12ខែចុងក្រោយ"
+    stats:
+      title: "ចំនួន%{model_name}សរុប"
+      description: "%{model_name}ត្រូវបាន%{action}ក្នុង%{period}ចុងក្រោយ"

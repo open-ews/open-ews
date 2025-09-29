@@ -1,0 +1,8 @@
+en:
+  dashboard_summary:
+    notifications_chart_title: "%{model_name} delivered in the last 12 months"
+    stats:
+      title: "Total %{model_name}"
+      description:
+        one: "%{model_name} was %{action} in the last %{period}"
+        other: "%{model_name} were %{action} in the last %{period}"

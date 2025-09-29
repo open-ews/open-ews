@@ -2,7 +2,7 @@
   <div class="card-body">
     <div class="notification-stats">
       <div class="subheader d-flex justify-content-between align-items-center">
-        <%= link_to "Broadcast ##{broadcast.id}", dashboard_broadcast_path(broadcast), class: "text-decoration-none text-secondary" %>
+        <%= link_to "#{Broadcast.model_name.human} ##{broadcast.id}", dashboard_broadcast_path(broadcast), class: "text-decoration-none text-secondary" %>
         <%= broadcast_status(broadcast) %>
       </div>
 
@@ -13,7 +13,7 @@
             class="progress-bar bg-<%= notification_status_color(status) %>"
             role="progressbar"
             data-bs-toggle="popover"
-            data-bs-content="<%= "#{number_with_delimiter(count)} of #{pluralize_model(broadcast.total_notifications_count, Notification.model_name)}" %>"
+            data-bs-content="<%= count_of_total(count, total: pluralize_model(broadcast.total_notifications_count, Notification.model_name)) %>"
             data-bs-placement="top"
             data-bs-trigger="hover"
             style="width: <%= percentage %>%">
@@ -26,12 +26,12 @@
           <% count = broadcast.notification_stats[status] %>
           <div class="col-auto d-flex align-items-center pe-2"
             data-bs-toggle="popover"
-            data-bs-content="<%= "#{number_with_delimiter(count)} of #{pluralize_model(broadcast.total_notifications_count, Notification.model_name)}" %>"
+            data-bs-content="<%= count_of_total(count, total: pluralize_model(broadcast.total_notifications_count, Notification.model_name)) %>"
             data-bs-placement="top"
             data-bs-trigger="hover"
           >
             <span class="legend bg-<%= notification_status_color(status) %>"></span>
-            <span class="mx-1"><%= status.to_s.humanize %></span>
+            <span class="mx-1"><%= t("statuses.#{status}", default: status.to_s.humanize) %></span>
             <span class="d-none d-md-inline d-lg-none d-xxl-inline text-secondary"><%= number_to_percentage(percentage, precision: 0, strip_insignificant_zeros: true) %></span>
           </div>
         <% end %>

@@ -148,8 +148,36 @@ module ApplicationHelper
     end
   end
 
-  def pluralize_model(count, model_name, formatter: ->(count) { number_with_delimiter(count) })
-    pluralize(formatter.call(count), model_name.human).downcase
+  def pluralize_model(count, model_name, formatter: ->(count) { number_with_delimiter(count) }, locale: I18n.locale, **options)
+    pluralize(formatter.call(count), model_name.human(locale:), locale:, **options).downcase
+  end
+
+  def titleize_model(model_name, **options)
+    model_name.human(default: model_name.human.pluralize, **options)
+  end
+
+  def dashboard_summary_description(count, model_name, past_participle:, time_period:, unit:, locale: I18n.locale, **options)
+    t(
+      "dashboard_summary.stats.description",
+      count:,
+      model_name: pluralize_model(count, model_name, locale:),
+      action: t("past_participles.#{past_participle}", locale:, default: past_participle.humanize.downcase),
+      period: pluralize(time_period, t("units.#{unit}", locale:, default: unit.humanize.downcase), locale:),
+      locale:,
+      **options
+    )
+  end
+
+  def count_of_total(count, total:, formatter: ->(count) { number_with_delimiter(count) }, **options)
+    count = formatter.call(count)
+
+    t(
+      "count_of_total",
+      count:,
+      total:,
+      default: "#{count} of #{total}",
+      **options
+    )
   end
 
   def error_message_for(code)
