@@ -8,7 +8,8 @@ module Somleng
           from: response.from,
           account_sid: response.account_sid,
           status: response.status,
-          call_duration: nil
+          call_duration: nil,
+          sip_response_code: nil
         )
       end
     end

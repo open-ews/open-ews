@@ -8,7 +8,8 @@ module Somleng
           from: payload.fetch("From"),
           account_sid: payload.fetch("AccountSid"),
           status: payload.fetch("MessageStatus"),
-          call_duration: nil
+          call_duration: nil,
+          sip_response_code: nil
         )
       end
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_12_160523) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_29_061539) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -172,10 +172,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_160523) do
     t.bigint "broadcast_id", null: false
     t.datetime "queued_at"
     t.datetime "completed_at"
+    t.string "error_code"
     t.index ["beneficiary_id"], name: "index_delivery_attempts_on_beneficiary_id"
     t.index ["broadcast_id", "status"], name: "index_delivery_attempts_on_broadcast_id_and_status"
     t.index ["broadcast_id"], name: "index_delivery_attempts_on_broadcast_id"
     t.index ["created_at"], name: "index_delivery_attempts_on_created_at"
+    t.index ["error_code", "beneficiary_id"], name: "index_delivery_attempts_on_error_code_and_beneficiary_id", where: "((error_code)::text = 'phone_number_unreachable'::text)"
     t.index ["id", "lock_version"], name: "index_delivery_attempts_on_id_and_lock_version"
     t.index ["initiated_at"], name: "index_delivery_attempts_on_initiated_at"
     t.index ["notification_id"], name: "index_delivery_attempts_on_notification_id"
