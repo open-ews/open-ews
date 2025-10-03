@@ -1,10 +1,10 @@
 GIT
   remote: https://github.com/heartcombo/responders.git
-  revision: 9bdc60dfbfa8001641c1c4df7bc73c3fc2a4cf41
+  revision: 818ec078bcb37d7729db5fd34883e08ae031f038
   specs:
     responders (3.1.1)
-      actionpack (>= 5.2)
-      railties (>= 5.2)
+      actionpack (>= 7.0)
+      railties (>= 7.0)
 
 GIT
   remote: https://github.com/rails/record_tag_helper.git
