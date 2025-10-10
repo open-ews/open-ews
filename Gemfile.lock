@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/heartcombo/responders.git
-  revision: 818ec078bcb37d7729db5fd34883e08ae031f038
+  revision: b20fdd24befee0f23f77fcf021da677e15646891
   specs:
-    responders (3.1.1)
+    responders (3.2.0)
       actionpack (>= 7.0)
       railties (>= 7.0)
 
@@ -147,7 +147,7 @@ GEM
     base64 (0.3.0)
     bcrypt (3.1.20)
     benchmark (0.4.1)
-    bigdecimal (3.2.3)
+    bigdecimal (3.3.1)
     bootsnap (1.18.6)
       msgpack (~> 1.2)
     bootstrap-email (1.5.2)
@@ -242,7 +242,7 @@ GEM
       mail (~> 2.7)
     enumerize (2.8.1)
       activesupport (>= 3.2)
-    erb (5.0.2)
+    erb (5.0.3)
     erubi (1.13.1)
     factory_bot (6.5.5)
       activesupport (>= 6.1.0)
@@ -328,7 +328,7 @@ GEM
     mime-types-data (3.2025.0603)
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
-    minitest (5.25.5)
+    minitest (5.26.0)
     msgpack (1.8.0)
     mustache (1.1.1)
     net-http (0.6.0)
@@ -359,7 +359,7 @@ GEM
     pghero (3.7.0)
       activerecord (>= 7.1)
     phony (2.22.5)
-    pp (0.6.2)
+    pp (0.6.3)
       prettyprint
     premailer (1.27.0)
       addressable
@@ -434,9 +434,10 @@ GEM
       ffi (~> 1.0)
     rbs (3.9.5)
       logger
-    rdoc (6.14.2)
+    rdoc (6.15.0)
       erb
       psych (>= 4.0.0)
+      tsort
     regexp_parser (2.11.3)
     reline (0.6.2)
       io-console (~> 0.5)
@@ -564,7 +565,7 @@ GEM
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.1.0)
-    uri (1.0.3)
+    uri (1.0.4)
     useragent (0.16.11)
     warden (1.2.9)
       rack (>= 2.0.9)
