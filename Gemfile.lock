@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/heartcombo/responders.git
-  revision: b20fdd24befee0f23f77fcf021da677e15646891
+  revision: 05a1275bd89657846f4d58462a50030deee74a25
   specs:
     responders (3.2.0)
       actionpack (>= 7.0)
@@ -242,7 +242,7 @@ GEM
       mail (~> 2.7)
     enumerize (2.8.1)
       activesupport (>= 3.2)
-    erb (5.0.3)
+    erb (5.1.1)
     erubi (1.13.1)
     factory_bot (6.5.5)
       activesupport (>= 6.1.0)
