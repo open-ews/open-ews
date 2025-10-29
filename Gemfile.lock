@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/heartcombo/responders.git
-  revision: c1692d5896f94a52f4a39e7591c1b62c6a3e3db6
+  revision: 3902aa33b7e72300ff6c132009979676e0af0d23
   specs:
     responders (3.2.0)
       actionpack (>= 7.0)
@@ -186,7 +186,7 @@ GEM
     csv (3.3.5)
     cursor_paginator (0.2.1)
       activesupport (>= 3)
-    date (3.4.1)
+    date (3.5.0)
     devise (4.9.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -428,7 +428,7 @@ GEM
       tsort (>= 0.2)
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
-    rake (13.3.0)
+    rake (13.3.1)
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
       ffi (~> 1.0)
