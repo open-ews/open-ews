@@ -1,7 +1,7 @@
 module Dashboard
   module Settings
     class AccountsController < DashboardController
-      self.raise_on_open_redirects = false
+      self.action_on_open_redirect = :log
 
       def show
         @account = AccountForm.initialize_with(current_account)

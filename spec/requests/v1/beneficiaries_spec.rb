@@ -220,7 +220,7 @@ RSpec.resource "Beneficiaries"  do
             address: {
               iso_region_code: "KH-1",
               administrative_division_level_2_code: "0102",
-              administrative_division_level_2_name: "Mongkol Borei",
+              administrative_division_level_2_name: "Mongkol Borey",
               administrative_division_level_3_code: "010201",
               administrative_division_level_3_name: "Banteay Neang",
               administrative_division_level_4_code: "01020101",
@@ -241,7 +241,7 @@ RSpec.resource "Beneficiaries"  do
       expect(json_response.dig("included", 0, "attributes")).to include(
         "iso_region_code" => "KH-1",
         "administrative_division_level_2_code" => "0102",
-        "administrative_division_level_2_name" => "Mongkol Borei",
+        "administrative_division_level_2_name" => "Mongkol Borey",
         "administrative_division_level_3_code" => "010201",
         "administrative_division_level_3_name" => "Banteay Neang",
         "administrative_division_level_4_code" => "01020101",
@@ -653,7 +653,7 @@ RSpec.resource "Beneficiaries"  do
           attributes: {
             iso_region_code: "KH-1",
             administrative_division_level_2_code: "0102",
-            administrative_division_level_2_name: "Mongkol Borei",
+            administrative_division_level_2_name: "Mongkol Borey",
             administrative_division_level_3_code: "010201",
             administrative_division_level_3_name: "Banteay Neang",
             administrative_division_level_4_code: "01020101",
@@ -667,7 +667,7 @@ RSpec.resource "Beneficiaries"  do
       expect(jsonapi_response_attributes).to include(
         "iso_region_code" => "KH-1",
         "administrative_division_level_2_code" => "0102",
-        "administrative_division_level_2_name" => "Mongkol Borei",
+        "administrative_division_level_2_name" => "Mongkol Borey",
         "administrative_division_level_3_code" => "010201",
         "administrative_division_level_3_name" => "Banteay Neang",
         "administrative_division_level_4_code" => "01020101",

@@ -48,7 +48,7 @@ RSpec.describe "Broadcasts" do
     select_list("My group", "My other group", from: "Beneficiary groups")
     select_filter("Gender", operator: "Equals", select: "Male")
     select_filter("Commune")
-    select_tree("Banteay Meanchey", "Mongkol Borei", "Banteay Neang")
+    select_tree("Banteay Meanchey", "Mongkol Borey", "Banteay Neang")
 
     click_on("Create Broadcast")
 
@@ -62,7 +62,7 @@ RSpec.describe "Broadcasts" do
     end
     within("#beneficiary_filter_administrative_division_level_3_code") do
       expect(page).to have_content("Banteay Meanchey")
-      expect(page).to have_content("Mongkol Borei")
+      expect(page).to have_content("Mongkol Borey")
       expect(page).to have_content("Banteay Neang")
     end
   end
@@ -150,7 +150,7 @@ RSpec.describe "Broadcasts" do
     select_filter("Gender", operator: "Equals", select: "Male")
     select_filter("Disability status", operator: "Equals", select: "Disabled")
     select_filter("ISO language code", operator: "Equals", fill_in: "khm")
-    select_tree("Banteay Meanchey", "Mongkol Borei", "Banteay Neang")
+    select_tree("Banteay Meanchey", "Mongkol Borey", "Banteay Neang")
 
     click_on "Update Broadcast"
 
@@ -179,7 +179,7 @@ RSpec.describe "Broadcasts" do
     end
     within("#beneficiary_filter_administrative_division_level_3_code") do
       expect(page).to have_content("Banteay Meanchey")
-      expect(page).to have_content("Mongkol Borei")
+      expect(page).to have_content("Mongkol Borey")
       expect(page).to have_content("Banteay Neang")
       expect(page).to have_content("Phnom Penh")
       expect(page).to have_content("Chamkar Mon")
@@ -268,9 +268,9 @@ RSpec.describe "Broadcasts" do
 
   def select_tree(*values)
     within("#broadcast_beneficiary_filter_administrative_division_level_3_code") do
-      values.each do
-        title = find("a", text: it)
-        if it == values.last
+      values.each do |value|
+        title = find("a", text: value)
+        if value == values.last
           title.find(:xpath, "preceding-sibling::input[@type='checkbox'][1]").click
         else
           title.find(:xpath, 'preceding-sibling::a[1]').click

@@ -439,12 +439,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rails/activestorage@npm:^8.0.100":
-  version: 8.0.200
-  resolution: "@rails/activestorage@npm:8.0.200"
+"@rails/activestorage@npm:^8.1.100":
+  version: 8.1.100
+  resolution: "@rails/activestorage@npm:8.1.100"
   dependencies:
     spark-md5: "npm:^3.0.1"
-  checksum: 10c0/c5acd3f8affc9a85bd25bcee29573109063b5b7787a21a768e7e8482d40d8593a69b4cae948ade31ad5fb15bbda5c8d3073152efe629c9d4b31dd3e8c74b1a55
+  checksum: 10c0/6c9fa3dec8f8c18f829826d9266b134ad26f5f35cfba8c7ec2d2512f967f50cac103bb20a46a1c6f7b60616b13a8de8c93a825c28f10c00777550e6693c1a09f
   languageName: node
   linkType: hard
 
@@ -1605,7 +1605,7 @@ __metadata:
     "@hotwired/stimulus": "npm:^3.2.2"
     "@hotwired/turbo-rails": "npm:^8.0.13"
     "@popperjs/core": "npm:^2.11.8"
-    "@rails/activestorage": "npm:^8.0.100"
+    "@rails/activestorage": "npm:^8.1.100"
     "@tabler/core": "npm:^1.1.1"
     "@tabler/icons-webfont": "npm:^3.31.0"
     apexcharts: "npm:^4.7.0"
