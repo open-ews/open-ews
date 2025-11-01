@@ -34,7 +34,7 @@ RSpec.describe ImportBeneficiary do
         meta_my_attribute: "my_value",
         address_iso_region_code: "KH-1",
         address_administrative_division_level_2_code: "0102",
-        address_administrative_division_level_2_name: "Mongkol Borei",
+        address_administrative_division_level_2_name: "Mongkol Borey",
         address_administrative_division_level_3_code: "010201",
         address_administrative_division_level_3_name: "Banteay Neang",
         address_administrative_division_level_4_code: "01020101",
@@ -55,7 +55,7 @@ RSpec.describe ImportBeneficiary do
         have_attributes(
           iso_region_code: "KH-1",
           administrative_division_level_2_code: "0102",
-          administrative_division_level_2_name: "Mongkol Borei",
+          administrative_division_level_2_name: "Mongkol Borey",
           administrative_division_level_3_code: "010201",
           administrative_division_level_3_name: "Banteay Neang",
           administrative_division_level_4_code: "01020101",

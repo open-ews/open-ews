@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-gem "rails", "~> 8.0.3"
+gem "rails", "~> 8.1"
 
 # The modern frontend packages for Rails
 gem "propshaft"
@@ -66,6 +66,7 @@ gem "twilio-ruby"
 gem "tzinfo-data"
 
 group :development, :test do
+  gem "bundler-audit", require: false
   gem "pry"
   gem "rspec_api_documentation", github: "zipmark/rspec_api_documentation"
   gem "rspec-rails"
