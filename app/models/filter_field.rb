@@ -31,8 +31,8 @@ class FilterField
   def filter_value
     case operator
     when :is_null then nil
-    when :contains, :not_contains then "%#{value}%"
-    when :starts_with then "#{value}%"
+    when :contains, :not_contains then Arel::Nodes::Quoted.new("%#{value}%")
+    when :starts_with then Arel::Nodes::Quoted.new("#{value}%")
     when :between then Range.new(value[0], value[1])
     else value
     end
