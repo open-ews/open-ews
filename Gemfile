@@ -33,7 +33,7 @@ gem "aws-actionmailer-ses"
 gem "active_storage_validations"
 gem "baan"
 gem "bootsnap", require: false
-gem "bootstrap-email", "1.5.2"
+gem "bootstrap-email", "1.7.0"
 gem "countries"
 gem "country_select"
 gem "cursor_paginator"
