@@ -15,6 +15,10 @@ class Broadcast < ApplicationRecord
   enumerize :status, in: StateMachine.state_definitions.map(&:name)
 
   belongs_to :account
+  belongs_to :created_by, class_name: "User", optional: true
+  belongs_to :started_by, class_name: "User", optional: true
+  belongs_to :stopped_by, class_name: "User", optional: true
+  belongs_to :updated_by, class_name: "User", optional: true
   has_many :notifications
   has_many :beneficiaries, through: :notifications
   has_many :delivery_attempts

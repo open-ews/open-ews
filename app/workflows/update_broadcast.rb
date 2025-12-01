@@ -13,7 +13,14 @@ class UpdateBroadcast < ApplicationWorkflow
   def call
     broadcast.transaction do
       broadcast.update!(params)
-      broadcast.transition_to!(desired_status) if desired_status.present?
+      if desired_status.present?
+        broadcast.transition_to!(desired_status)
+
+        if params[:updated_by].present?
+          broadcast.update!(started_by: params[:updated_by]) if broadcast.queued?
+          broadcast.update!(stopped_by: params[:updated_by]) if broadcast.stopped?
+        end
+      end
     end
 
     ExecuteWorkflowJob.perform_later(StartBroadcast.to_s, broadcast) if broadcast.queued?

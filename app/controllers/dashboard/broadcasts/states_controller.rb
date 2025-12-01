@@ -9,7 +9,8 @@ module Dashboard
           @broadcast,
           desired_status: broadcast_state_machine.transition_to!(
             params.fetch(:desired_status)
-          ).name
+          ).name,
+          updated_by: current_user
         )
 
         respond_with(:dashboard, @broadcast)

@@ -100,7 +100,32 @@
         <% end %>
       <% end %>
 
+      <%= f.attribute :created_by do %>
+        <% if f.object.created_by.present? %>
+          <%= link_to(f.object.created_by.name, dashboard_settings_user_path(f.object.created_by)) %>
+        <% end %>
+      <% end %>
+
+      <%= f.attribute :updated_by do %>
+        <% if f.object.updated_by.present? %>
+          <%= link_to(f.object.updated_by.name, dashboard_settings_user_path(f.object.updated_by)) %>
+        <% end %>
+      <% end %>
+
+      <%= f.attribute :started_by do %>
+        <% if f.object.started_by.present? %>
+          <%= link_to(f.object.started_by.name, dashboard_settings_user_path(f.object.started_by)) %>
+        <% end %>
+      <% end %>
+
+      <%= f.attribute :stopped_by do %>
+        <% if f.object.stopped_by.present? %>
+          <%= link_to(f.object.stopped_by.name, dashboard_settings_user_path(f.object.stopped_by)) %>
+        <% end %>
+      <% end %>
+
       <%= f.attribute :created_at, value: local_time(@broadcast.created_at) %>
+      <%= f.attribute :started_at, value: local_time(@broadcast.started_at) %>
       <%= f.attribute :updated_at, value: local_time(@broadcast.updated_at) %>
 
       <% if @broadcast.channel.voice? %>

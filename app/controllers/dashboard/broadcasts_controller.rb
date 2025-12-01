@@ -10,7 +10,7 @@ module Dashboard
     end
 
     def create
-      @broadcast = BroadcastForm.new(account: current_account, **permitted_params)
+      @broadcast = BroadcastForm.new(account: current_account, created_by: current_user, **permitted_params)
       @broadcast.save
       respond_with(:dashboard, @broadcast)
     end
@@ -21,7 +21,7 @@ module Dashboard
 
     def update
       @broadcast = BroadcastForm.initialize_with(scope.find(params[:id]))
-      @broadcast.assign_attributes(permitted_params)
+      @broadcast.assign_attributes(updated_by: current_user, **permitted_params)
       @broadcast.save
 
       respond_with(:dashboard, @broadcast)

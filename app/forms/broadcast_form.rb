@@ -3,6 +3,10 @@ class BroadcastForm < ApplicationForm
   attribute :channel
   attribute :audio_file
   attribute :message
+  attribute :created_by
+  attribute :started_by
+  attribute :stopped_by
+  attribute :updated_by
   attribute :beneficiary_groups, FilledArrayType.new
   attribute :beneficiary_filter,
             FilterFormType.new(
@@ -44,6 +48,8 @@ class BroadcastForm < ApplicationForm
   def save
     return false if invalid?
 
+    object.created_by = created_by if new_record?
+    object.updated_by = updated_by if persisted?
     object.channel = channel if new_record? && channel.present?
     object.message = message.presence if channel == "sms"
     object.audio_file = audio_file if channel == "voice"
