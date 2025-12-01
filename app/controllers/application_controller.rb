@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   allow_browser versions: :modern, block: :handle_outdated_browser
   respond_to :html
 
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
   protect_from_forgery with: :exception
 
   helper_method :current_account
@@ -19,5 +21,9 @@ class ApplicationController < ActionController::Base
 
   def handle_outdated_browser
     render "errors/show", status: 406, locals: { status_code: 406 }
+  end
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_in, keys: [ :otp_attempt ])
   end
 end

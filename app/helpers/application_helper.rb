@@ -187,4 +187,18 @@ module ApplicationHelper
   def format_phone_number(value)
     Phony.format(value)
   end
+
+  def mfa_qr_code(user)
+    label = "OpenEWS:#{user.email}"
+    content = "".html_safe
+    content + RQRCode::QRCode.new(
+      user.otp_provisioning_uri(label, issuer: "OpenEWS")
+    ).as_svg(
+      offset: 0,
+      color: "000",
+      shape_rendering: "crispEdges",
+      module_size: 3,
+      standalone: true
+    ).html_safe
+  end
 end

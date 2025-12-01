@@ -14,11 +14,19 @@ default: &default
   audio_host: <%= ENV.fetch("AUDIO_HOST", "https://uploads.open-ews.org") %>
   admin_username: "admin"
   admin_password: "password"
+  active_record_encryption:
+    primary_key: YyTyCDLosQ8iNXtZM0kVYqtgAXLqSkPd
+    deterministic_key: fD6Wh7Lv53LcC4RBllJ027XbtJ2YxZPK
+    key_derivation_salt: y2WOH9JF2donmcXy5Oo8JDRZNsFOD1op
 
 production: &production
   <<: *default
   sentry_dsn: "<%= Rails.application.credentials.sentry_dsn %>"
   admin_password: "<%= ENV.fetch("ADMIN_PASSWORD") { Rails.application.credentials.admin_password } %>"
+  active_record_encryption:
+    primary_key: "<%= ENV.fetch("ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY") { Rails.application.credentials.dig(:active_record_encryption, :primary_key) } %>"
+    deterministic_key: "<%= ENV.fetch("ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY") { Rails.application.credentials.dig(:active_record_encryption, :deterministic_key) } %>"
+    key_derivation_salt: "<%= ENV.fetch("ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT") { Rails.application.credentials.dig(:active_record_encryption, :key_derivation_salt) } %>"
 
 staging:
   <<: *production
