@@ -224,6 +224,7 @@ FactoryBot.define do
     name { "John Doe" }
     password { "secret123" }
     password_confirmation { password }
+    otp_required_for_login { true }
 
     trait :confirmed do
       confirmed_at { Time.current }

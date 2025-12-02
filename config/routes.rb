@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     end
 
     scope module: :dashboard, as: :dashboard do
+      resources :two_factor_authentications, only: %i[new create]
       resources :alerts, only: [ :index, :show, :new, :create ]
 
       namespace :settings do

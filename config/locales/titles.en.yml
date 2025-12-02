@@ -26,6 +26,8 @@ en:
       create: Resend confirmation instructions
     developers:
       show: Developers
+    two_factor_authentications:
+      new: Setup Two-Factor Authentication (2FA)
     broadcast_notifications:
       index: "Notifications for broadcast #%{broadcast}"
     beneficiary_group_memberships:

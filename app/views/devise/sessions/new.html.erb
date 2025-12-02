@@ -1,18 +1,32 @@
 <h2 class="h2 text-center mb-4"><%= title %></h2>
 
 <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), html: { data: { turbo: false }, novalidate: true, autocomplete: "off" }) do |f| %>
-  <%= f.input :email,
-          required: true,
-          autofocus: true,
-          input_html: {
-            autocomplete: "email",
-          } %>
+  <%= f.input(
+    :email,
+    required: true,
+    autofocus: true,
+    input_html: {
+      autocomplete: "email",
+    }
+  ) %>
 
-  <%= f.input :password,
-          required: true,
-          input_html: {
-            autocomplete: "current-password",
-          } %>
+  <%= f.input(
+    :password,
+    required: true,
+    input_html: {
+      autocomplete: "current-password",
+    }
+  ) %>
+
+  <%= f.input(
+      :otp_attempt,
+      label: "OTP Code",
+      required: false,
+      minlength: 6, maxlength: 6,
+      input_html: { inputmode: "numeric", size: nil },
+      hint: "Leave this blank if you haven't set up 2FA."
+    )
+  %>
 
   <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
 

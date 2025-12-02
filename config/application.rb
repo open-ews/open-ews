@@ -49,6 +49,11 @@ module OpenEWS
     config.action_mailer.default_url_options = { host: config.app_settings.fetch(:app_url_host) }
 
     config.exceptions_app = self.routes
+
+    encryption_config = config.app_settings.fetch(:active_record_encryption)
+    config.active_record.encryption.primary_key = encryption_config.fetch(:primary_key)
+    config.active_record.encryption.deterministic_key = encryption_config.fetch(:deterministic_key)
+    config.active_record.encryption.key_derivation_salt = encryption_config.fetch(:key_derivation_salt)
   end
 end
 

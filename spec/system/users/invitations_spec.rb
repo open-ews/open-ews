@@ -20,6 +20,6 @@ RSpec.describe "Invitations" do
     fill_in("Password confirmation", with: "password123")
     click_on("Set my password")
 
-    expect(page).to have_text("Your password was set successfully. You are now signed in.")
+    expect(page).to have_text("Two Factor Authentication Required")
   end
 end

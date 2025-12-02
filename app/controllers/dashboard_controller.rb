@@ -7,6 +7,7 @@ class DashboardController < ApplicationController
 
   before_action :authenticate_user!, :set_locale
   before_action :authorize_account!
+  before_action :enforce_two_factor_authentication!
 
   helper_method :current_account
 
@@ -19,7 +20,7 @@ class DashboardController < ApplicationController
     redirect_to(
       new_user_session_url(host: current_account.subdomain_host),
       status: :see_other,
-      alert: t("devise.failure.invalid", authentication_keys: :email)
+      alert: t("devise.failure.invalid", authentication_keys: "Email")
     )
   end
 
@@ -33,5 +34,15 @@ class DashboardController < ApplicationController
 
   def filter_param
     params.fetch(:filter, {}).permit!
+  end
+
+  def enforce_two_factor_authentication!
+    return if current_user.otp_required_for_login?
+
+    redirect_to(
+      new_dashboard_two_factor_authentication_path,
+      alert: "Two Factor Authentication Required",
+      status: :see_other
+    )
   end
 end
