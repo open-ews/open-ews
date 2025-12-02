@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Dashboard Authentication", type: :system do
   it "sign in with valid OTP" do
     account = create(:account)
-    user = create(:user, email: "user@example.com", password: "password123", account:)
+    user = create(:user, email: "user@example.com", password: "password123", account:, otp_required_for_login: true)
 
     set_app_host(account)
     visit(new_user_session_path)
