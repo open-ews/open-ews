@@ -2,7 +2,7 @@
 
 RSpec.describe "Confirmations" do
   it "resends confirmation instructions" do
-    user = create(:user, email: "user@example.com", confirmed_at: nil, password: "password123")
+    user = create(:user, email: "user@example.com", confirmed_at: nil, password: "password123", otp_required_for_login: false)
 
     set_app_host(user.account)
     visit(new_user_session_path)
@@ -24,6 +24,6 @@ RSpec.describe "Confirmations" do
     fill_in("Password", with: "password123")
     click_on("Log in")
 
-    expect(page).to have_text("Signed in successfully.")
+    expect(page).to have_text("Two Factor Authentication Required")
   end
 end

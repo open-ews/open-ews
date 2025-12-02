@@ -26,12 +26,13 @@ RSpec.describe "Dashboard Authentication", type: :system do
     fill_in("Password", with: "Super Secret")
     click_on("Log in")
 
-    expect(page).to have_content("Setup 2FA")
-
     fill_in("OTP Code", with: user.current_otp)
-    click_on("Enable")
+    click_on("Verify & Enable 2FA")
 
     expect(page).to have_content("2FA was successfully enabled")
+    expect(user.reload).to have_attributes(
+      otp_required_for_login: true
+    )
   end
 
   it "denies access without a valid OTP code" do
@@ -62,5 +63,18 @@ RSpec.describe "Dashboard Authentication", type: :system do
 
     expect(page).to have_content("Invalid Email or password")
     expect(page).to have_current_path(new_user_session_path)
+  end
+
+  it "sign out" do
+    user = create(:user)
+
+    account_sign_in(user)
+    visit dashboard_root_path
+
+    within(".topbar-nav") do
+      click_on "Sign out"
+    end
+
+    expect(page).to have_content("You need to sign in or sign up before continuing")
   end
 end
