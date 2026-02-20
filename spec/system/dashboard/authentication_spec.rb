@@ -46,7 +46,7 @@ RSpec.describe "Dashboard Authentication", type: :system do
     fill_in("OTP Code", with: "0")
     click_on("Log in")
 
-    expect(page).to have_content("Invalid Email or password.")
+    expect(page).to have_content("Invalid email or password.")
   end
 
   it "denies access for cross domain requests" do
@@ -61,7 +61,7 @@ RSpec.describe "Dashboard Authentication", type: :system do
     fill_in("OTP Code", with: user.current_otp)
     click_on("Log in")
 
-    expect(page).to have_content("Invalid Email or password")
+    expect(page).to have_content("Invalid email or password")
     expect(page).to have_current_path(new_user_session_path)
   end
 

@@ -105,7 +105,7 @@ RSpec.describe "Broadcasts" do
     within("#beneficiary_filter_iso_country_code") do
       expect(page).to have_field(with: "Country")
       expect(page).to have_field(with: "Equals")
-      expect(page).to have_field(with: "United States of America (the)")
+      expect(page).to have_field(with: "United States of America")
     end
     within("#beneficiary_filter_iso_region_code") do
       expect(page).to have_field(with: "ISO region code")
