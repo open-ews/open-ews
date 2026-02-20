@@ -1,0 +1,6 @@
+---
+ne:
+  views:
+    pagination:
+      next: "अर्को पृष्ठ &rsaquo;"
+      previous: "&lsaquo; अघिल्लो पृष्ठ"

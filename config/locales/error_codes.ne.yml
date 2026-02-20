@@ -1,0 +1,10 @@
+ne:
+  error_codes:
+    no_matching_beneficiaries: "फिल्टरसँग मेल खाने कुनै लाभग्राही छैन।"
+    account_not_configured_for_channel: "खाता यस च्यानलको लागि कन्फिगर गरिएको छैन।"
+    audio_download_failed: "अडियो फाइल डाउनलोड गर्न असमर्थ।"
+    import_contains_marked_for_deletion_flags: "'marked_for_deletion' फ्ल्याग भएका आयात हुँदा लाभग्राही सिर्जना गर्न सकिँदैन। कृपया 'marked_for_deletion' स्तम्भ हटाएर पुनः प्रयास गर्नुहोस्।"
+    beneficiary_has_multiple_addresses: "लाभग्राहीसँग धेरै ठेगानाहरू छन्।"
+    beneficiary_not_found: "लाभग्राही फेला परेन।"
+    invalid_marked_for_deletion_flag: "'marked_for_deletion' फ्ल्यागको मान अमान्य छ। मान सत्य हुनुपर्छ।"
+    invalid_import_columns: "अमान्य आयात स्तम्भहरू।"

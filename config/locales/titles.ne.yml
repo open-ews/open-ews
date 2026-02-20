@@ -1,0 +1,32 @@
+---
+ne:
+  titles:
+    actions:
+      new: "नयाँ"
+      filters: "फिल्टरहरू"
+      export: "निर्यात गर्नुहोस्"
+      import: "आयात गर्नुहोस्"
+      delete: "मेटाउनुहोस्"
+      more: "थप"
+      sign_out: "साइन आउट गर्नुहोस्"
+    home:
+      index: "ड्यासबोर्ड"
+    exports:
+      index: "निर्यातहरू"
+    imports:
+      index: "आयातहरू"
+    user_settings:
+      index: "सेटिङहरू"
+    beneficiaries:
+      index: "लाभग्राहीहरू"
+    broadcasts:
+      index: "प्रसारणहरू"
+    beneficiary_groups:
+      index: "लाभग्राही समूहहरू"
+    profiles:
+      show: "प्रोफाइल"
+    notifications:
+      index: "सूचनाहरू"
+    settings:
+      index: "सेटिङहरू"
+    no_records: "कुनै रेकर्ड फेला परेन"

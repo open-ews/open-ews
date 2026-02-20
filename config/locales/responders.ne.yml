@@ -1,0 +1,11 @@
+---
+ne:
+  flash:
+    actions:
+      create:
+        notice: "%{resource_name} सफलतापूर्वक सिर्जना गरियो।"
+      destroy:
+        notice: "%{resource_name} सफलतापूर्वक मेटाइयो।"
+        notification: "%{resource_name} मेटाउन सकिएन।"
+      update:
+        notice: "%{resource_name} सफलतापूर्वक अपडेट गरियो।"

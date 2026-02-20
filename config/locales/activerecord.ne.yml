@@ -1,0 +1,13 @@
+---
+ne:
+  attributes:
+    iso_country_code: "देश"
+    group_ids: "समूहहरू"
+    delivery_attempts_count: "डेलिभरी प्रयासहरू"
+    kh:
+      administrative_division_level_3_code: "समुदाय"
+
+  activerecord:
+    attributes:
+      beneficiary_group_membership:
+        created_at: "सदस्यता सुरु भएको मिति"

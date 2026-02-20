@@ -1,0 +1,7 @@
+---
+ne:
+  enumerize:
+    defaults:
+      gender:
+        M: "पुरुष"
+        F: "महिला"

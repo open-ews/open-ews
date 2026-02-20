@@ -12,7 +12,7 @@ class User < ApplicationRecord
 
   has_one_attached :avatar
 
-  enumerize :language, in: %w[en km lo], default: "en"
+  enumerize :language, in: %w[en km lo ne], default: "en"
 
   validates :name, :email, presence: true
   validates :avatar, content_type: ACCEPTED_AVATAR_CONTENT_TYPES
