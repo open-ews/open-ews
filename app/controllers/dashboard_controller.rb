@@ -20,7 +20,7 @@ class DashboardController < ApplicationController
     redirect_to(
       new_user_session_url(host: current_account.subdomain_host),
       status: :see_other,
-      alert: t("devise.failure.invalid", authentication_keys: "Email")
+      alert: t("devise.failure.invalid", authentication_keys: "email")
     )
   end
 
