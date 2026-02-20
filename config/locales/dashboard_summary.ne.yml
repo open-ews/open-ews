@@ -1,0 +1,8 @@
+ne:
+  dashboard_summary:
+    notifications_chart_title: "गत १२ महिनामा %{model_name} वितरण गरियो"
+    stats:
+      title: "कुल %{model_name}"
+      description:
+        one: "गत %{period} मा %{model_name} %{action} गरियो"
+        other: "गत %{period} मा %{model_name} %{action} गरिएका थिए"

@@ -1,0 +1,6 @@
+---
+ne:
+  helpers:
+    submit:
+      create: "%{model} सिर्जना गर्नुहोस्"
+      update: "सुरक्षित गर्नुहोस्"
