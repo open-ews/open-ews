@@ -28,7 +28,6 @@ km:
     delivery_attempt_id: កំណត់ត្រាការហៅចេញ
     duration: រយៈ (វិនាទី)
     metadata: ទិន្នន័យបន្ថែម
-    msisdn: លេខទូរស័ព្ទ
     notification: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
     notification_id: សមាជិកចូលរួមក្នុងសេចក្ដីប្រកាស
     status: ស្ថានភាព
