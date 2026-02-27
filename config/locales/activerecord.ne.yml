@@ -1,11 +1,37 @@
 ---
 ne:
+  activerecord:
+    models:
+      beneficiary: "लाभग्राही"
+      broadcast: "घोषणा"
+      notification: "सूचना"
+      user: "प्रयोगकर्ता"
+
   attributes:
-    iso_country_code: "देश"
     group_ids: "समूहहरू"
     delivery_attempts_count: "डेलिभरी प्रयासहरू"
-    kh:
-      administrative_division_level_3_code: "समुदाय"
+    name: "नाम"
+    locations: "स्थानहरू"
+    gender: "लिङ्ग"
+    disability_status: "अपाङ्गता स्थिति"
+    date_of_birth: "जन्म मिति"
+    iso_language_code: "भाषा"
+    iso_country_code: "देश"
+    iso_region_code: "प्रदेश"
+    np:
+      administrative_division_level_2_code: "जिल्ला"
+    beneficiary: "लाभग्राही"
+    beneficiary_id: "लाभग्राही"
+    broadcast: "घोषणा"
+    broadcast_id: "घोषणा"
+    created_at: "सिर्जना मिति"
+    delivery_attempt: "डेलिभरी प्रयास"
+    delivery_attempt_id: "डेलिभरी प्रयास"
+    duration: "अवधि (सेकेन्ड)"
+    metadata: "अतिरिक्त जानकारी"
+    notification: "घोषणामा सहभागी"
+    notification_id: "घोषणामा सहभागी"
+    status: "स्थिति"
 
   activerecord:
     attributes:
