@@ -26,6 +26,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   # Country codes
   inflect.acronym "KH"
   inflect.acronym "LA"
+  inflect.acronym "NP"
 end
 
 [ :km, :lo ].each do |locale|
