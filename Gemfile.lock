@@ -273,6 +273,7 @@ GEM
       mime-types (>= 1.0)
     foreman (0.90.0)
       thor (~> 1.4)
+    gaun (0.2.0)
     globalid (1.3.0)
       activesupport (>= 6.1)
     google-protobuf (4.33.5)
@@ -637,6 +638,7 @@ DEPENDENCIES
   faraday
   file_validators
   foreman
+  gaun
   jsbundling-rails
   jsonapi-serializer
   kaminari
