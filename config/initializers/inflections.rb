@@ -29,7 +29,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "NP"
 end
 
-[ :km, :lo ].each do |locale|
+[ :km, :lo, :ne ].each do |locale|
   ActiveSupport::Inflector.inflections(locale) do |inflect|
     inflect.plural(/^(.*)$/u, '\1')
     inflect.singular(/^(.*)$/u, '\1')
