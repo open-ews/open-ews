@@ -3,7 +3,8 @@ module CountryAddressData
 
   SETTINGS = {
     KH: :administrative_division_level_3_code,
-    LA: :administrative_division_level_2_code
+    LA: :administrative_division_level_2_code,
+    NP: :administrative_division_level_2_code
   }
 
   def self.address_field_name(iso_country_code)
