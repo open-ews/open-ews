@@ -20,9 +20,9 @@
       <div class="container container-tight py-4">
         <div class="text-center mb-4 account-logo">
           <% if app_request.account_subdomain_request? %>
-            <%= account_logo(current_account, class: "img-fluid mx-auto px-5 my-3 d-block w-50") %>
+            <%= account_logo(current_account, class: "img-fluid mx-auto px-5 my-3 d-block") %>
           <% else %>
-            <%= image_tag("open-ews_landscape_logo.png", class: "img-fluid mx-auto px-5 my-3 d-block w-50") %>
+            <%= image_tag("open-ews_landscape_logo.png", class: "img-fluid mx-auto px-5 my-3 d-block") %>
           <% end %>
         </div>
 
