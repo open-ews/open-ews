@@ -3,8 +3,8 @@ ne:
   activerecord:
     models:
       beneficiary: "लाभग्राही"
-      broadcast: "घोषणा"
-      notification: "सूचना"
+      broadcast: "अलर्ट"
+      notification: "सन्देश"
       user: "प्रयोगकर्ता"
     attributes:
       beneficiary_group_membership:
@@ -24,6 +24,8 @@ ne:
     np:
       administrative_division_level_2_code: "जिल्ला"
     beneficiary: "लाभग्राही"
+    channel: "च्यानल"
+    phone_number: "फोन नम्बर"
     beneficiary_id: "लाभग्राही"
     broadcast: "घोषणा"
     broadcast_id: "घोषणा"

@@ -1,20 +1,5 @@
 ---
 ne:
-  errors:
-    title: "उफ… तपाईंले एक त्रुटि पृष्ठ भेट्नुभयो।"
-    back_to_home: "गृहपृष्ठमा फर्कनुहोस्"
-    400:
-      title: "गलत अनुरोध"
-      subtitle: "अनुरोध अमान्य थियो र प्रक्रिया गरिएको छैन।"
-    404:
-      title: "फेला परेन"
-      subtitle: "तपाईंले खोजिरहेको पृष्ठ अवस्थित छैन।"
-    406:
-      title: "असमर्थित ब्राउजर"
-      subtitle: "तपाईंको ब्राउजर समर्थन गरिएको छैन।"
-    500:
-      title: "आन्तरिक सर्भर त्रुटि"
-      subtitle: "सर्भरले आन्तरिक त्रुटि अनुभव गर्यो।"
   filter_operators:
     eq: "बराबर"
     not_eq: "बराबर छैन"
@@ -29,3 +14,16 @@ ne:
     is_null: "NULL हो"
     in: "भित्र"
     not_in: "भित्र छैन"
+  past_participles:
+    registered: "दर्ता"
+    delivered: "पठाइयो"
+    issued: "सिर्जना"
+  statuses:
+    failed: "असफल"
+    succeeded: "सफल"
+    pending: "प्रतीक्षामा"
+  units:
+    day: "दिन"
+    month: "महिना"
+    year: "वर्ष"
+  count_of_total: "%{total} मध्ये %{count}"
