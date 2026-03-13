@@ -6,6 +6,9 @@ ne:
       broadcast: "घोषणा"
       notification: "सूचना"
       user: "प्रयोगकर्ता"
+    attributes:
+      beneficiary_group_membership:
+        created_at: "सदस्यता सुरु भएको मिति"
 
   attributes:
     group_ids: "समूहहरू"
@@ -32,8 +35,3 @@ ne:
     notification: "घोषणामा सहभागी"
     notification_id: "घोषणामा सहभागी"
     status: "स्थिति"
-
-  activerecord:
-    attributes:
-      beneficiary_group_membership:
-        created_at: "सदस्यता सुरु भएको मिति"
