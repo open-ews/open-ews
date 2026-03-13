@@ -4,5 +4,5 @@ ne:
     stats:
       title: "कुल %{model_name}"
       description:
-        one: "गत %{period} मा %{model_name} %{action} गरियो"
-        other: "गत %{period} मा %{model_name} %{action} गरिएका थिए"
+        one: "गत %{period}मा %{model_name} %{action}"
+        other: "गत %{period}मा %{model_name} %{action}"
