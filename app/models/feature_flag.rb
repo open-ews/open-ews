@@ -5,7 +5,8 @@ class FeatureFlag
     1198 => [ :alerts ],
     1300 => [ :alerts ],
     1331 => [ :alerts ],
-    1332 => [ :alerts ]
+    1332 => [ :alerts ],
+    1495 => [ :alerts ]
   }
 
   class << self
