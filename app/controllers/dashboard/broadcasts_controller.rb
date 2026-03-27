@@ -44,7 +44,14 @@ module Dashboard
     end
 
     def permitted_params
-      params.require(:broadcast).permit(:audio_file, :message, :channel, beneficiary_groups: [], beneficiary_filter: {})
+      params.require(:broadcast).permit(
+        :name,
+        :audio_file,
+        :message,
+        :channel,
+        beneficiary_groups: [],
+        beneficiary_filter: {}
+      )
     end
   end
 end

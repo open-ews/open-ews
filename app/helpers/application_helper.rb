@@ -118,6 +118,12 @@ module ApplicationHelper
     )
   end
 
+  def display_value(value)
+    return value if value.present?
+
+    I18n.t(:"show_for.blank", default: "Not specified")
+  end
+
   def notification_status(notification)
     status = NOTIFICATION_STATUSES[notification.status.to_sym]
 

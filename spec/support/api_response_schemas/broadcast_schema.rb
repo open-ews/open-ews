@@ -4,6 +4,7 @@ module APIResponseSchema
     required(:type).filled(eql?: "broadcast")
 
     required(:attributes).schema do
+      required(:name).maybe(:str?)
       required(:channel).maybe(:str?)
       required(:audio_url).maybe(:str?)
       required(:message).maybe(:str?)

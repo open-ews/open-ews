@@ -16,9 +16,12 @@
 
   <%= render "shared/filter_form", filter_form: @filter_form %>
 
-  <%= render("shared/table_data", collection: @broadcasts, headers: [:id, :channel, :status, :created_at]) do |broadcast| %>
+  <%= render("shared/table_data", collection: @broadcasts, headers: [:id, :name, :channel, :status, :created_at]) do |broadcast| %>
     <td>
       <%= link_to(broadcast.id, dashboard_broadcast_path(broadcast)) %>
+    </td>
+    <td>
+      <%= display_value(broadcast.name) %>
     </td>
     <td>
       <%= broadcast.channel.humanize %>

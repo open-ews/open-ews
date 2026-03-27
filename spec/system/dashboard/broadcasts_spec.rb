@@ -6,22 +6,24 @@ RSpec.describe "Broadcasts" do
     pending_broadcast = create(
       :broadcast,
       :pending,
+      name: "My broadcast 1",
       account: user.account
     )
     completed_broadcast = create(
       :broadcast,
       :completed,
+      name: "My broadcast 2",
       account: user.account
     )
-    other_broadcast = create(:broadcast)
+    other_broadcast = create(:broadcast, name: "My broadcast 3")
 
     account_sign_in(user)
     visit dashboard_broadcasts_path
 
     expect(page).to have_title("Broadcasts")
-    expect(page).to have_content_tag_for(pending_broadcast)
-    expect(page).to have_content_tag_for(completed_broadcast)
-    expect(page).not_to have_content_tag_for(other_broadcast)
+    expect(page).to have_content("My broadcast 1")
+    expect(page).to have_content("My broadcast 2")
+    expect(page).to have_no_content("My broadcast 3")
 
     click_on "Filters"
     select_filter("Status", operator: "Equals", select: "Pending")
@@ -43,6 +45,7 @@ RSpec.describe "Broadcasts" do
 
     expect(page).to have_select("Channel", options: ["Voice"])
 
+    fill_in("Name", with: "My broadcast")
     select("Voice", from: "Channel")
     attach_file("Audio file", file_fixture("test.mp3"))
     select_list("My group", "My other group", from: "Beneficiary groups")
@@ -53,6 +56,7 @@ RSpec.describe "Broadcasts" do
     click_on("Create Broadcast")
 
     expect(page).to have_content("Broadcast was successfully created.")
+    expect(page).to have_content("My broadcast")
     expect(page).to have_content("My group")
     expect(page).to have_content("My other group")
     expect(page).to have_link(user.name, href: dashboard_settings_user_path(user))
@@ -147,6 +151,7 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_link("test.mp3")
     expect(page).to have_select("Channel", disabled: true)
 
+    fill_in("Name", with: "My updated broadcast")
     select_list("My other group", from: "Beneficiary groups")
     select_filter("Gender", operator: "Equals", select: "Male")
     select_filter("Disability status", operator: "Equals", select: "Disabled")
@@ -156,6 +161,7 @@ RSpec.describe "Broadcasts" do
     click_on "Update Broadcast"
 
     expect(page).to have_content("Broadcast was successfully updated.")
+    expect(page).to have_content("My updated broadcast")
     expect(page).to have_content("My group")
     expect(page).to have_content("My other group")
     expect(page).to have_link(user.name, href: dashboard_settings_user_path(user))
