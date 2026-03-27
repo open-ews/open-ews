@@ -52,6 +52,7 @@
   <div class="card-body">
     <%= show_for(@broadcast) do |f| %>
       <%= f.attribute :id %>
+      <%= f.attribute :name %>
       <%= f.attribute :status do %>
         <%= broadcast_status(@broadcast) %>
         <% if @broadcast.errored? %>

@@ -1,4 +1,4 @@
 class BroadcastSerializer < ResourceSerializer
-  attributes :channel, :audio_url, :message, :metadata, :beneficiary_filter, :status, :error_code
+  attributes :name, :channel, :audio_url, :message, :metadata, :beneficiary_filter, :status, :error_code
   has_many :beneficiary_groups, serializer: BeneficiaryGroupSerializer
 end

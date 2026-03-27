@@ -7,6 +7,7 @@ class BroadcastForm < ApplicationForm
   attribute :started_by
   attribute :stopped_by
   attribute :updated_by
+  attribute :name
   attribute :beneficiary_groups, FilledArrayType.new
   attribute :beneficiary_filter,
             FilterFormType.new(
@@ -23,6 +24,7 @@ class BroadcastForm < ApplicationForm
   delegate :id, :new_record?, :persisted?, to: :object
   delegate :supported_channels, to: :account
 
+  validates :channel, presence: true
   validates :audio_file, presence: true, if: -> { new_record? && channel == "voice" }
   validates :message, presence: true, if: -> { channel == "sms" }
   validates :channel, presence: true, inclusion: { in: ->(form) { form.supported_channels } }, if: :new_record?
@@ -37,6 +39,7 @@ class BroadcastForm < ApplicationForm
     new(
       object: broadcast,
       account: broadcast.account,
+      name: broadcast.name,
       message: broadcast.message,
       channel: broadcast.channel,
       audio_file: broadcast.audio_file.blob,
@@ -48,6 +51,7 @@ class BroadcastForm < ApplicationForm
   def save
     return false if invalid?
 
+    object.name = name.presence
     object.created_by = created_by if new_record?
     object.updated_by = updated_by if persisted?
     object.channel = channel if new_record? && channel.present?
@@ -69,6 +73,6 @@ class BroadcastForm < ApplicationForm
   end
 
   def channel_options_for_select
-    BroadcastForm.channel.values.select { supported_channels.include?(it) }.map { [it.text, it] }
+    BroadcastForm.channel.values.select { supported_channels.include?(it) }.map { [ it.text, it ] }
   end
 end

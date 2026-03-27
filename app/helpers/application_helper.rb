@@ -118,6 +118,12 @@ module ApplicationHelper
     )
   end
 
+  def broadcast_name(broadcast)
+    return broadcast.name if broadcast.name.present?
+
+    I18n.t(:"show_for.blank", default: "Not specified")
+  end
+
   def notification_status(notification)
     status = NOTIFICATION_STATUSES[notification.status.to_sym]
 

@@ -25,12 +25,18 @@ RSpec.resource "Broadcasts"  do
 
     example "Filter broadcasts" do
       account = create(:account)
-      broadcast = create(:broadcast, :running, account:)
+      broadcast = create(:broadcast, :running, account:, name: "Test Broadcast")
       create(:broadcast, :running, account:, started_at: 6.hours.ago, created_at: 6.hours.ago)
       create(:broadcast, :stopped, account:)
 
       set_authorization_header_for(account)
-      do_request(filter: { status: { eq: "running" }, started_at: { gt: 5.hours.ago.utc.iso8601 } })
+      do_request(
+        filter: {
+          status: { eq: "running" },
+          started_at: { gt: 5.hours.ago.utc.iso8601 },
+          name: { starts_with: "Test" }
+        }
+      )
 
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("broadcast")
