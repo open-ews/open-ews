@@ -21,7 +21,7 @@
       <%= link_to(broadcast.id, dashboard_broadcast_path(broadcast)) %>
     </td>
     <td>
-      <%= broadcast_name(broadcast) %>
+      <%= display_value(broadcast.name) %>
     </td>
     <td>
       <%= broadcast.channel.humanize %>

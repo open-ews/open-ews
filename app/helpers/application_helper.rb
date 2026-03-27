@@ -118,8 +118,8 @@ module ApplicationHelper
     )
   end
 
-  def broadcast_name(broadcast)
-    return broadcast.name if broadcast.name.present?
+  def display_value(value)
+    return value if value.present?
 
     I18n.t(:"show_for.blank", default: "Not specified")
   end
