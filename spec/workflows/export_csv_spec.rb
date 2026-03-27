@@ -12,6 +12,7 @@ RSpec.describe ExportCSV do
         completed_broadcast = create(
           :broadcast,
           :completed,
+          name: "My broadcast",
           audio_url: "https://example.com/audio.mp3",
           beneficiary_filter: { gender: { eq: "F" } },
           account: account
@@ -40,6 +41,7 @@ RSpec.describe ExportCSV do
         expect(csv_data.length).to eq(1)
         exported_broadcast = csv_data.first
         expect(exported_broadcast["id"]).to eq(completed_broadcast.id.to_s)
+        expect(exported_broadcast["name"]).to eq("My broadcast")
         expect(exported_broadcast["status"]).to eq("completed")
         expect(exported_broadcast["channel"]).to eq("voice")
         expect(exported_broadcast["audio_url"]).to eq("https://example.com/audio.mp3")
