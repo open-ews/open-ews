@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/heartcombo/responders.git
-  revision: 7442d861ef6419fb662162542f1a7266dffbf867
+  revision: e81ed9137292729aea22615f6882cd6628266b4b
   specs:
     responders (3.2.0)
       actionpack (>= 7.0)
@@ -349,7 +349,7 @@ GEM
       logger
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
-    minitest (6.0.2)
+    minitest (6.0.3)
       drb (~> 2.0)
       prism (~> 1.5)
     msgpack (1.8.0)
