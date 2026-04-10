@@ -1,5 +1,5 @@
 class BroadcastDecorator < ApplicationDecorator
-  ORDERED_STATUSES = %i[failed succeeded pending].freeze
+  ORDERED_STATUSES = %i[succeeded failed pending].freeze
 
   delegate :notifications, to: :object, private: true
 
