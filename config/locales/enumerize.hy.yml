@@ -1,0 +1,7 @@
+---
+hy:
+  enumerize:
+    defaults:
+      gender:
+        M: "Արական"
+        F: "Իգական"

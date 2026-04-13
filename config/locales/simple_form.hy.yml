@@ -1,0 +1,6 @@
+---
+hy:
+  helpers:
+    submit:
+      create: "%{model}-ը ստեղծել"
+      update: "Պահպանել"

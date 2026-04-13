@@ -1,0 +1,8 @@
+hy:
+  dashboard_summary:
+    notifications_chart_title: "Վերջին 12 ամսում առաքվել է %{model_name}"
+    stats:
+      title: "Ընդհանուր %{model_name}"
+      description:
+        one: "Վերջին %{period}-ում %{model_name}-ը %{action}"
+        other: "Վերջին %{period}-ում %{model_name}-ը %{action}"

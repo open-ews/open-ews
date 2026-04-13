@@ -1,0 +1,6 @@
+---
+hy:
+  views:
+    pagination:
+      next: "Հաջորդ էջ &rsaquo;"
+      previous: "&lsaquo; Նախորդ էջ"

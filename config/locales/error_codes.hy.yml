@@ -1,0 +1,10 @@
+hy:
+  error_codes:
+    no_matching_beneficiaries: "Ֆիլտրին համապատասխանող շահառուներ չկան։"
+    account_not_configured_for_channel: "Հաշիվը կազմաձևված չէ այս ալիքի համար։"
+    audio_download_failed: "Չհաջողվեց ներբեռնել աուդիո ֆայլը։"
+    import_contains_marked_for_deletion_flags: "Շահառուների ստեղծումը հնարավոր չէ, եթե ներմուծման մեջ կան 'marked_for_deletion' դրոշներ։ Խնդրում ենք հեռացնել 'marked_for_deletion' սյունակը և կրկին փորձել։"
+    beneficiary_has_multiple_addresses: "Շահառուն ունի մի քանի հասցեներ։"
+    beneficiary_not_found: "Շահառուն չի գտնվել։"
+    invalid_marked_for_deletion_flag: "'marked_for_deletion' դրոշի արժեքը անվավեր է։ Այն պետք է լինի true։"
+    invalid_import_columns: "Անվավեր ներմուծման սյունակներ։"

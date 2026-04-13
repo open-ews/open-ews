@@ -1,6 +1,0 @@
----
-km:
-  errors:
-    phone_number?: is invalid
-    remote_request_params?: is invalid
-    unique?: must be unique

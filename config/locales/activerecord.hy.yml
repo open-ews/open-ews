@@ -1,0 +1,45 @@
+---
+hy:
+  activerecord:
+    models:
+      beneficiary: "Շահառու"
+      broadcast: "Ծանուցում"
+      notification: "Հաղորդագրություն"
+      user: "Օգտատեր"
+    attributes:
+      beneficiary_group_membership:
+        created_at: "Անդամակցության սկսման ամսաթիվ"
+
+  attributes:
+    group_ids: "Խմբեր"
+    delivery_attempts_count: "Առաքման փորձերի քանակ"
+    name: "Անուն"
+    locations: "Վայրեր"
+    gender: "Սեռ"
+    disability_status: "Հաշմանդամության կարգավիճակ"
+    date_of_birth: "Ծննդյան ամսաթիվ"
+    iso_language_code: "Լեզու"
+    iso_country_code: "Երկիր"
+    iso_region_code: "Մարզ"
+    am:
+      administrative_division_level_2_code: "համայնքներ"
+    beneficiary: "Շահառու"
+    channel: "Ալիք"
+    phone_number: "Հեռախոսահամար"
+    beneficiary_id: "Շահառու"
+    broadcast: "Ծանուցում"
+    broadcast_id: "Ծանուցում"
+    created_at: "Ստեղծման ամսաթիվ"
+    delivery_attempt: "Առաքման փորձ"
+    delivery_attempt_id: "Առաքման փորձ"
+    duration: "Տևողություն (վայրկյաններով)"
+    metadata: "Լրացուցիչ տեղեկություն"
+    notification: "Ծանուցման մասնակից"
+    notification_id: "Ծանուցման մասնակից"
+    status: "Կարգավիճակ"
+    language: "Լեզու"
+    avatar: "Ավատար"
+    email: "Էլ. փոստ"
+    current_password: "Ներկայիս գաղտնաբառ"
+    password: "Գաղտնաբառ"
+    password_confirmation: "Գաղտնաբառի հաստատում"

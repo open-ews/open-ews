@@ -1,0 +1,32 @@
+---
+hy:
+  titles:
+    actions:
+      new: "Նոր"
+      filters: "Ֆիլտրեր"
+      export: "Արտահանել"
+      import: "Ներմուծել"
+      delete: "Ջնջել"
+      more: "Ավելին"
+      sign_out: "Դուրս գալ"
+    home:
+      index: "Վահանակ"
+    exports:
+      index: "Արտահանումներ"
+    imports:
+      index: "Ներմուծումներ"
+    user_settings:
+      index: "Կարգավորումներ"
+    beneficiaries:
+      index: "Շահառուներ"
+    broadcasts:
+      index: "Հեռարձակումներ"
+    beneficiary_groups:
+      index: "Շահառուների խմբեր"
+    profiles:
+      show: "Պրոֆիլ"
+    notifications:
+      index: "Ծանուցումներ"
+    settings:
+      index: "Կարգավորումներ"
+    no_records: "Գրառումներ չեն գտնվել"
