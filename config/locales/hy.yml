@@ -1,0 +1,29 @@
+---
+ne:
+  filter_operators:
+    eq: "Հավասար է"
+    not_eq: "Հավասար չէ"
+    contains: "Պարունակում է"
+    not_contains: "Չի պարունակում"
+    starts_with: "Սկսվում է"
+    gt: "Ավելի մեծ է"
+    gteq: "Ավելի մեծ կամ հավասար"
+    lt: "Ավելի փոքր է"
+    lteq: "Ավելի փոքր կամ հավասար"
+    between: "Միջակայքում"
+    is_null: "NULL է"
+    in: "Մեջ է"
+    not_in: "Մեջ չէ"
+  past_participles:
+    registered: "Գրանցված"
+    delivered: "Առաքված"
+    issued: "Ստեղծված"
+  statuses:
+    failed: "Ձախողված"
+    succeeded: "Հաջողված"
+    pending: "Սպասման մեջ"
+  units:
+    day: "Օր"
+    month: "Ամիս"
+    year: "Տարի"
+  count_of_total: "%{total}-ից %{count}"

@@ -1,0 +1,11 @@
+---
+hy:
+  flash:
+    actions:
+      create:
+        notice: "%{resource_name}-ը հաջողությամբ ստեղծվեց։"
+      destroy:
+        notice: "%{resource_name}-ը հաջողությամբ ջնջվեց։"
+        notification: "%{resource_name}-ը հնարավոր չեղավ ջնջել։"
+      update:
+        notice: "%{resource_name}-ը հաջողությամբ թարմացվեց։"
