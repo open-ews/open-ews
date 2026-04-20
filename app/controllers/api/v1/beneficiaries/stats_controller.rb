@@ -8,7 +8,9 @@ module API
             serializer_class: StatSerializer,
             **serializer_options
           ) do |permitted_params|
+            query_cache.fetch(permitted_params.slice(:filter, :group_by), scope_keys: current_account.cache_key) do
               StatsQuery.new(permitted_params).apply(scope)
+            end
           end
         end
 
@@ -26,6 +28,10 @@ module API
               pagination: false
             }
           }
+        end
+
+        def query_cache
+          @query_cache ||= QueryCache.new
         end
       end
     end
