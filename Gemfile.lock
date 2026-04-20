@@ -296,7 +296,7 @@ GEM
     jmespath (1.6.2)
     jsbundling-rails (1.3.1)
       railties (>= 6.0.0)
-    json (2.19.3)
+    json (2.19.4)
     jsonapi-serializer (2.2.0)
       activesupport (>= 4.2)
     jwt (3.1.2)
@@ -349,7 +349,7 @@ GEM
       logger
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
-    minitest (6.0.3)
+    minitest (6.0.5)
       drb (~> 2.0)
       prism (~> 1.5)
     msgpack (1.8.0)
@@ -380,8 +380,8 @@ GEM
     pg (1.6.3)
     pg_query (6.2.2)
       google-protobuf (>= 3.25.3)
-    pghero (3.7.0)
-      activerecord (>= 7.1)
+    pghero (3.8.0)
+      activerecord (>= 7.2)
     phony (3.0.5)
     pp (0.6.3)
       prettyprint
