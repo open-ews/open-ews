@@ -38,31 +38,29 @@ RSpec.describe QueryCache do
   it "handles sorting query params" do
     cache = QueryCache.new(store: build_cache_store)
     cache_misses = 0
-
-    params1 = {
-      foo: [ { foo: "bar", baz: "foo" }, { foo: "bar", bar: "baz" } ],
-      baz: "baz",
-      bar: {
+    request_params = [
+      {
+        foo: [ { foo: "bar", baz: "foo" }, { foo: "bar", bar: "baz" } ],
         baz: "baz",
-        bar: "bar"
-      }
-    }
-
-    params2 = {
-      bar: {
-        bar: "bar",
-        baz: "baz"
+        bar: {
+          baz: "baz",
+          bar: "bar"
+        }
       },
-      baz: "baz",
-      foo: [ { baz: "foo", foo: "bar" }, { bar: "baz", foo: "bar" } ]
-    }
+      {
+        bar: {
+          bar: "bar",
+          baz: "baz"
+        },
+        baz: "baz",
+        foo: [ { baz: "foo", foo: "bar" }, { bar: "baz", foo: "bar" } ]
+      }
+    ]
 
-    cache.fetch(params1) do
-      cache_misses += 1
-    end
-
-    cache.fetch(params2) do
-      cache_misses += 1
+    request_params.each do |params|
+      cache.fetch(params) do
+        cache_misses += 1
+      end
     end
 
     expect(cache_misses).to eq(1)
