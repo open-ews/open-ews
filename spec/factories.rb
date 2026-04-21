@@ -102,19 +102,6 @@ FactoryBot.define do
     beneficiary {  association :beneficiary, account: beneficiary_group.account }
   end
 
-  factory :batch_operation_base, class: "BatchOperation::Base" do
-    account
-
-    traits_for_enum :status, %i[preview queued running finished]
-
-    factory :callout_population, aliases: [ :batch_operation, :broadcast_population ],
-                                 class: "BatchOperation::CalloutPopulation" do
-      after(:build) do |callout_population|
-        callout_population.broadcast ||= build(:broadcast, account: callout_population.account)
-      end
-    end
-  end
-
   factory :event do
     account
     beneficiary_created

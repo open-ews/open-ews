@@ -378,10 +378,6 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.6.3)
-    pg_query (6.2.2)
-      google-protobuf (>= 3.25.3)
-    pghero (3.8.0)
-      activerecord (>= 7.2)
     phony (3.0.5)
     pp (0.6.3)
       prettyprint
@@ -576,8 +572,6 @@ GEM
       simplecov (~> 0.19)
     simplecov-html (0.13.2)
     simplecov_json_formatter (0.1.4)
-    skylight (7.1.0)
-      activesupport (>= 7.2.0)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringio (3.2.0)
@@ -657,8 +651,6 @@ DEPENDENCIES
   lograge
   okcomputer
   pg
-  pg_query
-  pghero
   phony
   propshaft
   pry
@@ -684,7 +676,6 @@ DEPENDENCIES
   simple_form
   simplecov
   simplecov-cobertura
-  skylight
   stimulus-rails
   thruster
   turbo-rails

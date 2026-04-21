@@ -68,10 +68,6 @@ Rails.application.routes.draw do
     root to: redirect("/users/forgot_subdomain"), as: :app_root
   end
 
-  namespace :admin do
-    mount(PgHero::Engine, at: "pghero")
-  end
-
   constraints(subdomain: [ AppSettings.fetch(:api_subdomain) ]) do
     namespace :v1, module: "api/v1", as: "api_v1", defaults: { format: "json" } do
       resources :beneficiaries, only: [ :index, :create, :show, :update, :destroy ] do
