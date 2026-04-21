@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_27_061936) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_21_133401) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -58,22 +58,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_061936) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
-  end
-
-  create_table "batch_operations", force: :cascade do |t|
-    t.bigint "account_id", null: false
-    t.bigint "broadcast_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.jsonb "metadata", default: {}, null: false
-    t.jsonb "parameters", default: {}, null: false
-    t.string "status", null: false
-    t.string "type", null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["account_id"], name: "index_batch_operations_on_account_id"
-    t.index ["broadcast_id"], name: "index_batch_operations_on_broadcast_id"
-    t.index ["created_at"], name: "index_batch_operations_on_created_at"
-    t.index ["status"], name: "index_batch_operations_on_status"
-    t.index ["updated_at"], name: "index_batch_operations_on_updated_at"
   end
 
   create_table "beneficiaries", force: :cascade do |t|
@@ -302,17 +286,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_061936) do
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
-  create_table "pghero_query_stats", force: :cascade do |t|
-    t.bigint "calls"
-    t.datetime "captured_at", precision: nil
-    t.text "database"
-    t.text "query"
-    t.bigint "query_hash"
-    t.float "total_time"
-    t.text "user"
-    t.index ["database", "captured_at"], name: "index_pghero_query_stats_on_database_and_captured_at"
-  end
-
   create_table "users", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.datetime "confirmation_sent_at", precision: nil
@@ -356,8 +329,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_061936) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "batch_operations", "accounts"
-  add_foreign_key "batch_operations", "broadcasts"
   add_foreign_key "beneficiaries", "accounts"
   add_foreign_key "beneficiary_addresses", "beneficiaries", on_delete: :cascade
   add_foreign_key "beneficiary_group_memberships", "beneficiaries", on_delete: :cascade

@@ -9,8 +9,6 @@ class Account < ApplicationRecord
   has_many :events
   has_many :notifications, through: :broadcasts
 
-  has_many :batch_operations, class_name: "BatchOperation::CalloutPopulation"
-
   before_create :set_default_settings
 
   enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
