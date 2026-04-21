@@ -16,7 +16,6 @@ class QueryCache
 
   def cache_key(params, scope_keys:)
     [
-      "query_cache",
       *Array(scope_keys).sort,
       sha256_params(params)
     ].join(":")
@@ -37,7 +36,3 @@ class QueryCache
     end
   end
 end
-
-#         Rails.cache.fetch("expensive_query_key", expires_in: 10.minutes) do
-#   Model.where(...).to_a
-# end
