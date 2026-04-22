@@ -8,7 +8,7 @@ module CSVSerializers
         phone_number: "85510555123",
         gender: "F",
         status: "active",
-        disability_status: "normal",
+        disability_status: "none",
         iso_language_code: "khm",
         date_of_birth: Date.new(1990, 1, 1),
         iso_country_code: "KH"
@@ -35,7 +35,7 @@ module CSVSerializers
       expect(result[:phone_number]).to eq("85510555123")
       expect(result[:gender]).to eq("F")
       expect(result[:status]).to eq("active")
-      expect(result[:disability_status]).to eq("normal")
+      expect(result[:disability_status]).to eq("none")
       expect(result[:iso_language_code]).to eq("khm")
       expect(result[:date_of_birth]).to eq(Date.new(1990, 1, 1))
       expect(result[:iso_country_code]).to eq("KH")

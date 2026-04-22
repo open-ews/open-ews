@@ -84,7 +84,7 @@ RSpec.describe ImportBeneficiary do
         phone_number: "+85516789111",
         iso_country_code: "KH",
         iso_language_code: "eng",
-        disability_status: "normal",
+        disability_status: "none",
         date_of_birth: Date.new(1991, 1, 1),
         gender: "F"
       }
@@ -95,7 +95,7 @@ RSpec.describe ImportBeneficiary do
       phone_number: "85516789111",
       iso_country_code: "KH",
       iso_language_code: "eng",
-      disability_status: "normal",
+      disability_status: "none",
       date_of_birth: Date.new(1991, 1, 1),
       gender: "F"
     )

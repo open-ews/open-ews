@@ -4,7 +4,7 @@ class Beneficiary < ApplicationRecord
 
   enumerize :status, in: [ :active, :disabled ], scope: :shallow
   enumerize :gender, in: [ "M", "F" ]
-  enumerize :disability_status, in: [ :normal, :disabled ]
+  enumerize :disability_status, in: [ :none, :disabled ]
   enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
 
   belongs_to :account
