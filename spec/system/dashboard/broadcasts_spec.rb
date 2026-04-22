@@ -140,7 +140,7 @@ RSpec.describe "Broadcasts" do
       beneficiary_groups: [ create_beneficiary_group(name: "My group", account:) ],
       beneficiary_filter: {
         phone_number: { in: [ "855715100850",  "855715100851" ] },
-        disability_status: { eq: 'normal' },
+        disability_status: { eq: 'none' },
         "address.administrative_division_level_3_code": { in: [ "120101" ] },
       }
     )

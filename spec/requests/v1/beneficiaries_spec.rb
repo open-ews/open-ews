@@ -189,7 +189,7 @@ RSpec.resource "Beneficiaries"  do
             date_of_birth: "1990-01-01",
             metadata: { "my_custom_property" => "my_custom_property_value" },
             iso_country_code: "KH",
-            disability_status: "normal"
+            disability_status: "none"
           }
         }
       )
@@ -203,7 +203,7 @@ RSpec.resource "Beneficiaries"  do
         "date_of_birth" => "1990-01-01",
         "metadata" => { "my_custom_property" => "my_custom_property_value" },
         "iso_country_code" => "KH",
-        "disability_status" => "normal",
+        "disability_status" => "none",
       )
     end
 
