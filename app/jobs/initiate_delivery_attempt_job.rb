@@ -25,6 +25,8 @@ class InitiateDeliveryAttemptJob < ApplicationJob
         initiate_delivery_attempt { send_message }
       end
     rescue Somleng::Client::RestError => e
+      Sentry.capture_exception(e)
+
       delivery_attempt.transaction do
         HandleDeliveryAttemptStatusUpdate.call(delivery_attempt, status: "failed")
         update_metadata!(
