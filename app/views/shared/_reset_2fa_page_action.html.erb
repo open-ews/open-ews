@@ -1,0 +1,11 @@
+<%= button_to(
+  dashboard_two_factor_authentication_path(user),
+  class: "dropdown-item",
+  form_class: "d-inline",
+  title: action(:reset_2fa),
+  method: :delete,
+  form: { data: { turbo_confirm: "Are you sure you want to continue?" }}
+  ) do %>
+  <i class="ti ti-lock-open-2"></i>
+  <%= action(:reset_2fa) %>
+<% end %>
