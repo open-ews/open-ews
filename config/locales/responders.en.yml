@@ -1,6 +1,9 @@
 en:
   flash:
     dashboard:
+      two_factor_authentications:
+        destroy:
+          notice: "2FA was successfully reset for %{email}"
       settings:
         users:
           create:

@@ -60,6 +60,25 @@ RSpec.describe "Users" do
     expect(page).to have_no_content("John Cena")
   end
 
+  it "resets 2fa for another user" do
+    account = create(:account)
+    user = create(:user, account:)
+    other_user = create(
+      :user,
+      account:,
+      otp_required_for_login: true,
+      email: "johndoe@example.com"
+    )
+
+    account_sign_in(user)
+    visit dashboard_settings_user_path(other_user)
+
+    click_on "Reset 2FA"
+
+    expect(page).to have_content("2FA was successfully reset for johndoe@example.com")
+    expect(page).to have_current_path(dashboard_settings_user_path(other_user))
+  end
+
   it "handles form validations" do
     user = create(:user)
 
