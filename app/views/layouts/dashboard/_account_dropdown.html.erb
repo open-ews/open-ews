@@ -22,9 +22,11 @@
 
     <div class="dropdown-divider"></div>
 
-    <%= link_to(dashboard_settings_root_path, class: "dropdown-item") do %>
-      <i class="icon ti ti-settings"></i>
-      <%= title(controller_name: :settings, action_name: :index) %>
+    <% if current_user.owner? %>
+      <%= link_to(dashboard_settings_root_path, class: "dropdown-item") do %>
+        <i class="icon ti ti-settings"></i>
+        <%= title(controller_name: :settings, action_name: :index) %>
+      <% end %>
     <% end %>
 
     <%= button_to(

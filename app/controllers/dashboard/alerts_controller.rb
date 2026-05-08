@@ -6,18 +6,22 @@ module Dashboard
     helper_method :alert_badge
 
     def index
+      authorize(:alert, policy_class: AlertPolicy)
       @alerts = FakeResource::Alert.all
     end
 
     def new
+      authorize(:alert, policy_class: AlertPolicy)
       @alert = FakeResource::Alert.first
     end
 
     def create
+      authorize(:alert, policy_class: AlertPolicy)
       redirect_to(dashboard_alert_path(FakeResource::Alert.first.id), notice: "Alert created successfully.")
     end
 
     def show
+      authorize(:alert, policy_class: AlertPolicy)
       @alert = FakeResource::Alert.find(params[:id])
       @broadcasts = FakeResource::Broadcast.all
     end

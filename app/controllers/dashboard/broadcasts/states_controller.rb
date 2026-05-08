@@ -3,6 +3,7 @@ module Dashboard
     class StatesController < DashboardController
       def create
         @broadcast = current_account.broadcasts.find(params[:broadcast_id])
+        authorize(@broadcast, policy_class: BroadcastStatePolicy)
         broadcast_state_machine = BroadcastStateMachine.new(@broadcast.status)
 
         UpdateBroadcast.call(

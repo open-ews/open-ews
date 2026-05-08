@@ -59,7 +59,7 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_content("My broadcast")
     expect(page).to have_content("My group")
     expect(page).to have_content("My other group")
-    expect(page).to have_link(user.name, href: dashboard_settings_user_path(user))
+    expect(page).to have_content(user.name)
     within("#beneficiary_filter_gender") do
       expect(page).to have_field(with: "Gender")
       expect(page).to have_field(with: "Equals")
@@ -164,7 +164,7 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_content("My updated broadcast")
     expect(page).to have_content("My group")
     expect(page).to have_content("My other group")
-    expect(page).to have_link(user.name, href: dashboard_settings_user_path(user))
+    expect(page).to have_content(user.name)
     within("#beneficiary_filter_gender") do
       expect(page).to have_field(with: "Gender")
       expect(page).to have_field(with: "Equals")
@@ -232,7 +232,7 @@ RSpec.describe "Broadcasts" do
 
     expect(page).to have_text("Broadcast was successfully updated.")
     expect(page).to have_text("Running")
-    expect(page).to have_link(user.name, href: dashboard_settings_user_path(user))
+    expect(page).to have_content(user.name)
   end
 
   it "stop a broadcast" do
@@ -247,7 +247,7 @@ RSpec.describe "Broadcasts" do
 
     expect(page).to have_text("Broadcast was successfully updated.")
     expect(page).to have_text("Stopped")
-    expect(page).to have_link(user.name, href: dashboard_settings_user_path(user))
+    expect(page).to have_content(user.name)
   end
 
   it "fail to start a broadcast" do

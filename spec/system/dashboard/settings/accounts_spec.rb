@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Account Settings" do
   it "updates the account settings" do
     account = create(:account)
-    user = create(:user, account:, name: "John Doe")
+    user = create(:user, :owner, account:, name: "John Doe")
     somleng_account_sid = generate(:somleng_account_sid)
     somleng_auth_token = generate(:auth_token)
 
@@ -33,7 +33,7 @@ RSpec.describe "Account Settings" do
 
   it "updates the subdomain" do
     account = create(:account, subdomain: "my-alerting-authority")
-    user = create(:user, account:)
+    user = create(:user, :owner, account:)
 
     account_sign_in(user)
     visit(dashboard_settings_account_path)
@@ -47,7 +47,7 @@ RSpec.describe "Account Settings" do
 
   it "handles validations" do
     other_account = create(:account)
-    user = create(:user)
+    user = create(:user, :owner)
 
     account_sign_in(user)
     visit(dashboard_settings_account_path)
@@ -55,5 +55,15 @@ RSpec.describe "Account Settings" do
     click_on("Save")
 
     expect(page).to have_content("has already been taken")
+  end
+
+  it "denies access to members" do
+    user = create(:user, :member)
+
+    account_sign_in(user)
+    visit(dashboard_settings_account_path)
+
+    expect(page).to have_current_path(dashboard_root_path)
+    expect(page).to have_content("You are not authorized to perform this action")
   end
 end

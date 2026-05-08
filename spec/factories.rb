@@ -208,6 +208,7 @@ FactoryBot.define do
     account
     email
     confirmed
+    member
     name { "John Doe" }
     password { "secret123" }
     password_confirmation { password }
@@ -216,6 +217,8 @@ FactoryBot.define do
     trait :confirmed do
       confirmed_at { Time.current }
     end
+
+    traits_for_enum :role, %i[owner member]
   end
 
   factory :access_token do

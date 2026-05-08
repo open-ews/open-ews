@@ -2,18 +2,22 @@ module Dashboard
   module Settings
     class UsersController < DashboardController
       def index
+        authorize(User)
         @users = paginate_resources(scope)
       end
 
       def show
         @user = scope.find(params[:id])
+        authorize(@user)
       end
 
       def new
+        authorize(User)
         @user = UserForm.new
       end
 
       def create
+        authorize(User)
         @user = UserForm.new(account: current_account, inviter: current_user, **permitted_params)
         @user.save
         respond_with(@user, location: -> { dashboard_settings_user_path(@user) })
@@ -21,6 +25,7 @@ module Dashboard
 
       def destroy
         @user = scope.find(params[:id])
+        authorize(@user)
         @user.destroy
         respond_with(@user, location: dashboard_settings_users_path)
       end

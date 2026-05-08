@@ -2,6 +2,7 @@ module Dashboard
   module BeneficiaryGroups
     class MembershipsController < DashboardController
       def index
+        authorize(BeneficiaryGroupMembership)
         @filter_form = BeneficiaryGroupMembershipFilterForm.new(filter_param)
         @memberships = paginate_resources(
           @filter_form.apply(scope).includes(:beneficiary)

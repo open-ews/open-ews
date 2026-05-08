@@ -1,10 +1,12 @@
 module Dashboard
   class ImportsController < DashboardController
     def index
+      authorize(Import)
       @imports = paginate_resources(scope)
     end
 
     def create
+      authorize(Import)
       @import = build_import
       if @import.save
         ExecuteWorkflowJob.perform_later(ImportCSV.to_s, @import)

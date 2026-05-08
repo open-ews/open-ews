@@ -1,0 +1,2 @@
+class BroadcastPolicy < DashboardPolicy
+end

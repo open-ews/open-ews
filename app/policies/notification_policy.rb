@@ -1,0 +1,2 @@
+class NotificationPolicy < DashboardPolicy
+end

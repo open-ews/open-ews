@@ -1,0 +1,2 @@
+class BeneficiaryGroupMembershipPolicy < DashboardPolicy
+end

@@ -1,10 +1,12 @@
 module Dashboard
   class ExportsController < DashboardController
     def index
+      authorize(Export)
       @exports = paginate_resources(scope)
     end
 
     def create
+      authorize(Export)
       ExportForm.new(user: current_user, **permitted_params).save!
 
       flash[:notice] = t("flash.dashboard.exports.create.notice_html", exports_path: helpers.link_to("Exports", dashboard_exports_path))
