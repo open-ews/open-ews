@@ -36,7 +36,7 @@ RSpec.describe "Broadcasts" do
 
   it "create a voice broadcast", :js do
     account = create(:account, iso_country_code: "KH", supported_channels: ["voice"])
-    user = create(:user, account:)
+    user = create(:user, :owner, account:)
     create_beneficiary_group(name: "My group", account:)
     create_beneficiary_group(name: "My other group", account:)
 
@@ -59,7 +59,7 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_content("My broadcast")
     expect(page).to have_content("My group")
     expect(page).to have_content("My other group")
-    expect(page).to have_content(user.name)
+    expect(page).to have_link(user.name, href: dashboard_settings_user_path(user))
     within("#beneficiary_filter_gender") do
       expect(page).to have_field(with: "Gender")
       expect(page).to have_field(with: "Equals")
