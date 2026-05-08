@@ -1,2 +1,0 @@
-class BroadcastStatePolicy < DashboardPolicy
-end

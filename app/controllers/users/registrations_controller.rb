@@ -1,5 +1,7 @@
 module Users
   class RegistrationsController < Devise::RegistrationsController
+    include Pundit::Authorization
+
     layout "dashboard"
 
     before_action :set_locale
