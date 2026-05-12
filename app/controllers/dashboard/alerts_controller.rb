@@ -11,18 +11,19 @@ module Dashboard
     end
 
     def new
-      authorize(:alert, policy_class: AlertPolicy)
       @alert = FakeResource::Alert.first
+      authorize(@alert, policy_class: AlertPolicy)
     end
 
     def create
-      authorize(:alert, policy_class: AlertPolicy)
-      redirect_to(dashboard_alert_path(FakeResource::Alert.first.id), notice: "Alert created successfully.")
+      @alert = FakeResource::Alert.first
+      authorize(@alert, policy_class: AlertPolicy)
+      redirect_to(dashboard_alert_path(@alert.id), notice: "Alert created successfully.")
     end
 
     def show
-      authorize(:alert, policy_class: AlertPolicy)
       @alert = FakeResource::Alert.find(params[:id])
+      authorize(@alert, policy_class: AlertPolicy)
       @broadcasts = FakeResource::Broadcast.all
     end
 

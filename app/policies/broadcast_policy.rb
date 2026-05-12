@@ -1,2 +1,2 @@
-class BroadcastPolicy < DashboardPolicy
+class BroadcastPolicy < ApplicationPolicy
 end

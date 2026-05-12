@@ -20,32 +20,34 @@ module Dashboard
     end
 
     def edit
-      @beneficiary_group = scope.find(params[:id])
-      authorize(@beneficiary_group)
+      @beneficiary_group = find_beneficiary_group
     end
 
     def update
-      @beneficiary_group = scope.find(params[:id])
-      authorize(@beneficiary_group)
+      @beneficiary_group = find_beneficiary_group
       @beneficiary_group.update(permitted_params)
 
       respond_with(:dashboard, @beneficiary_group)
     end
 
     def show
-      @beneficiary_group = scope.find(params[:id])
-      authorize(@beneficiary_group)
+      @beneficiary_group = find_beneficiary_group
     end
 
     def destroy
-      @beneficiary_group = scope.find(params[:id])
-      authorize(@beneficiary_group)
+      @beneficiary_group = find_beneficiary_group
       @beneficiary_group.destroy
 
       respond_with(:dashboard, @beneficiary_group)
     end
 
     private
+
+    def find_beneficiary_group
+      beneficiary_group = scope.find(params[:id])
+      authorize(beneficiary_group)
+      beneficiary_group
+    end
 
     def scope
       current_account.beneficiary_groups

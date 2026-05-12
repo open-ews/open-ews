@@ -31,8 +31,4 @@ module UserAuthorization
       alert: t("devise.failure.invalid", authentication_keys: "email")
     )
   end
-
-  def policy_class
-    "#{controller_name.classify}Policy".constantize
-  end
 end

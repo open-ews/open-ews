@@ -4,7 +4,7 @@ RSpec.describe TwoFactorAuthenticationPolicy do
   it "allows all users to set up their own 2fa" do
     user = build_stubbed(:user, :member, otp_required_for_login: false)
 
-    policy = described_class.new(user, user)
+    policy = TwoFactorAuthenticationPolicy.new(user, user)
 
     expect(policy.new?).to be(true)
     expect(policy.create?).to be(true)
@@ -14,7 +14,7 @@ RSpec.describe TwoFactorAuthenticationPolicy do
     owner = build_stubbed(:user, role: :owner)
     member = build_stubbed(:user, :member)
 
-    expect(described_class.new(owner, member).destroy?).to be(true)
-    expect(described_class.new(member, owner).destroy?).to be(false)
+    expect(TwoFactorAuthenticationPolicy.new(owner, member).destroy?).to be(true)
+    expect(TwoFactorAuthenticationPolicy.new(member, owner).destroy?).to be(false)
   end
 end

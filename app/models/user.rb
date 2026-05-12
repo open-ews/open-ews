@@ -13,7 +13,7 @@ class User < ApplicationRecord
   has_one_attached :avatar
 
   enumerize :language, in: %w[en km lo ne hy], default: "en"
-  enumerize :role, in: %i[owner member], default: :owner, predicates: true
+  enumerize :role, in: %i[owner member], predicates: true
 
   validates :name, :email, presence: true
   validates :avatar, content_type: ACCEPTED_AVATAR_CONTENT_TYPES

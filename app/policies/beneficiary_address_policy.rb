@@ -1,2 +1,2 @@
-class BeneficiaryAddressPolicy < DashboardPolicy
+class BeneficiaryAddressPolicy < ApplicationPolicy
 end

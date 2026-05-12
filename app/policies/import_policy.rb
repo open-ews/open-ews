@@ -1,2 +1,2 @@
-class ImportPolicy < DashboardPolicy
+class ImportPolicy < ApplicationPolicy
 end

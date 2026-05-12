@@ -7,30 +7,34 @@ module Dashboard
       end
 
       def show
-        @user = scope.find(params[:id])
-        authorize(@user)
+        @user = find_user
       end
 
       def new
-        authorize(User)
         @user = UserForm.new
+        authorize(@user)
       end
 
       def create
-        authorize(User)
         @user = UserForm.new(account: current_account, inviter: current_user, **permitted_params)
+        authorize(@user)
         @user.save
         respond_with(@user, location: -> { dashboard_settings_user_path(@user) })
       end
 
       def destroy
-        @user = scope.find(params[:id])
-        authorize(@user)
+        @user = find_user
         @user.destroy
         respond_with(@user, location: dashboard_settings_users_path)
       end
 
       private
+
+      def find_user
+        user = scope.find(params[:id])
+        authorize(user)
+        user
+      end
 
       def scope
         current_account.users

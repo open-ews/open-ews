@@ -1,2 +1,2 @@
-class ExportPolicy < DashboardPolicy
+class ExportPolicy < ApplicationPolicy
 end

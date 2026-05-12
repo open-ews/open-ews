@@ -6,8 +6,8 @@ module Dashboard
     end
 
     def create
-      authorize(Import)
       @import = build_import
+      authorize(@import)
       if @import.save
         ExecuteWorkflowJob.perform_later(ImportCSV.to_s, @import)
         flash[:notice] = "Your import is being processed. You can view its status from the #{helpers.link_to('Imports', dashboard_imports_path)} page."

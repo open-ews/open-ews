@@ -3,13 +3,13 @@ module Dashboard
     skip_before_action :enforce_two_factor_authentication!, only: %i[new create]
 
     def new
-      authorize(current_user, policy_class: TwoFactorAuthenticationPolicy)
       @resource = TwoFactorAuthenticationForm.new
+      authorize(@resource, policy_class: TwoFactorAuthenticationPolicy)
     end
 
     def create
-      authorize(current_user, policy_class: TwoFactorAuthenticationPolicy)
       @resource = TwoFactorAuthenticationForm.new(permitted_params)
+      authorize(@resource, policy_class: TwoFactorAuthenticationPolicy)
       @resource.user = current_user
       @resource.save
 

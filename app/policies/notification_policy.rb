@@ -1,2 +1,2 @@
-class NotificationPolicy < DashboardPolicy
+class NotificationPolicy < ApplicationPolicy
 end

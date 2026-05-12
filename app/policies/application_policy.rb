@@ -35,7 +35,7 @@ class ApplicationPolicy
   end
 
   def manage?
-    false
+    true
   end
 
   def read?

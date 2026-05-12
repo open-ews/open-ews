@@ -22,6 +22,10 @@ class ExportForm < ApplicationForm
 
   delegate :account, to: :user
 
+  def self.model_name
+    ActiveModel::Name.new(self, nil, "Export")
+  end
+
   def save!
     raise InvalidFormValues if invalid?
 

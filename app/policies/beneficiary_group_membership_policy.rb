@@ -1,2 +1,2 @@
-class BeneficiaryGroupMembershipPolicy < DashboardPolicy
+class BeneficiaryGroupMembershipPolicy < ApplicationPolicy
 end

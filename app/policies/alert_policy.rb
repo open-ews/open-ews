@@ -1,2 +1,2 @@
-class AlertPolicy < DashboardPolicy
+class AlertPolicy < ApplicationPolicy
 end

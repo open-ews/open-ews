@@ -5,12 +5,12 @@ module Dashboard
 
       def show
         @account = AccountForm.initialize_with(current_account)
-        authorize(current_account)
+        authorize(@account)
       end
 
       def update
         @account = AccountForm.new(object: current_account, **permitted_params)
-        authorize(current_account)
+        authorize(@account)
         if @account.save
           respond_with(@account, location: dashboard_settings_account_url(host: @account.subdomain_host))
         else

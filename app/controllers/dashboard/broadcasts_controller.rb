@@ -7,25 +7,24 @@ module Dashboard
     end
 
     def new
-      authorize(Broadcast)
       @broadcast = BroadcastForm.new(account: current_account)
+      authorize(@broadcast)
     end
 
     def create
-      authorize(Broadcast)
       @broadcast = BroadcastForm.new(account: current_account, created_by: current_user, **permitted_params)
+      authorize(@broadcast)
       @broadcast.save
       respond_with(:dashboard, @broadcast)
     end
 
     def edit
-      @broadcast = BroadcastForm.initialize_with(scope.find(params[:id]))
-      authorize(@broadcast.object)
+      @broadcast = BroadcastForm.initialize_with(find_broadcast)
     end
 
     def update
-      @broadcast = BroadcastForm.initialize_with(scope.find(params[:id]))
-      authorize(@broadcast.object)
+      @broadcast = BroadcastForm.initialize_with(find_broadcast)
+      authorize(@broadcast)
       @broadcast.assign_attributes(updated_by: current_user, **permitted_params)
       @broadcast.save
 
@@ -33,18 +32,22 @@ module Dashboard
     end
 
     def show
-      @broadcast = BroadcastDecorator.new(scope.find(params[:id]))
-      authorize(@broadcast.object)
+      @broadcast = BroadcastDecorator.new(find_broadcast)
     end
 
     def destroy
-      @broadcast = scope.find(params[:id])
-      authorize(@broadcast)
+      @broadcast = find_broadcast
       @broadcast.destroy
       respond_with(:dashboard, @broadcast)
     end
 
     private
+
+    def find_broadcast
+      broadcast = scope.find(params[:id])
+      authorize(broadcast)
+      broadcast
+    end
 
     def scope
       current_account.broadcasts
