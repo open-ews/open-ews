@@ -207,4 +207,14 @@ module ApplicationHelper
       standalone: true
     ).html_safe
   end
+
+  def user_link(user)
+    return if user.blank?
+
+    if policy(user).manage?
+      link_to(user.name, dashboard_settings_user_path(user))
+    else
+      user.name
+    end
+  end
 end

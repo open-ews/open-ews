@@ -10,3 +10,6 @@ en:
         lo: ລາວ
         ne: नेपाली
         hy: Հայերեն
+      role:
+        owner: Owner
+        member: Member

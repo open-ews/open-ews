@@ -1,38 +1,41 @@
 module Dashboard
   class BeneficiariesController < DashboardController
     def index
+      authorize(Beneficiary)
       @filter_form = BeneficiaryFilterForm.new(filter_param)
       @beneficiaries = paginate_resources(@filter_form.apply(scope))
     end
 
     def new
       @beneficiary = scope.new
+      authorize(@beneficiary)
     end
 
     def create
       @beneficiary = scope.new(permitted_params)
+      authorize(@beneficiary)
       @beneficiary.save
 
       respond_with(:dashboard, @beneficiary)
     end
 
     def edit
-      @beneficiary = scope.find(params[:id])
+      @beneficiary = find_beneficiary
     end
 
     def update
-      @beneficiary = scope.find(params[:id])
+      @beneficiary = find_beneficiary
       @beneficiary.update(permitted_params)
 
       respond_with(:dashboard, @beneficiary)
     end
 
     def show
-      @beneficiary = scope.find(params[:id])
+      @beneficiary = find_beneficiary
     end
 
     def destroy
-      @beneficiary = scope.find(params[:id])
+      @beneficiary = find_beneficiary
       @beneficiary.destroy
 
       respond_with(:dashboard, @beneficiary)
@@ -42,6 +45,12 @@ module Dashboard
 
     def scope
       current_account.beneficiaries
+    end
+
+    def find_beneficiary
+      beneficiary = scope.find(params[:id])
+      authorize(beneficiary)
+      beneficiary
     end
 
     def permitted_params

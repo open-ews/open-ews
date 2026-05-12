@@ -1,0 +1,2 @@
+class AlertPolicy < ApplicationPolicy
+end

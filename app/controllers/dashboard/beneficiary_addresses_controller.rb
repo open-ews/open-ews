@@ -1,3 +1,7 @@
 module Dashboard
-  class BeneficiaryAddressesController < DashboardController; end
+  class BeneficiaryAddressesController < DashboardController
+    def new
+      authorize(BeneficiaryAddress)
+    end
+  end
 end

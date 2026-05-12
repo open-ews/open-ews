@@ -4,7 +4,7 @@ RSpec.describe "Developer Settings" do
   it "can view the developer settings" do
     account = create(:account)
     create(:access_token, account:)
-    user = create(:user, account:)
+    user = create(:user, :owner, account:)
 
     account_sign_in(user)
     visit(dashboard_settings_developer_path)

@@ -36,7 +36,7 @@ RSpec.describe "Broadcasts" do
 
   it "create a voice broadcast", :js do
     account = create(:account, iso_country_code: "KH", supported_channels: ["voice"])
-    user = create(:user, account:)
+    user = create(:user, :owner, account:)
     create_beneficiary_group(name: "My group", account:)
     create_beneficiary_group(name: "My other group", account:)
 
@@ -164,7 +164,7 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_content("My updated broadcast")
     expect(page).to have_content("My group")
     expect(page).to have_content("My other group")
-    expect(page).to have_link(user.name, href: dashboard_settings_user_path(user))
+    expect(page).to have_content(user.name)
     within("#beneficiary_filter_gender") do
       expect(page).to have_field(with: "Gender")
       expect(page).to have_field(with: "Equals")
@@ -232,7 +232,7 @@ RSpec.describe "Broadcasts" do
 
     expect(page).to have_text("Broadcast was successfully updated.")
     expect(page).to have_text("Running")
-    expect(page).to have_link(user.name, href: dashboard_settings_user_path(user))
+    expect(page).to have_content(user.name)
   end
 
   it "stop a broadcast" do
@@ -247,7 +247,7 @@ RSpec.describe "Broadcasts" do
 
     expect(page).to have_text("Broadcast was successfully updated.")
     expect(page).to have_text("Stopped")
-    expect(page).to have_link(user.name, href: dashboard_settings_user_path(user))
+    expect(page).to have_content(user.name)
   end
 
   it "fail to start a broadcast" do

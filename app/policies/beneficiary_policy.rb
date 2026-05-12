@@ -1,0 +1,2 @@
+class BeneficiaryPolicy < ApplicationPolicy
+end
