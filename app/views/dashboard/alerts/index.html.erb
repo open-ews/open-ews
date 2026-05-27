@@ -1,5 +1,7 @@
 <% content_for(:page_actions) do %>
-  <%= render("shared/new_resource_page_action", path: new_dashboard_alert_path) %>
+  <% unless FeatureFlag.enabled_for?(current_user, :alert_approval) %>
+    <%= render("shared/new_resource_page_action", path: new_dashboard_alert_path) %>
+  <% end %>
 <% end %>
 
 <div class="card">
@@ -8,7 +10,7 @@
       <thead>
         <tr role="row">
           <th>#</th>
-          <% ["Event", "Headline", "Urgency", "Severity", "Created at"].each do |column| %>
+          <% ["Event", "Headline", "Approval status", "Urgency", "Severity", "Created at"].each do |column| %>
             <th>
               <div class="text">
                 <%= column %>
@@ -29,6 +31,9 @@
             </td>
             <td>
               <%= alert.headline %>
+            </td>
+            <td>
+              <%= status_badge(alert.approval_status.humanize, color: alert_badge(alert.approval_status).color, icon: alert_badge(alert.approval_status).icon) %>
             </td>
             <td>
               <%= status_badge(alert.urgency.humanize, color: alert_badge(alert.urgency).color, icon: alert_badge(alert.urgency).icon) %>
