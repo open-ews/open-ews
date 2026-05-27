@@ -22,6 +22,16 @@ module Dashboard
       @broadcasts = FakeResource::Broadcast.all
     end
 
+    def update
+      @alert = FakeResource::Alert.find(params[:id])
+      permitted_params = params.require(:alert).permit(:approval_status)
+      @alert.approval_status = ActiveSupport::StringInquirer.new(permitted_params[:approval_status])
+      @alert.reviewed_by = current_user.name
+      @alert.reviewed_at = Time.current
+
+      redirect_to(dashboard_alert_path(@alert.id), notice: "Alert updated successfully.")
+    end
+
     private
 
     def authorize_feature_flag
@@ -46,12 +56,14 @@ module Dashboard
         Badge.new(color: "red", icon: "temperature-sun")
       when "sms"
         Badge.new(color: "green", icon: "message")
-      when "pending"
+      when "pending", "pending_approval"
         Badge.new(color: "gray-200", icon: "clock")
       when "in_progress"
         Badge.new(color: "blue", icon: "hourglass-high")
-      when "completed"
+      when "completed", "approved"
         Badge.new(color: "green", icon: "check")
+      when "rejected"
+        Badge.new(color: "red", icon: "alert-triangle")
       end
     end
   end

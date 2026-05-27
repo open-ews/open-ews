@@ -16,6 +16,10 @@ module FakeResource
     attribute :language
     attribute :area_description
     attribute :locations
+    attribute :approval_status
+    attribute :created_by
+    attribute :reviewed_by
+    attribute :reviewed_at, :datetime
 
     enumerize :event, in: [ :heat, :flood, :earthquake ]
     enumerize :urgency, in: [ :immediate, :expected, :future ]
@@ -41,6 +45,8 @@ module FakeResource
             area_description: "Bahawalpur Division",
             locations: [ "Rahim Yar Khan", "Bahawalnagar", "Bahawalpur" ],
             created_at: 24.hours.ago,
+            approval_status: ActiveSupport::StringInquirer.new("pending_approval"),
+            created_by: "Bilal Ahmed",
           ),
           Alert.new(
             id: "3",
@@ -54,6 +60,8 @@ module FakeResource
             area_description: "Jacobabad District",
             locations: [ "Garhi Khairo Tehsil", "Jacobabad Tehsil", "Thul Tehsil" ],
             created_at: 48.hours.ago,
+            approval_status: ActiveSupport::StringInquirer.new("pending_approval"),
+            created_by: "Bilal Ahmed",
           ),
           Alert.new(
             id: "2",
@@ -66,7 +74,11 @@ module FakeResource
             language: "English",
             area_description: "Quetta District",
             locations: [ "Zarghoon", "Chiltan", "Panjpai" ],
-            created_at: 72.hours.ago
+            created_at: 72.hours.ago,
+            approval_status: ActiveSupport::StringInquirer.new("approved"),
+            reviewed_at: 71.hours.ago,
+            reviewed_by: "Zain Ali",
+            created_by: "Mahnoor Fatima"
           ),
           Alert.new(
             id: "1",
@@ -80,6 +92,10 @@ module FakeResource
             area_description: "Mirpur Division",
             locations: [ "Mirpur", "Kotli", "Bhimber" ],
             created_at: 96.hours.ago,
+            approval_status: ActiveSupport::StringInquirer.new("approved"),
+            reviewed_at: 75.hours.ago,
+            reviewed_by: "Ayesha Khan",
+            created_by: "Sana Malik"
           )
         ]
       end
