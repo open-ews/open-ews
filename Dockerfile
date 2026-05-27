@@ -35,8 +35,8 @@ RUN bundle install && \
   mkdir -p log && \
   bundle exec bootsnap precompile --gemfile
 
-COPY package.json yarn.lock ./
-RUN yarn install
+COPY package.json yarn.lock .yarnrc.yml ./
+RUN yarn install || (find /tmp -name build.log -exec cat {} \; && false)
 
 # Copy application code
 COPY . .
