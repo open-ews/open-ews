@@ -92,7 +92,7 @@ module FakeResource
             area_description: "Mirpur Division",
             locations: [ "Mirpur", "Kotli", "Bhimber" ],
             created_at: 96.hours.ago,
-            approval_status: ActiveSupport::StringInquirer.new("approved"),
+            approval_status: ActiveSupport::StringInquirer.new("rejected"),
             reviewed_at: 75.hours.ago,
             reviewed_by: "Ayesha Khan",
             created_by: "Sana Malik"
