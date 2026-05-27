@@ -1,12 +1,14 @@
 module Dashboard
   class NotificationsController < DashboardController
     def index
+      authorize(Notification)
       @filter_form = NotificationFilterForm.new(filter_param)
       @notifications = paginate_resources(@filter_form.apply(scope))
     end
 
     def show
       @notification = scope.find(params[:id])
+      authorize(@notification)
     end
 
     private

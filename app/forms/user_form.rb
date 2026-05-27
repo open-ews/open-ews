@@ -21,7 +21,8 @@ class UserForm < ApplicationForm
       {
         name:,
         email:,
-        account:
+        account:,
+        role: :member
       },
       inviter
     )

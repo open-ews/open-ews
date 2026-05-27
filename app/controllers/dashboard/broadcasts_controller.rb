@@ -1,26 +1,30 @@
 module Dashboard
   class BroadcastsController < DashboardController
     def index
+      authorize(Broadcast)
       @filter_form = BroadcastFilterForm.new(filter_param)
       @broadcasts = paginate_resources(@filter_form.apply(scope))
     end
 
     def new
       @broadcast = BroadcastForm.new(account: current_account)
+      authorize(@broadcast)
     end
 
     def create
       @broadcast = BroadcastForm.new(account: current_account, created_by: current_user, **permitted_params)
+      authorize(@broadcast)
       @broadcast.save
       respond_with(:dashboard, @broadcast)
     end
 
     def edit
-      @broadcast = BroadcastForm.initialize_with(scope.find(params[:id]))
+      @broadcast = BroadcastForm.initialize_with(find_broadcast)
     end
 
     def update
-      @broadcast = BroadcastForm.initialize_with(scope.find(params[:id]))
+      @broadcast = BroadcastForm.initialize_with(find_broadcast)
+      authorize(@broadcast)
       @broadcast.assign_attributes(updated_by: current_user, **permitted_params)
       @broadcast.save
 
@@ -28,16 +32,22 @@ module Dashboard
     end
 
     def show
-      @broadcast = BroadcastDecorator.new(scope.find(params[:id]))
+      @broadcast = BroadcastDecorator.new(find_broadcast)
     end
 
     def destroy
-      @broadcast = scope.find(params[:id])
+      @broadcast = find_broadcast
       @broadcast.destroy
       respond_with(:dashboard, @broadcast)
     end
 
     private
+
+    def find_broadcast
+      broadcast = scope.find(params[:id])
+      authorize(broadcast)
+      broadcast
+    end
 
     def scope
       current_account.broadcasts

@@ -7,7 +7,8 @@ RSpec.describe "Invitations" do
       User.invite!(
         account:,
         email: "johndoe@example.com",
-        name: "John Doe"
+        name: "John Doe",
+        role: :member
       )
     end
 

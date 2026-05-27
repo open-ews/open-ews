@@ -1,0 +1,2 @@
+class ExportPolicy < ApplicationPolicy
+end

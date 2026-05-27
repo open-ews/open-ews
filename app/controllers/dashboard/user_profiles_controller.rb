@@ -2,10 +2,12 @@ module Dashboard
   class UserProfilesController < DashboardController
     def show
       @user = current_user
+      authorize(@user, policy_class: UserProfilePolicy)
     end
 
     def update
       @user = current_user
+      authorize(@user, policy_class: UserProfilePolicy)
       if @user.update(permitted_params)
         respond_with(@user, location: dashboard_user_profile_path)
       else

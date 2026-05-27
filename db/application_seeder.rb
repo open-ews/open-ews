@@ -14,7 +14,7 @@ class ApplicationSeeder
     )
     access_token = account.access_token || account.create_access_token!
     user = create_user(account:)
-    beneficiary = create_beneficiary(
+    create_beneficiary(
       account:,
       iso_country_code: ACCOUNT_COUNTRY,
       phone_number: "+85512345678",
@@ -50,6 +50,13 @@ class ApplicationSeeder
 
     return existing_user if existing_user.present?
 
-    User.create!(name: "John Doe", email: USER_EMAIL, password: USER_PASSWORD, confirmed_at: Time.current, **params)
+    User.create!(
+      name: "John Doe",
+      email: USER_EMAIL,
+      password: USER_PASSWORD,
+      confirmed_at: Time.current,
+      role: :owner,
+      **params
+    )
   end
 end

@@ -1,12 +1,16 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["element", "destroyElement"]
+  static targets = ["destroyElement"]
 
   remove(e) {
     e.preventDefault()
 
-    this.elementTarget.style.display = "none"
+    this.element
+      .querySelectorAll("input:not([type='hidden']), select, textarea")
+      .forEach((el) => (el.disabled = true))
+
+    this.element.classList.add("d-none")
     this.destroyElementTarget.value = "true"
   }
 }
