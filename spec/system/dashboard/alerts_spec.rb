@@ -21,4 +21,15 @@ RSpec.describe "Alerts" do
     click_on "Create Alert"
     expect(page).to have_content("Alert created successfully.")
   end
+
+  it "approve an alert" do
+    user = create(:user, id: 2)
+    account_sign_in(user)
+
+    visit dashboard_alert_path(4)
+    click_on "Approve"
+
+    expect(page).to have_content("Alert updated successfully.")
+    expect(page).to have_content("Approved")
+  end
 end

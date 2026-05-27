@@ -29,6 +29,7 @@ module Dashboard
 
     def update
       @alert = FakeResource::Alert.find(params[:id])
+      authorize(@alert, policy_class: AlertPolicy)
       permitted_params = params.require(:alert).permit(:approval_status)
       @alert.approval_status = ActiveSupport::StringInquirer.new(permitted_params[:approval_status])
       @alert.reviewed_by = current_user.name
