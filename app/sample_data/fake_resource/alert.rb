@@ -1,5 +1,11 @@
 module FakeResource
   class Alert
+    class FilledArrayType < ActiveRecord::Type::String
+      def cast(value)
+        Array(value).reject(&:blank?)
+      end
+    end
+
     include ActiveModel::Model
     include ActiveModel::Attributes
 
@@ -15,8 +21,8 @@ module FakeResource
     attribute :created_at, :datetime
     attribute :language
     attribute :area_description
-    attribute :locations
-    attribute :approval_status
+    attribute :locations, FilledArrayType.new
+    attribute :approval_status, default: ActiveSupport::StringInquirer.new("pending_approval")
     attribute :created_by
     attribute :reviewed_by
     attribute :reviewed_at, :datetime
@@ -27,7 +33,11 @@ module FakeResource
     enumerize :language, in: [ "English", "اُردُو" ]
 
     def model_name
-      ActiveModel::Name.new(self, nil, "FakeAlert")
+      ActiveModel::Name.new(self, nil, "Alert")
+    end
+
+    def save
+      self.class.prepend(self)
     end
 
     class << self
@@ -45,7 +55,6 @@ module FakeResource
             area_description: "Bahawalpur Division",
             locations: [ "Rahim Yar Khan", "Bahawalnagar", "Bahawalpur" ],
             created_at: 24.hours.ago,
-            approval_status: ActiveSupport::StringInquirer.new("pending_approval"),
             created_by: "Bilal Ahmed",
           ),
           Alert.new(
@@ -60,7 +69,6 @@ module FakeResource
             area_description: "Jacobabad District",
             locations: [ "Garhi Khairo Tehsil", "Jacobabad Tehsil", "Thul Tehsil" ],
             created_at: 48.hours.ago,
-            approval_status: ActiveSupport::StringInquirer.new("pending_approval"),
             created_by: "Bilal Ahmed",
           ),
           Alert.new(
@@ -106,6 +114,18 @@ module FakeResource
 
       def find(id)
         all.find(-> { raise(ActiveRecord::RecordNotFound) }) { it.id == id }
+      end
+
+      def prepend(alert)
+        alert.id ||= generate_id
+        alert.created_at ||= Time.current
+        all.prepend(alert)
+      end
+
+      private
+
+      def generate_id
+        (all.map { |it| it.id.to_i }.max + 1).to_s
       end
     end
   end
