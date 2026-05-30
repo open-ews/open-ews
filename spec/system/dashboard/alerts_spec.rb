@@ -17,9 +17,11 @@ RSpec.describe "Alerts" do
 
     visit dashboard_alerts_path
     click_on "New"
+    fill_in("Headline", with: "Flood warning for Rawalpindi")
 
     click_on "Create Alert"
     expect(page).to have_content("Alert created successfully.")
+    expect(page).to have_content("Flood warning for Rawalpindi")
   end
 
   it "approve an alert" do

@@ -53,3 +53,13 @@ ShowFor.setup do |config|
   # specify label_proc - it will be automatically called, passing in the label text.
   # config.label_proc = lambda { |l| l + ":" }
 end
+
+module ShowFor
+  module Helper
+    private
+
+    def show_for_html_class(object, html_options)
+      "show_for model-#{dom_class(object)} #{html_options[:class]} #{ShowFor.show_for_class}".squeeze(" ").rstrip
+    end
+  end
+end

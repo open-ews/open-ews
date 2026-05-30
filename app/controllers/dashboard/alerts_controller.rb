@@ -6,30 +6,34 @@ module Dashboard
     helper_method :alert_badge
 
     def index
-      authorize(:alert, policy_class: AlertPolicy)
+      authorize(:alert)
       @alerts = FakeResource::Alert.all
     end
 
     def new
       @alert = FakeResource::Alert.first
-      authorize(@alert, policy_class: AlertPolicy)
+      authorize(@alert)
     end
 
     def create
-      @alert = FakeResource::Alert.first
-      authorize(@alert, policy_class: AlertPolicy)
-      redirect_to(dashboard_alert_path(@alert.id), notice: "Alert created successfully.")
+      permitted_params = params.require(:alert).permit(
+        :event, :urgency, :severity, :language, :area_description, :headline, :description,
+        :instruction, locations: []
+      )
+      @alert = FakeResource::Alert.new(permitted_params)
+      authorize(@alert)
+      @alert.created_by = current_user.name
+      @alert.save
+      respond_with(:dashboard, @alert, notice: "Alert created successfully.")
     end
 
     def show
-      @alert = FakeResource::Alert.find(params[:id])
-      authorize(@alert, policy_class: AlertPolicy)
+      @alert = find_alert
       @broadcasts = FakeResource::Broadcast.all
     end
 
     def update
-      @alert = FakeResource::Alert.find(params[:id])
-      authorize(@alert, policy_class: AlertPolicy)
+      @alert = find_alert
       permitted_params = params.require(:alert).permit(:approval_status)
       @alert.approval_status = ActiveSupport::StringInquirer.new(permitted_params[:approval_status])
       @alert.reviewed_by = current_user.name
@@ -39,6 +43,12 @@ module Dashboard
     end
 
     private
+
+    def find_alert
+      alert = FakeResource::Alert.find(params[:id])
+      authorize(alert)
+      alert
+    end
 
     def authorize_feature_flag
       return if FeatureFlag.enabled_for?(current_user, :alerts)
