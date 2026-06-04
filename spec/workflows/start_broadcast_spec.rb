@@ -38,6 +38,17 @@ RSpec.describe StartBroadcast do
       started_at: be_present,
       audio_file: be_attached
     )
+    expect(broadcast.account.events).to include(
+      have_attributes(
+        type: "broadcast.updated",
+        details: hash_including(
+          "data" => hash_including(
+            "id" => broadcast.id.to_s,
+            "type" => "broadcast"
+          )
+        )
+      )
+    )
     expect(broadcast.beneficiaries).to contain_exactly(*female_beneficiaries.first(2), beneficiary_in_group)
     expect(broadcast.notifications).to contain_exactly(
       have_attributes(
@@ -133,6 +144,7 @@ RSpec.describe StartBroadcast do
       status: "errored",
       error_code: "audio_download_failed"
     )
+    expect(broadcast.account.events).to include(have_attributes(type: "broadcast.updated"))
   end
 
   it "marks errored when the audio file is an invalid format" do
@@ -151,6 +163,7 @@ RSpec.describe StartBroadcast do
       status: "errored",
       error_code: "invalid_audio_file"
     )
+    expect(broadcast.account.events).to include(have_attributes(type: "broadcast.updated"))
   end
 
   it "marks errored when there are no beneficiaries that match the filters" do
@@ -175,6 +188,7 @@ RSpec.describe StartBroadcast do
       error_code: "no_matching_beneficiaries",
       audio_file: be_attached
     )
+    expect(broadcast.account.events).to include(have_attributes(type: "broadcast.updated"))
   end
 
   it "marks errored when the account is not yet configured for sending broadcasts" do
@@ -196,6 +210,7 @@ RSpec.describe StartBroadcast do
       status: "errored",
       error_code: "account_not_configured_for_channel"
     )
+    expect(broadcast.account.events).to include(have_attributes(type: "broadcast.updated"))
   end
 
   it "handles broadcasts that are not queued" do

@@ -1,4 +1,7 @@
 Doorkeeper.configure do
+  api_only
+  base_controller "ActionController::API"
+
   # Change the ORM that doorkeeper will use (needs plugins)
   orm :active_record
 

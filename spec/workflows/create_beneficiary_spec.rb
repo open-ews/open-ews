@@ -17,12 +17,12 @@ RSpec.describe CreateBeneficiary do
     expect(account.events).to contain_exactly(
       have_attributes(
         type: "beneficiary.created",
-        details: {
-          "data" => {
+        details: hash_including(
+          "data" => hash_including(
             "id" => beneficiary.id.to_s,
             "type" => "beneficiary"
-          }
-        }
+          )
+        )
       )
     )
   end

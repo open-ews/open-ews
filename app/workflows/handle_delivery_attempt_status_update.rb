@@ -47,11 +47,9 @@ class HandleDeliveryAttemptStatusUpdate < ApplicationWorkflow
       when "completed"
         delivery_attempt.transition_to!(:succeeded, touch: :completed_at)
         complete_notification(:succeeded)
-        complete_broadcast
       when "failed"
         if delivery_attempt_retry_policy.terminal?
           complete_notification(:failed)
-          complete_broadcast
           delete_beneficiary if beneficiary_termination_policy.terminate?
         else
           RetryNotificationJob.set(wait: 15.minutes).perform_later(notification)
@@ -77,7 +75,10 @@ class HandleDeliveryAttemptStatusUpdate < ApplicationWorkflow
   end
 
   def complete_broadcast
-    broadcast.transition_to(:completed, touch: :completed_at) if broadcast.notifications.where(status: :pending).none?
+    return false unless broadcast.notifications.where(status: :pending).none?
+
+    broadcast.transition_to(:completed, touch: :completed_at)
+    CreateEvent.call(type: "broadcast.updated", resource: broadcast)
   end
 
   def delete_beneficiary

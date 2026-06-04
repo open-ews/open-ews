@@ -7,6 +7,17 @@ RSpec.describe UpdateBroadcast do
     UpdateBroadcast.call(broadcast, desired_status: :queued)
 
     expect(broadcast).to have_attributes(status: "queued")
+    expect(broadcast.account.events).to include(
+      have_attributes(
+        type: "broadcast.updated",
+        details: hash_including(
+          "data" => hash_including(
+            "id" => broadcast.id.to_s,
+            "type" => "broadcast"
+          )
+        )
+      )
+    )
   end
 
   it "sets started by" do

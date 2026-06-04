@@ -1,7 +1,10 @@
 class Event < ApplicationRecord
   self.inheritance_column = :_type_disabled
 
-  belongs_to :account
+  EVENT_TYPES = %i[beneficiary.created beneficiary.deleted broadcast.created broadcast.updated].freeze
 
-  enumerize :type, in: %i[beneficiary.created beneficiary.deleted]
+  belongs_to :account
+  has_many :webhook_request_logs, dependent: :destroy
+
+  enumerize :type, in: EVENT_TYPES
 end

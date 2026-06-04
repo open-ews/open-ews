@@ -20,6 +20,7 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
       status: "completed",
       completed_at: be_present
     )
+    expect(broadcast.account.events).to include(have_attributes(type: "broadcast.updated"))
   end
 
   it "retries the notification after failed events" do
@@ -66,6 +67,7 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
       status: "completed",
       completed_at: be_present
     )
+    expect(broadcast.account.events).to include(have_attributes(type: "broadcast.updated"))
 
     expect(RetryNotificationJob).not_to have_been_enqueued
   end
@@ -91,6 +93,7 @@ RSpec.describe HandleDeliveryAttemptStatusUpdate do
       status: "completed",
       completed_at: be_present
     )
+    expect(broadcast.account.events).to include(have_attributes(type: "broadcast.updated"))
 
     expect(RetryNotificationJob).not_to have_been_enqueued
     expect(ExecuteWorkflowJob).to have_been_enqueued.with(DeleteBeneficiary.to_s, beneficiary)

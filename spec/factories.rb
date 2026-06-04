@@ -113,7 +113,7 @@ FactoryBot.define do
 
       type { "beneficiary.created" }
       details {
-        BeneficiaryEventSerializer.new(beneficiary).serializable_hash
+        BeneficiarySerializer.new(beneficiary).serializable_hash
       }
     end
 
@@ -124,7 +124,29 @@ FactoryBot.define do
 
       type { "beneficiary.deleted" }
       details {
-        BeneficiaryEventSerializer.new(beneficiary).serializable_hash
+        BeneficiarySerializer.new(beneficiary).serializable_hash
+      }
+    end
+
+    trait :broadcast_created do
+      transient do
+        broadcast { create(:broadcast, account:) }
+      end
+
+      type { "broadcast.created" }
+      details {
+        BroadcastSerializer.new(broadcast).serializable_hash
+      }
+    end
+
+    trait :broadcast_updated do
+      transient do
+        broadcast { create(:broadcast, :running, account:) }
+      end
+
+      type { "broadcast.updated" }
+      details {
+        BroadcastSerializer.new(broadcast).serializable_hash
       }
     end
   end
@@ -223,6 +245,43 @@ FactoryBot.define do
 
   factory :access_token do
     account
+  end
+
+  factory :oauth_application, class: "Doorkeeper::Application" do
+    transient do
+      account { create(:account) }
+    end
+
+    sequence(:name) { |n| "App #{n}" }
+    sequence(:redirect_uri) { |n| "https://example#{n}.com/callback" }
+    sequence(:uid) { |n| "uid-#{n}" }
+    sequence(:secret) { |n| "secret-#{n}" }
+
+    after(:build) do |oauth_application, evaluator|
+      oauth_application.owner_id = evaluator.account.id
+      oauth_application.define_singleton_method(:owner) { evaluator.account }
+      oauth_application.define_singleton_method(:owner=) { |value| self.owner_id = value.id }
+      oauth_application.define_singleton_method(:confidential) { true }
+      oauth_application.define_singleton_method(:confidential=) { |_| true }
+      oauth_application.define_singleton_method(:confidential?) { true }
+    end
+  end
+
+  factory :webhook_endpoint do
+    oauth_application
+    url { "https://example.com/webhooks" }
+    signing_secret { "signing-secret" }
+    subscriptions { [ "broadcast.created", "broadcast.updated" ] }
+    enabled { true }
+  end
+
+  factory :webhook_request_log do
+    event
+    webhook_endpoint
+    url { webhook_endpoint.url }
+    http_status_code { "200" }
+    failed { false }
+    payload { EventSerializer.new(event).serializable_hash.deep_stringify_keys }
   end
 
   factory :active_storage_attachment, class: "ActiveStorage::Blob" do

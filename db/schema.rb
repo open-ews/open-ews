@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_07_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_04_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -328,6 +328,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_100000) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "webhook_endpoints", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.boolean "enabled", default: true, null: false
+    t.bigint "oauth_application_id", null: false
+    t.string "signing_secret", null: false
+    t.string "subscriptions", null: false, array: true
+    t.datetime "updated_at", null: false
+    t.string "url", null: false
+    t.index ["oauth_application_id"], name: "index_webhook_endpoints_on_oauth_application_id"
+  end
+
+  create_table "webhook_request_logs", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "event_id", null: false
+    t.boolean "failed", null: false
+    t.string "http_status_code", null: false
+    t.jsonb "payload", default: {}, null: false
+    t.datetime "updated_at", null: false
+    t.string "url", null: false
+    t.bigint "webhook_endpoint_id", null: false
+    t.index ["event_id"], name: "index_webhook_request_logs_on_event_id"
+    t.index ["webhook_endpoint_id"], name: "index_webhook_request_logs_on_webhook_endpoint_id"
+  end
+
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "beneficiaries", "accounts"
@@ -359,4 +383,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_07_100000) do
   add_foreign_key "oauth_applications", "accounts", column: "owner_id"
   add_foreign_key "users", "accounts"
   add_foreign_key "users", "users", column: "invited_by_id", on_delete: :nullify
+  add_foreign_key "webhook_endpoints", "oauth_applications"
+  add_foreign_key "webhook_request_logs", "events"
+  add_foreign_key "webhook_request_logs", "webhook_endpoints"
 end
