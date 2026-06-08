@@ -236,7 +236,6 @@ FactoryBot.define do
   factory :webhook_endpoint do
     oauth_application
     url { "https://example.com/webhooks" }
-    signing_secret { "signing-secret" }
     subscriptions { [ "broadcast.created", "broadcast.updated" ] }
     enabled { true }
   end

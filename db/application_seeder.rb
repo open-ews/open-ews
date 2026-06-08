@@ -13,6 +13,21 @@ class ApplicationSeeder
       supported_channels: Broadcast.channel.values
     )
     access_token = account.access_token || account.create_access_token!(scopes: :write)
+
+    oauth_application = Doorkeeper::Application.find_or_create_by!(
+      owner: account
+    ) do |application|
+      application.name = "My Application"
+      application.redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
+    end
+
+    WebhookEndpoint.find_or_create_by!(
+      oauth_application: oauth_application
+    ) do |endpoint|
+      endpoint.url = "http://example.com/webhooks"
+      endpoint.subscriptions = [ "broadcast.created", "broadcast.updated" ]
+    end
+
     user = create_user(account:)
     create_beneficiary(
       account:,

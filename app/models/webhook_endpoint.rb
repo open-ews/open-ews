@@ -9,6 +9,14 @@ class WebhookEndpoint < ApplicationRecord
   scope :for_account, ->(account) { joins(:oauth_application).where(oauth_applications: { owner_id: account.id }) }
   scope :subscribed_to, ->(event_type) { where("? = ANY(subscriptions)", event_type) }
 
-  validates :signing_secret, :url, presence: true
+  validates :url, presence: true
   validates :subscriptions, presence: true
+
+  before_create :generate_signing_secret
+
+  private
+
+  def generate_signing_secret
+    self.signing_secret ||= SecureRandom.alphanumeric(32)
+  end
 end

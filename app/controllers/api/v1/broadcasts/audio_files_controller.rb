@@ -4,6 +4,9 @@ module API
       class AudioFilesController < APIController
         include ActiveStorage::SetCurrent
 
+        skip_before_action :doorkeeper_authorize!
+        before_action -> { doorkeeper_authorize!(:write, :"read:broadcast") }
+
         def show
           if broadcast.audio_file.attached?
             redirect_to broadcast.audio_file.url, allow_other_host: true
