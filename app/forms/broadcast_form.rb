@@ -52,8 +52,6 @@ class BroadcastForm < ApplicationForm
     return false if invalid?
 
     object.name = name.presence
-    object.created_by = created_by if new_record?
-    object.updated_by = updated_by if persisted?
     object.channel = channel if new_record? && channel.present?
     object.message = message.presence if channel == "sms"
     object.audio_file = audio_file if channel == "voice"
@@ -65,7 +63,15 @@ class BroadcastForm < ApplicationForm
       field_definitions: FieldDefinitions::BeneficiaryFields
     ).serialize(beneficiary_filter)
 
-    object.save!
+    if new_record?
+      object.created_by = created_by
+      object.save!
+      create_event("broadcast.created")
+    else
+      object.updated_by = updated_by
+      object.save!
+      create_event("broadcast.updated")
+    end
   end
 
   def beneficiary_groups_options_for_select
@@ -74,5 +80,9 @@ class BroadcastForm < ApplicationForm
 
   def channel_options_for_select
     BroadcastForm.channel.values.select { supported_channels.include?(it) }.map { [ it.text, it ] }
+  end
+
+  def create_event(event_type)
+    CreateEvent.call(type: event_type, resource: object)
   end
 end

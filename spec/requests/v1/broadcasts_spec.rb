@@ -58,6 +58,17 @@ RSpec.resource "Broadcasts"  do
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "id")).to eq(broadcast.id.to_s)
     end
+
+    example "Fetch a broadcast with read:broadcast scope", document: false do
+      account = create(:account)
+      broadcast = create(:broadcast, account:)
+
+      access_token = create(:access_token, account:, scopes: :"read:broadcast")
+      set_authorization_header(access_token:)
+      do_request(id: broadcast.id)
+
+      expect(response_status).to eq(200)
+    end
   end
 
   post "/v1/broadcasts" do
@@ -111,6 +122,10 @@ RSpec.resource "Broadcasts"  do
 
     example "Create and start a voice broadcast" do
       account = create(:account, :configured_for_broadcasts)
+      oauth_application = create(:oauth_application, account:)
+      webhook_endpoint = create(:webhook_endpoint, oauth_application:, subscriptions: [ "broadcast.created", "broadcast.updated" ])
+      stub_request(:post, webhook_endpoint.url).to_return(status: 200)
+
       create(:beneficiary_address, beneficiary: create(:beneficiary, gender: "M", account:), iso_region_code: "KH-1")
       stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
 
@@ -142,6 +157,19 @@ RSpec.resource "Broadcasts"  do
           "gender" => { "eq" => "M" },
           "address.iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }
         }
+      )
+
+      expect(webhook_endpoint.webhook_request_logs).to contain_exactly(
+        have_attributes(
+          event: have_attributes(
+            type: "broadcast.created"
+          )
+        ),
+        have_attributes(
+          event: have_attributes(
+            type: "broadcast.updated"
+          )
+        )
       )
     end
 
@@ -262,6 +290,16 @@ RSpec.resource "Broadcasts"  do
       expect(response_body).to match_api_response_schema("jsonapi_error")
       expect(json_response.dig("errors", 0, "source", "pointer")).to eq("/data/attributes/beneficiary_filter")
       expect(json_response.dig("errors", 1, "source", "pointer")).to eq("/data/attributes/audio_url")
+    end
+
+    example "Fail to create a broadcast without write scope", document: false do
+      account = create(:account)
+
+      access_token = create(:access_token, account:, scopes: :"read:broadcast")
+      set_authorization_header(access_token:)
+      do_request
+
+      expect(response_status).to eq(403)
     end
   end
 

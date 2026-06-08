@@ -12,6 +12,7 @@ class CreateBroadcast < ApplicationWorkflow
       broadcast = Broadcast.create!(params)
       broadcast.transition_to!(desired_status) if desired_status.present?
       ExecuteWorkflowJob.perform_later(StartBroadcast.to_s, broadcast) if broadcast.queued?
+      CreateEvent.call(type: "broadcast.created", resource: broadcast)
       broadcast
     end
   end

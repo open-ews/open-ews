@@ -77,7 +77,10 @@ class HandleDeliveryAttemptStatusUpdate < ApplicationWorkflow
   end
 
   def complete_broadcast
-    broadcast.transition_to(:completed, touch: :completed_at) if broadcast.notifications.where(status: :pending).none?
+    return unless broadcast.notifications.where(status: :pending).none?
+
+    broadcast.transition_to(:completed, touch: :completed_at)
+    CreateEvent.call(type: "broadcast.updated", resource: broadcast)
   end
 
   def delete_beneficiary

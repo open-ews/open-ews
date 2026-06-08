@@ -2,11 +2,16 @@ require "rails_helper"
 
 RSpec.describe UpdateBroadcast do
   it "updates the broadcast" do
-    broadcast = create(:broadcast, :pending)
+    broadcast = create(:broadcast, :running)
 
-    UpdateBroadcast.call(broadcast, desired_status: :queued)
+    UpdateBroadcast.call(broadcast, desired_status: :completed)
 
-    expect(broadcast).to have_attributes(status: "queued")
+    expect(broadcast).to have_attributes(status: "completed")
+    expect(broadcast.account.events).to include(
+      have_attributes(
+        type: "broadcast.updated",
+      )
+    )
   end
 
   it "sets started by" do

@@ -19,10 +19,6 @@ class CreateBeneficiary < ApplicationWorkflow
   private
 
   def create_event(beneficiary)
-    Event.create!(
-      account: beneficiary.account,
-      type: "beneficiary.created",
-      details: BeneficiaryEventSerializer.new(beneficiary).serializable_hash
-    )
+    CreateEvent.call(type: "beneficiary.created", resource: beneficiary)
   end
 end

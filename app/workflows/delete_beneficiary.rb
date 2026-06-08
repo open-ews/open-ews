@@ -16,10 +16,6 @@ class DeleteBeneficiary < ApplicationWorkflow
   private
 
   def create_event
-    Event.create!(
-      account: beneficiary.account,
-      type: "beneficiary.deleted",
-      details: BeneficiaryEventSerializer.new(beneficiary).serializable_hash
-    )
+    CreateEvent.call(type: "beneficiary.deleted", resource: beneficiary)
   end
 end

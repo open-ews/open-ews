@@ -26,6 +26,8 @@ class StartBroadcast < ApplicationWorkflow
     end
   rescue DownloadBroadcastAudioFile::Error, Error => e
     broadcast.mark_as_errored!(e.code)
+  ensure
+    CreateEvent.call(type: "broadcast.updated", resource: broadcast)
   end
 
   private

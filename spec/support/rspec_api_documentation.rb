@@ -59,6 +59,37 @@ RspecApiDocumentation.configure do |config|
 
     `Authorization: Bearer YOUR_API_TOKEN`
 
+    ## Webhooks
+
+    OpenEWS uses webhooks to notify your application when events occur in your account.
+
+    To help ensure that webhook requests originate from OpenEWS, every webhook delivery is signed and includes a JWT in the `Authorization` header. You should verify this signature before processing the event to confirm that the request was sent by OpenEWS and has not been tampered with.
+
+    ### Verifying webhook signatures
+
+    Webhook requests use standard Bearer authentication with a signed [JSON Web Token (JWT)](https://jwt.io/). Tokens are signed using the HS256 (HMAC-SHA256) algorithm and your webhook signing secret.
+
+    When a webhook is received, validate the JWT using your signing secret and verify that the issuer (`iss`) claim is set to `OpenEWS`.
+
+    Example in Ruby:
+
+    ```ruby
+    JWT.decode(
+      request.headers["Authorization"].sub("Bearer ", ""),
+      "[your-webhook-signing-secret]",
+      true,
+      algorithm: "HS256",
+      verify_iss: true,
+      iss: "OpenEWS"
+    )
+    ```
+
+    If token verification fails, the webhook request should be rejected.
+
+    ### Event payloads
+
+    The payload delivered by a webhook is identical to the corresponding event object returned by the Events API. See the [Events documentation](#events) for the complete event schema and examples for each event type.
+
     ## Filtering
 
     OpenEWS supports filtering of resources using query parameters. Filters are passed using the following format:
