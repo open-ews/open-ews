@@ -223,6 +223,7 @@ FactoryBot.define do
 
   factory :access_token do
     account
+    scopes { :write }
   end
 
   factory :oauth_application, class: "Doorkeeper::Application" do

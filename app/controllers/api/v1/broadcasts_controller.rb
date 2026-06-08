@@ -1,6 +1,9 @@
 module API
   module V1
     class BroadcastsController < APIController
+      skip_before_action :doorkeeper_authorize!, only: [ :index, :show ]
+      before_action -> { doorkeeper_authorize!(:write, :"read:broadcast") }, only: [ :index, :show ]
+
       def index
         apply_filters(scope.includes(include_parameter(only: [ :beneficiary_groups ])), with: BroadcastFilter)
       end

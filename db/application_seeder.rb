@@ -12,7 +12,7 @@ class ApplicationSeeder
       subdomain: ACCOUNT_SUBDOMAIN,
       supported_channels: Broadcast.channel.values
     )
-    access_token = account.access_token || account.create_access_token!
+    access_token = account.access_token || account.create_access_token!(scopes: :write)
     user = create_user(account:)
     create_beneficiary(
       account:,

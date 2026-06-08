@@ -58,6 +58,17 @@ RSpec.resource "Broadcasts"  do
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "id")).to eq(broadcast.id.to_s)
     end
+
+    example "Fetch a broadcast with read:broadcast scope", document: false do
+      account = create(:account)
+      broadcast = create(:broadcast, account:)
+
+      access_token = create(:access_token, account:, scopes: :"read:broadcast")
+      set_authorization_header(access_token:)
+      do_request(id: broadcast.id)
+
+      expect(response_status).to eq(200)
+    end
   end
 
   post "/v1/broadcasts" do
@@ -279,6 +290,16 @@ RSpec.resource "Broadcasts"  do
       expect(response_body).to match_api_response_schema("jsonapi_error")
       expect(json_response.dig("errors", 0, "source", "pointer")).to eq("/data/attributes/beneficiary_filter")
       expect(json_response.dig("errors", 1, "source", "pointer")).to eq("/data/attributes/audio_url")
+    end
+
+    example "Fail to create a broadcast without write scope", document: false do
+      account = create(:account)
+
+      access_token = create(:access_token, account:, scopes: :"read:broadcast")
+      set_authorization_header(access_token:)
+      do_request
+
+      expect(response_status).to eq(403)
     end
   end
 

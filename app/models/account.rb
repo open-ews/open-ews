@@ -1,7 +1,7 @@
 class Account < ApplicationRecord
   LOGO_CONTENT_TYPES = %w[image/jpg image/png].freeze
 
-  has_one :access_token, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
+  has_one :access_token, -> { where(scopes: :write) }, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
   has_many :oauth_applications, class_name: "Doorkeeper::Application", foreign_key: :owner_id
   has_many :users
   has_many :beneficiaries
