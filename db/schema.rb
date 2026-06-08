@@ -383,7 +383,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_000000) do
   add_foreign_key "oauth_applications", "accounts", column: "owner_id"
   add_foreign_key "users", "accounts"
   add_foreign_key "users", "users", column: "invited_by_id", on_delete: :nullify
-  add_foreign_key "webhook_endpoints", "oauth_applications"
-  add_foreign_key "webhook_request_logs", "events"
-  add_foreign_key "webhook_request_logs", "webhook_endpoints"
+  add_foreign_key "webhook_endpoints", "oauth_applications", on_delete: :cascade
+  add_foreign_key "webhook_request_logs", "events", on_delete: :cascade
+  add_foreign_key "webhook_request_logs", "webhook_endpoints", on_delete: :cascade
 end

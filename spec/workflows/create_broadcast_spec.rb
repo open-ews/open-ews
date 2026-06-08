@@ -22,7 +22,10 @@ RSpec.describe CreateBroadcast do
         details: hash_including(
           "data" => hash_including(
             "id" => broadcast.id.to_s,
-            "type" => "broadcast"
+            "type" => "broadcast",
+            "attributes" => hash_including(
+              "status" => "pending"
+            )
           )
         )
       )
