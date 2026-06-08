@@ -23,8 +23,11 @@ class UpdateBroadcast < ApplicationWorkflow
       end
     end
 
-    ExecuteWorkflowJob.perform_later(StartBroadcast.to_s, broadcast) if broadcast.queued?
-    CreateEvent.call(type: "broadcast.updated", resource: broadcast)
+    if broadcast.queued?
+      ExecuteWorkflowJob.perform_later(StartBroadcast.to_s, broadcast)
+    else
+      CreateEvent.call(type: "broadcast.updated", resource: broadcast)
+    end
 
     broadcast
   rescue StateMachine::Machine::InvalidStateTransitionError => e

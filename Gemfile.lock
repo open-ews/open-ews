@@ -641,6 +641,7 @@ DEPENDENCIES
   image_processing
   jsbundling-rails
   jsonapi-serializer
+  jwt
   kaminari
   listen
   lograge

@@ -15,7 +15,6 @@ class NotifyWebhookEndpoint < ApplicationWorkflow
 
     webhook_request_log = WebhookRequestLog.create!(
       event:,
-      carrier: event.carrier,
       url: webhook_endpoint.url,
       webhook_endpoint:,
       http_status_code: response.status,
@@ -52,7 +51,7 @@ class NotifyWebhookEndpoint < ApplicationWorkflow
       attempt: failed_attempts_count
     ).seconds.from_now
 
-    ScheduledJob.perform_later(
+    DelayedJob.perform_later(
       ExecuteWorkflowJob.to_s,
       self.class.to_s,
       webhook_endpoint,

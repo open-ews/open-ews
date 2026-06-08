@@ -111,6 +111,10 @@ RSpec.resource "Broadcasts"  do
 
     example "Create and start a voice broadcast" do
       account = create(:account, :configured_for_broadcasts)
+      oauth_application = create(:oauth_application, account:)
+      webhook_endpoint = create(:webhook_endpoint, oauth_application:, subscriptions: [ "broadcast.created", "broadcast.updated" ])
+      stub_request(:post, webhook_endpoint.url).to_return(status: 200)
+
       create(:beneficiary_address, beneficiary: create(:beneficiary, gender: "M", account:), iso_region_code: "KH-1")
       stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
 
@@ -142,6 +146,19 @@ RSpec.resource "Broadcasts"  do
           "gender" => { "eq" => "M" },
           "address.iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }
         }
+      )
+
+      expect(webhook_endpoint.webhook_request_logs).to contain_exactly(
+        have_attributes(
+          event: have_attributes(
+            type: "broadcast.created"
+          )
+        ),
+        have_attributes(
+          event: have_attributes(
+            type: "broadcast.updated"
+          )
+        )
       )
     end
 

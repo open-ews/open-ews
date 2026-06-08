@@ -127,28 +127,6 @@ FactoryBot.define do
         BeneficiarySerializer.new(beneficiary).serializable_hash
       }
     end
-
-    trait :broadcast_created do
-      transient do
-        broadcast { create(:broadcast, account:) }
-      end
-
-      type { "broadcast.created" }
-      details {
-        BroadcastSerializer.new(broadcast).serializable_hash
-      }
-    end
-
-    trait :broadcast_updated do
-      transient do
-        broadcast { create(:broadcast, :running, account:) }
-      end
-
-      type { "broadcast.updated" }
-      details {
-        BroadcastSerializer.new(broadcast).serializable_hash
-      }
-    end
   end
 
   factory :notification do
