@@ -39,6 +39,6 @@ RSpec.describe CreateEvent do
   end
 
   def create_webhook_endpoint(account:, **attributes)
-    create(:webhook_endpoint, oauth_application: create(:oauth_application, account:), **attributes)
+    create(:webhook_endpoint, oauth_application: create(:oauth_application, owner: account), **attributes)
   end
 end

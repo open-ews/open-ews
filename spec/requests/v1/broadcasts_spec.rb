@@ -122,7 +122,7 @@ RSpec.resource "Broadcasts"  do
 
     example "Create and start a voice broadcast" do
       account = create(:account, :configured_for_broadcasts)
-      oauth_application = create(:oauth_application, account:)
+      oauth_application = create(:oauth_application, owner: account)
       webhook_endpoint = create(:webhook_endpoint, oauth_application:, subscriptions: [ "broadcast.created", "broadcast.updated" ])
       stub_request(:post, webhook_endpoint.url).to_return(status: 200)
 
