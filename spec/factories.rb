@@ -227,23 +227,10 @@ FactoryBot.define do
   end
 
   factory :oauth_application, class: "Doorkeeper::Application" do
-    transient do
-      account { create(:account) }
-    end
+    association :owner, factory: :account
 
-    sequence(:name) { |n| "App #{n}" }
-    sequence(:redirect_uri) { |n| "https://example#{n}.com/callback" }
-    sequence(:uid) { |n| "uid-#{n}" }
-    sequence(:secret) { |n| "secret-#{n}" }
-
-    after(:build) do |oauth_application, evaluator|
-      oauth_application.owner_id = evaluator.account.id
-      oauth_application.define_singleton_method(:owner) { evaluator.account }
-      oauth_application.define_singleton_method(:owner=) { |value| self.owner_id = value.id }
-      oauth_application.define_singleton_method(:confidential) { true }
-      oauth_application.define_singleton_method(:confidential=) { |_| true }
-      oauth_application.define_singleton_method(:confidential?) { true }
-    end
+    name { "My Application" }
+    redirect_uri { "urn:ietf:wg:oauth:2.0:oob" }
   end
 
   factory :webhook_endpoint do

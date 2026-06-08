@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_04_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_08_113411) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -274,14 +274,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_04_000000) do
   end
 
   create_table "oauth_applications", force: :cascade do |t|
+    t.boolean "confidential", default: true, null: false
     t.datetime "created_at", precision: nil, null: false
     t.string "name", null: false
     t.bigint "owner_id", null: false
+    t.string "owner_type", null: false
     t.text "redirect_uri", null: false
     t.string "scopes", default: "", null: false
     t.string "secret", null: false
     t.string "uid", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["owner_id", "owner_type"], name: "index_oauth_applications_on_owner_id_and_owner_type"
     t.index ["owner_id"], name: "index_oauth_applications_on_owner_id"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
