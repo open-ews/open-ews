@@ -18,9 +18,14 @@ lo:
     current_password: ລະຫັດຜ່ານປະຈຸບັນ
     password_confirmation: ຢືນຢັນລະຫັດຜ່ານ
     resource_type: ປະເພດຊັບພະຍາກອນ
+    target_areas: ພື້ນທີ່ເປົ້າໝາຍ
+    registered_locations: ສະຖານທີ່ລົງທະບຽນ
     la:
-      iso_region_code: ແຂວງ
-      administrative_division_level_2_code: ເມືອງ
+      iso_region_code: ລະຫັດແຂວງ ISO
+      administrative_division_level_2_code: ລະຫັດເມືອງ
+      administrative_division_level_2_name: ຊື່ເມືອງ
+      administrative_division_level_3_code: ລະຫັດບ້ານ
+      administrative_division_level_3_name: ຊື່ບ້ານ
 
   activerecord:
     models:

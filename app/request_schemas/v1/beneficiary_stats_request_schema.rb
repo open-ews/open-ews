@@ -13,7 +13,9 @@ module V1
       "address.administrative_division_level_3_code",
       "address.administrative_division_level_3_name",
       "address.administrative_division_level_4_code",
-      "address.administrative_division_level_4_name"
+      "address.administrative_division_level_4_name",
+      "address.administrative_division_level_5_code",
+      "address.administrative_division_level_5_name"
     ].freeze
 
     params do

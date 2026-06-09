@@ -184,7 +184,7 @@
     <% if filter.address_data_field.present? %>
       <div class="row" id="beneficiary_filter_<%= filter.address_data_field.name %>">
         <div class="col">
-          <input class="mb-1 field-name form-control" type="text" value="<%= filter.address_data_field.field_definition.human_name(namespace: current_account.iso_country_code) %>" readonly />
+          <input class="mb-1 field-name form-control" type="text" value="<%= ApplicationRecord.human_attribute_name(:target_areas) %>" readonly />
 
           <div data-controller="treeview"
                data-treeview-data-value="<%= treeview_address_data.to_json %>"

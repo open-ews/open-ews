@@ -38,7 +38,9 @@ RSpec.describe ImportBeneficiary do
         address_administrative_division_level_3_code: "010201",
         address_administrative_division_level_3_name: "Banteay Neang",
         address_administrative_division_level_4_code: "01020101",
-        address_administrative_division_level_4_name: "Ou Thum"
+        address_administrative_division_level_4_name: "Ou Thum",
+        address_administrative_division_level_5_code: "0102010101",
+        address_administrative_division_level_5_name: "Krom 1"
       }
     )
 
@@ -59,7 +61,9 @@ RSpec.describe ImportBeneficiary do
           administrative_division_level_3_code: "010201",
           administrative_division_level_3_name: "Banteay Neang",
           administrative_division_level_4_code: "01020101",
-          administrative_division_level_4_name: "Ou Thum"
+          administrative_division_level_4_name: "Ou Thum",
+          administrative_division_level_5_code: "0102010101",
+          administrative_division_level_5_name: "Krom 1"
         )
       )
     )

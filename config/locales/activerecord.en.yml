@@ -4,12 +4,37 @@ en:
     iso_country_code: Country
     group_ids: Groups
     delivery_attempts_count: Delivery attempts
+    iso_region_code: ISO region code
     kh:
-      administrative_division_level_3_code: Commune
+      iso_region_code: ISO province code
+      administrative_division_level_2_code: District code
+      administrative_division_level_2_name: District name
+      administrative_division_level_3_code: Commune code
+      administrative_division_level_3_name: Commune name
+      administrative_division_level_4_code: Village code
+      administrative_division_level_4_name: Village name
+      administrative_division_level_5_code: Group code
+      administrative_division_level_5_name: Group name
     la:
-      administrative_division_level_2_code: District
+      iso_region_code: ISO province code
+      administrative_division_level_2_code: District code
+      administrative_division_level_2_name: District name
+      administrative_division_level_3_code: Village code
+      administrative_division_level_3_name: Village name
     np:
-      administrative_division_level_2_code: District
+      iso_region_code: ISO province code
+      administrative_division_level_2_code: District code
+      administrative_division_level_2_name: District name
+    am:
+      iso_region_code: ISO province code
+      administrative_division_level_2_code: District code
+      administrative_division_level_2_name: District name
+      administrative_division_level_3_code: Municipality code
+      administrative_division_level_3_name: Municipality name
+      administrative_division_level_4_code: Village code
+      administrative_division_level_4_name: Village name
+      administrative_division_level_5_code: Group code
+      administrative_division_level_5_name: Group name
 
   activerecord:
     attributes:

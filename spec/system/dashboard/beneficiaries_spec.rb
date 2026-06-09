@@ -57,9 +57,10 @@ RSpec.describe "Beneficiaries" do
   end
 
   it "creates a new beneficiary", :js do
-    user = create(:user)
-    create(:beneficiary_group, name: "My group", account: user.account)
-    create(:beneficiary_group, name: "My other group", account: user.account)
+    account = create(:account, iso_country_code: "KH")
+    user = create(:user, account:)
+    create(:beneficiary_group, name: "My group", account:)
+    create(:beneficiary_group, name: "My other group", account:)
 
     account_sign_in(user)
     visit dashboard_beneficiaries_path
@@ -69,7 +70,7 @@ RSpec.describe "Beneficiaries" do
     select("Cambodia", from: "Country")
     select_list("My group", "My other group", from: "Groups")
     click_on("Add Address")
-    fill_in("ISO region code", with: "KH-12")
+    fill_in("ISO province code", with: "KH-12")
 
     click_on "Create Beneficiary"
 
@@ -152,7 +153,7 @@ RSpec.describe "Beneficiaries" do
     fill_in("ISO language code", with: "khm")
     select_list("My other group", from: "Groups")
     click_on("Add Address")
-    fill_in("ISO region code", with: "KH-12")
+    fill_in("ISO province code", with: "KH-12")
     click_on("Update Beneficiary")
 
     expect(page).to have_content("Beneficiary was successfully updated.")

@@ -10,15 +10,24 @@ km:
     name: ឈ្មោះ
     locations: ទីតាំង
     gender: ភេទ
+    phone_number: លេខទូរស័ព្ទ
     disability_status: សិទិ្ធបានបង្រៀន
     date_of_birth: ថ្ងៃខែឆ្នាំកំណើត
-    iso_language_code: ភាសា
+    iso_language_code: លេខកូដភាសា ISO
     iso_country_code: ប្រទេស
-    iso_region_code: ខេត្ត
+    group_ids: ក្រុម
+    target_areas: តំបន់គោលដៅ
+    registered_locations: ទីតាំងដែលបានចុះបញ្ជី
     kh:
-      administrative_division_level_2_code: ស្រុក/ខណ្ឌ
-      administrative_division_level_3_code: ឃុំ/សង្កាត់
-      administrative_division_level_4_code: ភូមិ
+      iso_region_code: លេខកូដខេត្ត ISO
+      administrative_division_level_2_code: លេខកូដស្រុក/ខណ្ឌ
+      administrative_division_level_2_name: ឈ្មោះស្រុក/ខណ្ឌ
+      administrative_division_level_3_code: លេខកូដឃុំ/សង្កាត់
+      administrative_division_level_3_name: ឈ្មោះឃុំ/សង្កាត់
+      administrative_division_level_4_code: លេខកូដភូមិ
+      administrative_division_level_4_name: ឈ្មោះភូមិ
+      administrative_division_level_5_code: លេខកូដក្រុម
+      administrative_division_level_5_name: ឈ្មោះក្រុម
     beneficiary: សមាជិកទំនាក់ទំនង
     beneficiary_id: សមាជិកទំនាក់ទំនង
     broadcast: សេចក្ដីប្រកាស
