@@ -203,6 +203,26 @@ module V1
       ).not_to have_valid_field(:data, :attributes, :message, error_message: "is not allowed")
     end
 
+    it "handles postprocessing" do
+      schema = validate_schema(
+        input_params: {
+          data: {
+            attributes: {
+              channel: "sms",
+              message: "Test message"
+            }
+          }
+        }
+      )
+
+      expect(schema.output).to eq(
+        channel: "sms",
+        message: "Test message",
+        beneficiary_group_ids: [],
+        created_via: :api
+      )
+    end
+
     def validate_schema(input_params:, options: {})
       BroadcastRequestSchema.new(
         input_params:,

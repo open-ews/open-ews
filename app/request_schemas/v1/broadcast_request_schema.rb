@@ -57,6 +57,7 @@ module V1
       result = super
       result[:beneficiary_group_ids] = Array(result.delete(:beneficiary_groups))
       result[:desired_status] = broadcast_state_machine.transition_to!(result.delete(:status)).name if result.key?(:status)
+      result[:created_via] = :api
       result
     end
   end

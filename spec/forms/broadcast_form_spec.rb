@@ -58,7 +58,8 @@ RSpec.describe BroadcastForm do
 
   it "handles inputs for SMS" do
     account = create(:account)
-    form = BroadcastForm.new(account:, message: "Test message", channel: :sms)
+    user = create(:user, account:)
+    form = BroadcastForm.new(account:, message: "Test message", channel: :sms, created_by: user)
 
     expect(form).to have_attributes(
       account:,
@@ -71,7 +72,9 @@ RSpec.describe BroadcastForm do
     expect(form.object).to have_attributes(
       persisted?: true,
       channel: "sms",
-      message: "Test message"
+      message: "Test message",
+      created_via: "dashboard",
+      created_by: user
     )
   end
 
@@ -95,7 +98,7 @@ RSpec.describe BroadcastForm do
   end
 
   it "validates the channel" do
-    account = create(:account, supported_channels: ["sms"])
+    account = create(:account, supported_channels: [ "sms" ])
     form = BroadcastForm.new(account:, channel: "voice")
 
     form.valid?

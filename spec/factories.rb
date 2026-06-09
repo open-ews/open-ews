@@ -17,6 +17,7 @@ FactoryBot.define do
     account
     voice
     pending
+    created_via { :dashboard }
 
     trait :with_attached_audio do
       transient do

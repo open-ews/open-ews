@@ -65,6 +65,7 @@ class BroadcastForm < ApplicationForm
 
     if new_record?
       object.created_by = created_by
+      object.created_via = :dashboard
       object.save!
       create_event("broadcast.created")
     else

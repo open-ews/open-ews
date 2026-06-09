@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_08_113411) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_09_094911) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -132,6 +132,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_113411) do
     t.datetime "completed_at"
     t.datetime "created_at", precision: nil, null: false
     t.bigint "created_by_id"
+    t.string "created_via", null: false
     t.string "error_code"
     t.text "message"
     t.jsonb "metadata", default: {}, null: false
@@ -146,6 +147,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_113411) do
     t.index ["account_id"], name: "index_broadcasts_on_account_id"
     t.index ["channel"], name: "index_broadcasts_on_channel"
     t.index ["created_by_id"], name: "index_broadcasts_on_created_by_id"
+    t.index ["created_via"], name: "index_broadcasts_on_created_via"
     t.index ["started_by_id"], name: "index_broadcasts_on_started_by_id"
     t.index ["status"], name: "index_broadcasts_on_status"
     t.index ["stopped_by_id"], name: "index_broadcasts_on_stopped_by_id"
