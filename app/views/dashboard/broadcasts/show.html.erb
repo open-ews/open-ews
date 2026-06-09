@@ -144,7 +144,10 @@
       <div class="col"><label class="form-label">Value</label></div>
     </div>
 
-    <% filter = BeneficiaryFilterData.new(data: @broadcast.beneficiary_filter, address_data_field_name: CountryAddressData.address_field_name(current_account.iso_country_code)) %>
+    <% filter = BeneficiaryFilterData.new(
+      data: @broadcast.beneficiary_filter,
+      address_data_field_definition: CountryAddressData.address_field(current_account.iso_country_code)
+    ) %>
 
     <% filter.data.fields.values.each do |field| %>
       <% next if filter.address_data_field.present? && filter.address_fields.values.include?(field) %>

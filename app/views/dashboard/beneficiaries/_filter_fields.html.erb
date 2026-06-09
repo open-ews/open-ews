@@ -1,17 +1,16 @@
-<% excluded_fields = local_assigns.key?(:excluded_fields) ? local_assigns[:excluded_fields] : [] %>
+<% whitelist = local_assigns[:whitelist] %>
 
 <% filter_form.object.class.attributes.each do |attribute_name, attribute_type| %>
   <% field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name: attribute_name) %>
-  <% next if attribute_name.in?(excluded_fields) %>
+  <% next if whitelist && whitelist.exclude?(field_definition) %>
   <% next if CountryAddressData.supported?(current_account.iso_country_code) && attribute_type.form == BeneficiaryFilterForm::AddressFieldForm %>
 
   <%= render "shared/filter_form/field", filter_form:, field_name: attribute_name, field_definition: %>
 <% end %>
 
-<% if CountryAddressData.supported?(current_account.iso_country_code) %>
-  <% address_field_name = CountryAddressData.address_field_name(current_account.iso_country_code) %>
-  <% field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name: address_field_name) %>
-  <%= filter_form.simple_fields_for(address_field_name, filter_form.object.attributes[address_field_name.to_s]) do |address_field| %>
+<% address_field_definition = CountryAddressData.address_field(current_account.iso_country_code) %>
+<% if address_field_definition.present? && (whitelist.nil? || whitelist.include?(address_field_definition)) %>
+  <%= filter_form.simple_fields_for(address_field_definition.name, filter_form.object.attributes[address_field_definition.name.to_s]) do |address_field| %>
     <% element_id = address_field.object_name.parameterize.underscore %>
     <div class="row filter-field"
           id="<%= element_id %>"
@@ -33,7 +32,7 @@
           </span>
           <input class="form-control"
                   type="text"
-                  value="<%= field_definition.human_name(namespace: current_account.iso_country_code) %>"
+                  value="<%= address_field_definition.human_name(namespace: current_account.iso_country_code) %>"
                   readonly
                   data-beneficiary-addresses-filter-field-target="fieldName" />
 

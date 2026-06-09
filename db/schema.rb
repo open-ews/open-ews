@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_09_094911) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_09_101108) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -18,6 +18,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_094911) do
 
   create_table "accounts", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
+    t.string "dashboard_broadcast_beneficiary_filter_whitelist", default: [], null: false, array: true
     t.integer "delivery_attempt_queue_limit", null: false
     t.citext "iso_country_code", null: false
     t.integer "max_delivery_attempts_for_notification", null: false
