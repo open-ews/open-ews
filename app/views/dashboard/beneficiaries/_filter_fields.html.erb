@@ -2,14 +2,14 @@
 
 <% filter_form.object.class.attributes.each do |attribute_name, attribute_type| %>
   <% field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name: attribute_name) %>
-  <% next if whitelist && whitelist.exclude?(field_definition) %>
+  <% next if whitelist.present? && whitelist.exclude?(field_definition) %>
   <% next if CountryAddressData.supported?(current_account.iso_country_code) && attribute_type.form == BeneficiaryFilterForm::AddressFieldForm %>
 
   <%= render "shared/filter_form/field", filter_form:, field_name: attribute_name, field_definition: %>
 <% end %>
 
 <% address_field_definition = CountryAddressData.address_field(current_account.iso_country_code) %>
-<% if address_field_definition.present? && (whitelist.nil? || whitelist.include?(address_field_definition)) %>
+<% if address_field_definition.present? && (whitelist.blank? || whitelist.include?(address_field_definition)) %>
   <%= filter_form.simple_fields_for(address_field_definition.name, filter_form.object.attributes[address_field_definition.name.to_s]) do |address_field| %>
     <% element_id = address_field.object_name.parameterize.underscore %>
     <div class="row filter-field"
