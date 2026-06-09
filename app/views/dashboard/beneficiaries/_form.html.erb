@@ -14,7 +14,24 @@
       </div>
       <div class="row">
         <div class="col">
-          <%= f.input :iso_language_code %>
+          <%= f.input(
+            :iso_language_code,
+            label:
+              safe_join(
+                [
+                  f.label(:iso_language_code),
+                  link_to(
+                    "https://en.wikipedia.org/wiki/List_of_ISO_639-3_codes",
+                    target: "_blank",
+                    rel: "noopener",
+                    style: "text-decoration: none;",
+                    aria: { label: "Help" }
+                  ) do
+                    content_tag(:i, "", class: "ti ti-info-circle")
+                  end
+                ], " "
+              )
+          ) %>
         </div>
         <div class="col">
           <%= f.input :date_of_birth, html5: true %>

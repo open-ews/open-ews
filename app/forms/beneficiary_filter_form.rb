@@ -18,4 +18,6 @@ class BeneficiaryFilterForm < FilterForm
   attribute :administrative_division_level_3_name, FormType.new(form: AddressFieldForm)
   attribute :administrative_division_level_4_code, FormType.new(form: AddressFieldForm)
   attribute :administrative_division_level_4_name, FormType.new(form: AddressFieldForm)
+  attribute :administrative_division_level_5_code, FormType.new(form: AddressFieldForm)
+  attribute :administrative_division_level_5_name, FormType.new(form: AddressFieldForm)
 end

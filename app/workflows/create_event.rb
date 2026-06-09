@@ -1,12 +1,13 @@
 class CreateEvent < ApplicationWorkflow
-  attr_reader :resource, :type
+  attr_reader :resource, :type, :serializer_class
 
   delegate :account, to: :resource
 
-  def initialize(type:, resource:)
+  def initialize(type:, resource:, **options)
     super()
     @type = type
     @resource = resource
+    @serializer_class = options.fetch(:serializer_class) { resource.jsonapi_serializer_class }
   end
 
   def call
@@ -27,9 +28,5 @@ class CreateEvent < ApplicationWorkflow
 
   def webhook_endpoints
     WebhookEndpoint.enabled.for_account(account).subscribed_to(type)
-  end
-
-  def serializer_class
-    resource.jsonapi_serializer_class
   end
 end

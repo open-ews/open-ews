@@ -13,6 +13,8 @@ module V1
           optional(:administrative_division_level_3_name).maybe(:string, max_size?: 255)
           optional(:administrative_division_level_4_code).maybe(:string, max_size?: 255)
           optional(:administrative_division_level_4_name).maybe(:string, max_size?: 255)
+          optional(:administrative_division_level_5_code).maybe(:string, max_size?: 255)
+          optional(:administrative_division_level_5_name).maybe(:string, max_size?: 255)
         end
       end
     end

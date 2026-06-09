@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_09_101108) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_09_123004) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -92,12 +92,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_101108) do
     t.citext "administrative_division_level_3_name"
     t.citext "administrative_division_level_4_code"
     t.citext "administrative_division_level_4_name"
+    t.citext "administrative_division_level_5_code"
+    t.citext "administrative_division_level_5_name"
     t.bigint "beneficiary_id", null: false
     t.datetime "created_at", null: false
     t.citext "iso_region_code", null: false
     t.datetime "updated_at", null: false
-    t.index ["beneficiary_id", "iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code"], name: "idx_on_beneficiary_id_iso_region_code_administrativ_c45be0885e"
-    t.index ["beneficiary_id", "iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name"], name: "idx_on_beneficiary_id_iso_region_code_administrativ_396f86096a"
+    t.index ["beneficiary_id", "iso_region_code", "administrative_division_level_2_code", "administrative_division_level_3_code", "administrative_division_level_4_code", "administrative_division_level_5_code"], name: "idx_on_beneficiary_id_iso_region_code_administrativ_e40dc43f80"
+    t.index ["beneficiary_id", "iso_region_code", "administrative_division_level_2_name", "administrative_division_level_3_name", "administrative_division_level_4_name", "administrative_division_level_5_name"], name: "idx_on_beneficiary_id_iso_region_code_administrativ_07df769d41"
     t.index ["beneficiary_id"], name: "index_beneficiary_addresses_on_beneficiary_id"
   end
 

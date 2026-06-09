@@ -10,7 +10,7 @@ class BeneficiaryAddressValidator
   def valid?(attributes)
     attributes.symbolize_keys!
 
-    4.downto(3) do |level|
+    5.downto(3) do |level|
       division_attributes = [ :code, :name ].map { |type| :"administrative_division_level_#{level}_#{type}" }
 
       next if division_attributes.all? { |division_attribute| attributes[division_attribute].blank? }

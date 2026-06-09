@@ -3,7 +3,7 @@
 <% filter_form.object.class.attributes.each do |attribute_name, attribute_type| %>
   <% field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name: attribute_name) %>
   <% next if whitelist.present? && whitelist.exclude?(field_definition) %>
-  <% next if CountryAddressData.supported?(current_account.iso_country_code) && attribute_type.form == BeneficiaryFilterForm::AddressFieldForm %>
+  <% next if CountryAddressData.supported?(current_account.iso_country_code) && field_definition.prefix&.address? %>
 
   <%= render "shared/filter_form/field", filter_form:, field_name: attribute_name, field_definition: %>
 <% end %>
@@ -32,7 +32,7 @@
           </span>
           <input class="form-control"
                   type="text"
-                  value="<%= address_field_definition.human_name(namespace: current_account.iso_country_code) %>"
+                  value="<%= address_field_label %>"
                   readonly
                   data-beneficiary-addresses-filter-field-target="fieldName" />
 

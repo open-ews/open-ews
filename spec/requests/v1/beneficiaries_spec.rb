@@ -125,43 +125,15 @@ RSpec.resource "Beneficiaries"  do
         method: :_disabled
       )
     end
+
     with_options scope: %i[data attributes address] do
-      parameter(
-        :iso_region_code, "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address",
-        required: false,
-        method: :_disabled
-      )
-      parameter(
-        :administrative_division_level_2_code, "The second-level administrative subdivision code of the address (e.g. district code)",
-        required: false,
-        method: :_disabled
-      )
-      parameter(
-        :administrative_division_level_2_name, "The second-level administrative subdivision name of the address (e.g. district name)",
-        required: false,
-        method: :_disabled
-      )
-      parameter(
-        :administrative_division_level_3_code, "The third-level administrative subdivision code of the address (e.g. commune code)",
-        required: false,
-        method: :_disabled
-      )
-      parameter(
-        :administrative_division_level_3_name, "The third-level administrative subdivision name of the address (e.g. commune name)",
-        required: false,
-        method: :_disabled
-      )
-      parameter(
-        :administrative_division_level_4_code, "The forth-level administrative subdivision code of the address (e.g. village code)",
-        required: false,
-        method: :_disabled
-      )
-      parameter(
-        :administrative_division_level_4_name, "The forth-level administrative subdivision name of the address (e.g. village name)",
-        required: false,
-        method: :_disabled
-      )
+      FieldDefinitions::BeneficiaryFields.each do |field|
+        next unless field.prefix&.address?
+
+        parameter(field.name, field.description, required: false, method: :_disabled)
+      end
     end
+
     with_options scope: [ :data, :relationships, :groups ] do
       parameter(
         :"data.*.type", "Must be `beneficiary_group`",
@@ -224,7 +196,9 @@ RSpec.resource "Beneficiaries"  do
               administrative_division_level_3_code: "010201",
               administrative_division_level_3_name: "Banteay Neang",
               administrative_division_level_4_code: "01020101",
-              administrative_division_level_4_name: "Ou Thum"
+              administrative_division_level_4_name: "Ou Thum",
+              administrative_division_level_5_code: "0102010101",
+              administrative_division_level_5_name: "Krom 1"
             }
           }
         }
@@ -245,7 +219,9 @@ RSpec.resource "Beneficiaries"  do
         "administrative_division_level_3_code" => "010201",
         "administrative_division_level_3_name" => "Banteay Neang",
         "administrative_division_level_4_code" => "01020101",
-        "administrative_division_level_4_name" => "Ou Thum"
+        "administrative_division_level_4_name" => "Ou Thum",
+        "administrative_division_level_5_code" => "0102010101",
+        "administrative_division_level_5_name" => "Krom 1",
       )
     end
 
@@ -586,7 +562,7 @@ RSpec.resource "Beneficiaries"  do
       account = create(:account)
       beneficiary = create(:beneficiary, account:)
       address1 = create(:beneficiary_address, :full, beneficiary:)
-      address2 = create(:beneficiary_address, :full, beneficiary:, administrative_division_level_4_code: "01020102", administrative_division_level_4_name: "Phnum")
+      address2 = create(:beneficiary_address, :full, beneficiary:, administrative_division_level_5_code: "0102010102", administrative_division_level_5_name: "Krom 2")
       other_beneficiary = create(:beneficiary)
       _other_address = create(:beneficiary_address, beneficiary: other_beneficiary)
 
@@ -611,34 +587,12 @@ RSpec.resource "Beneficiaries"  do
     end
 
     with_options scope: %i[data attributes] do
-      parameter(
-        :iso_region_code, "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address",
-        required: true
-      )
-      parameter(
-        :administrative_division_level_2_code, "The second-level administrative subdivision code of the address (e.g. district code)",
-        required: false
-      )
-      parameter(
-        :administrative_division_level_2_name, "The second-level administrative subdivision name of the address (e.g. district name)",
-        required: false
-      )
-      parameter(
-        :administrative_division_level_3_code, "The third-level administrative subdivision code of the address (e.g. commune code)",
-        required: false
-      )
-      parameter(
-        :administrative_division_level_3_name, "The third-level administrative subdivision name of the address (e.g. commune name)",
-        required: false
-      )
-      parameter(
-        :administrative_division_level_4_code, "The forth-level administrative subdivision code of the address (e.g. village code)",
-        required: false
-      )
-      parameter(
-        :administrative_division_level_4_name, "The forth-level administrative subdivision name of the address (e.g. village name)",
-        required: false
-      )
+      FieldDefinitions::BeneficiaryFields.each do |field|
+        next unless field.prefix&.address?
+        required = field.name == :iso_region_code ? true : false
+
+        parameter(field.name, field.description, required:, method: :_disabled)
+      end
     end
 
     example "Create an address for a beneficiary" do
@@ -657,7 +611,9 @@ RSpec.resource "Beneficiaries"  do
             administrative_division_level_3_code: "010201",
             administrative_division_level_3_name: "Banteay Neang",
             administrative_division_level_4_code: "01020101",
-            administrative_division_level_4_name: "Ou Thum"
+            administrative_division_level_4_name: "Ou Thum",
+            administrative_division_level_5_code: "0102010101",
+            administrative_division_level_5_name: "Krom 1"
           }
         }
       )
@@ -671,7 +627,9 @@ RSpec.resource "Beneficiaries"  do
         "administrative_division_level_3_code" => "010201",
         "administrative_division_level_3_name" => "Banteay Neang",
         "administrative_division_level_4_code" => "01020101",
-        "administrative_division_level_4_name" => "Ou Thum"
+        "administrative_division_level_4_name" => "Ou Thum",
+        "administrative_division_level_5_code" => "0102010101",
+        "administrative_division_level_5_name" => "Krom 1"
       )
     end
   end

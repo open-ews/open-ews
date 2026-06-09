@@ -50,7 +50,7 @@ RSpec.describe "Broadcasts" do
     attach_file("Audio file", file_fixture("test.mp3"))
     select_list("My group", "My other group", from: "Beneficiary groups")
     select_filter("Gender", operator: "Equals", select: "Male")
-    select_filter("Commune")
+    select_filter("Target areas")
     select_tree("Banteay Meanchey", "Mongkol Borey", "Banteay Neang")
 
     click_on("Create Broadcast")
@@ -142,7 +142,7 @@ RSpec.describe "Broadcasts" do
     account_sign_in(user)
     visit new_dashboard_broadcast_path
 
-    expect(page).to have_field(with: "Commune")
+    expect(page).to have_field(with: "Target areas")
     expect(page).to have_field(with: "Gender")
     expect(page).to have_no_field(with: "Phone number")
   end

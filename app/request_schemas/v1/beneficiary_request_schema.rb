@@ -23,6 +23,8 @@ module V1
             optional(:administrative_division_level_3_name).maybe(:string, max_size?: 255)
             optional(:administrative_division_level_4_code).maybe(:string, max_size?: 255)
             optional(:administrative_division_level_4_name).maybe(:string, max_size?: 255)
+            optional(:administrative_division_level_5_code).maybe(:string, max_size?: 255)
+            optional(:administrative_division_level_5_name).maybe(:string, max_size?: 255)
           end
         end
 
@@ -50,7 +52,7 @@ module V1
       next if beneficiary_address_validator.valid?(value)
 
       beneficiary_address_validator.errors.each do |error|
-        key([*key.path, error.key]).failure(error.message)
+        key([ *key.path, error.key ]).failure(error.message)
       end
     end
 

@@ -34,7 +34,9 @@ class ImportBeneficiary < ApplicationWorkflow
       administrative_division_level_3_code: sanitize(data[:address_administrative_division_level_3_code]),
       administrative_division_level_3_name: sanitize(data[:address_administrative_division_level_3_name]),
       administrative_division_level_4_code: sanitize(data[:address_administrative_division_level_4_code]),
-      administrative_division_level_4_name: sanitize(data[:address_administrative_division_level_4_name])
+      administrative_division_level_4_name: sanitize(data[:address_administrative_division_level_4_name]),
+      administrative_division_level_5_code: sanitize(data[:address_administrative_division_level_5_code]),
+      administrative_division_level_5_name: sanitize(data[:address_administrative_division_level_5_name])
     }.compact
 
     if address_attributes.any?
