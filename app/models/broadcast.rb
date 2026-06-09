@@ -13,6 +13,7 @@ class Broadcast < ApplicationRecord
 
   enumerize :channel, in: [ :voice, :sms ]
   enumerize :status, in: StateMachine.state_definitions.map(&:name)
+  enumerize :created_via, in: [ :api, :dashboard ]
 
   belongs_to :account
   belongs_to :created_by, class_name: "User", optional: true

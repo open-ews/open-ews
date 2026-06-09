@@ -2,12 +2,12 @@ module CountryAddressData
   Locality = Data.define(:value, :name_en, :name_local, :subdivisions)
 
   SETTINGS = {
-    KH: :administrative_division_level_3_code,
-    LA: :administrative_division_level_2_code,
-    NP: :administrative_division_level_2_code
+    KH: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_3_code),
+    LA: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code),
+    NP: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code)
   }
 
-  def self.address_field_name(iso_country_code)
+  def self.address_field(iso_country_code)
     SETTINGS[iso_country_code.to_sym]
   end
 

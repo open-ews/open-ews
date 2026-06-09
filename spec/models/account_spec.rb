@@ -12,6 +12,13 @@ RSpec.describe Account do
     )
   end
 
+  it "validates the dashboard beneficiary filter whitelist" do
+    account = build(:account, dashboard_broadcast_beneficiary_filter_whitelist: [ "invalid_field" ])
+
+    expect(account).not_to be_valid
+    expect(account.errors[:dashboard_broadcast_beneficiary_filter_whitelist]).to include("is invalid")
+  end
+
   describe "#api_key" do
     it "returns the correct API key" do
       account = create(:account)

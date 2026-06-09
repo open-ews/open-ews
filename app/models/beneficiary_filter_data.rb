@@ -3,7 +3,7 @@ class BeneficiaryFilterData
   include ActiveModel::Attributes
 
   attribute :data, FilterDataType.new(field_definitions: FieldDefinitions::BeneficiaryFields)
-  attribute :address_data_field_name
+  attribute :address_data_field_definition
 
   def address_fields
     @address_fields ||= data.fields.each_with_object({}) do |(_name, field), result|
@@ -17,6 +17,6 @@ class BeneficiaryFilterData
     fields = address_fields.values
     return unless fields.one?
 
-    fields.first if fields.first.name == address_data_field_name
+    fields.first if fields.first.name == address_data_field_definition.name
   end
 end

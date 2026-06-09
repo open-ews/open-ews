@@ -65,6 +65,7 @@ class BroadcastForm < ApplicationForm
 
     if new_record?
       object.created_by = created_by
+      object.created_via = :dashboard
       object.save!
       create_event("broadcast.created")
     else
@@ -81,6 +82,17 @@ class BroadcastForm < ApplicationForm
   def channel_options_for_select
     BroadcastForm.channel.values.select { supported_channels.include?(it) }.map { [ it.text, it ] }
   end
+
+  def beneficiary_filter_fields
+    FieldDefinitions::BeneficiaryFields.select do |field|
+      next false if field.name == :status
+      next true if account.dashboard_broadcast_beneficiary_filter_whitelist.blank?
+
+      account.dashboard_broadcast_beneficiary_filter_whitelist.include?(field.name.to_s)
+    end
+  end
+
+  private
 
   def create_event(event_type)
     CreateEvent.call(type: event_type, resource: object)

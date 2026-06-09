@@ -35,7 +35,7 @@ RSpec.describe "Broadcasts" do
   end
 
   it "create a voice broadcast", :js do
-    account = create(:account, iso_country_code: "KH", supported_channels: ["voice"])
+    account = create(:account, iso_country_code: "KH", supported_channels: [ "voice" ])
     user = create(:user, :owner, account:)
     create_beneficiary_group(name: "My group", account:)
     create_beneficiary_group(name: "My other group", account:)
@@ -43,7 +43,7 @@ RSpec.describe "Broadcasts" do
     account_sign_in(user)
     visit new_dashboard_broadcast_path
 
-    expect(page).to have_select("Channel", options: ["Voice"])
+    expect(page).to have_select("Channel", options: [ "Voice" ])
 
     fill_in("Name", with: "My broadcast")
     select("Voice", from: "Channel")
@@ -128,6 +128,25 @@ RSpec.describe "Broadcasts" do
     end
   end
 
+  it "handles whitelisted beneficiary filters" do
+    account = create(
+      :account,
+      iso_country_code: "KH",
+      dashboard_broadcast_beneficiary_filter_whitelist: [
+        "administrative_division_level_3_code",
+        "gender"
+      ]
+    )
+    user = create(:user, account:)
+
+    account_sign_in(user)
+    visit new_dashboard_broadcast_path
+
+    expect(page).to have_field(with: "Commune")
+    expect(page).to have_field(with: "Gender")
+    expect(page).to have_no_field(with: "Phone number")
+  end
+
   it "update a broadcast", :js do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
@@ -141,7 +160,7 @@ RSpec.describe "Broadcasts" do
       beneficiary_filter: {
         phone_number: { in: [ "855715100850",  "855715100851" ] },
         disability_status: { eq: 'none' },
-        "address.administrative_division_level_3_code": { in: [ "120101" ] },
+        "address.administrative_division_level_3_code": { in: [ "120101" ] }
       }
     )
 

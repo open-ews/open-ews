@@ -158,7 +158,6 @@ RSpec.resource "Broadcasts"  do
           "address.iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }
         }
       )
-
       expect(webhook_endpoint.webhook_request_logs).to contain_exactly(
         have_attributes(
           event: have_attributes(

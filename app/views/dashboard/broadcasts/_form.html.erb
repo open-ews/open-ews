@@ -40,7 +40,7 @@
       </div>
 
       <%= f.simple_fields_for(:beneficiary_filter, @broadcast.beneficiary_filter) do |filter_form| %>
-        <%= render "dashboard/beneficiaries/filter_fields", filter_form:, excluded_fields: ["status"] %>
+        <%= render("dashboard/beneficiaries/filter_fields", filter_form:, whitelist: @broadcast.beneficiary_filter_fields) %>
       <% end %>
     </div>
 

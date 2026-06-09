@@ -8,6 +8,7 @@ RSpec.describe CreateBroadcast do
       account:,
       channel: "sms",
       message: "Test message",
+      created_via: :api,
       beneficiary_filter: {
         gender: {
           eq: "M"
