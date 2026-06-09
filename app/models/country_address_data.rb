@@ -4,7 +4,8 @@ module CountryAddressData
   SETTINGS = {
     KH: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_3_code),
     LA: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code),
-    NP: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code)
+    NP: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code),
+    MM: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_5_code)
   }
 
   def self.address_field(iso_country_code)
