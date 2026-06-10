@@ -1,6 +1,6 @@
 module CountryAddressData
-  class KH
-    def self.address_data
+  class Cambodia
+    def address_data
       @address_data ||= begin
         data = Pumi::Commune.all.each_with_object(Hash.new { |h1, k1| h1[k1] = Hash.new { |h2, k2| h2[k2] = [] } }) do |commune, result|
           province_locality = CountryAddressData::Locality.new(

@@ -1,0 +1,41 @@
+my:
+  activerecord:
+    models:
+      beneficiary: အကျိုးခံစားခွင့်ရသူ
+      broadcast: ကြေညာချက်
+      notification: အသိပေးချက်
+      user: အသုံးပြုသူ
+  attributes:
+    name: အမည်
+    locations: တည်နေရာများ
+    gender: လိင်
+    phone_number: ဖုန်းနံပါတ်
+    disability_status: မသန်စွမ်းမှုအခြေအနေ
+    date_of_birth: မွေးသက္ကရာဇ်
+    iso_language_code: ISO ဘာသာစကားကုဒ်
+    iso_country_code: နိုင်ငံကုဒ်
+    group_ids: အုပ်စုများ
+    target_areas: ပစ်မှတ်ဒေသများ
+    registered_locations: မှတ်ပုံတင်ထားသော တည်နေရာများ
+    mm:
+      iso_region_code: ISO တိုင်းဒေသကြီးကုဒ်
+      administrative_division_level_2_code: ခရိုင်ကုဒ်
+      administrative_division_level_2_name: ခရိုင်အမည်
+      administrative_division_level_3_code: မြို့နယ်ကုဒ်
+      administrative_division_level_3_name: မြို့နယ်အမည်
+      administrative_division_level_4_code: မြို့ / ကျေးရွာအုပ်စုကုဒ်
+      administrative_division_level_4_name: မြို့ / ကျေးရွာအုပ်စုအမည်
+      administrative_division_level_5_code: ရပ်ကွက် / ကျေးရွာကုဒ်
+      administrative_division_level_5_name: ရပ်ကွက် / ကျေးရွာအမည်
+    beneficiary: အကျိုးခံစားခွင့်ရသူ
+    beneficiary_id: အကျိုးခံစားခွင့်ရသူ
+    broadcast: ကြေညာချက်
+    broadcast_id: ကြေညာချက်
+    created_at: ဖန်တီးချိန်
+    delivery_attempt: ပေးပို့မှုမှတ်တမ်း
+    delivery_attempt_id: ပေးပို့မှုမှတ်တမ်း
+    duration: ကြာချိန် (စက္ကန့်)
+    metadata: အချက်အလက်အပို
+    notification: အသိပေးချက်
+    notification_id: အသိပေးချက်
+    status: အခြေအနေ

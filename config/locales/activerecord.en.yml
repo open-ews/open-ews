@@ -35,6 +35,16 @@ en:
       administrative_division_level_4_name: Village name
       administrative_division_level_5_code: Group code
       administrative_division_level_5_name: Group name
+    mm:
+      iso_region_code: ISO region code
+      administrative_division_level_2_code: District code
+      administrative_division_level_2_name: District name
+      administrative_division_level_3_code: Township code
+      administrative_division_level_3_name: Township name
+      administrative_division_level_4_code: Town/Village tract code
+      administrative_division_level_4_name: Town/Village tract name
+      administrative_division_level_5_code: Ward/Village code
+      administrative_division_level_5_name: Ward/Village name
 
   activerecord:
     attributes:

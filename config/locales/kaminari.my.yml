@@ -1,0 +1,6 @@
+---
+my:
+  views:
+    pagination:
+      next: "နောက်စာမျက်နှာ &rsaquo;"
+      previous: "&lsaquo; ယခင်စာမျက်နှာ"

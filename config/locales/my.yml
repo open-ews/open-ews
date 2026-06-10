@@ -1,0 +1,29 @@
+---
+my:
+  filter_operators:
+    eq: "တူညီသည်"
+    not_eq: "မတူညီပါ"
+    contains: "ပါဝင်သည်"
+    not_contains: "မပါဝင်ပါ"
+    starts_with: "ဖြင့် စတင်သည်"
+    gt: "ထက် ကြီးသည်"
+    gteq: "ထက် ကြီးသည် သို့မဟုတ် ညီသည်"
+    lt: "ထက် ငယ်သည်"
+    lteq: "ထက် ငယ်သည် သို့မဟုတ် ညီသည်"
+    between: "အကြား"
+    is_null: "မရှိပါ"
+    in: "အတွင်း"
+    not_in: "အတွင်း မရှိပါ"
+  past_participles:
+    registered: "မှတ်ပုံတင်ပြီး"
+    delivered: "ပေးပို့ပြီး"
+    issued: "ထုတ်ပြန်ပြီး"
+  statuses:
+    failed: "မအောင်မြင်ပါ"
+    succeeded: "အောင်မြင်သည်"
+    pending: "စောင့်ဆိုင်းနေသည်"
+  units:
+    day: "ရက်"
+    month: "လ"
+    year: "နှစ်"
+  count_of_total: "%{total} အနက် %{count}"

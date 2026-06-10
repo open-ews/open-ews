@@ -1,0 +1,26 @@
+---
+my:
+  flash:
+    actions:
+      create:
+        notice: "%{resource_name} ကို အောင်မြင်စွာ ဖန်တီးပြီးပါပြီ။"
+      destroy:
+        notice: "%{resource_name} ကို အောင်မြင်စွာ ဖျက်ပြီးပါပြီ။"
+        notification: "%{resource_name} ကို ဖျက်၍ မရပါ။"
+      update:
+        notice: "%{resource_name} ကို အောင်မြင်စွာ ပြင်ဆင်ပြီးပါပြီ။"
+    dashboard:
+      two_factor_authentications:
+        destroy:
+          notice: "%{email} အတွက် ၂ ဆင့်အတည်ပြုခြင်း (2FA) ကို အောင်မြင်စွာ ပြန်လည်သတ်မှတ်ပြီးပါပြီ။"
+      settings:
+        users:
+          create:
+            notice: "%{email} ထံသို့ ဖိတ်ကြားခြင်း အီးမေးလ်ကို ပေးပို့ပြီးပါပြီ။"
+      broadcasts:
+        states:
+          create:
+            notice: "ထုတ်လွှင့်မှုကို အောင်မြင်စွာ အပ်ဒိတ်လုပ်ပြီးပါပြီ။"
+      exports:
+        create:
+          notice_html: "<span>သင်၏ တင်ပို့မှုကို ဆောင်ရွက်နေပါသည်။ ၎င်း၏ အခြေအနေကို %{exports_path} စာမျက်နှာတွင် ကြည့်ရှုနိုင်ပါသည်။</span>"
