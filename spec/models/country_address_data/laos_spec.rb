@@ -3,7 +3,7 @@ require "rails_helper"
 module CountryAddressData
   RSpec.describe Laos do
     it "returns address localities in Laos" do
-      result = Laos.new.address_data
+      result = CountryAddressData.address_data(:LA)
 
       expect(result).to be_an(Array)
       expect(result[0]).to be_a(CountryAddressData::Locality)
