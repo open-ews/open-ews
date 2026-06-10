@@ -22,11 +22,6 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "CSV"
   inflect.acronym "TwiML"
   inflect.acronym "SMS"
-
-  # Country codes
-  inflect.acronym "KH"
-  inflect.acronym "LA"
-  inflect.acronym "NP"
 end
 
 [ :km, :lo, :ne ].each do |locale|
