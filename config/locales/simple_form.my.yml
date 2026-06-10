@@ -1,0 +1,12 @@
+---
+my:
+  helpers:
+    submit:
+      create: "%{model} ဖန်တီးရန်"
+      update: "သိမ်းဆည်းရန်"
+    account:
+      update: "သိမ်းဆည်းရန်"
+    session:
+      destroy: "ထွက်ရန်"
+    user:
+      update: "သိမ်းဆည်းရန်"

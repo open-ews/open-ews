@@ -5,7 +5,6 @@ my:
       broadcast: ကြေညာချက်
       notification: အသိပေးချက်
       user: အသုံးပြုသူ
-
   attributes:
     name: အမည်
     locations: တည်နေရာများ

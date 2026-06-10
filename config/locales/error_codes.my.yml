@@ -1,0 +1,10 @@
+my:
+  error_codes:
+    no_matching_beneficiaries: "စစ်ထုတ်မှုများနှင့် ကိုက်ညီသော အကျိုးခံစားခွင့်ရရှိသူ မရှိပါ"
+    account_not_configured_for_channel: "ဤချန်နယ်အတွက် အကောင့်ကို စီစဉ်သတ်မှတ်ထားခြင်း မရှိပါ"
+    audio_download_failed: "အသံဖိုင်ကို ဒေါင်းလုဒ်လုပ်၍ မရပါ"
+    import_contains_marked_for_deletion_flags: "'marked_for_deletion' အမှတ်အသားများ ပါဝင်နေသောကြောင့် အကျိုးခံစားခွင့်ရရှိသူများကို ဖန်တီး၍ မရပါ။ 'marked_for_deletion' ကော်လံကို ဖယ်ရှားပြီး ထပ်မံကြိုးစားပါ"
+    beneficiary_has_multiple_addresses: "အကျိုးခံစားခွင့်ရရှိသူတွင် လိပ်စာများစွာ ရှိနေပါသည်"
+    beneficiary_not_found: "အကျိုးခံစားခွင့်ရရှိသူကို မတွေ့ရှိပါ"
+    invalid_marked_for_deletion_flag: "'marked_for_deletion' အမှတ်အသားအတွက် တန်ဖိုး မမှန်ကန်ပါ။ true ဖြစ်ရပါမည်"
+    invalid_import_columns: "တင်သွင်းထားသော ကော်လံများ မမှန်ကန်ပါ"

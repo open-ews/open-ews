@@ -1,0 +1,9 @@
+my:
+  enumerize:
+    defaults:
+      gender:
+        M: "ကျား"
+        F: "မ"
+      role:
+        owner: "ပိုင်ရှင်"
+        member: "အဖွဲ့ဝင်"

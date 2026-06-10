@@ -1,0 +1,47 @@
+---
+my:
+  titles:
+    actions:
+      start_broadcast: "ထုတ်လွှင့်မှုကို စတင်တော့မည်ဖြစ်သည်။ ၎င်းသည် ခန့်မှန်းခြေအားဖြင့် %{count} ဦးထံ ရောက်ရှိမည်ဖြစ်သည်။ ဆက်လက်လုပ်ဆောင်လိုပါသလား။"
+      confirm: "သေချာပါသလား။"
+      reset_2fa: "၂ ဆင့်အတည်ပြုခြင်း (2FA) ကို ပြန်လည်သတ်မှတ်ရန်"
+      no_filters_export: "စစ်ထုတ်မှုများကို ရွေးချယ်ထားခြင်း မရှိပါ။ မှတ်တမ်းအားလုံးကို တင်ပို့လိုသည်မှာ သေချာပါသလား။"
+      download: "ဒေါင်းလုဒ်"
+      new: "အသစ်"
+      filters: "စစ်ထုတ်မှုများ"
+      export: "တင်ပို့ရန်"
+      import: "တင်သွင်းရန်"
+      delete: "ဖျက်ရန်"
+      more: "နောက်ထပ်"
+    home:
+      index: "ပင်မစာမျက်နှာ"
+    sessions:
+      new: "ဝင်ရောက်ရန်"
+    settings:
+      index: "ဆက်တင်များ"
+    registrations:
+      edit: "ပရိုဖိုင် ပြင်ဆင်ရန်"
+    forgot_subdomain:
+      new: "သင့် subdomain ကို မေ့နေပါသလား။"
+    passwords:
+      new: "စကားဝှက် မေ့နေပါသလား။"
+      create: "စကားဝှက် မေ့နေပါသလား။"
+      edit: "စကားဝှက် ပြောင်းလဲရန်"
+    confirmations:
+      new: "အတည်ပြုချက် ညွှန်ကြားချက်များကို ပြန်လည်ပေးပို့ရန်"
+      create: "အတည်ပြုချက် ညွှန်ကြားချက်များကို ပြန်လည်ပေးပို့ရန်"
+    developers:
+      show: "ဖွံ့ဖြိုးတိုးတက်ရေးသမားများ"
+    two_factor_authentications:
+      new: "၂ ဆင့်အတည်ပြုခြင်း (2FA) ကို စတင်သတ်မှတ်ရန်"
+    broadcast_notifications:
+      index: "ထုတ်လွှင့်မှု #%{broadcast} အတွက် အသိပေးချက်များ"
+    beneficiary_group_memberships:
+      index: "%{beneficiary_group} အတွက် အဖွဲ့ဝင်မှုများ"
+    no_records: "မှတ်တမ်းများ မတွေ့ရှိပါ။"
+    broadcasts:
+      index: "ထုတ်လွှင့်မှုများ"
+    beneficiaries:
+      index: "အကျိုးခံစားခွင့်ရရှိသူများ"
+    notifications:
+      index: "အသိပေးချက်များ"
