@@ -21,6 +21,7 @@ RUN apk update --no-cache && \
   apk upgrade --no-cache && \
   apk add --update --no-cache build-base git gcompat postgresql-dev yaml-dev nodejs-current npm
 
+RUN npm install -g corepack
 RUN corepack enable
 RUN corepack prepare yarn@stable --activate
 
