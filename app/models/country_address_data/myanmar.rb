@@ -1,6 +1,6 @@
 module CountryAddressData
   class Myanmar
-    def address_data
+    def self.address_data
       @address_data ||= [
         CountryAddressData::Locality.new(
           value: "MM-11",
@@ -78,6 +78,12 @@ module CountryAddressData
                           value: "MMR001003006220400",
                           name_en: "In Don Zwut",
                           name_local: "အင်ဒုံးဇွပ်",
+                          subdivisions: []
+                        ),
+                        CountryAddressData::Locality.new(
+                          value: "MMR001003006C220400",
+                          name_en: "U Lawng Yang",
+                          name_local: "အူလောန်ယန်",
                           subdivisions: []
                         ),
                         CountryAddressData::Locality.new(
