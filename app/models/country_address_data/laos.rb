@@ -1,6 +1,6 @@
 module CountryAddressData
   class Laos
-    def address_data
+    def self.address_data
       @address_data ||= Baan::Province.all.map do |province|
         CountryAddressData::Locality.new(
           value: province.code,

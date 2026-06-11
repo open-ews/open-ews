@@ -1,6 +1,6 @@
 module CountryAddressData
   class Nepal
-    def address_data
+    def self.address_data
       @address_data ||= Gaun::Province.all.map do |province|
         CountryAddressData::Locality.new(
           value: province.code,

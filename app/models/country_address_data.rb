@@ -3,10 +3,10 @@ module CountryAddressData
   Configuration = Data.define(:address_field, :address_data)
 
   SETTINGS = {
-    KH: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_3_code), address_data: -> { CountryAddressData::Cambodia.new.address_data }),
-    LA: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code), address_data: -> { CountryAddressData::Laos.new.address_data }),
-    NP: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code), address_data: -> { CountryAddressData::Nepal.new.address_data }),
-    MM: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_5_code), address_data: -> { CountryAddressData::Myanmar.new.address_data })
+    KH: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_3_code), address_data: -> { CountryAddressData::Cambodia.address_data }),
+    LA: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code), address_data: -> { CountryAddressData::Laos.address_data }),
+    NP: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code), address_data: -> { CountryAddressData::Nepal.address_data }),
+    MM: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_5_code), address_data: -> { CountryAddressData::Myanmar.address_data })
   }
 
   def self.address_field(iso_country_code)
