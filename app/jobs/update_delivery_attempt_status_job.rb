@@ -19,9 +19,9 @@ class UpdateDeliveryAttemptStatusJob < ApplicationJob
 
       somleng_resource_sid = delivery_attempt.metadata.fetch("somleng_resource_sid")
 
-      response = if delivery_attempt.broadcast.channel.voice?
+      response = if delivery_attempt.broadcast.channel.voice_call?
         somleng_client.fetch_call(somleng_resource_sid)
-      elsif delivery_attempt.broadcast.channel.sms?
+      elsif delivery_attempt.broadcast.channel.message?
         somleng_client.fetch_message(somleng_resource_sid)
       end
 

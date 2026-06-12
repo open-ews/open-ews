@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe UpdateDeliveryAttemptStatusJob do
   it "updates the status of a voice delivery attempt" do
     account = create(:account)
-    broadcast = create(:broadcast, :running, :voice, account:)
+    broadcast = create(:broadcast, :running, :voice_call, account:)
     notification = create(:notification, broadcast:)
     delivery_attempt = create(
       :delivery_attempt,
@@ -32,7 +32,7 @@ RSpec.describe UpdateDeliveryAttemptStatusJob do
 
   it "handles incomplete statuses" do
     account = create(:account)
-    broadcast = create(:broadcast, :running, :voice, account:)
+    broadcast = create(:broadcast, :running, :voice_call, account:)
     notification = create(:notification, broadcast:)
     delivery_attempt = create(
       :delivery_attempt,
@@ -58,9 +58,9 @@ RSpec.describe UpdateDeliveryAttemptStatusJob do
     )
   end
 
-  it "updates the status of a SMS delivery attempt" do
+  it "updates the status of a message delivery attempt" do
     account = create(:account)
-    broadcast = create(:broadcast, :running, :sms, account:)
+    broadcast = create(:broadcast, :running, :message, account:)
     notification = create(:notification, broadcast:)
     delivery_attempt = create(
       :delivery_attempt,

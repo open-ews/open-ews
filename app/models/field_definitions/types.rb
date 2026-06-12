@@ -9,5 +9,16 @@ module FieldDefinitions
     UpcaseString = String.constructor do |string|
       string.upcase if string.present?
     end
+
+    ChannelType = String.constructor do |string|
+      case string
+      when "voice"
+        "voice_call"
+      when "sms"
+        "message"
+      else
+        string
+      end
+    end
   end
 end

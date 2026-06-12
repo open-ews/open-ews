@@ -93,6 +93,24 @@ RSpec.describe StartBroadcast do
     )
   end
 
+  it "handles audio channels" do
+    account = create(:account)
+
+    broadcast = create(
+      :broadcast,
+      :audio,
+      :with_attached_audio,
+      status: :queued,
+      account:
+    )
+
+    StartBroadcast.call(broadcast)
+
+    expect(broadcast).to have_attributes(
+      status: "running"
+    )
+  end
+
   it "copies the audio file with an extension" do
     broadcast = create(:broadcast, :queued, :with_attached_audio, active_storage_service: :amazon)
     allow(CopyBlobWithExtension).to receive(:call)

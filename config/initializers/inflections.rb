@@ -21,7 +21,6 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym "ISO"
   inflect.acronym "CSV"
   inflect.acronym "TwiML"
-  inflect.acronym "SMS"
 end
 
 [ :km, :lo, :ne ].each do |locale|

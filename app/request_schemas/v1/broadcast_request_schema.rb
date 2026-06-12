@@ -6,7 +6,7 @@ module V1
       required(:data).value(:hash).schema do
         required(:type).filled(:str?, eql?: "broadcast")
         required(:attributes).value(:hash).schema do
-          required(:channel).filled(:str?, included_in?: Broadcast.channel.values)
+          required(:channel).filled(Types::ChannelType, included_in?: Broadcast.channel.values)
           optional(:audio_url).maybe(:str?)
           optional(:message).maybe(:str?)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
@@ -36,13 +36,13 @@ module V1
     end
 
     attribute_rule(:audio_url) do |attributes:, **|
-      next key.failure("is missing") if value.blank? && attributes[:channel] == "voice"
-      next key.failure("is not allowed") if value.present? && attributes[:channel] != "voice"
+      next key.failure("is missing") if value.blank? && [ "voice_call", "audio" ].include?(attributes[:channel])
+      next key.failure("is not allowed") if value.present? && [ "voice_call", "audio" ].exclude?(attributes[:channel])
     end
 
     attribute_rule(:message) do |attributes:, **|
-      next key.failure("is missing") if value.blank? && attributes[:channel] == "sms"
-      next key.failure("is not allowed") if value.present? && attributes[:channel] != "sms"
+      next key.failure("is missing") if value.blank? && attributes[:channel] == "message"
+      next key.failure("is not allowed") if value.present? && attributes[:channel] != "message"
     end
 
     attribute_rule(:channel) do
