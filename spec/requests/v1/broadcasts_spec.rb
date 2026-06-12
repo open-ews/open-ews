@@ -135,7 +135,7 @@ RSpec.resource "Broadcasts"  do
           data: {
             type: :broadcast,
             attributes: {
-              channel: "voice",
+              channel: "voice_call",
               audio_url: "https://www.example.com/test.mp3",
               status: :running,
               beneficiary_filter: {
@@ -150,7 +150,7 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
-        "channel" => "voice",
+        "channel" => "voice_call",
         "status" => "queued",
         "audio_url" => "https://www.example.com/test.mp3",
         "beneficiary_filter" => {
@@ -172,7 +172,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Create and start an SMS broadcast" do
+    example "Create and start an message broadcast" do
       account = create(:account, :configured_for_broadcasts)
       create(:beneficiary_address, beneficiary: create(:beneficiary, gender: "M", account:), iso_region_code: "KH-1")
 
@@ -182,7 +182,7 @@ RSpec.resource "Broadcasts"  do
           data: {
             type: :broadcast,
             attributes: {
-              channel: "sms",
+              channel: "message",
               message: "Test message",
               status: :running,
               beneficiary_filter: {
@@ -197,7 +197,7 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
-        "channel" => "sms",
+        "channel" => "message",
         "status" => "queued",
         "message" => "Test message",
         "beneficiary_filter" => {
@@ -222,7 +222,7 @@ RSpec.resource "Broadcasts"  do
         data: {
           type: :broadcast,
           attributes: {
-            channel: "voice",
+            channel: "voice_call",
             audio_url: "https://www.example.com/test.mp3",
           },
           relationships: {
@@ -255,7 +255,7 @@ RSpec.resource "Broadcasts"  do
           data: {
             type: :broadcast,
             attributes: {
-              channel: "voice",
+              channel: "voice_call",
               audio_url: "https://www.example.com/test.mp3",
               status: :running,
               beneficiary_filter: {
@@ -278,7 +278,7 @@ RSpec.resource "Broadcasts"  do
         data: {
           type: :broadcast,
           attributes: {
-            channel: "voice",
+            channel: "voice_call",
             audio_url: nil,
             beneficiary_filter: {}
           }

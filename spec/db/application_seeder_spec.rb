@@ -15,7 +15,7 @@ RSpec.describe ApplicationSeeder do
           email: "user@example.com"
         )
       ),
-      supported_channels: contain_exactly("voice", "sms")
+      supported_channels: contain_exactly("voice_call", "message", "audio")
     )
 
     seeder.seed!

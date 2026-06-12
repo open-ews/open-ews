@@ -15,11 +15,13 @@ class StartBroadcast < ApplicationWorkflow
   def call
     return unless broadcast.queued?
 
-    prepare_audio_file if broadcast.channel.voice?
+    prepare_audio_file if broadcast.channel.voice_call? || broadcast.channel.audio?
 
     ApplicationRecord.transaction do
-      create_notifications
-      create_delivery_attempts
+      unless broadcast.channel.audio?
+        create_notifications
+        create_delivery_attempts
+      end
 
       broadcast.error_code = nil
       broadcast.transition_to!(:running, touch: :started_at)

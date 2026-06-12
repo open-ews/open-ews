@@ -11,7 +11,7 @@ class Broadcast < ApplicationRecord
     state :completed
   end
 
-  enumerize :channel, in: [ :voice, :sms ]
+  enumerize :channel, in: [ :voice_call, :message, :audio ]
   enumerize :status, in: StateMachine.state_definitions.map(&:name)
   enumerize :created_via, in: [ :api, :dashboard ]
 

@@ -42,13 +42,13 @@ module V1
     attribute_rule(:audio_url) do
       next unless key?
       next key.failure("cannot be updated after broadcast started") unless broadcast_state_machine.updatable?
-      next key.failure("is not allowed") if value.present? && resource.channel != "voice"
+      next key.failure("is not allowed") if value.present? && resource.channel != "voice_call"
     end
 
     attribute_rule(:message) do
       next unless key?
       next key.failure("cannot be updated after broadcast started") unless broadcast_state_machine.updatable?
-      next key.failure("is not allowed") if value.present? && resource.channel != "sms"
+      next key.failure("is not allowed") if value.present? && resource.channel != "message"
     end
 
     attribute_rule(:status).validate(:broadcast_status)

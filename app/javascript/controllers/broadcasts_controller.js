@@ -29,11 +29,11 @@ export default class extends Controller {
 
   toggleChannel() {
     switch (this.channelInputTarget.value) {
-      case "voice":
+      case "voice_call":
         this.#toggleInput(this.audioFileInputTarget, true)
         this.#toggleInput(this.messageInputTarget, false)
         break
-      case "sms":
+      case "message":
         this.#toggleInput(this.messageInputTarget, true)
         this.#toggleInput(this.audioFileInputTarget, false)
         break

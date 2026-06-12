@@ -9,7 +9,7 @@ RSpec.describe InitiateDeliveryAttemptJob do
         somleng_account_sid: "account-sid",
         somleng_auth_token: "auth-token"
       )
-      broadcast = create(:broadcast, :voice, :with_attached_audio, account:, audio_filename: "test.mp3")
+      broadcast = create(:broadcast, :voice_call, :with_attached_audio, account:, audio_filename: "test.mp3")
       notification = create(:notification, broadcast:)
       delivery_attempt = create(
         :delivery_attempt,
@@ -49,14 +49,14 @@ RSpec.describe InitiateDeliveryAttemptJob do
       )
     end
 
-    it "initiates an SMS delivery attempt" do
+    it "initiates an message delivery attempt" do
       account = create(
         :account,
         notification_phone_number: "1294",
         somleng_account_sid: "account-sid",
         somleng_auth_token: "auth-token"
       )
-      broadcast = create(:broadcast, :sms, account:, message: "Test message")
+      broadcast = create(:broadcast, :message, account:, message: "Test message")
       notification = create(:notification, broadcast:)
       delivery_attempt = create(
         :delivery_attempt,
