@@ -41,8 +41,8 @@ module V1
     end
 
     attribute_rule(:message) do |attributes:, **|
-      next key.failure("is missing") if value.blank? && attributes[:channel] == "message"
-      next key.failure("is not allowed") if value.present? && attributes[:channel] != "message"
+      next key.failure("is missing") if value.blank? && attributes[:channel] == "text_message"
+      next key.failure("is not allowed") if value.present? && attributes[:channel] != "text_message"
     end
 
     attribute_rule(:channel) do

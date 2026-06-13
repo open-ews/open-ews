@@ -60,7 +60,7 @@ RSpec.describe UpdateDeliveryAttemptStatusJob do
 
   it "updates the status of a message delivery attempt" do
     account = create(:account)
-    broadcast = create(:broadcast, :running, :message, account:)
+    broadcast = create(:broadcast, :running, :text_message, account:)
     notification = create(:notification, broadcast:)
     delivery_attempt = create(
       :delivery_attempt,

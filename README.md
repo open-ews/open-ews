@@ -22,7 +22,7 @@ We're helping to achieve this goal by building and [certifying](https://digitalp
 
 ### 🇰🇭 Cambodia
 National Committee for Disaster Management (NCDM)
-NCDM is the central agency responsible for disaster risk management in Cambodia. It uses OpenEWS to disseminate alerts across the country via message and other channels.
+NCDM is the central agency responsible for disaster risk management in Cambodia. It uses OpenEWS to disseminate alerts across the country via messages and other channels.
 
 ### 🇱🇦 Laos
 Department of Meteorology and Hydrology (DMH)
@@ -40,7 +40,7 @@ DMH is the national authority for weather forecasting and hydrological monitorin
   OpenEWS supports localization, allowing the platform to be fully translated and adapted to any language, including right-to-left and non-Latin scripts like Khmer and Lao.
 
 - 🛜 **Interoperable**
-  OpenEWS integrates easily with mobile network operators, government databases, and early warning protocols. It is designed to be API-driven and works across diverse communication channels including message, IVR, and Cell Broadcast.
+  OpenEWS integrates easily with mobile network operators, government databases, and early warning protocols. It is designed to be API-driven and works across diverse communication channels including messages, IVR, and Cell Broadcast.
 
 - 💖 **Free and Open Source**
   Built under the permissive MIT License, OpenEWS is fully open-source. Anyone can inspect, use, and contribute to the codebase, no vendor lock-in, no hidden costs.
@@ -57,7 +57,7 @@ OpenEWS integrates seamlessly with [Somleng](https://github.com/somleng/somleng)
 Local Mobile Network Operators (MNOs) can use Somleng to distribute Early Warning System (EWS) alerts across the following channels:
 
 - 📲 **Voice Alerts (IVR)** – Interactive voice calls to inform and instruct.
-- 💬 **message** – Text-based warnings in local languages.
+- 💬 **Text Messages** – Text-based warnings in local languages.
 - 🗼 **Cell Broadcast** – Area-based alerts sent to all phones in a coverage zone.
 
 ## 🚀 Getting Started (Local Development with Docker)

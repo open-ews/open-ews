@@ -36,8 +36,8 @@ FactoryBot.define do
       channel { "audio" }
     end
 
-    trait :message do
-      channel { "message" }
+    trait :text_message do
+      channel { "text_message" }
       message { "Test message" }
     end
 
@@ -196,7 +196,7 @@ FactoryBot.define do
     name { "NCDM" }
     sequence(:subdomain) { |n| "ncdm#{n}" }
     iso_country_code { "KH" }
-    supported_channels { [ "voice_call", "message" ] }
+    supported_channels { [ "voice_call", "text_message" ] }
 
     trait :configured_for_broadcasts do
       somleng_account_sid { generate(:somleng_account_sid) }

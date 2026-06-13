@@ -6,7 +6,7 @@ RSpec.describe CreateBroadcast do
 
     broadcast = CreateBroadcast.call(
       account:,
-      channel: "message",
+      channel: "text_message",
       message: "Test message",
       created_via: :api,
       beneficiary_filter: {

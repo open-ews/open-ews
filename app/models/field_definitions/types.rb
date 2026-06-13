@@ -14,8 +14,6 @@ module FieldDefinitions
       case string
       when "voice"
         "voice_call"
-      when "sms"
-        "message"
       else
         string
       end

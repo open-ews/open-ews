@@ -72,19 +72,19 @@ RSpec.describe "Broadcasts" do
     end
   end
 
-  it "create a message broadcast", :js do
+  it "create a text message broadcast", :js do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
 
     account_sign_in(user)
     visit new_dashboard_broadcast_path
-    select("Message", from: "Channel")
+    select("Text message", from: "Channel")
     fill_in("Message", with: "Test message")
     select_filter("Gender", operator: "Equals", select: "Male")
     click_on("Create Broadcast")
 
     expect(page).to have_content("Broadcast was successfully created.")
-    expect(page).to have_content("Message")
+    expect(page).to have_content("Text message")
     expect(page).to have_content("Test message")
   end
 

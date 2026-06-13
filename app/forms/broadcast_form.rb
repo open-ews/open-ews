@@ -26,7 +26,7 @@ class BroadcastForm < ApplicationForm
 
   validates :channel, presence: true
   validates :audio_file, presence: true, if: -> { new_record? &&  [ "voice_call", "audio" ].include?(channel) }
-  validates :message, presence: true, if: -> { channel == "message" }
+  validates :message, presence: true, if: -> { channel == "text_message" }
   validates :channel, presence: true, inclusion: { in: ->(form) { form.supported_channels } }, if: :new_record?
   validates :beneficiary_filter, presence: true, if: :new_record?
   validates :beneficiary_groups, length: { maximum: Broadcast::MAX_BENEFICIARY_GROUPS, allow_blank: true }
@@ -53,7 +53,7 @@ class BroadcastForm < ApplicationForm
 
     object.name = name.presence
     object.channel = channel if new_record? && channel.present?
-    object.message = message.presence if channel == "message"
+    object.message = message.presence if channel == "text_message"
     object.audio_file = audio_file if channel == "voice_call"
     object.account ||= account
     object.beneficiary_group_ids = beneficiary_groups

@@ -40,7 +40,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "message"
+                channel: "text_message"
               }
             }
           },
@@ -181,7 +181,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "message",
+                channel: "text_message",
                 audio_url: "https://www.example.com/test.mp3"
               }
             }
@@ -196,7 +196,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "message",
+                channel: "text_message",
                 message: "Test message"
               }
             }
@@ -209,7 +209,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "message"
+                channel: "text_message"
               }
             }
           }
@@ -235,7 +235,7 @@ module V1
         input_params: {
           data: {
             attributes: {
-              channel: "message",
+              channel: "text_message",
               message: "Test message"
             }
           }
@@ -243,7 +243,7 @@ module V1
       )
 
       expect(schema.output).to eq(
-        channel: "message",
+        channel: "text_message",
         message: "Test message",
         beneficiary_group_ids: [],
         created_via: :api

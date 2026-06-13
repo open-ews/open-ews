@@ -59,11 +59,11 @@ RSpec.describe BroadcastForm do
   it "handles inputs for messages" do
     account = create(:account)
     user = create(:user, account:)
-    form = BroadcastForm.new(account:, message: "Test message", channel: :message, created_by: user)
+    form = BroadcastForm.new(account:, message: "Test message", channel: :text_message, created_by: user)
 
     expect(form).to have_attributes(
       account:,
-      channel: "message",
+      channel: "text_message",
       message: "Test message"
     )
 
@@ -71,7 +71,7 @@ RSpec.describe BroadcastForm do
 
     expect(form.object).to have_attributes(
       persisted?: true,
-      channel: "message",
+      channel: "text_message",
       message: "Test message",
       created_via: "dashboard",
       created_by: user
@@ -80,7 +80,7 @@ RSpec.describe BroadcastForm do
 
   it "ensures the channel cannot be updated" do
     broadcast = create(:broadcast, :voice_call)
-    form = BroadcastForm.new(account: broadcast.account, object: broadcast, channel: "message")
+    form = BroadcastForm.new(account: broadcast.account, object: broadcast, channel: "text_message")
 
     form.save
 
@@ -98,7 +98,7 @@ RSpec.describe BroadcastForm do
   end
 
   it "validates the channel" do
-    account = create(:account, supported_channels: [ "message" ])
+    account = create(:account, supported_channels: [ "text_message" ])
     form = BroadcastForm.new(account:, channel: "voice_call")
 
     form.valid?
@@ -120,7 +120,7 @@ RSpec.describe BroadcastForm do
 
   it "validates the message presence for message broadcasts" do
     account = create(:account)
-    form = BroadcastForm.new(account:, channel: "message")
+    form = BroadcastForm.new(account:, channel: "text_message")
 
     form.valid?
 

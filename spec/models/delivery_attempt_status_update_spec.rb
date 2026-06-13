@@ -9,13 +9,13 @@ RSpec.describe DeliveryAttemptStatusUpdate do
     expect(DeliveryAttemptStatusUpdate.new(channel: "voice_call", status: "failed").desired_status).to eq("failed")
     expect(DeliveryAttemptStatusUpdate.new(channel: "voice_call", status: "no-answer").desired_status).to eq("failed")
 
-    expect(DeliveryAttemptStatusUpdate.new(channel: "message", status: "queued").desired_status).to be_nil
-    expect(DeliveryAttemptStatusUpdate.new(channel: "message", status: "accepted").desired_status).to be_nil
-    expect(DeliveryAttemptStatusUpdate.new(channel: "message", status: "scheduled").desired_status).to be_nil
-    expect(DeliveryAttemptStatusUpdate.new(channel: "message", status: "sending").desired_status).to be_nil
-    expect(DeliveryAttemptStatusUpdate.new(channel: "message", status: "delivered").desired_status).to eq("completed")
-    expect(DeliveryAttemptStatusUpdate.new(channel: "message", status: "sent").desired_status).to eq("completed")
-    expect(DeliveryAttemptStatusUpdate.new(channel: "message", status: "failed").desired_status).to eq("failed")
-    expect(DeliveryAttemptStatusUpdate.new(channel: "message", status: "canceled").desired_status).to eq("failed")
+    expect(DeliveryAttemptStatusUpdate.new(channel: "text_message", status: "queued").desired_status).to be_nil
+    expect(DeliveryAttemptStatusUpdate.new(channel: "text_message", status: "accepted").desired_status).to be_nil
+    expect(DeliveryAttemptStatusUpdate.new(channel: "text_message", status: "scheduled").desired_status).to be_nil
+    expect(DeliveryAttemptStatusUpdate.new(channel: "text_message", status: "sending").desired_status).to be_nil
+    expect(DeliveryAttemptStatusUpdate.new(channel: "text_message", status: "delivered").desired_status).to eq("completed")
+    expect(DeliveryAttemptStatusUpdate.new(channel: "text_message", status: "sent").desired_status).to eq("completed")
+    expect(DeliveryAttemptStatusUpdate.new(channel: "text_message", status: "failed").desired_status).to eq("failed")
+    expect(DeliveryAttemptStatusUpdate.new(channel: "text_message", status: "canceled").desired_status).to eq("failed")
   end
 end

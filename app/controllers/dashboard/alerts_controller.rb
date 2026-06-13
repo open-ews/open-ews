@@ -70,7 +70,7 @@ module Dashboard
         Badge.new(color: "orange", icon: "buildings")
       when "heat"
         Badge.new(color: "red", icon: "temperature-sun")
-      when "message"
+      when "text_message"
         Badge.new(color: "green", icon: "message")
       when "pending", "pending_approval"
         Badge.new(color: "gray-200", icon: "clock")

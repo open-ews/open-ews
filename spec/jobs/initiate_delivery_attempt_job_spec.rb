@@ -56,7 +56,7 @@ RSpec.describe InitiateDeliveryAttemptJob do
         somleng_account_sid: "account-sid",
         somleng_auth_token: "auth-token"
       )
-      broadcast = create(:broadcast, :message, account:, message: "Test message")
+      broadcast = create(:broadcast, :text_message, account:, message: "Test message")
       notification = create(:notification, broadcast:)
       delivery_attempt = create(
         :delivery_attempt,

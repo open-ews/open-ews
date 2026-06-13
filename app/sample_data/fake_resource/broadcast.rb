@@ -14,7 +14,7 @@ module FakeResource
     attribute :started_at
     attribute :completed_at
 
-    enumerize :channel, in: [ :message ]
+    enumerize :channel, in: [ :text_message ]
     enumerize :status, in: [ :pending, :in_progress, :completed ]
 
     def model_name
@@ -27,14 +27,14 @@ module FakeResource
           Broadcast.new(
             id: "4",
             operator: "Jazz",
-            channel: "message",
+            channel: "text_message",
             status: "pending",
             progress_percentage: 0,
           ),
           Broadcast.new(
             id: "3",
             operator: "Ufone",
-            channel: "message",
+            channel: "text_message",
             status: "in_progress",
             progress_percentage: 75,
             started_at: 23.hours.ago
@@ -42,7 +42,7 @@ module FakeResource
           Broadcast.new(
             id: "2",
             operator: "Zong",
-            channel: "message",
+            channel: "text_message",
             status: "in_progress",
             progress_percentage: 90,
             started_at: 23.hours.ago
@@ -50,7 +50,7 @@ module FakeResource
           Broadcast.new(
             id: "1",
             operator: "Telenor",
-            channel: "message",
+            channel: "text_message",
             status: "completed",
             progress_percentage: 100,
             started_at: 23.hours.ago,

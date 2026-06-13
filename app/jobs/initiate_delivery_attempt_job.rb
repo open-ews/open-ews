@@ -21,7 +21,7 @@ class InitiateDeliveryAttemptJob < ApplicationJob
       if delivery_attempt.broadcast.channel.voice_call?
         raise(AudioNotAttachedError, "Audio file not attached") unless delivery_attempt.broadcast.audio_file.attached?
         initiate_delivery_attempt { initiate_call }
-      elsif delivery_attempt.broadcast.channel.message?
+      elsif delivery_attempt.broadcast.channel.text_message?
         initiate_delivery_attempt { send_message }
       end
     rescue Somleng::Client::RestError => e

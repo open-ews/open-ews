@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "Message Status Callbacks" do
   it "Handles message status callbacks" do
     account = create(:account, somleng_account_sid: "account-sid", somleng_auth_token: "auth-token")
-    broadcast = create(:broadcast, :running, :message, account:)
+    broadcast = create(:broadcast, :running, :text_message, account:)
     notification = create(:notification, :pending, broadcast:)
     delivery_attempt = create(:delivery_attempt, :initiated, notification:)
 

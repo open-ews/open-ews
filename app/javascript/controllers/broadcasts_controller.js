@@ -33,7 +33,7 @@ export default class extends Controller {
         this.#toggleInput(this.audioFileInputTarget, true)
         this.#toggleInput(this.messageInputTarget, false)
         break
-      case "message":
+      case "text_message":
         this.#toggleInput(this.messageInputTarget, true)
         this.#toggleInput(this.audioFileInputTarget, false)
         break

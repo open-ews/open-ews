@@ -21,7 +21,7 @@ class UpdateDeliveryAttemptStatusJob < ApplicationJob
 
       response = if delivery_attempt.broadcast.channel.voice_call?
         somleng_client.fetch_call(somleng_resource_sid)
-      elsif delivery_attempt.broadcast.channel.message?
+      elsif delivery_attempt.broadcast.channel.text_message?
         somleng_client.fetch_message(somleng_resource_sid)
       end
 

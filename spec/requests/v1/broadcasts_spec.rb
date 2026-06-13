@@ -86,7 +86,7 @@ RSpec.resource "Broadcasts"  do
         method: :_disabled
       )
       parameter(
-        :audio_url, "A publicly available URL which contains the broadcast message.",
+        :audio_url, "A publicly available URL which contains the broadcast audio message.",
         required: true,
         method: :_disabled
       )
@@ -172,7 +172,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Create and start an message broadcast" do
+    example "Create and start a text message broadcast" do
       account = create(:account, :configured_for_broadcasts)
       create(:beneficiary_address, beneficiary: create(:beneficiary, gender: "M", account:), iso_region_code: "KH-1")
 
@@ -182,7 +182,7 @@ RSpec.resource "Broadcasts"  do
           data: {
             type: :broadcast,
             attributes: {
-              channel: "message",
+              channel: "text_message",
               message: "Test message",
               status: :running,
               beneficiary_filter: {
@@ -197,7 +197,7 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
-        "channel" => "message",
+        "channel" => "text_message",
         "status" => "queued",
         "message" => "Test message",
         "beneficiary_filter" => {
