@@ -9,7 +9,7 @@ module V1
           optional(:channels).array(:string).value(size?: 1).each do
             included_in?(Broadcast.channel.values)
           end
-          optional(:channel).filled(Types::ChannelType, eql?: "voice_call")
+          optional(:channel).maybe(:str?)
           optional(:audio_url).maybe(:str?)
           optional(:message).maybe(:str?)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
@@ -30,13 +30,18 @@ module V1
       end
     end
 
-    attribute_rule(:channels, :channel) do |attributes:, context:, **|
-      context[:channels] = Array(attributes[:channels] || attributes[:channel])
+    attribute_rule(:channel) do |context:, **|
+      next if value != "voice"
+
+      context[:channels] = Array("voice_call")
       context[:channel_capabilities] = context[:channels].map { BroadcastChannelCapabilities.new(it) }
     end
 
-    attribute_rule(:channels) do |context:, **|
-      key.failure("is not supported") if key? && Array(context[:channels]).any? { account.supported_channels.exclude?(it) }
+    attribute_rule(:channels) do |attributes:, context:, **|
+      context[:channels] = Array(attributes[:channels]) if key?
+      context[:channel_capabilities] = Array(context[:channels]).map { BroadcastChannelCapabilities.new(it) }
+      key.failure("is required") if Array(context[:channels]).blank?
+      key.failure("is not supported") if Array(context[:channels]).any? { account.supported_channels.exclude?(it) }
     end
 
     attribute_rule(:status) do |context:, **|

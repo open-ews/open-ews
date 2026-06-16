@@ -2,7 +2,7 @@ require "rails_helper"
 
 module V1
   RSpec.describe BroadcastRequestSchema, type: :request_schema do
-    it "validates the channel" do
+    it "validates the channels" do
       account = create(:account, supported_channels: [ "voice_call" ])
 
       expect(
@@ -25,6 +25,21 @@ module V1
           input_params: {
             data: {
               attributes: {
+                channels: [ "voice_call", "text_message" ]
+              }
+            }
+          },
+          options: {
+            account:
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :channels, error_message: "size must be 1")
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
                 channel: "voice"
               }
             }
@@ -33,7 +48,7 @@ module V1
             account:
           }
         )
-      ).to have_valid_field(:data, :attributes, :channel)
+      ).to have_valid_field(:data, :attributes, :channels)
 
       expect(
         validate_schema(
@@ -48,7 +63,7 @@ module V1
             account:
           }
         )
-      ).not_to have_valid_field(:data, :attributes, :channel)
+      ).not_to have_valid_field(:data, :attributes, :channels, error_message: "is required")
 
       expect(
         validate_schema(
