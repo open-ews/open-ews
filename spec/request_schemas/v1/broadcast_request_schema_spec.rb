@@ -40,6 +40,21 @@ module V1
           input_params: {
             data: {
               attributes: {
+                channel: "voice_call"
+              }
+            }
+          },
+          options: {
+            account:
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :channel)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
                 channels: [ "text_message" ]
               }
             }
