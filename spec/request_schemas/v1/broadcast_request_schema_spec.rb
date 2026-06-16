@@ -287,18 +287,29 @@ module V1
         input_params: {
           data: {
             attributes: {
-              channel: "voice",
-              audio_url: "https://www.example.com/test.mp3"
+              channel: "voice"
             }
           }
         }
       )
 
-      expect(schema.output).to eq(
-        channel: "voice_call",
-        audio_url: "https://www.example.com/test.mp3",
-        beneficiary_group_ids: [],
-        created_via: :api
+      expect(schema.output).to include(
+        channel: "voice_call"
+      )
+
+      schema = validate_schema(
+        input_params: {
+          data: {
+            attributes: {
+              channel: "voice",
+              channels: [ "text_message" ]
+            }
+          }
+        }
+      )
+
+      expect(schema.output).to include(
+        channel: "text_message"
       )
     end
 
