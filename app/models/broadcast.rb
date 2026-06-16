@@ -53,7 +53,7 @@ class Broadcast < ApplicationRecord
   end
 
   def channel_capabilities
-    @channel_capabilities ||= BroadcastChannelCapabilities.new(channel)
+    @channel_capabilities ||= Array(channel).map { BroadcastChannelCapabilities.new(channel) }
   end
 
   private

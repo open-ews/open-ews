@@ -5,7 +5,9 @@ module APIResponseSchema
 
     required(:attributes).schema do
       required(:name).maybe(:str?)
-      required(:channel).maybe(:str?)
+      required(:channels).array(:string).value(size?: 1).each do
+        included_in?(Broadcast.channel.values)
+      end
       required(:audio_url).maybe(:str?)
       required(:message).maybe(:str?)
       required(:beneficiary_filter).maybe(:hash?)

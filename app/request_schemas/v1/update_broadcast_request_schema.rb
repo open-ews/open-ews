@@ -42,13 +42,13 @@ module V1
     attribute_rule(:audio_url) do
       next unless key?
       next key.failure("cannot be updated after broadcast started") unless broadcast_state_machine.updatable?
-      next key.failure("is not allowed") if value.present? && !resource.channel_capabilities.audio?
+      next key.failure("is not allowed") if value.present? && resource.channel_capabilities.none? { it.audio? }
     end
 
     attribute_rule(:message) do
       next unless key?
       next key.failure("cannot be updated after broadcast started") unless broadcast_state_machine.updatable?
-      next key.failure("is not allowed") if value.present? && !resource.channel_capabilities.text?
+      next key.failure("is not allowed") if value.present? && resource.channel_capabilities.none? { it.text? }
     end
 
     attribute_rule(:status) do |context:, **|
@@ -56,7 +56,7 @@ module V1
 
       if broadcast_state_machine.may_transition_to?(value)
         context[:desired_status] = broadcast_state_machine.transition_to!(value).name
-        if value == "running" && resource.channel_capabilities.deliverable? && !account.configured_for_broadcasts?
+        if value == "running" && resource.channel_capabilities.any? { it.deliverable? } && !account.configured_for_broadcasts?
           base.failure("Account not configured")
         end
       else

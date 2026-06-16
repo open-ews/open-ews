@@ -120,7 +120,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Create and start a voice broadcast" do
+    example "Create and start a voice call broadcast" do
       account = create(:account, :configured_for_broadcasts)
       oauth_application = create(:oauth_application, owner: account)
       webhook_endpoint = create(:webhook_endpoint, oauth_application:, subscriptions: [ "broadcast.created", "broadcast.updated" ])
@@ -135,7 +135,7 @@ RSpec.resource "Broadcasts"  do
           data: {
             type: :broadcast,
             attributes: {
-              channel: "voice_call",
+              channels: [ "voice_call" ],
               audio_url: "https://www.example.com/test.mp3",
               status: :running,
               beneficiary_filter: {
@@ -150,7 +150,7 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
-        "channel" => "voice_call",
+        "channels" => [ "voice_call" ],
         "status" => "queued",
         "audio_url" => "https://www.example.com/test.mp3",
         "beneficiary_filter" => {
@@ -182,7 +182,7 @@ RSpec.resource "Broadcasts"  do
           data: {
             type: :broadcast,
             attributes: {
-              channel: "text_message",
+              channels: [ "text_message" ],
               message: "Test message",
               status: :running,
               beneficiary_filter: {
@@ -197,7 +197,7 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
-        "channel" => "text_message",
+        "channels" => [ "text_message" ],
         "status" => "queued",
         "message" => "Test message",
         "beneficiary_filter" => {
@@ -217,7 +217,7 @@ RSpec.resource "Broadcasts"  do
           data: {
             type: :broadcast,
             attributes: {
-              channel: "audio",
+              channels: [ "audio" ],
               audio_url: "https://www.example.com/test.mp3",
               status: :running
             }
@@ -228,7 +228,7 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
-        "channel" => "audio",
+        "channels" => [ "audio" ],
         "status" => "queued"
       )
     end
@@ -248,8 +248,8 @@ RSpec.resource "Broadcasts"  do
         data: {
           type: :broadcast,
           attributes: {
-            channel: "voice_call",
-            audio_url: "https://www.example.com/test.mp3",
+            channels: [ "voice_call" ],
+            audio_url: "https://www.example.com/test.mp3"
           },
           relationships: {
             beneficiary_groups: {
@@ -281,7 +281,7 @@ RSpec.resource "Broadcasts"  do
           data: {
             type: :broadcast,
             attributes: {
-              channel: "voice_call",
+              channels: [ "voice_call" ],
               audio_url: "https://www.example.com/test.mp3",
               status: :running,
               beneficiary_filter: {
@@ -304,7 +304,7 @@ RSpec.resource "Broadcasts"  do
         data: {
           type: :broadcast,
           attributes: {
-            channel: "voice_call",
+            channels: [ "voice_call" ],
             audio_url: nil,
             beneficiary_filter: {}
           }
@@ -354,7 +354,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    with_options scope: [:data, :relationships, :beneficiary_groups] do
+    with_options scope: [ :data, :relationships, :beneficiary_groups ] do
       parameter(
         :"data.*.type", "Must be `beneficiary_group`",
         required: false,

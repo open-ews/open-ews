@@ -10,7 +10,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "voice_call"
+                channels: [ "voice_call" ]
               }
             }
           },
@@ -18,7 +18,7 @@ module V1
             account:
           }
         )
-      ).to have_valid_field(:data, :attributes, :channel)
+      ).to have_valid_field(:data, :attributes, :channels)
 
       expect(
         validate_schema(
@@ -40,7 +40,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "text_message"
+                channels: [ "text_message" ]
               }
             }
           },
@@ -48,7 +48,7 @@ module V1
             account:
           }
         )
-      ).not_to have_valid_field(:data, :attributes, :channel, error_message: "is not supported")
+      ).not_to have_valid_field(:data, :attributes, :channels, error_message: "is not supported")
     end
 
     it "validates the beneficiary filter" do
@@ -70,7 +70,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "text_message"
+                channels: [ "text_message" ]
               }
             }
           }
@@ -130,7 +130,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "voice_call",
+                channels: [ "voice_call" ],
                 status: "running"
               }
             }
@@ -148,7 +148,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "voice_call",
+                channels: [ "voice_call" ],
                 audio_url: "https://www.example.com/test.mp3"
               }
             }
@@ -161,7 +161,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "voice_call"
+                channels: [ "voice_call" ]
               }
             }
           }
@@ -173,7 +173,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "audio"
+                channels: [ "audio" ]
               }
             }
           }
@@ -185,7 +185,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "text_message",
+                channels: [ "text_message" ],
                 audio_url: "https://www.example.com/test.mp3"
               }
             }
@@ -200,7 +200,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "text_message",
+                channels: [ "text_message" ],
                 message: "Test message"
               }
             }
@@ -213,7 +213,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "text_message"
+                channels: [ "text_message" ]
               }
             }
           }
@@ -225,7 +225,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "voice_call",
+                channels: [ "voice_call" ],
                 message: "Test message"
               }
             }
@@ -239,7 +239,7 @@ module V1
         input_params: {
           data: {
             attributes: {
-              channel: "text_message",
+              channels: [ "text_message" ],
               message: "Test message"
             }
           }
@@ -249,6 +249,24 @@ module V1
       expect(schema.output).to eq(
         channel: "text_message",
         message: "Test message",
+        beneficiary_group_ids: [],
+        created_via: :api
+      )
+
+      schema = validate_schema(
+        input_params: {
+          data: {
+            attributes: {
+              channel: "voice",
+              audio_url: "https://www.example.com/test.mp3"
+            }
+          }
+        }
+      )
+
+      expect(schema.output).to eq(
+        channel: "voice_call",
+        audio_url: "https://www.example.com/test.mp3",
         beneficiary_group_ids: [],
         created_via: :api
       )
