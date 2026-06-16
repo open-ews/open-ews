@@ -207,6 +207,32 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
+    example "Create and start an audio broadcast" do
+      account = create(:account)
+      set_authorization_header_for(account)
+      stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
+
+      perform_enqueued_jobs do
+        do_request(
+          data: {
+            type: :broadcast,
+            attributes: {
+              channel: "audio",
+              audio_url: "https://www.example.com/test.mp3",
+              status: :running
+            }
+          }
+        )
+      end
+
+      expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(json_response.dig("data", "attributes")).to include(
+        "channel" => "audio",
+        "status" => "queued"
+      )
+    end
+
     example "Create broadcast with a beneficiary group" do
       explanation <<~HEREDOC
         When creating a broadcast, you can target one or more beneficiary groups **in addition to** *or* **instead of** using a beneficiary filter.

@@ -52,6 +52,10 @@ class Broadcast < ApplicationRecord
     end
   end
 
+  def channel_capabilities
+    @channel_capabilities ||= BroadcastChannelCapabilities.new(channel)
+  end
+
   private
 
   def state_machine

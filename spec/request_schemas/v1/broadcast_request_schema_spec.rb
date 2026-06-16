@@ -68,7 +68,11 @@ module V1
       expect(
         validate_schema(
           input_params: {
-            data: { attributes: {} }
+            data: {
+              attributes: {
+                channel: "text_message"
+              }
+            }
           }
         )
       ).not_to have_valid_field(:data, :attributes, :beneficiary_filter)

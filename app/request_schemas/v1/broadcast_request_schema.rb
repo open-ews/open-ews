@@ -27,26 +27,33 @@ module V1
       end
     end
 
-    attribute_rule(:status).validate(:broadcast_status)
+    attribute_rule(:channel) do |context:, **|
+      key.failure("is not supported") if key? && account.supported_channels.exclude?(value)
+      context[:channel_capabilities] = BroadcastChannelCapabilities.new(value)
+    end
+
+    attribute_rule(:status) do |context:, **|
+      next unless key?
+      if context[:channel_capabilities]&.deliverable? && !account.configured_for_broadcasts?
+        base.failure("Account not configured")
+      end
+    end
+
     attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
-    attribute_rule(:beneficiary_filter) do |relationships:, **|
-      next if key? || relationships.key?(:beneficiary_groups)
+    attribute_rule(:beneficiary_filter) do |relationships:, context:, **|
+      next if key? || relationships.key?(:beneficiary_groups) || !context[:channel_capabilities]&.deliverable?
 
       key.failure("is missing")
     end
 
-    attribute_rule(:audio_url) do |attributes:, **|
-      next key.failure("is missing") if value.blank? && [ "voice_call", "audio" ].include?(attributes[:channel])
-      next key.failure("is not allowed") if value.present? && [ "voice_call", "audio" ].exclude?(attributes[:channel])
+    attribute_rule(:audio_url) do |context:, **|
+      next key.failure("is missing") if value.blank? && context[:channel_capabilities]&.audio?
+      next key.failure("is not allowed") if value.present? && !context[:channel_capabilities]&.audio?
     end
 
-    attribute_rule(:message) do |attributes:, **|
-      next key.failure("is missing") if value.blank? && attributes[:channel] == "text_message"
-      next key.failure("is not allowed") if value.present? && attributes[:channel] != "text_message"
-    end
-
-    attribute_rule(:channel) do
-      key.failure("is not supported") if key? && account.supported_channels.exclude?(value)
+    attribute_rule(:message) do |context:, **|
+      next key.failure("is missing") if value.blank? && context[:channel_capabilities]&.text?
+      next key.failure("is not allowed") if value.present? && !context[:channel_capabilities]&.text?
     end
 
     attribute_rule(:audio_url).validate(:url_format)
