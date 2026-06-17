@@ -30,7 +30,7 @@
     "tom-select": "^2.4.3"
   },
   "devDependencies": {
-    "esbuild": "^0.25.0"
+    "esbuild": "^0.28.1"
   },
   "browserslist": [
     "defaults"
