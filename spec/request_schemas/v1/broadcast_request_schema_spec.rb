@@ -2,8 +2,38 @@ require "rails_helper"
 
 module V1
   RSpec.describe BroadcastRequestSchema, type: :request_schema do
-    it "validates the channel" do
-      account = create(:account, :supported_channels => ["voice"])
+    it "validates the channels" do
+      account = create(:account, supported_channels: [ "voice_call" ])
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channels: [ "voice_call" ]
+              }
+            }
+          },
+          options: {
+            account:
+          }
+        )
+      ).to have_valid_field(:data, :attributes, :channels)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channels: [ "voice_call", "text_message" ]
+              }
+            }
+          },
+          options: {
+            account:
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :channels, error_message: "size must be 1")
 
       expect(
         validate_schema(
@@ -18,14 +48,14 @@ module V1
             account:
           }
         )
-      ).to have_valid_field(:data, :attributes, :channel)
+      ).to have_valid_field(:data, :attributes, :channels)
 
       expect(
         validate_schema(
           input_params: {
             data: {
               attributes: {
-                channel: "sms"
+                channel: "voice_call"
               }
             }
           },
@@ -33,7 +63,22 @@ module V1
             account:
           }
         )
-      ).not_to have_valid_field(:data, :attributes, :channel, error_message: "is not supported")
+      ).not_to have_valid_field(:data, :attributes, :channels, error_message: "is required")
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channels: [ "text_message" ]
+              }
+            }
+          },
+          options: {
+            account:
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :channels, error_message: "is not supported")
     end
 
     it "validates the beneficiary filter" do
@@ -53,7 +98,11 @@ module V1
       expect(
         validate_schema(
           input_params: {
-            data: { attributes: {} }
+            data: {
+              attributes: {
+                channels: [ "text_message" ]
+              }
+            }
           }
         )
       ).not_to have_valid_field(:data, :attributes, :beneficiary_filter)
@@ -111,7 +160,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "voice",
+                channels: [ "voice_call" ],
                 status: "running"
               }
             }
@@ -123,13 +172,13 @@ module V1
       ).not_to have_valid_schema(error_message: "Account not configured")
     end
 
-    it "validates voice broadcasts" do
+    it "validates voice and audio broadcasts" do
       expect(
         validate_schema(
           input_params: {
             data: {
               attributes: {
-                channel: "voice",
+                channels: [ "voice_call" ],
                 audio_url: "https://www.example.com/test.mp3"
               }
             }
@@ -142,7 +191,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "voice",
+                channels: [ "voice_call" ]
               }
             }
           }
@@ -154,7 +203,19 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "sms",
+                channels: [ "audio" ]
+              }
+            }
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :audio_url, error_message: "is missing")
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channels: [ "text_message" ],
                 audio_url: "https://www.example.com/test.mp3"
               }
             }
@@ -163,13 +224,13 @@ module V1
       ).not_to have_valid_field(:data, :attributes, :audio_url, error_message: "is not allowed")
     end
 
-    it "validates SMS broadcasts" do
+    it "validates message broadcasts" do
       expect(
         validate_schema(
           input_params: {
             data: {
               attributes: {
-                channel: "sms",
+                channels: [ "text_message" ],
                 message: "Test message"
               }
             }
@@ -182,7 +243,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "sms"
+                channels: [ "text_message" ]
               }
             }
           }
@@ -194,7 +255,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "voice",
+                channels: [ "voice_call" ],
                 message: "Test message"
               }
             }
@@ -208,7 +269,7 @@ module V1
         input_params: {
           data: {
             attributes: {
-              channel: "sms",
+              channels: [ "text_message" ],
               message: "Test message"
             }
           }
@@ -216,10 +277,39 @@ module V1
       )
 
       expect(schema.output).to eq(
-        channel: "sms",
+        channel: "text_message",
         message: "Test message",
         beneficiary_group_ids: [],
         created_via: :api
+      )
+
+      schema = validate_schema(
+        input_params: {
+          data: {
+            attributes: {
+              channel: "voice"
+            }
+          }
+        }
+      )
+
+      expect(schema.output).to include(
+        channel: "voice_call"
+      )
+
+      schema = validate_schema(
+        input_params: {
+          data: {
+            attributes: {
+              channel: "voice",
+              channels: [ "text_message" ]
+            }
+          }
+        }
+      )
+
+      expect(schema.output).to include(
+        channel: "text_message"
       )
     end
 

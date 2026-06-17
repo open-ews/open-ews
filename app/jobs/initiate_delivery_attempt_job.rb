@@ -18,10 +18,10 @@ class InitiateDeliveryAttemptJob < ApplicationJob
     def perform
       return if delivery_attempt.initiated?
 
-      if delivery_attempt.broadcast.channel.voice?
+      if delivery_attempt.broadcast.channel.voice_call?
         raise(AudioNotAttachedError, "Audio file not attached") unless delivery_attempt.broadcast.audio_file.attached?
         initiate_delivery_attempt { initiate_call }
-      elsif delivery_attempt.broadcast.channel.sms?
+      elsif delivery_attempt.broadcast.channel.text_message?
         initiate_delivery_attempt { send_message }
       end
     rescue Somleng::Client::RestError => e

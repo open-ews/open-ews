@@ -31,14 +31,6 @@ class ApplicationRequestSchema < Dry::Validation::Contract
     key.failure(text: "is invalid")
   end
 
-  register_macro(:broadcast_status) do
-    next unless key?
-    next unless broadcast_state_machine.may_transition_to?(:running)
-    next if account.configured_for_broadcasts?
-
-    base.failure("Account not configured")
-  end
-
   # NOTE: composable contracts
   #
   # params do

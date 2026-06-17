@@ -4,7 +4,7 @@ RSpec.describe BroadcastForm do
   it "handles initialization" do
     broadcast = create(
       :broadcast,
-      channel: :voice,
+      channel: :voice_call,
       beneficiary_filter: {
         gender: { eq: "M" },
         "address.iso_region_code": { eq: "KH-1" }
@@ -14,7 +14,7 @@ RSpec.describe BroadcastForm do
     form = BroadcastForm.initialize_with(broadcast)
 
     expect(form).to have_attributes(
-      channel: "voice",
+      channel: "voice_call",
       beneficiary_filter: have_attributes(
         gender: have_attributes(
           operator: "eq",
@@ -31,11 +31,11 @@ RSpec.describe BroadcastForm do
   it "handles inputs for voice" do
     account = create(:account)
 
-    form = BroadcastForm.new(account:, audio_file: file_fixture("test.mp3"), channel: :voice, beneficiary_filter: { gender: { operator: "eq", value: "M" } })
+    form = BroadcastForm.new(account:, audio_file: file_fixture("test.mp3"), channel: :voice_call, beneficiary_filter: { gender: { operator: "eq", value: "M" } })
 
     expect(form).to have_attributes(
       account:,
-      channel: "voice",
+      channel: "voice_call",
       beneficiary_filter: have_attributes(
         gender: have_attributes(
           operator: "eq",
@@ -48,7 +48,7 @@ RSpec.describe BroadcastForm do
 
     expect(form.object).to have_attributes(
       persisted?: true,
-      channel: "voice",
+      channel: "voice_call",
       audio_file: be_attached,
       beneficiary_filter: {
         "gender" => { "eq" => "M" }
@@ -56,14 +56,14 @@ RSpec.describe BroadcastForm do
     )
   end
 
-  it "handles inputs for SMS" do
+  it "handles inputs for messages" do
     account = create(:account)
     user = create(:user, account:)
-    form = BroadcastForm.new(account:, message: "Test message", channel: :sms, created_by: user)
+    form = BroadcastForm.new(account:, message: "Test message", channel: :text_message, created_by: user)
 
     expect(form).to have_attributes(
       account:,
-      channel: "sms",
+      channel: "text_message",
       message: "Test message"
     )
 
@@ -71,7 +71,7 @@ RSpec.describe BroadcastForm do
 
     expect(form.object).to have_attributes(
       persisted?: true,
-      channel: "sms",
+      channel: "text_message",
       message: "Test message",
       created_via: "dashboard",
       created_by: user
@@ -79,12 +79,12 @@ RSpec.describe BroadcastForm do
   end
 
   it "ensures the channel cannot be updated" do
-    broadcast = create(:broadcast, :voice)
-    form = BroadcastForm.new(account: broadcast.account, object: broadcast, channel: "sms")
+    broadcast = create(:broadcast, :voice_call)
+    form = BroadcastForm.new(account: broadcast.account, object: broadcast, channel: "text_message")
 
     form.save
 
-    expect(broadcast.reload.channel).to eq("voice")
+    expect(broadcast.reload.channel).to eq("voice_call")
   end
 
   it "validates the beneficiary groups length" do
@@ -98,26 +98,29 @@ RSpec.describe BroadcastForm do
   end
 
   it "validates the channel" do
-    account = create(:account, supported_channels: [ "sms" ])
-    form = BroadcastForm.new(account:, channel: "voice")
+    account = create(:account, supported_channels: [ "text_message" ])
+    form = BroadcastForm.new(account:, channel: "voice_call")
 
     form.valid?
 
     expect(form.errors[:channel]).to be_present
   end
 
-  it "validates the audio file presence for voice broadcasts" do
+  it "validates the audio file presence for voice and audio broadcasts" do
     account = create(:account)
-    form = BroadcastForm.new(account:, channel: "voice")
+    voice_call_form = BroadcastForm.new(account:, channel: "voice_call")
+    audio_form = BroadcastForm.new(account:, channel: "audio")
 
-    form.valid?
+    voice_call_form.valid?
+    audio_form.valid?
 
-    expect(form.errors[:audio_file]).to be_present
+    expect(voice_call_form.errors[:audio_file]).to be_present
+    expect(audio_form.errors[:audio_file]).to be_present
   end
 
-  it "validates the message presence for SMS broadcasts" do
+  it "validates the message presence for message broadcasts" do
     account = create(:account)
-    form = BroadcastForm.new(account:, channel: "sms")
+    form = BroadcastForm.new(account:, channel: "text_message")
 
     form.valid?
 

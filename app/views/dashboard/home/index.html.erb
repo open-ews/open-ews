@@ -14,7 +14,7 @@
       "stats",
       stats: @dashboard_summary.notifications_stats,
       header_title: t("dashboard_summary.stats.title", model_name: titleize_model(Notification.model_name)),
-      icon_name: "message",
+      icon_name: "text_message",
       description: dashboard_summary_description(@dashboard_summary.notifications_stats.new_count, Notification.model_name, past_participle: "delivered", time_period: 30, unit: "day")
     ) %>
   </div>

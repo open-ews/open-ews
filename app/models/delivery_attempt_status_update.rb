@@ -1,12 +1,12 @@
 class DeliveryAttemptStatusUpdate
   INCOMPLETE_STATUSES = {
-    voice: [ "queued", "ringing", "in-progress" ],
-    sms: [ "accepted", "scheduled", "queued", "sending" ]
+    voice_call: [ "queued", "ringing", "in-progress" ],
+    text_message: [ "accepted", "scheduled", "queued", "sending" ]
   }.freeze
 
   SUCCEEDED_STATUSES = {
-    voice: [ "completed" ],
-    sms: [ "delivered", "sent" ]
+    voice_call: [ "completed" ],
+    text_message: [ "delivered", "sent" ]
   }.freeze
 
   COMPLETED = "completed".freeze

@@ -7,12 +7,12 @@ module CSVSerializers
         BroadcastSerializer.new(
           create(
             :broadcast,
-            channel: :voice,
+            channel: :voice_call,
             audio_url: "https://www.example.com/test.mp3",
           )
         ).as_json
       ).to include(
-        channel: "voice",
+        channel: "voice_call",
         audio_url: "https://www.example.com/test.mp3",
         message: nil,
       )

@@ -81,22 +81,33 @@ RSpec.resource "Broadcasts"  do
 
     with_options scope: %i[data attributes] do
       parameter(
-        :channel, "Must be one of #{Broadcast.channel.values.map { |t| "`#{t}`" }.join(", ")}.",
+        :channels,
+        "An array of delivery channels for the broadcast. At least one channel is required. Currently, the array must contain exactly one channel, although support for multiple channels may be added in future releases. Supported values are #{Broadcast.channel.values.map { |t| "`#{t}`" }.join(", ")}.",
         required: true,
         method: :_disabled
       )
+
       parameter(
-        :audio_url, "A publicly available URL which contains the broadcast message.",
-        required: true,
+        :message,
+        "The text content of the broadcast. This field is required if any of the selected channels require text content.",
         method: :_disabled
       )
+
+      parameter(
+        :audio_url,
+        "A publicly accessible URL pointing to the audio message to be delivered. This field is required if any of the selected channels require audio content.",
+        method: :_disabled
+      )
+
       parameter(
         :status,
-        "If supplied, must be `running`. This will create the broadcast and start it immediately.",
+        "If supplied, the value must be `running`. The broadcast will be created and started immediately. If omitted, the broadcast will be created in a pending state.",
         method: :_disabled
       )
+
       parameter(
-        :metadata, "Set of key-value pairs that you can attach to the broadcast. This can be useful for storing additional information about the broadcast in a structured format.",
+        :metadata,
+        "A set of key-value pairs that can be attached to the broadcast. This can be useful for storing additional structured information associated with the broadcast.",
         method: :_disabled
       )
     end
@@ -120,7 +131,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Create and start a voice broadcast" do
+    example "Create and start a voice call broadcast" do
       account = create(:account, :configured_for_broadcasts)
       oauth_application = create(:oauth_application, owner: account)
       webhook_endpoint = create(:webhook_endpoint, oauth_application:, subscriptions: [ "broadcast.created", "broadcast.updated" ])
@@ -135,7 +146,7 @@ RSpec.resource "Broadcasts"  do
           data: {
             type: :broadcast,
             attributes: {
-              channel: "voice",
+              channels: [ "voice_call" ],
               audio_url: "https://www.example.com/test.mp3",
               status: :running,
               beneficiary_filter: {
@@ -150,7 +161,7 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
-        "channel" => "voice",
+        "channels" => [ "voice_call" ],
         "status" => "queued",
         "audio_url" => "https://www.example.com/test.mp3",
         "beneficiary_filter" => {
@@ -172,7 +183,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Create and start an SMS broadcast" do
+    example "Create and start a text message broadcast" do
       account = create(:account, :configured_for_broadcasts)
       create(:beneficiary_address, beneficiary: create(:beneficiary, gender: "M", account:), iso_region_code: "KH-1")
 
@@ -182,7 +193,7 @@ RSpec.resource "Broadcasts"  do
           data: {
             type: :broadcast,
             attributes: {
-              channel: "sms",
+              channels: [ "text_message" ],
               message: "Test message",
               status: :running,
               beneficiary_filter: {
@@ -197,13 +208,39 @@ RSpec.resource "Broadcasts"  do
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
-        "channel" => "sms",
+        "channels" => [ "text_message" ],
         "status" => "queued",
         "message" => "Test message",
         "beneficiary_filter" => {
           "gender" => { "eq" => "M" },
           "address.iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }
         }
+      )
+    end
+
+    example "Create and start an audio broadcast" do
+      account = create(:account)
+      set_authorization_header_for(account)
+      stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
+
+      perform_enqueued_jobs do
+        do_request(
+          data: {
+            type: :broadcast,
+            attributes: {
+              channels: [ "audio" ],
+              audio_url: "https://www.example.com/test.mp3",
+              status: :running
+            }
+          }
+        )
+      end
+
+      expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(json_response.dig("data", "attributes")).to include(
+        "channels" => [ "audio" ],
+        "status" => "queued"
       )
     end
 
@@ -222,8 +259,8 @@ RSpec.resource "Broadcasts"  do
         data: {
           type: :broadcast,
           attributes: {
-            channel: "voice",
-            audio_url: "https://www.example.com/test.mp3",
+            channels: [ "voice_call" ],
+            audio_url: "https://www.example.com/test.mp3"
           },
           relationships: {
             beneficiary_groups: {
@@ -255,7 +292,7 @@ RSpec.resource "Broadcasts"  do
           data: {
             type: :broadcast,
             attributes: {
-              channel: "voice",
+              channels: [ "voice_call" ],
               audio_url: "https://www.example.com/test.mp3",
               status: :running,
               beneficiary_filter: {
@@ -278,7 +315,7 @@ RSpec.resource "Broadcasts"  do
         data: {
           type: :broadcast,
           attributes: {
-            channel: "voice",
+            channels: [ "voice_call" ],
             audio_url: nil,
             beneficiary_filter: {}
           }
@@ -305,30 +342,45 @@ RSpec.resource "Broadcasts"  do
   patch "/v1/broadcasts/:id" do
     with_options scope: %i[data] do
       parameter(
-        :id, "The unique identifier of the broadcast.",
+        :id,
+        "The unique identifier of the broadcast to update.",
         required: true
       )
+
       parameter(
-        :type, "Must be `broadcast`",
+        :type,
+        "The resource type. Must be `broadcast`.",
         required: true
       )
     end
 
     with_options scope: %i[data attributes] do
       parameter(
-        :audio_url, "A publicly available URL which contains the broadcast message. Can only be updated before the broadcast starts.",
-      )
-      parameter(
-        :status,
-        "Update the status of a broadcast. Must be one of #{V1::UpdateBroadcastRequestSchema::VALID_STATES.map { "`#{it}`" }.join(", ")}.",
+        :message,
+        "The text content of the broadcast. This field can only be updated before the broadcast has started.",
         method: :_disabled
       )
+
       parameter(
-        :metadata, "Set of key-value pairs that you can attach to the broadcast. This can be useful for storing additional information about the broadcast in a structured format."
+        :audio_url,
+        "A publicly accessible URL pointing to the audio message to be delivered. This field can only be updated before the broadcast has started.",
+        method: :_disabled
+      )
+
+      parameter(
+        :status,
+        "Updates the lifecycle state of the broadcast. Supported values are #{V1::UpdateBroadcastRequestSchema::VALID_STATES.map { "`#{it}`" }.join(", ")}.",
+        method: :_disabled
+      )
+
+      parameter(
+        :metadata,
+        "A set of key-value pairs that can be attached to the broadcast. This can be useful for storing additional structured information associated with the broadcast.",
+        method: :_disabled
       )
     end
 
-    with_options scope: [:data, :relationships, :beneficiary_groups] do
+    with_options scope: [ :data, :relationships, :beneficiary_groups ] do
       parameter(
         :"data.*.type", "Must be `beneficiary_group`",
         required: false,

@@ -3,10 +3,10 @@ require "rails_helper"
 module V1
   RSpec.describe UpdateBroadcastRequestSchema, type: :request_schema do
     it "validates the audio_url" do
-      broadcast = create(:broadcast, :pending, :voice)
-      started_broadcast = create(:broadcast, :running, :voice)
-      stopped_broadcast = create(:broadcast, :stopped, :voice)
-      sms_broadcast = create(:broadcast, :pending, :sms)
+      broadcast = create(:broadcast, :pending, :voice_call)
+      started_broadcast = create(:broadcast, :running, :voice_call)
+      stopped_broadcast = create(:broadcast, :stopped, :voice_call)
+      text_message_broadcast = create(:broadcast, :pending, :text_message)
 
       expect(
         validate_schema(input_params: { data: { attributes: {} } }, options: { resource: broadcast })
@@ -29,15 +29,15 @@ module V1
       ).not_to have_valid_field(:data, :attributes, :audio_url)
 
       expect(
-        validate_schema(input_params: { data: { attributes: { audio_url: "http://example.com/sample.mp3" } } }, options: { resource: sms_broadcast })
+        validate_schema(input_params: { data: { attributes: { audio_url: "http://example.com/sample.mp3" } } }, options: { resource: text_message_broadcast })
       ).not_to have_valid_field(:data, :attributes, :audio_url)
     end
 
     it "validates the message" do
-      broadcast = create(:broadcast, :pending, :sms)
-      started_broadcast = create(:broadcast, :running, :sms)
-      stopped_broadcast = create(:broadcast, :stopped, :sms)
-      voice_broadcast = create(:broadcast, :pending, :voice)
+      broadcast = create(:broadcast, :pending, :text_message)
+      started_broadcast = create(:broadcast, :running, :text_message)
+      stopped_broadcast = create(:broadcast, :stopped, :text_message)
+      voice_broadcast = create(:broadcast, :pending, :voice_call)
 
       expect(
         validate_schema(input_params: { data: { attributes: {} } }, options: { resource: broadcast })
@@ -144,7 +144,7 @@ module V1
           input_params: {
             data: {
               attributes: {
-                channel: "voice",
+                channel: "voice_call",
                 status: "running"
               }
             }
@@ -230,9 +230,9 @@ module V1
     end
 
     it "handles post processing" do
-      pending_broadcast = create(:broadcast, :pending, :voice)
-      errored_broadcast = create(:broadcast, :errored, :voice)
-      sms_broadcast = create(:broadcast, :pending, :sms)
+      pending_broadcast = create(:broadcast, :pending, :voice_call)
+      errored_broadcast = create(:broadcast, :errored, :voice_call)
+      text_message_broadcast = create(:broadcast, :pending, :text_message)
 
       result = validate_schema(
         input_params: {
@@ -273,14 +273,14 @@ module V1
       result = validate_schema(
         input_params: {
           data: {
-            id: sms_broadcast.id,
+            id: text_message_broadcast.id,
             attributes: {
               status: "running",
               message: "Updated test message"
             }
           }
         },
-        options: { resource: sms_broadcast }
+        options: { resource: text_message_broadcast }
       ).output
 
       expect(result).to include(

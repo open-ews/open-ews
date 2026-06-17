@@ -43,7 +43,7 @@ RSpec.describe ExportCSV do
         expect(exported_broadcast["id"]).to eq(completed_broadcast.id.to_s)
         expect(exported_broadcast["name"]).to eq("My broadcast")
         expect(exported_broadcast["status"]).to eq("completed")
-        expect(exported_broadcast["channel"]).to eq("voice")
+        expect(exported_broadcast["channel"]).to eq("voice_call")
         expect(exported_broadcast["audio_url"]).to eq("https://example.com/audio.mp3")
         expect(JSON.parse(exported_broadcast["beneficiary_filter"])).to eq({ "gender" => { "eq" => "F" } })
         expect(exported_broadcast["error_code"]).to be_nil

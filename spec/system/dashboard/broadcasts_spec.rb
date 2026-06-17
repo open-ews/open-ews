@@ -35,7 +35,7 @@ RSpec.describe "Broadcasts" do
   end
 
   it "create a voice broadcast", :js do
-    account = create(:account, iso_country_code: "KH", supported_channels: [ "voice" ])
+    account = create(:account, iso_country_code: "KH", supported_channels: [ "voice_call" ])
     user = create(:user, :owner, account:)
     create_beneficiary_group(name: "My group", account:)
     create_beneficiary_group(name: "My other group", account:)
@@ -43,7 +43,7 @@ RSpec.describe "Broadcasts" do
     account_sign_in(user)
     visit new_dashboard_broadcast_path
 
-    expect(page).to have_select("Channel", options: [ "Voice" ])
+    expect(page).to have_select("Channel", options: [ "Voice call" ])
 
     fill_in("Name", with: "My broadcast")
     select("Voice", from: "Channel")
@@ -72,19 +72,19 @@ RSpec.describe "Broadcasts" do
     end
   end
 
-  it "create an SMS broadcast", :js do
+  it "create a text message broadcast", :js do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
 
     account_sign_in(user)
     visit new_dashboard_broadcast_path
-    select("SMS", from: "Channel")
+    select("Text message", from: "Channel")
     fill_in("Message", with: "Test message")
     select_filter("Gender", operator: "Equals", select: "Male")
     click_on("Create Broadcast")
 
     expect(page).to have_content("Broadcast was successfully created.")
-    expect(page).to have_content("SMS")
+    expect(page).to have_content("Text message")
     expect(page).to have_content("Test message")
   end
 

@@ -11,7 +11,7 @@ class Broadcast < ApplicationRecord
     state :completed
   end
 
-  enumerize :channel, in: [ :voice, :sms ]
+  enumerize :channel, in: [ :voice_call, :text_message, :audio ]
   enumerize :status, in: StateMachine.state_definitions.map(&:name)
   enumerize :created_via, in: [ :api, :dashboard ]
 
@@ -50,6 +50,10 @@ class Broadcast < ApplicationRecord
       state_machine.transition_to!(:errored)
       update!(error_code:)
     end
+  end
+
+  def channel_capabilities
+    @channel_capabilities ||= Array(channel).map { BroadcastChannelCapabilities.new(channel) }
   end
 
   private

@@ -101,7 +101,7 @@
         </div>
       <% end %>
 
-      <% if @broadcast.channel.voice? %>
+      <% if @broadcast.channel.voice_call? %>
         <%= f.attribute :audio_file do %>
           <% if @broadcast.audio_file.attached? %>
             <%= audio_tag(@broadcast.audio_file, controls: true) %>
@@ -109,7 +109,7 @@
         <% end %>
       <% end %>
 
-      <% if @broadcast.channel.sms? %>
+      <% if @broadcast.channel.text_message? %>
         <%= f.attribute :message do %>
           <%= text_area_tag(:message, @broadcast.message, rows: 4, class: "form-control w-100", readonly: true) %>
         <% end %>
