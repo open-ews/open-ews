@@ -25,8 +25,8 @@ class BroadcastForm < ApplicationForm
   delegate :supported_channels, to: :account
 
   validates :channel, presence: true
-  validates :audio_file, presence: true, if: -> { new_record? &&  [ "voice_call", "audio" ].include?(channel) }
-  validates :message, presence: true, if: -> { channel == "text_message" }
+  validates :audio_file, presence: true, if: -> { new_record? && channel_capabilities.audio? }
+  validates :message, presence: true, if: -> { channel_capabilities.text? }
   validates :channel, presence: true, inclusion: { in: ->(form) { form.supported_channels } }, if: :new_record?
   validates :beneficiary_filter, presence: true, if: :new_record?
   validates :beneficiary_groups, length: { maximum: Broadcast::MAX_BENEFICIARY_GROUPS, allow_blank: true }
@@ -53,8 +53,8 @@ class BroadcastForm < ApplicationForm
 
     object.name = name.presence
     object.channel = channel if new_record? && channel.present?
-    object.message = message.presence if channel == "text_message"
-    object.audio_file = audio_file if channel == "voice_call"
+    object.message = message.presence if channel_capabilities.text?
+    object.audio_file = audio_file if channel_capabilities.audio?
     object.account ||= account
     object.beneficiary_group_ids = beneficiary_groups
     object.beneficiary_filter = FilterFormType.new(
@@ -93,6 +93,10 @@ class BroadcastForm < ApplicationForm
   end
 
   private
+
+  def channel_capabilities
+    BroadcastChannelCapabilities.new(channel)
+  end
 
   def create_event(event_type)
     CreateEvent.call(type: event_type, resource: object)
