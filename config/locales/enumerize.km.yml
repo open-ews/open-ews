@@ -1,6 +1,10 @@
 km:
   enumerize:
     defaults:
+      channel:
+        voice_call: "ការហៅសំឡេង"
+        text_message: "សារ"
+        audio: "សំឡេង"
       gender:
         M: "ប្រុស"
         F: "ស្រី"
