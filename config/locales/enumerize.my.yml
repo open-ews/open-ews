@@ -1,6 +1,10 @@
 my:
   enumerize:
     defaults:
+      channel:
+        voice_call: "အသံခေါ်ဆိုမှု"
+        text_message: "စာတို"
+        audio: "အသံ"
       gender:
         M: "ကျား"
         F: "မ"

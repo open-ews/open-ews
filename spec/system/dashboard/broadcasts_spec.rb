@@ -46,7 +46,7 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_select("Channel", options: [ "Voice call" ])
 
     fill_in("Name", with: "My broadcast")
-    select("Voice", from: "Channel")
+    select("Voice call", from: "Channel")
     attach_file("Audio file", file_fixture("test.mp3"))
     select_list("My group", "My other group", from: "Beneficiary groups")
     select_filter("Gender", operator: "Equals", select: "Male")
@@ -86,6 +86,20 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_content("Broadcast was successfully created.")
     expect(page).to have_content("Text message")
     expect(page).to have_content("Test message")
+  end
+
+  it "create an audio broadcast", :js do
+    account = create(:account)
+    user = create(:user, account:)
+
+    account_sign_in(user)
+    visit new_dashboard_broadcast_path
+    select("Audio", from: "Channel")
+    attach_file("Audio file", file_fixture("test.mp3"))
+    click_on("Create Broadcast")
+
+    expect(page).to have_content("Broadcast was successfully created.")
+    expect(page).to have_content("Audio")
   end
 
   it "create a broadcast from an unsupported country", :js do

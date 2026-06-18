@@ -2,6 +2,10 @@
 hy:
   enumerize:
     defaults:
+      channel:
+        voice_call: "Ձայնային զանգ"
+        text_message: "Հաղորդագրություն"
+        audio: "Ձայն"
       gender:
         M: "Արական"
         F: "Իգական"

@@ -2,6 +2,10 @@
 ne:
   enumerize:
     defaults:
+      channel:
+        voice_call: "भ्वाइस कल"
+        text_message: "सन्देश"
+        audio: "अडियो"
       gender:
         M: "पुरुष"
         F: "महिला"

@@ -1,6 +1,10 @@
 lo:
   enumerize:
     defaults:
+      channel:
+        voice_call: "ໂທສຽງ"
+        text_message: "ຂໍ້ຄວາມ"
+        audio: "ສຽງ"
       gender:
         M: "ເພດຊາຍ"
         F: "ຜູ້ຍິງ"
