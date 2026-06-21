@@ -18,7 +18,7 @@
       <div class="value-input hidden">
         <% base_options = { label: false, required: true, input_html: { data: { "filter-field-target": "value" } } } %>
         <% case field_definition.schema %>
-        <% when FieldDefinitions::FilterSchema::ListType %>
+        <% when FieldDefinitions::FilterSchema::ListType, FieldDefinitions::FilterSchema::ArrayType %>
           <%= field_form.input(:value, as: :select, collection: field_definition.schema.options_for_select, **base_options) %>
         <% when FieldDefinitions::FilterSchema::StringType %>
           <%= field_form.input(:value, as: :string, **base_options.deep_merge(input_html: { class: "w-100", minlength: field_definition.schema.options[:length], maxlength: field_definition.schema.options[:length] })) %>
@@ -46,7 +46,7 @@
       <div class="multi-value-input hidden">
         <% selected_values = FieldDefinitions::Field::MULTIPLE_SELECTION_OPERATORS.include?(field_form.object&.operator) ? field_form.object.value : [] %>
         <% base_options = { label: false, required: true, include_hidden: false, multiple: true, selected: selected_values } %>
-        <% if field_definition.schema.is_a?(FieldDefinitions::FilterSchema::ListType) %>
+        <% if field_definition.schema.respond_to?(:options_for_select) %>
           <%= field_form.input(:value, as: :select, collection: field_definition.schema.options_for_select, input_html: { class: "list-select", data: { "filter-field-target": "multiValue" } }, **base_options) %>
         <% else %>
           <%= field_form.input(:value, as: :select, collection: selected_values, input_html: { class: "input-tags", data: { "filter-field-target": "multiValue" } }, **base_options) %>
