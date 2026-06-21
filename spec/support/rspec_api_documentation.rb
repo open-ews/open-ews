@@ -147,6 +147,52 @@ RspecApiDocumentation.configure do |config|
     GET https://api.open-ews.org/v1/beneficiaries?filter[created_at][gteq]=2025-04-01
     ```
 
+    ### Array Type Operators
+
+    For attributes of type **array**, the following operators are supported:
+
+    | Operator | Description                                                             |
+    | -------- | ----------------------------------------------------------------------- |
+    | `in`     | Matches resources where the array contains any of the specified values  |
+    | `not_in` | Matches resources where the array contains none of the specified values |
+
+    **Examples:**
+
+    ```http
+    GET https://api.open-ews.org/v1/broadcasts?filter[channels][in][]=voice_call
+    GET https://api.open-ews.org/v1/broadcasts?filter[channels][in][]=voice_call&filter[channels][in][]=text_message
+    GET https://api.open-ews.org/v1/broadcasts?filter[channels][not_in][]=audio
+    ```
+
+    **Notes:**
+
+    * `in` returns resources where the array contains **at least one** of the specified values.
+    * `not_in` returns resources where the array contains **none** of the specified values.
+    * Values must be provided as an array using repeated query parameters.
+
+    For example, given a broadcast with:
+
+    ```json
+    {
+      "channels": ["voice_call", "audio"]
+    }
+    ```
+
+    The following filters would match:
+
+    ```http
+    ?filter[channels][in][]=voice_call
+    ```
+
+    ```http
+    ?filter[channels][in][]=text_message&filter[channels][in][]=audio
+    ```
+
+    The following filter would not match:
+
+    ```http
+    ?filter[channels][not_in][]=audio
+    ```
   HEREDOC
 
   config.format = :open_ews_slate

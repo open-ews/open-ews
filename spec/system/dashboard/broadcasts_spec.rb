@@ -6,12 +6,14 @@ RSpec.describe "Broadcasts" do
     pending_broadcast = create(
       :broadcast,
       :pending,
+      :voice_call,
       name: "My broadcast 1",
       account: user.account
     )
     completed_broadcast = create(
       :broadcast,
       :completed,
+      :text_message,
       name: "My broadcast 2",
       account: user.account
     )
@@ -27,6 +29,7 @@ RSpec.describe "Broadcasts" do
 
     click_on "Filters"
     select_filter("Status", operator: "Equals", select: "Pending")
+    select_filter("Channels", operator: "In", select: "Voice call")
     click_on "Apply Filters"
 
     expect(page).to have_content_tag_for(pending_broadcast)

@@ -25,7 +25,7 @@ RSpec.resource "Broadcasts"  do
 
     example "Filter broadcasts" do
       account = create(:account)
-      broadcast = create(:broadcast, :running, account:, name: "Test Broadcast")
+      broadcast = create(:broadcast, :running, :text_message, account:, name: "Test Broadcast")
       create(:broadcast, :running, account:, started_at: 6.hours.ago, created_at: 6.hours.ago)
       create(:broadcast, :stopped, account:)
 
@@ -34,7 +34,8 @@ RSpec.resource "Broadcasts"  do
         filter: {
           status: { eq: "running" },
           started_at: { gt: 5.hours.ago.utc.iso8601 },
-          name: { starts_with: "Test" }
+          name: { starts_with: "Test" },
+          channels: { in: [ "text_message" ] }
         }
       )
 
