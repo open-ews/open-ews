@@ -3,18 +3,6 @@ require "rails_helper"
 module FieldDefinitions
   module FilterSchema
     RSpec.describe ArrayType do
-      it "supports `eq` operator" do
-        expect(validate_schema(build_schema, input: { eq: [ "foo" ] })).to be_success
-        expect(validate_schema(build_schema, input: { eq: "foo" })).not_to be_success
-        expect(validate_schema(build_schema(included_in: [ "bar" ]), input: { eq: [ "foo" ] })).not_to be_success
-      end
-
-      it "supports `not_eq` operator" do
-        expect(validate_schema(build_schema, input: { not_eq: [ "foo" ] })).to be_success
-        expect(validate_schema(build_schema, input: { not_eq: "foo" })).not_to be_success
-        expect(validate_schema(build_schema(included_in: [ "bar" ]), input: { not_eq: [ "foo" ] })).not_to be_success
-      end
-
       it "supports `in` operator" do
         expect(validate_schema(build_schema, input: { in: [ "foo", "bar" ] })).to be_success
         expect(validate_schema(build_schema, input: { in: "foo" })).not_to be_success
@@ -31,8 +19,6 @@ module FieldDefinitions
         schema = build_schema
 
         expect(schema.schema_definition.key_map.map(&:name)).to contain_exactly(
-          "eq",
-          "not_eq",
           "in",
           "not_in"
         )

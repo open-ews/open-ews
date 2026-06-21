@@ -5,8 +5,6 @@ module FieldDefinitions
         schema = Dry::Schema.Params do
           schema_options = {}
           schema_options[:included_in?] = Array(options[:included_in]) if options.key?(:included_in)
-          optional(:eq).array(type, **schema_options)
-          optional(:not_eq).array(type, **schema_options)
           optional(:in).array(type, **schema_options)
           optional(:not_in).array(type, **schema_options)
         end
@@ -16,6 +14,10 @@ module FieldDefinitions
           value_type: type,
           **options
         )
+      end
+
+      def options_for_select
+        Array(options[:included_in]).map { [ it.text, it ] }
       end
     end
   end
