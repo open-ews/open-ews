@@ -6,25 +6,17 @@ export default class extends Controller {
   static targets = ["channelInput", "audioFileInput", "messageInput"]
   static values = {
     messageSegmentWarningThreshold: Number,
+    characterCountTranslations: Object,
   }
 
   connect() {
     this.toggleChannel()
-    this.checkSegments()
+    this.updateMessageInfo()
   }
 
-  checkSegments() {
-    const input = this.#getInputTarget(this.messageInputTarget)
-    const segmentedMessage = new SegmentedMessage(input.value)
-    const warningTarget = this.#getWarningTarget(this.messageInputTarget)
-
-    if (
-      segmentedMessage.segmentsCount > this.messageSegmentWarningThresholdValue
-    ) {
-      warningTarget.style.display = "block"
-    } else {
-      warningTarget.style.display = "none"
-    }
+  updateMessageInfo() {
+    this.#updateCharacterCount()
+    this.#checkSegments()
   }
 
   toggleChannel() {
@@ -41,6 +33,35 @@ export default class extends Controller {
     }
   }
 
+  #updateCharacterCount() {
+    const input = this.#getInputTarget(this.messageInputTarget)
+    const infoTarget = this.#getInfoTarget(this.messageInputTarget)
+
+    const count = input.value.length
+    const formattedCount = new Intl.NumberFormat().format(count)
+
+    const pluralRule = new Intl.PluralRules().select(count)
+    const template =
+      this.characterCountTranslationsValue[pluralRule] ??
+      this.characterCountTranslationsValue.other
+
+    infoTarget.textContent = template.replace("%{count}", formattedCount)
+  }
+
+  #checkSegments() {
+    const input = this.#getInputTarget(this.messageInputTarget)
+    const segmentedMessage = new SegmentedMessage(input.value)
+    const warningTarget = this.#getWarningTarget(this.messageInputTarget)
+
+    if (
+      segmentedMessage.segmentsCount > this.messageSegmentWarningThresholdValue
+    ) {
+      warningTarget.style.display = "block"
+    } else {
+      warningTarget.style.display = "none"
+    }
+  }
+
   #toggleInput(target, enable) {
     const input = this.#getInputTarget(target)
     input.disabled = !enable
@@ -53,5 +74,9 @@ export default class extends Controller {
 
   #getWarningTarget(target) {
     return target.querySelector(".input-warning")
+  }
+
+  #getInfoTarget(target) {
+    return target.querySelector(".input-info span")
   }
 }

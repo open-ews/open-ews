@@ -1,0 +1,8 @@
+ne:
+  dashboard:
+    broadcasts:
+      form:
+        character_count:
+          one: "%{count} अक्षर"
+          other: "%{count} अक्षरहरू"
+        message_segment_warning: "सन्देश एकल खण्डको सीमाभन्दा बढी छ"

@@ -1,0 +1,6 @@
+km:
+  dashboard:
+    broadcasts:
+      form:
+        character_count: "%{count} តួអក្សរ"
+        message_segment_warning: "សារលើសពីកម្រិតសម្រាប់ផ្នែកតែមួយ"

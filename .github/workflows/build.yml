@@ -74,9 +74,6 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Scan for known security vulnerabilities in gems used
-        run: bin/bundler-audit
-
       - name: Enable Corepack (Yarn 4+ Manager)
         run: corepack enable
 

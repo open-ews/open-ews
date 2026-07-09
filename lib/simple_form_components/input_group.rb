@@ -11,6 +11,13 @@ module SimpleFormComponents
       template.content_tag(:i, nil, class: "icon ti ti-exclamation-circle") + " " +
       template.content_tag(:span, options[:warning])
     end
+
+    def info(_wrapper_options = nil)
+      return if options[:info].blank?
+
+      template.content_tag(:i, nil, class: "icon ti ti-info-circle") + " " +
+      template.content_tag(:span, options[:info])
+    end
   end
 end
 

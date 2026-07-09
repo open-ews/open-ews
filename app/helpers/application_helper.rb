@@ -186,6 +186,11 @@ module ApplicationHelper
     )
   end
 
+  def pluralized_translations(key, **)
+    translations = t(key, **)
+    translations.is_a?(Hash) ? translations : { other: translations }
+  end
+
   def error_message_for(code)
     t("error_codes.#{code}", default: code.to_s.humanize)
   end

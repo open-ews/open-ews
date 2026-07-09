@@ -1,0 +1,6 @@
+my:
+  dashboard:
+    broadcasts:
+      form:
+        character_count: "%{count} အက္ခရာ"
+        message_segment_warning: "မက်ဆေ့ချ်သည် အပိုင်းတစ်ခုအတွက် ကန့်သတ်ချက်ထက် ကျော်လွန်နေပါသည်"

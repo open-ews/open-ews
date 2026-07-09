@@ -1,5 +1,14 @@
 <div class="card">
-  <%= simple_form_for([:dashboard, @broadcast], html: { data: { controller: :broadcasts, broadcasts_message_segment_warning_threshold_value: 1 } }) do |f| %>
+  <%= simple_form_for(
+    [:dashboard, @broadcast],
+    html: {
+      data: {
+        controller: :broadcasts,
+        broadcasts_message_segment_warning_threshold_value: 1,
+        broadcasts_character_count_translations_value: pluralized_translations(".character_count").to_json
+      }
+    }
+  ) do |f| %>
     <div class="card-body">
       <div class="row">
         <div class="col">
@@ -16,8 +25,9 @@
             :message,
             as: :text,
             required: f.object.new_record?,
-            warning: "Message exceeds single-segment limit.",
-            input_html: { rows: 4, data: { action: "broadcasts#checkSegments" } }
+            info: t(".character_count", count: 0),
+            warning: t(".message_segment_warning"),
+            input_html: { rows: 4, data: { action: "broadcasts#updateMessageInfo" } }
           ) %>
         </div>
       </div>
