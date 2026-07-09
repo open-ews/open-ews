@@ -1,0 +1,8 @@
+en:
+  dashboard:
+    broadcasts:
+      form:
+        character_count:
+          one: "%{count} character"
+          other: "%{count} characters"
+        message_segment_warning: "Message exceeds single-segment limit"

@@ -1,0 +1,6 @@
+hy:
+  dashboard:
+    broadcasts:
+      form:
+        character_count: "%{count} նիշ"
+        message_segment_warning: "Հաղորդագրությունը գերազանցում է մեկ հատվածի սահմանաչափը"

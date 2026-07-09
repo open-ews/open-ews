@@ -1,0 +1,6 @@
+lo:
+  dashboard:
+    broadcasts:
+      form:
+        character_count: "%{count} ຕົວອັກສອນ"
+        message_segment_warning: "ຂໍ້ຄວາມເກີນຂີດຈຳກັດສຳລັບສ່ວນດຽວ"
