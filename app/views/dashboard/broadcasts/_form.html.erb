@@ -1,21 +1,11 @@
 <div class="card">
-  <%
-    character_count_translations = t(".character_count")
-    character_count_translations =
-      if character_count_translations.is_a?(Hash)
-        character_count_translations
-      else
-        { other: character_count_translations }
-      end
-  %>
-
   <%= simple_form_for(
     [:dashboard, @broadcast],
     html: {
       data: {
         controller: :broadcasts,
         broadcasts_message_segment_warning_threshold_value: 1,
-        broadcasts_character_count_translations_value: character_count_translations.to_json
+        broadcasts_character_count_translations_value: pluralized_translations(".character_count").to_json
       }
     }
   ) do |f| %>
