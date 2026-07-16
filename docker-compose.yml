@@ -1,6 +1,6 @@
 services:
   db:
-    image: public.ecr.aws/docker/library/postgres:alpine
+    image: public.ecr.aws/docker/library/postgres:17-alpine
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
     environment:
