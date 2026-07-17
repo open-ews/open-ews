@@ -2,7 +2,7 @@ services:
   db:
     image: public.ecr.aws/docker/library/postgres:alpine
     volumes:
-      - ./tmp/db:/var/lib/postgresql/data
+      - ./tmp/db:/var/lib/postgresql
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
