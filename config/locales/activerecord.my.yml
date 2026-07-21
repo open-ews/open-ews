@@ -6,7 +6,14 @@ my:
       notification: အသိပေးချက်
       user: အသုံးပြုသူ
   attributes:
+    avatar: ပုပရိုဖိုင်ပုံ
+    email: အီးမေးလ်
+    current_password: လက်ရှိ စကားဝှက်
+    password: စကားဝှက်
+    password_confirmation: စကားဝှက် အတည်ပြုပါ
+    channel: ချာနယ်
     name: အမည်
+    language: ဘာသာစကား
     locations: တည်နေရာများ
     gender: လိင်
     phone_number: ဖုန်းနံပါတ်
@@ -17,6 +24,10 @@ my:
     group_ids: အုပ်စုများ
     target_areas: ပစ်မှတ်ဒေသများ
     registered_locations: မှတ်ပုံတင်ထားသော တည်နေရာများ
+    import: တင်သွင်းမှု
+    import_type: တင်သွင်းမှု အမျိုးအစား
+    error_message: အမှား သတင်းစကား
+    resource_type: အရင်းအမြစ်အမျိုးအစား
     mm:
       iso_region_code: ISO တိုင်းဒေသကြီးကုဒ်
       administrative_division_level_2_code: ခရိုင်ကုဒ်

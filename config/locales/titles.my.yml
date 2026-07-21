@@ -18,7 +18,7 @@ my:
     sessions:
       new: "ဝင်ရောက်ရန်"
     settings:
-      index: "ဆက်တင်များ"
+      index: "ချိန်ညှိချက်များ"
     registrations:
       edit: "ပရိုဖိုင် ပြင်ဆင်ရန်"
     forgot_subdomain:
@@ -27,6 +27,12 @@ my:
       new: "စကားဝှက် မေ့နေပါသလား။"
       create: "စကားဝှက် မေ့နေပါသလား။"
       edit: "စကားဝှက် ပြောင်းလဲရန်"
+    profiles:
+      show: "ကိုယ်ရေးရာဇဝင်အကျဥ်း"
+    imports:
+      index: "တင်သွင်းမှုများ"
+    exports:
+      index: "တင်ပို့မှုများ"
     confirmations:
       new: "အတည်ပြုချက် ညွှန်ကြားချက်များကို ပြန်လည်ပေးပို့ရန်"
       create: "အတည်ပြုချက် ညွှန်ကြားချက်များကို ပြန်လည်ပေးပို့ရန်"
@@ -36,6 +42,8 @@ my:
       new: "၂ ဆင့်အတည်ပြုခြင်း (2FA) ကို စတင်သတ်မှတ်ရန်"
     broadcast_notifications:
       index: "ထုတ်လွှင့်မှု #%{broadcast} အတွက် အသိပေးချက်များ"
+    beneficiary_groups:
+      index: "အကျိုးခံစားခွင့်ရသူ အုပ်စုများ"
     beneficiary_group_memberships:
       index: "%{beneficiary_group} အတွက် အဖွဲ့ဝင်မှုများ"
     no_records: "မှတ်တမ်းများ မတွေ့ရှိပါ။"
@@ -45,3 +53,5 @@ my:
       index: "အကျိုးခံစားခွင့်ရရှိသူများ"
     notifications:
       index: "အသိပေးချက်များ"
+    user_settings:
+      index: "အသုံးပြုသူ ချိန်ညှိချက်များ"
