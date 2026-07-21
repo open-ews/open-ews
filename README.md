@@ -83,7 +83,7 @@ cd open-ews
 Run the following command to build and start the application:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 This will:
@@ -151,13 +151,13 @@ If successful, the API will respond with the details of the newly created benefi
 * **Rebuild containers:**
 
   ```bash
-  docker-compose up --build
+  docker compose up --build
   ```
 
 * **Stop the application:**
 
   ```bash
-  docker-compose down
+  docker compose down
   ```
 
 ### 📚 Additional Resources
