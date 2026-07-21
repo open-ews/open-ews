@@ -15,9 +15,9 @@ my:
     in: "အတွင်း"
     not_in: "အတွင်း မရှိပါ"
   past_participles:
-    registered: "မှတ်ပုံတင်ပြီး"
-    delivered: "ပေးပို့ပြီး"
-    issued: "ထုတ်ပြန်ပြီး"
+    registered: "မှတ်ပုံတင်"
+    delivered: "ပေးပို့"
+    issued: "ထုတ်ပြန်"
   statuses:
     failed: "မအောင်မြင်ပါ"
     succeeded: "အောင်မြင်သည်"
