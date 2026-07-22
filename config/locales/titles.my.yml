@@ -44,13 +44,16 @@ my:
       index: "ထုတ်လွှင့်မှု #%{broadcast} အတွက် အသိပေးချက်များ"
     beneficiary_groups:
       index: "အကျိုးခံစားခွင့်ရသူ အုပ်စုများ"
+      new: "အကျိုးခံစားခွင့်ရှိသူ အုပ်စုအသစ်"
     beneficiary_group_memberships:
       index: "%{beneficiary_group} အတွက် အဖွဲ့ဝင်မှုများ"
     no_records: "မှတ်တမ်းများ မတွေ့ရှိပါ။"
     broadcasts:
       index: "ထုတ်လွှင့်မှုများ"
+      new: "ထုတ်လွှင့်မှုအသစ်"
     beneficiaries:
       index: "အကျိုးခံစားခွင့်ရရှိသူများ"
+      new: "အကျိုးခံစားခွင့်ရရှိသူအသစ်"
     notifications:
       index: "အသိပေးချက်များ"
     user_settings:

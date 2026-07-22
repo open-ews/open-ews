@@ -9,9 +9,9 @@ RSpec.describe "Beneficiary Groups" do
 
     account_sign_in(user)
     visit dashboard_root_path
-    click_on("Beneficiary groups")
+    click_on("Beneficiary Groups")
 
-    expect(page).to have_title("Beneficiary groups")
+    expect(page).to have_title("Beneficiary Groups")
     expect(page).to have_content("My group 1")
     expect(page).to have_content("My group 2")
     expect(page).not_to have_content("My group 3")

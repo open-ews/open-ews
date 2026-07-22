@@ -11,12 +11,8 @@
     </div>
 
     <div class="offcanvas-body overflow-visible">
-      <%= simple_form_for filter_form, url: url_for(action: :index), method: :get do |f| %>
-        <div class="row">
-          <div class="col"><label class="form-label">Field</label></div>
-          <div class="col"><label class="form-label">Operator</label></div>
-          <div class="col"><label class="form-label">Value</label></div>
-        </div>
+      <%= simple_form_for(filter_form, url: url_for(action: :index), method: :get) do |f| %>
+        <%= render("shared/filter_form/field_headers") %>
 
         <%= yield(f) %>
 

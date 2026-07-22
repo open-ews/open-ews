@@ -2,7 +2,7 @@ my:
   activerecord:
     models:
       beneficiary: အကျိုးခံစားခွင့်ရသူ
-      broadcast: ကြေညာချက်
+      broadcast: ထုတ်လွှင့်မှု
       notification: အသိပေးချက်
       user: အသုံးပြုသူ
   attributes:
@@ -28,6 +28,9 @@ my:
     import_type: တင်သွင်းမှု အမျိုးအစား
     error_message: အမှား သတင်းစကား
     resource_type: အရင်းအမြစ်အမျိုးအစား
+    message: သတင်းစကား
+    beneficiary_groups: အကျိုးခံစားခွင့်ရသူ အုပ်စုများ
+    audio_file: အသံဖိုင်
     mm:
       iso_region_code: ISO တိုင်းဒေသကြီးကုဒ်
       administrative_division_level_2_code: ခရိုင်ကုဒ်

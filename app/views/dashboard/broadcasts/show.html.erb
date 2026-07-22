@@ -136,13 +136,11 @@
       <%= f.attribute :updated_at, value: local_time(@broadcast.updated_at) %>
     <% end %>
 
-    <div class="hr-text">Beneficiary filters</div>
-
-    <div class="row">
-      <div class="col"><label class="form-label">Field</label></div>
-      <div class="col"><label class="form-label">Operator</label></div>
-      <div class="col"><label class="form-label">Value</label></div>
+    <div class="hr-text">
+      <%= t("beneficiary_filters")%>
     </div>
+
+    <%= render("shared/filter_form/field_headers") %>
 
     <% filter = BeneficiaryFilterData.new(
       data: @broadcast.beneficiary_filter,
