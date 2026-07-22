@@ -11,7 +11,7 @@ class UserForm < ApplicationForm
   delegate :persisted?, :id, to: :object
 
   def self.model_name
-    ActiveModel::Name.new(self, nil, "User")
+    User.model_name
   end
 
   def save

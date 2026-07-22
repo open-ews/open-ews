@@ -10,6 +10,13 @@ en:
       download: "Download"
     home:
       index: Dashboard
+    broadcasts:
+      new: New Broadcast
+    beneficiaries:
+      new: New Beneficiary
+    beneficiary_groups:
+      index: Beneficiary Groups
+      new: New Beneficiary Group
     sessions:
       new: Sign in
     settings:

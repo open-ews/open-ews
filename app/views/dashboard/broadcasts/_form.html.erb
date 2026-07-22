@@ -42,12 +42,11 @@
         </div>
       </div>
 
-      <div class="hr-text">Beneficiary Filters</div>
-      <div class="row">
-        <div class="col"><label class="form-label">Field</label></div>
-        <div class="col"><label class="form-label">Operator</label></div>
-        <div class="col"><label class="form-label">Value</label></div>
+      <div class="hr-text">
+        <%= t("beneficiary_filters")%>
       </div>
+
+      <%= render("shared/filter_form/field_headers") %>
 
       <%= f.simple_fields_for(:beneficiary_filter, @broadcast.beneficiary_filter) do |filter_form| %>
         <%= render(
@@ -60,7 +59,7 @@
     </div>
 
     <div class="card-footer text-end">
-      <%= f.button :submit, class: 'btn btn-primary' %>
+      <%= f.button(:submit, class: 'btn btn-primary') %>
     </div>
   <% end %>
 </div>

@@ -23,7 +23,7 @@ class ExportForm < ApplicationForm
   delegate :account, to: :user
 
   def self.model_name
-    ActiveModel::Name.new(self, nil, "Export")
+    Export.model_name
   end
 
   def save!

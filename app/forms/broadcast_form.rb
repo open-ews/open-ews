@@ -32,7 +32,7 @@ class BroadcastForm < ApplicationForm
   validates :beneficiary_groups, length: { maximum: Broadcast::MAX_BENEFICIARY_GROUPS, allow_blank: true }
 
   def self.model_name
-    ActiveModel::Name.new(self, nil, "Broadcast")
+    Broadcast.model_name
   end
 
   def self.initialize_with(broadcast)

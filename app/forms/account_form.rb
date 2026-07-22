@@ -19,7 +19,7 @@ class AccountForm < ApplicationForm
   delegate :id, :new_record?, :persisted?, :subdomain_host, to: :object
 
   def self.model_name
-    ActiveModel::Name.new(self, nil, "Account")
+    Account.model_name
   end
 
   def self.initialize_with(account)

@@ -5,7 +5,7 @@ class ForgotSubdomainForm < ApplicationForm
   validate :validate_email_exists
 
   def self.model_name
-    ActiveModel::Name.new(self, nil, "User")
+    ActiveModel::Name.new(self, nil, "ForgotSubdomain")
   end
 
   def save
