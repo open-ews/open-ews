@@ -3,7 +3,6 @@ require "rails_helper"
 RSpec.describe ImportBeneficiary do
   it "imports a beneficiary" do
     import = create(:import, :beneficiaries)
-
     beneficiary = ImportBeneficiary.call(
       import:,
       data: {
@@ -151,6 +150,38 @@ RSpec.describe ImportBeneficiary do
         iso_country_code: "KH",
         address_iso_region_code: "KH-12",
         address_administrative_division_level_2_code: "1201"
+      }
+    )
+
+    expect(beneficiary).to have_attributes(
+      addresses: contain_exactly(
+        have_attributes(
+          iso_region_code: "KH-12",
+          administrative_division_level_2_code: "1201"
+        )
+      )
+    )
+  end
+
+  it "allows explicitly replacing all addresses for an existing beneficiary" do
+    import = create(:import)
+    beneficiary = create(
+      :beneficiary,
+      phone_number: "85516789111",
+      iso_country_code: "KH",
+      account: import.account
+    )
+    create(:beneficiary_address, beneficiary:, iso_region_code: "KH-1")
+    create(:beneficiary_address, beneficiary:, iso_region_code: "KH-2")
+
+    ImportBeneficiary.call(
+      import:,
+      data: {
+        phone_number: "85516789111",
+        iso_country_code: "KH",
+        address_iso_region_code: "KH-12",
+        address_administrative_division_level_2_code: "1201",
+        address_replace_all: "true"
       }
     )
 

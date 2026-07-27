@@ -39,16 +39,26 @@ class ImportBeneficiary < ApplicationWorkflow
       administrative_division_level_5_name: sanitize(data[:address_administrative_division_level_5_name])
     }.compact
 
-    if address_attributes.any?
-      raise(Errors::ImportError.new(code: :beneficiary_has_multiple_addresses)) if beneficiary.addresses.many?
-
-      beneficiary.addresses.none? ? beneficiary.addresses.build(address_attributes) : beneficiary.addresses_attributes = { id: beneficiary.addresses.first.id, **address_attributes }
-    end
-
+    beneficiary.addresses_attributes = build_addresses_attributes(beneficiary:, address_attributes:)
     beneficiary.save!
     beneficiary
   rescue ActiveRecord::RecordInvalid => e
     raise Errors::ImportError.new(e.message, code: :validation_failed)
+  end
+
+  def build_addresses_attributes(beneficiary:, address_attributes:)
+    return [] if address_attributes.blank?
+    raise(Errors::ImportError.new(code: :beneficiary_has_multiple_addresses)) if beneficiary.addresses.many? && !replace_addresses?
+    return [ address_attributes ] if beneficiary.addresses.none?
+
+    beneficiary.addresses.map.with_index do |address, index|
+      result = {
+        id: address.id,
+        **address_attributes
+      }
+      result[:_destroy] = true unless index.zero?
+      result
+    end
   end
 
   def delete_beneficiary!
@@ -72,6 +82,10 @@ class ImportBeneficiary < ApplicationWorkflow
     raise(Errors::ImportError.new(code: :invalid_import_columns)) if data.keys.difference([ "phone_number", "marked_for_deletion" ]).any?
 
     true
+  end
+
+  def replace_addresses?
+    data[:address_replace_all].to_s.downcase == "true"
   end
 
   def extract_metadata(data)
