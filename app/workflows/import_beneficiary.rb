@@ -48,7 +48,7 @@ class ImportBeneficiary < ApplicationWorkflow
 
   def build_addresses_attributes(beneficiary:, address_attributes:)
     return [] if address_attributes.blank?
-    raise(Errors::ImportError.new(code: :beneficiary_has_multiple_addresses)) if beneficiary.addresses.many? && !replace_addresses?
+    raise(Errors::ImportError.new(code: :beneficiary_has_multiple_addresses)) if beneficiary.addresses.many? && !replace_all_addresses?
     return [ address_attributes ] if beneficiary.addresses.none?
 
     beneficiary.addresses.map.with_index do |address, index|
@@ -84,8 +84,8 @@ class ImportBeneficiary < ApplicationWorkflow
     true
   end
 
-  def replace_addresses?
-    data[:address_replace_all].to_s.downcase == "true"
+  def replace_all_addresses?
+    data[:address_modification_behavior].to_s.downcase == "replace_all"
   end
 
   def extract_metadata(data)
