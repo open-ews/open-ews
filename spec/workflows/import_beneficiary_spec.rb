@@ -181,7 +181,7 @@ RSpec.describe ImportBeneficiary do
         iso_country_code: "KH",
         address_iso_region_code: "KH-12",
         address_administrative_division_level_2_code: "1201",
-        address_replace_all: "true"
+        address_modification_behavior: "replace_all"
       }
     )
 
