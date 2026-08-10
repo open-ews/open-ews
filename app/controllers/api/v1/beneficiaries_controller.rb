@@ -2,7 +2,7 @@ module API
   module V1
     class BeneficiariesController < APIController
       def index
-        apply_filters(scope.includes(include_parameter(only: [ :addresses, :groups ])), with: BeneficiaryFilter)
+        apply_filters(scope.includes(:addresses, :groups), with: BeneficiaryFilter)
       end
 
       def show

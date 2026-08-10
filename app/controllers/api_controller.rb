@@ -67,8 +67,4 @@ class APIController < ActionController::API
   def respond_with_errors(object, **)
     respond_with(object, responder: InvalidRequestSchemaResponder, **)
   end
-
-  def include_parameter(only:)
-    JSONAPI::IncludeParameterParser.new.parse(request.query_parameters).select { Array(only).include?(it.to_sym) }
-  end
 end

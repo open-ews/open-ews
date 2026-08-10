@@ -528,6 +528,9 @@ GEM
     ruby-lsp-rspec (0.1.29)
       ruby-lsp (~> 0.26.0)
     ruby-progressbar (1.13.0)
+    ruby-vips (2.3.0)
+      ffi (~> 1.12)
+      logger
     rubyzip (3.4.1)
     sass-embedded (1.101.0)
       google-protobuf (~> 4.31)
@@ -660,6 +663,7 @@ DEPENDENCIES
   rubocop-rails-omakase
   rubocop-rspec
   ruby-lsp-rspec
+  ruby-vips
   selenium-webdriver
   sentry-rails
   shoryuken
