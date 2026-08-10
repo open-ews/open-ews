@@ -69,6 +69,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Install native dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libvips
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
