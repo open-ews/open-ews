@@ -19,7 +19,7 @@ FROM base AS build
 # Install packages needed to build gems
 RUN apk update --no-cache && \
   apk upgrade --no-cache && \
-  apk add --update --no-cache build-base git gcompat postgresql-dev yaml-dev nodejs-current npm
+  apk add --update --no-cache build-base git gcompat postgresql-dev vips-dev yaml-dev nodejs-current npm
 
 RUN npm install -g corepack
 RUN corepack enable
@@ -54,7 +54,7 @@ FROM base
 # Install packages needed for deployment
 RUN apk update --no-cache && \
   apk upgrade --no-cache && \
-  apk add --update --no-cache build-base gcompat postgresql-dev vips-dev ffmpeg
+  apk add --update --no-cache gcompat postgresql-dev vips ffmpeg
 
 # Copy built artifacts: gems, application
 COPY --from=build --link /usr/local/bundle/ /usr/local/bundle/
