@@ -33,16 +33,44 @@
       </div>
 
       <% if field_definition.schema.is_a?(FieldDefinitions::FilterSchema::ValueType) %>
-        <% base_options = { label: false, required: true, wrapper: false, input_html: { name: "#{field_form.object_name}[value][]", data: { "filter-field-target": "betweenValue" } } } %>
+        <%
+          base_options = {
+            label: false,
+            required: true,
+            wrapper: false,
+            input_html: {
+              name: "#{field_form.object_name}[value][]",
+              data: { "filter-field-target": "betweenValue" }
+            }
+          }
+        %>
+        <%
+          base_options = base_options.deep_merge(
+            input_html: {
+              min: field_definition.schema.options.dig(:type_options, :gteq?),
+              max: field_definition.schema.options.dig(:type_options, :lteq?),
+              step: 1
+            }
+          ) if field_definition.schema.form_value_type == :integer
+        %>
         <% existing_field_values = field_form.object&.operator == "between" ? field_form.object.value : [] %>
         <div class="between-value-input hidden">
           <div class="row">
-            <div class="col">
-              <%= field_form.input(:value, as: field_definition.schema.form_value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[0] })) %>
-            </div>
-            <div class="col">
-              <%= field_form.input(:value, as: field_definition.schema.form_value_type, html5: true, **base_options.deep_merge(input_html: { value: existing_field_values[1] })) %>
-            </div>
+            <% 2.times do |index| %>
+              <div class="col">
+                <%= field_form.input(
+                  :value,
+                  as: field_definition.schema.form_value_type,
+                  html5: true,
+                  **base_options.deep_merge(
+                    input_html: {
+                      id: "#{field_form.field_id(:value)}_#{index}",
+                      value: existing_field_values[index]
+                    }
+                  )
+                ) %>
+              </div>
+            <% end %>
           </div>
         </div>
       <% end %>

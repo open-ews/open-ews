@@ -29,7 +29,14 @@ module SystemSpecHelpers
     if options[:select].present?
       select(options.fetch(:select), from: value_input_id)
     elsif options[:fill_in].present?
-      fill_in(value_input_id, with: options.fetch(:fill_in))
+      inputs = Array(options.fetch(:fill_in))
+      if inputs.many?
+        inputs.each_with_index do |input, index|
+          fill_in("#{value_input_id}_#{index}", with: input.to_s)
+        end
+      else
+        fill_in(value_input_id, with: options.fetch(:fill_in).to_s)
+      end
     end
   end
 
