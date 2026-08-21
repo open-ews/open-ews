@@ -4,10 +4,13 @@ module FieldDefinitions
   module FilterSchema
     RSpec.describe ValueType do
       it "supports `eq` operator" do
-        schema = build_schema
+        schema = build_schema(type: :integer, type_options: { gteq?: 0, lteq?: 100 })
 
         expect(validate_schema(schema, input: { eq: 1 })).to be_success
         expect(validate_schema(schema, input: { eq: nil })).not_to be_success
+        expect(validate_schema(schema, input: { eq: 50 })).to be_success
+        expect(validate_schema(schema, input: { eq: -1 })).not_to be_success
+        expect(validate_schema(schema, input: { eq: 101 })).not_to be_success
       end
 
       it "supports `not_eq` operator" do
@@ -81,8 +84,8 @@ module FieldDefinitions
         schema.schema_definition.call(input)
       end
 
-      def build_schema(type = :integer)
-        ValueType.define(type:)
+      def build_schema(type: :integer, **)
+        ValueType.define(type:, **)
       end
     end
   end

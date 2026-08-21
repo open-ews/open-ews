@@ -19,7 +19,7 @@ RSpec.describe ScheduledJob do
         broadcast: create(:broadcast, :running, account:)
       )
     )
-    delivery_attempt_from_running_broadcast = create(
+    _delivery_attempt_from_running_broadcast = create(
       :delivery_attempt,
       notification: create(
         :notification,
