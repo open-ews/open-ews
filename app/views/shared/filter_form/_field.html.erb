@@ -23,7 +23,11 @@
         <% when FieldDefinitions::FilterSchema::StringType %>
           <%= field_form.input(:value, as: :string, **base_options.deep_merge(input_html: { class: "w-100", minlength: field_definition.schema.options[:length], maxlength: field_definition.schema.options[:length] })) %>
         <% when FieldDefinitions::FilterSchema::ValueType %>
-          <% base_options = base_options.deep_merge(input_html: { value: "" }) if field_form.object.present? && field_form.object.value.is_a?(Array) %>
+          <% if field_form.object.present? && field_form.object.value.is_a?(Array) %>
+            <% base_options = base_options.deep_merge(input_html: { value: "" })  %>
+          <% elsif field_definition.schema.form_value_type == :integer %>
+            <% base_options = base_options.deep_merge(input_html: { min: field_definition.schema.options.dig(:type_options, :gteq?), max: field_definition.schema.options.dig(:type_options, :lteq?), step: 1 }) %>
+          <% end %>
           <%= field_form.input(:value, as: field_definition.schema.form_value_type, html5: true, **base_options) %>
         <% end %>
       </div>
