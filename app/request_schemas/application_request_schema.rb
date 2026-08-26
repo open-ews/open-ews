@@ -54,7 +54,6 @@ class ApplicationRequestSchema < Dry::Validation::Contract
     super(**options)
 
     @input_params = input_params.to_h.with_indifferent_access
-    parse_json_filter_param!
   end
 
   def output
@@ -62,20 +61,6 @@ class ApplicationRequestSchema < Dry::Validation::Contract
   end
 
   private
-
-  # NOTE: GET requests submit `filter` as bracket-nested query params, e.g.
-  # `filter[gender][eq]=M`. That encoding can't represent an $or across
-  # different fields (Rack can only tell array items apart by a repeated key,
-  # so `$or: [{gender: ...}, {created_at: ...}]` gets silently merged into one
-  # AND'd item). Accept `filter` as a JSON-encoded string too, so clients that
-  # need $and/$or can send `?filter=%7B%22%24or%22...%7D` instead.
-  def parse_json_filter_param!
-    return unless input_params[:filter].is_a?(String)
-
-    input_params[:filter] = JSON.parse(input_params[:filter]).with_indifferent_access
-  rescue JSON::ParserError
-    nil
-  end
 
   def result
     @result ||= call(input_params)

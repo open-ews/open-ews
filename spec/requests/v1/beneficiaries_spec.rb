@@ -44,6 +44,56 @@ RSpec.resource "Beneficiaries"  do
       )
     end
 
+    example "Complex filtering" do
+      account = create(:account)
+      beneficiary_1 = create(:beneficiary, account:)
+      beneficiary_2 = create(:beneficiary, account:, gender: "M")
+      beneficiary_3 = create(:beneficiary, account:)
+
+      create(
+        :beneficiary_address,
+        beneficiary: beneficiary_1,
+        iso_region_code: "KH-12",
+      )
+
+      create(
+        :beneficiary_address,
+        beneficiary: beneficiary_2,
+        iso_region_code: "KH-1",
+        administrative_division_level_2_code: "0102",
+        administrative_division_level_3_code: "010201",
+      )
+
+      create(
+        :beneficiary_address,
+        beneficiary: beneficiary_3,
+        iso_region_code: "KH-2",
+        administrative_division_level_2_code: "0202",
+      )
+
+      set_authorization_header_for(account)
+      do_request(
+        filter: {
+          "$or": {
+            "0": {
+              "address.iso_region_code": { eq: "KH-12" }
+            },
+            "1": {
+              "address.iso_region_code": { eq: "KH-1" },
+              "address.administrative_division_level_2_code": { eq: "0102" },
+              "address.administrative_division_level_3_code": { in: [ "010201" ] }
+            }
+          }
+        }
+      )
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
+      expect(json_response.fetch("data").pluck("id")).to contain_exactly(
+        beneficiary_1.id.to_s, beneficiary_2.id.to_s
+      )
+    end
+
     example "Filter beneficiaries by phone number", document: false do
       account = create(:account)
       beneficiary = create(:beneficiary, account:, phone_number: "855715100888")
@@ -73,57 +123,6 @@ RSpec.resource "Beneficiaries"  do
       expect(json_response.dig("included", 0).to_json).to match_api_response_schema("beneficiary_address")
       expect(json_response.dig("included", 1).to_json).to match_api_response_schema("beneficiary_group")
     end
-  end
-
-  example "Filter beneficiaries using $or", document: false do
-    account = create(:account)
-    matching_by_gender = create(:beneficiary, account:, gender: "M", created_at: 5.days.ago)
-    matching_by_date = create(:beneficiary, account:, gender: "F", created_at: Time.current)
-    _non_matching = create(:beneficiary, account:, gender: "F", created_at: 5.days.ago)
-
-    set_authorization_header_for(account)
-    do_request(filter: { "$or": [ { gender: { eq: "M" } }, { created_at: { gt: 4.days.ago.utc.iso8601 } } ] }.to_json)
-
-    expect(response_status).to eq(200)
-    expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
-    expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-      matching_by_gender.id.to_s, matching_by_date.id.to_s
-    )
-  end
-
-  example "Filter beneficiaries using a nested $and/$or", document: false do
-    account = create(:account)
-    matching = create(:beneficiary, account:, gender: "M", iso_language_code: "eng", created_at: Time.current)
-    _wrong_gender_and_language = create(:beneficiary, account:, gender: "F", iso_language_code: "khm", created_at: Time.current)
-    _wrong_created_at = create(:beneficiary, account:, gender: "M", iso_language_code: "eng", created_at: 5.days.ago)
-
-    set_authorization_header_for(account)
-    do_request(
-      filter: {
-        "$and": [
-          { "$or": [ { gender: { eq: "M" } }, { iso_language_code: { eq: "eng" } } ] },
-          { created_at: { gt: 4.days.ago.utc.iso8601 } }
-        ]
-      }.to_json
-    )
-
-    expect(response_status).to eq(200)
-    expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
-    expect(json_response.fetch("data").pluck("id")).to contain_exactly(matching.id.to_s)
-  end
-
-  example "Fail to filter beneficiaries using an invalid value nested inside $or", document: false do
-    account = create(:account)
-
-    set_authorization_header_for(account)
-    do_request(filter: { "$or": [ { gender: { eq: "invalid-gender" } } ] }.to_json)
-
-    expect(response_status).to eq(400)
-    expect(response_body).to match_api_response_schema("jsonapi_error")
-    expect(json_response.dig("errors", 0)).to include(
-      "title" => "must be one of: M, F",
-      "source" => { "pointer" => "/filter/$or/0/gender/eq" }
-    )
   end
 
   post "/v1/beneficiaries" do
