@@ -13,6 +13,10 @@ class FilterField
     column.public_send(operator_method, filter_value)
   end
 
+  def associations
+    Array(association)
+  end
+
   private
 
   # NOTE: cast from user input operator to arel attribute's predications
