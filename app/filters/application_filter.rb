@@ -65,9 +65,11 @@ class ApplicationFilter < ApplicationRequestSchema
     filters.each_with_object([]) do |(key, val), conditions|
       case key.to_s
       when "$and"
-        conditions << build_filter_group(operator: :and, conditions: val.values)
+        filter_group = build_filter_group(operator: :and, conditions: val.values)
+        conditions << filter_group if filter_group.present?
       when "$or"
-        conditions << build_filter_group(operator: :or, conditions: val.values) { |output| FilterGroup.new(operator: :and, conditions: output) }
+        filter_group = build_filter_group(operator: :or, conditions: val.values) { |output| FilterGroup.new(operator: :and, conditions: output) }
+        conditions << filter_group if filter_group.present?
       else
         operator, value = val.first
         field_definition = field_collection.find_by!(path: key)
@@ -82,6 +84,8 @@ class ApplicationFilter < ApplicationRequestSchema
       output = self.class.new(input_params: condition).output
       result << (block_given? ? yield(output) : output) if output.present?
     end
+
+    return if group_conditions.blank?
 
     FilterGroup.new(operator:, conditions: group_conditions)
   end

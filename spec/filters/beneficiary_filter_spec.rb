@@ -117,8 +117,10 @@ RSpec.describe BeneficiaryFilter, type: :request_schema do
 
     expect(result).to contain_exactly(
       have_attributes(
-        conditions: contain_exactly(
+        operator: :or,
+        conditions: include(
           have_attributes(
+            operator: :and,
             conditions: contain_exactly(
               have_attributes(
                 field_definition: have_attributes(
@@ -129,6 +131,18 @@ RSpec.describe BeneficiaryFilter, type: :request_schema do
               ),
               have_attributes(
                 field_definition: have_attributes(
+                  name: :date_of_birth
+                ),
+                operator: :lt,
+                value: Date.parse("2020-01-01")
+              )
+            )
+          ),
+          have_attributes(
+            operator: :and,
+            conditions: contain_exactly(
+              have_attributes(
+                field_definition: have_attributes(
                   name: :iso_language_code
                 ),
                 operator: :eq,
@@ -136,7 +150,7 @@ RSpec.describe BeneficiaryFilter, type: :request_schema do
               )
             )
           )
-        )
+        ),
       ),
       have_attributes(
         field_definition: have_attributes(
