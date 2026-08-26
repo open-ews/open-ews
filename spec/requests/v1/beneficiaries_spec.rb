@@ -46,27 +46,22 @@ RSpec.resource "Beneficiaries"  do
 
     example "Complex filtering" do
       account = create(:account)
-      beneficiary_1 = create(:beneficiary, account:)
-      beneficiary_2 = create(:beneficiary, account:, gender: "M")
-      beneficiary_3 = create(:beneficiary, account:)
-
+      beneficiaries = create_list(:beneficiary, 3, account:)
       create(
         :beneficiary_address,
-        beneficiary: beneficiary_1,
+        beneficiary: beneficiaries[0],
         iso_region_code: "KH-12",
       )
-
       create(
         :beneficiary_address,
-        beneficiary: beneficiary_2,
+        beneficiary: beneficiaries[1],
         iso_region_code: "KH-1",
         administrative_division_level_2_code: "0102",
         administrative_division_level_3_code: "010201",
       )
-
       create(
         :beneficiary_address,
-        beneficiary: beneficiary_3,
+        beneficiary: beneficiaries[2],
         iso_region_code: "KH-2",
         administrative_division_level_2_code: "0202",
       )
@@ -90,7 +85,7 @@ RSpec.resource "Beneficiaries"  do
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
       expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-        beneficiary_1.id.to_s, beneficiary_2.id.to_s
+        beneficiaries[0].id.to_s, beneficiaries[1].id.to_s
       )
     end
 
