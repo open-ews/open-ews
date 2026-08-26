@@ -87,8 +87,23 @@ RSpec.describe BeneficiaryFilter, type: :request_schema do
       input_params: {
         filter: {
           "$or": {
-            "1": { gender: { eq: "M" } },
-            "2": { iso_language_code: { eq: "eng" } }
+            "1": {
+              gender: { eq: "M" },
+              date_of_birth: { lt: "2020-01-01" },
+              invalid_field: { eq: "invalid" }
+            },
+            "2": { iso_language_code: { eq: "eng" } },
+            "3": { invalid_field: { eq: "invalid" } },
+            "4": {
+              "$and": {
+                "1": {
+                  iso_country_code: { eq: "US" }
+                },
+                "2": {
+                  "address.iso_region_code": { eq: "US-AL" }
+                }
+              }
+            }
           },
           iso_country_code: { in: [ "KH", "AU" ] },
           "address.iso_region_code": { eq: "KH-12" }
@@ -98,22 +113,28 @@ RSpec.describe BeneficiaryFilter, type: :request_schema do
 
     result = schema.output
 
+    FilterScopeQuery.new(Beneficiary, result).apply
+
     expect(result).to contain_exactly(
       have_attributes(
         conditions: contain_exactly(
           have_attributes(
-            field_definition: have_attributes(
-              name: :gender
-            ),
-            operator: :eq,
-            value: "M"
-          ),
-          have_attributes(
-            field_definition: have_attributes(
-              name: :iso_language_code
-            ),
-            operator: :eq,
-            value: "eng"
+            conditions: contain_exactly(
+              have_attributes(
+                field_definition: have_attributes(
+                  name: :gender
+                ),
+                operator: :eq,
+                value: "M"
+              ),
+              have_attributes(
+                field_definition: have_attributes(
+                  name: :iso_language_code
+                ),
+                operator: :eq,
+                value: "eng"
+              )
+            )
           )
         )
       ),
