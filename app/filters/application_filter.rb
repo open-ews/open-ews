@@ -1,6 +1,24 @@
 class ApplicationFilter < ApplicationRequestSchema
   class_attribute :field_collection
 
+  register_macro(:filter_conjunction) do |macro:|
+    contract = macro.args[0].fetch(:with)
+    next unless key?
+    next key.failure(text: "must be a hash") unless value.is_a?(Hash)
+
+    value.each do |condition_identifier, condition|
+      next key([ *key.path, condition_identifier ]).failure(text: "must be a hash") unless condition.is_a?(Hash)
+
+      contract_result = contract.new(input_params: condition)
+
+      next if contract_result.success?
+
+      contract_result.errors.each do |error|
+        key([ *key.path, condition_identifier, *error.path ]).failure(error.text)
+      end
+    end
+  end
+
   def self.has_fields(field_collection)
     self.field_collection = field_collection
 
@@ -9,30 +27,12 @@ class ApplicationFilter < ApplicationRequestSchema
         optional(field.path.to_sym).filled(:hash).schema(field.schema.schema_definition)
       end
 
-      optional(:$and).filled(:hash)
-      optional(:$or).filled(:hash)
+      optional(:$and).value(:hash, min_size?: 1)
+      optional(:$or).value(:hash, min_size?: 1)
     end
 
-    rule(:$and) { _contract.class.validate_conjunction(self) }
-    rule(:$or) { _contract.class.validate_conjunction(self) }
-  end
-
-  def self.validate_conjunction(evaluator)
-    return unless evaluator.value.is_a?(Hash)
-
-    evaluator.value.each do |identifier, item|
-      unless item.is_a?(Hash) && item.present?
-        evaluator.key([ *evaluator.key.path.to_a, identifier ]).failure("must be a hash")
-        next
-      end
-
-      contract_result = new(input_params: item)
-      next if contract_result.success?
-
-      contract_result.errors.each do |error|
-        evaluator.key([ *evaluator.key.path.to_a, identifier, *error.path ]).failure(error.text)
-      end
-    end
+    rule(:$and).validate(filter_conjunction: { with: self })
+    rule(:$or).validate(filter_conjunction: { with: self })
   end
 
   def self.filter_contract
