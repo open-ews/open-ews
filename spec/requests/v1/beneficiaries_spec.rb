@@ -49,7 +49,7 @@ RSpec.resource "Beneficiaries"  do
         Advanced filtering allows multiple filter conditions to be combined using
         logical `AND` and `OR` operators.
 
-        ## Combining filters
+        ### Combining filters
 
         Multiple filters at the same level are combined using `AND`. For example:
 
@@ -64,7 +64,7 @@ RSpec.resource "Beneficiaries"  do
 
         This returns beneficiaries who are both female and at born on or after 01/01/2020.
 
-        ## OR conditions
+        ### OR conditions
 
         Use `$or` to match records that satisfy any of several sets of conditions:
 
@@ -109,7 +109,7 @@ RSpec.resource "Beneficiaries"  do
         have an address in `KH-1` with administrative division codes matching
         all of the specified conditions.
 
-        ## Combining AND and OR
+        ### Combining AND and OR
 
         `$and` can be used to explicitly group conditions, and `$and` and `$or`
         can be nested to construct more complex expressions.
