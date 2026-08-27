@@ -36,40 +36,38 @@ RSpec.describe FilterScopeQuery, type: :model do
     expect(result).to contain_exactly(beneficiary)
   end
 
-  it "combines a `FilterGroup` with plain `FilterField`s" do
+  it "combines a FilterGroup with plain FilterFields" do
     matching_beneficiary = create(:beneficiary, gender: "M", status: "active")
     _wrong_gender = create(:beneficiary, gender: "F", status: "active")
     _wrong_status = create(:beneficiary, gender: "M", status: "disabled")
 
-    gender_or_group = FilterGroup.new(
+    filter_group = FilterGroup.new(
       operator: :or,
       conditions: [
         FilterField.new(field_definition: find_field_definition(:gender), operator: "eq", value: "M"),
-        FilterField.new(field_definition: find_field_definition(:gender), operator: "eq", value: "X")
+        FilterField.new(field_definition: find_field_definition(:date_of_birth), operator: "lt", value: Date.new(2020, 1, 1))
       ]
     )
-    status_filter = FilterField.new(field_definition: find_field_definition(:status), operator: "eq", value: "active")
-
-    query = FilterScopeQuery.new(Beneficiary, [ gender_or_group, status_filter ])
+    filter_field = FilterField.new(field_definition: find_field_definition(:status), operator: "eq", value: "active")
+    query = FilterScopeQuery.new(Beneficiary, [ filter_group, filter_field ])
 
     result = query.apply
 
     expect(result).to contain_exactly(matching_beneficiary)
   end
 
-  it "joins associations referenced inside a `FilterGroup`" do
+  it "joins associations referenced inside a FilterGroup" do
     beneficiary_with_matching_address = create(:beneficiary)
     create(:beneficiary_address, beneficiary: beneficiary_with_matching_address, iso_region_code: "KH-1")
     _beneficiary_without_matching_address = create(:beneficiary)
 
-    region_or_group = FilterGroup.new(
+    filter_group = FilterGroup.new(
       operator: :or,
       conditions: [
         FilterField.new(field_definition: find_field_definition(:iso_region_code), operator: "eq", value: "KH-1")
       ]
     )
-
-    query = FilterScopeQuery.new(Beneficiary, Array(region_or_group))
+    query = FilterScopeQuery.new(Beneficiary, Array(filter_group))
 
     result = query.apply
 

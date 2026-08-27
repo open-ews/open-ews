@@ -14,7 +14,9 @@ class FilterField
   end
 
   def associations
-    Array(association)
+    return [] if association.blank?
+
+    [ association ]
   end
 
   private
