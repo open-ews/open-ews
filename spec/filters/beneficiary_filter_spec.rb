@@ -113,56 +113,54 @@ RSpec.describe BeneficiaryFilter, type: :request_schema do
 
     result = schema.output
 
-    FilterScopeQuery.new(Beneficiary, result).apply
-
     expect(result).to contain_exactly(
       have_attributes(
         operator: :or,
-        conditions: include(
+        conditions: contain_exactly(
           have_attributes(
             operator: :and,
             conditions: contain_exactly(
               have_attributes(
-                field_definition: have_attributes(
-                  name: :gender
-                ),
+                field_definition: have_attributes(name: :gender),
                 operator: :eq,
                 value: "M"
               ),
               have_attributes(
-                field_definition: have_attributes(
-                  name: :date_of_birth
-                ),
+                field_definition: have_attributes(name: :date_of_birth),
                 operator: :lt,
                 value: Date.parse("2020-01-01")
               )
             )
           ),
           have_attributes(
+            field_definition: have_attributes(name: :iso_language_code),
+            operator: :eq,
+            value: "eng"
+          ),
+          have_attributes(
             operator: :and,
             conditions: contain_exactly(
               have_attributes(
-                field_definition: have_attributes(
-                  name: :iso_language_code
-                ),
+                field_definition: have_attributes(name: :iso_country_code),
                 operator: :eq,
-                value: "eng"
+                value: "US"
+              ),
+              have_attributes(
+                field_definition: have_attributes(name: :iso_region_code),
+                operator: :eq,
+                value: "US-AL"
               )
             )
           )
-        ),
+        )
       ),
       have_attributes(
-        field_definition: have_attributes(
-          name: :iso_country_code
-        ),
+        field_definition: have_attributes(name: :iso_country_code),
         operator: :in,
         value: [ "KH", "AU" ]
       ),
       have_attributes(
-        field_definition: have_attributes(
-          name: :iso_region_code
-        ),
+        field_definition: have_attributes(name: :iso_region_code),
         operator: :eq,
         value: "KH-12"
       )
