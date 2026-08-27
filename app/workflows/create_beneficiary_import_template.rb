@@ -1,6 +1,10 @@
 require "csv"
 
 class CreateBeneficiaryImportTemplate < ApplicationWorkflow
+  ADDITIONAL_FIELDS = [
+    "address_modification_behavior"
+  ].freeze
+
   attr_reader :template, :fields
 
   def initialize(**options)
@@ -11,7 +15,7 @@ class CreateBeneficiaryImportTemplate < ApplicationWorkflow
 
   def call
     CSV.open(template, "w") do |csv|
-      csv << attribute_names
+      csv << attribute_names.concat(ADDITIONAL_FIELDS)
       csv << sample_data
     end
   end

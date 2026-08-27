@@ -102,6 +102,112 @@ RspecApiDocumentation.configure do |config|
 
     Filtering operators vary depending on the attribute type.
 
+    ### Advanced Filtering
+
+    For more complex queries, filters can be combined using logical `AND` and `OR` conditions.
+
+    By default, multiple filters are combined using `AND`. This means that a resource must satisfy all specified filter conditions.
+
+    For example:
+
+    `GET /v1/beneficiaries?filter[gender][eq]=F&filter[date_of_birth][lt]=2000-01-01`
+
+    This returns beneficiaries who are *female AND were born before 2000-01-01.*
+
+    #### OR Conditions
+
+    Use the `$or` filter to match resources that satisfy at least one of multiple condition groups.
+
+    `GET /v1/beneficiaries?filter[$or][0][gender][eq]=F&filter[$or][1][gender][eq]=M`
+
+    This is equivalent to:
+
+    `gender = F OR gender = M`
+
+    Each entry within `$or` represents a separate condition group. Conditions within a group are combined using `AND`.
+
+    For example:
+
+    `GET /v1/beneficiaries?filter[$or][0][address.iso_region_code][eq]=KH-12&filter[$or][1][address.iso_region_code][eq]=KH-1&filter[$or][1][address.administrative_division_level_2_code][eq]=0102`
+
+    This is equivalent to:
+
+    ```
+    address.iso_region_code = KH-12
+    OR
+    (
+      address.iso_region_code = KH-1
+      AND
+      address.administrative_division_level_2_code = 0102
+    )
+    ```
+
+    #### Combining AND and OR
+
+    Advanced filters can be combined with regular filters. Regular filters outside of an `$or` group are combined with the entire `$or` expression using `AND`.
+
+    For example:
+
+    `GET /v1/beneficiaries?filter[gender][eq]=F&filter[$or][0][address.iso_region_code][eq]=KH-12&filter[$or][1][address.iso_region_code][eq]=KH-1&filter[$or][1][address.administrative_division_level_2_code][eq]=0102`
+
+    This is equivalent to:
+
+    ```
+    gender = F
+    AND
+    (
+      address.iso_region_code = KH-12
+      OR
+      (
+        address.iso_region_code = KH-1
+        AND
+        address.administrative_division_level_2_code = 0102
+      )
+    )
+    ```
+
+    #### AND Conditions
+
+    Use the `$and` filter to explicitly group conditions that must all match.
+
+    `GET /v1/beneficiaries?filter[$and][0][gender][eq]=F&filter[$and][1][date_of_birth][lt]=2000-01-01`
+
+    This is equivalent to:
+
+    ```
+    (
+      gender = F
+      AND
+      date_of_birth < 2000-01-01
+    )
+    ```
+
+    Explicit `$and` groups are particularly useful when combining nested `AND` and `OR` conditions.
+
+    #### Nested Conditions
+
+    `$and` and `$or` conditions can be nested to construct more complex filtering expressions.
+
+    For example:
+
+    `GET /v1/beneficiaries?filter[$or][0][gender][eq]=F&filter[$or][1][$and][0][gender][eq]=M&filter[$or][1][$and][1][date_of_birth][lt]=2000-01-01`
+
+    This is equivalent to:
+
+    ```
+    gender = F
+    OR
+    (
+      gender = M
+      AND
+      date_of_birth < 2000-01-01
+    )
+    ```
+
+    Condition group identifiers such as `0`, `1`, and `2` are arbitrary identifiers. They are used to distinguish individual condition groups and do not affect the filtering logic.
+
+    When constructing complex filters, use `$and` and `$or` to make the intended logical grouping explicit. Conditions within an `AND` group must all match, while an `OR` group matches when at least one of its condition groups matches.
+
     ### String Type Operators
 
     For attributes of type **string**, the following operators are supported:

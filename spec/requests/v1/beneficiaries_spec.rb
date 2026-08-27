@@ -44,6 +44,170 @@ RSpec.resource "Beneficiaries"  do
       )
     end
 
+    example "Advanced filtering" do
+      explanation <<~HEREDOC
+        Advanced filtering allows multiple filter conditions to be combined using
+        logical `AND` and `OR` operators.
+
+        ## Combining filters
+
+        Multiple filters at the same level are combined using `AND`. For example:
+
+        ```json
+        {
+          "filter": {
+            "gender": { "eq": "F" },
+            "date_of_birth": { "gteq": "2020-01-01" }
+          }
+        }
+        ```
+
+        This returns beneficiaries who are both female and at born on or after 01/01/2020.
+
+        ## OR conditions
+
+        Use `$or` to match records that satisfy any of several sets of conditions:
+
+        ```json
+        {
+          "filter": {
+            "$or": {
+              "0": {
+                "gender": { "eq": "F" }
+              },
+              "1": {
+                "gender": { "eq": "M" }
+              }
+            }
+          }
+        }
+        ```
+
+        Each entry in `$or` is a separate condition group. A record only needs
+        to match one of the groups.
+
+        Conditions within an `$or` group are combined using `AND`. For example:
+
+        ```json
+        {
+          "filter": {
+            "$or": {
+              "0": {
+                "address.iso_region_code": { "eq": "KH-12" }
+              },
+              "1": {
+                "address.iso_region_code": { "eq": "KH-1" },
+                "address.administrative_division_level_2_code": { "eq": "0102" },
+                "address.administrative_division_level_3_code": { "in": ["010201"] }
+              }
+            }
+          }
+        }
+        ```
+
+        This matches beneficiaries who either have an address in `KH-12`, or
+        have an address in `KH-1` with administrative division codes matching
+        all of the specified conditions.
+
+        ## Combining AND and OR
+
+        `$and` can be used to explicitly group conditions, and `$and` and `$or`
+        can be nested to construct more complex expressions.
+
+        For example:
+
+        ```json
+        {
+          "filter": {
+            "gender": { "eq": "F" },
+            "$or": {
+              "0": {
+                "address.iso_region_code": { "eq": "KH-12" }
+              },
+              "1": {
+                "address.iso_region_code": { "eq": "KH-1" },
+                "address.administrative_division_level_2_code": { "eq": "0102" }
+              }
+            }
+          }
+        }
+        ```
+
+        The above filter is equivalent to:
+
+        ```
+        gender = "F"
+        AND
+        (
+          address.iso_region_code = "KH-12"
+          OR
+          (
+            address.iso_region_code = "KH-1"
+            AND address.administrative_division_level_2_code = "0102"
+          )
+        )
+        ```
+
+        The keys used for entries inside `$and` and `$or` (such as `"0"` and `"1"`)
+        are identifiers for the condition groups and can be any unique values.
+
+        Nested `$and` and `$or` expressions can be used when more complex filtering
+        logic is required.
+      HEREDOC
+
+      account = create(:account)
+      beneficiaries = [
+        *create_list(:beneficiary, 3, account:, gender: "F"),
+        create(:beneficiary, account:, gender: "M")
+      ]
+      create(
+        :beneficiary_address,
+        beneficiary: beneficiaries[0],
+        iso_region_code: "KH-12",
+      )
+      create(
+        :beneficiary_address,
+        beneficiary: beneficiaries[1],
+        iso_region_code: "KH-1",
+        administrative_division_level_2_code: "0102",
+        administrative_division_level_3_code: "010201",
+      )
+      create(
+        :beneficiary_address,
+        beneficiary: beneficiaries[2],
+        iso_region_code: "KH-2",
+        administrative_division_level_2_code: "0202",
+      )
+      create(
+        :beneficiary_address,
+        beneficiary: beneficiaries[3],
+        iso_region_code: "KH-12"
+      )
+
+      set_authorization_header_for(account)
+      do_request(
+        filter: {
+          gender: { eq: "F" },
+          "$or": {
+            "0": {
+              "address.iso_region_code": { eq: "KH-12" }
+            },
+            "1": {
+              "address.iso_region_code": { eq: "KH-1" },
+              "address.administrative_division_level_2_code": { eq: "0102" },
+              "address.administrative_division_level_3_code": { in: [ "010201" ] }
+            }
+          }
+        }
+      )
+
+      expect(response_status).to eq(200)
+      expect(response_body).to match_jsonapi_resource_collection_schema("beneficiary")
+      expect(json_response.fetch("data").pluck("id")).to contain_exactly(
+        beneficiaries[0].id.to_s, beneficiaries[1].id.to_s
+      )
+    end
+
     example "Filter beneficiaries by phone number", document: false do
       account = create(:account)
       beneficiary = create(:beneficiary, account:, phone_number: "855715100888")
