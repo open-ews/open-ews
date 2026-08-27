@@ -114,7 +114,7 @@ RspecApiDocumentation.configure do |config|
 
     This returns beneficiaries who are *female AND were born before 2000-01-01.*
 
-    #### OR Conditions
+    ### OR Conditions
 
     Use the `$or` filter to match resources that satisfy at least one of multiple condition groups.
 
@@ -142,7 +142,7 @@ RspecApiDocumentation.configure do |config|
     )
     ```
 
-    #### Combining AND and OR
+    ### Combining AND and OR
 
     Advanced filters can be combined with regular filters. Regular filters outside of an `$or` group are combined with the entire `$or` expression using `AND`.
 
@@ -166,7 +166,7 @@ RspecApiDocumentation.configure do |config|
     )
     ```
 
-    #### AND Conditions
+    ### AND Conditions
 
     Use the `$and` filter to explicitly group conditions that must all match.
 
@@ -184,7 +184,7 @@ RspecApiDocumentation.configure do |config|
 
     Explicit `$and` groups are particularly useful when combining nested `AND` and `OR` conditions.
 
-    #### Nested Conditions
+    ### Nested Conditions
 
     `$and` and `$or` conditions can be nested to construct more complex filtering expressions.
 
