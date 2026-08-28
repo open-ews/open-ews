@@ -106,9 +106,11 @@ RSpec.describe BeneficiaryFilter, type: :request_schema do
                 "2": {
                   "address.iso_region_code": { eq: "US-NY" }
                 },
-                "$or": {
-                  "1": { "address.iso_region_code": { eq: "US-WA", gender: { eq: "M" } } },
-                  "2": { "address.iso_region_code": { eq: "US-OR", gender: { eq: "F" } } }
+                "3": {
+                  "$or": {
+                    "1": { "address.iso_region_code": { eq: "US-WA", gender: { eq: "M" } } },
+                    "2": { "address.iso_region_code": { eq: "US-OR", gender: { eq: "F" } } }
+                  }
                 }
               }
             }
