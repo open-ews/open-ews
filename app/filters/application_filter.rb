@@ -1,19 +1,19 @@
 class ApplicationFilter < ApplicationRequestSchema
   class_attribute :field_collection
 
-  register_macro(:filter_conjunction) do |macro:|
-    contract = macro.args[0].fetch(:with)
+  register_macro(:conjunction) do |macro:|
+    schema = macro.args[0].fetch(:with_schema)
     next unless key?
     next key.failure(text: "must be a hash") unless value.is_a?(Hash)
 
     value.each do |condition_identifier, condition|
       next key([ *key.path, condition_identifier ]).failure(text: "must be a hash") unless condition.is_a?(Hash)
 
-      contract_result = contract.new(input_params: condition)
+      schema_result = schema.new(input_params: condition)
 
-      next if contract_result.success?
+      next if schema_result.success?
 
-      contract_result.errors.each do |error|
+      schema_result.errors.each do |error|
         key([ *key.path, condition_identifier, *error.path ]).failure(error.text)
       end
     end
@@ -31,8 +31,8 @@ class ApplicationFilter < ApplicationRequestSchema
       optional(:$or).value(:hash, min_size?: 1)
     end
 
-    rule(:$and).validate(filter_conjunction: { with: self })
-    rule(:$or).validate(filter_conjunction: { with: self })
+    rule(:$and).validate(conjunction: { with_schema: self })
+    rule(:$or).validate(conjunction: { with_schema: self })
   end
 
   def self.filter_contract
