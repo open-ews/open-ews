@@ -231,6 +231,24 @@ RSpec.describe "Broadcasts" do
     end
   end
 
+  it "show a broadcast" do
+    user = create(:user)
+    broadcast = create(
+      :broadcast,
+      account: user.account,
+      beneficiary_filter: {
+        gender: { eq: "M" },
+        "$or": {
+          "0": { gender: { eq: "F" } },
+          "1": { date_of_birth: { lt: "2020-01-01" } }
+        }
+      }
+    )
+
+    account_sign_in(user)
+    visit dashboard_broadcast_path(broadcast)
+  end
+
   it "delete a broadcast" do
     user = create(:user)
     broadcast = create(:broadcast, account: user.account)
