@@ -2,21 +2,19 @@ class BeneficiaryFilterData
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  attribute :data, FilterDataType.new(field_definitions: FieldDefinitions::BeneficiaryFields)
-  attribute :address_data_field_definition
+  attribute :data, FilterDataType.new(filter: BeneficiaryFilter)
 
-  def address_fields
-    @address_fields ||= data.fields.each_with_object({}) do |(_name, field), result|
-      next unless field.field_definition.prefix&.address?
-
-      result[field.name] = field
-    end
+  def has_address_fields?
+    data.fields.any? { address_field?(it) }
   end
 
-  def address_data_field
-    fields = address_fields.values
-    return unless fields.one?
+  private
 
-    fields.first if fields.first.name == address_data_field_definition.name
+  def address_field?(field)
+    if field.type.field?
+      field.address?
+    else
+      field.conditions.any? { address_field?(it) }
+    end
   end
 end

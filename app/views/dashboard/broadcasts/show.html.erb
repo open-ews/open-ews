@@ -147,39 +147,13 @@
       address_data_field_definition: CountryAddressData.address_field(current_account.iso_country_code)
     ) %>
 
-    <% filter.data.fields.values.each do |field| %>
-      <% next if filter.address_data_field.present? && filter.address_fields.values.include?(field) %>
-      <div class="row mb-3" id="beneficiary_filter_<%= field.name %>">
-        <div class="col">
-          <input class="field-name form-control" type="text" value="<%= field.field_definition.human_name(namespace: current_account.iso_country_code) %>" readonly />
-        </div>
-        <div class="col">
-          <input class="field-operator form-control" type="text" value="<%= field.field_definition.human_operator(field.operator) %>" readonly />
-        </div>
-        <div class="col">
-          <% if field.operator == "between" %>
-            <div class="row">
-              <div class="col">
-                <input class="field-value form-control" type="text" value="<%= field.value[0] %>" readonly />
-              </div>
-              <div class="col">
-                <input class="field-value form-control" type="text" value="<%= field.value[1] %>" readonly />
-              </div>
-            </div>
-          <% elsif field.value.is_a?(Array) %>
-            <select class="input-tags-readonly form-control" readonly multiple>
-              <% field.value.each do |value| %>
-                <option selected><%= field.field_definition.human_value(value) %></option>
-              <% end %>
-            </select>
-          <% else %>
-            <input class="field-value form-control" type="text" value="<%= field.field_definition.human_value(field.value) %>" readonly />
-          <% end %>
-        </div>
-      </div>
-    <% end %>
+    <%= render(
+      "filter_fields",
+      skip_address_fields: @broadcast.created_via.dashboard?,
+      fields: filter.data.fields
+    ) %>
 
-    <% if filter.address_data_field.present? %>
+    <% if @broadcast.created_via.dashboard? && filter.has_address_fields? %>
       <div class="row" id="beneficiary_filter_<%= filter.address_data_field.name %>">
         <div class="col">
           <input class="mb-1 field-name form-control" type="text" value="<%= ApplicationRecord.human_attribute_name(:target_areas) %>" readonly />

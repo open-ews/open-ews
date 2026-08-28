@@ -231,17 +231,18 @@ RSpec.describe "Broadcasts" do
     end
   end
 
-  it "show a broadcast" do
+  it "show a broadcast", :js, :selenium_chrome do
     user = create(:user)
     broadcast = create(
       :broadcast,
       account: user.account,
       beneficiary_filter: {
-        gender: { eq: "M" },
+        disability_status: { eq: "disabled" },
+        phone_number: { in: [ "855715100850",  "855715100851" ] },
         "$or": {
-          "0": { gender: { eq: "F" } },
+          "0": { gender: { eq: "F" }, disability_status: { eq: "disabled" } },
           "1": { date_of_birth: { lt: "2020-01-01" } }
-        }
+        },
       }
     )
 

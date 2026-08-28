@@ -1,22 +1,28 @@
 class FilterDataType < ActiveRecord::Type::Value
-  FilterData = Data.define(:fields, :groups)
+  FilterData = Data.define(:fields)
 
   FilterData::Field = Data.define(
     :name,
     :operator,
     :value,
-    :field_definition
-  )
+    :field_definition,
+    :type
+  ) do
+    def address?
+      field_definition.prefix&.address?
+    end
+  end
 
   FilterData::Group = Data.define(
     :operator,
-    :conditions
+    :conditions,
+    :type
   )
 
-  attr_reader :field_definitions
+  attr_reader :filter
 
-  def initialize(field_definitions:, **)
-    @field_definitions = field_definitions
+  def initialize(filter:, **)
+    @filter = filter
 
     super(**)
   end
@@ -24,15 +30,8 @@ class FilterDataType < ActiveRecord::Type::Value
   def cast(value)
     return value if value.is_a?(FilterData)
 
-    conditions = parse_conditions(Hash(value))
-
-    fields = conditions
-      .grep(FilterData::Field)
-      .index_by(&:name)
-
-    groups = conditions.grep(FilterData::Group)
-
-    FilterData.new(fields:, groups:)
+    filters = filter.new(input_params: value).output
+    filters
   end
 
   private
@@ -54,6 +53,7 @@ class FilterDataType < ActiveRecord::Type::Value
     raise ArgumentError, "#{operator} must be a hash" unless conditions.is_a?(Hash)
 
     FilterData::Group.new(
+      type: "group".inquiry,
       operator:,
       conditions: parse_group_conditions(conditions)
     )
@@ -75,6 +75,7 @@ class FilterDataType < ActiveRecord::Type::Value
     field_definition = field_definitions.find_by!(path: key)
 
     FilterData::Field.new(
+      type: "field".inquiry,
       field_definition:,
       name: field_definition.name,
       operator: operator.to_sym,
