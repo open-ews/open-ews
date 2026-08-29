@@ -2,14 +2,6 @@ class BeneficiaryFilterData
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  ADDRESS_LEVELS = {
-    iso_region_code: 1,
-    administrative_division_level_2_code: 2,
-    administrative_division_level_3_code: 3,
-    administrative_division_level_4_code: 4,
-    administrative_division_level_5_code: 5
-  }.freeze
-
   attribute :data, FilterDataType.new(filter: BeneficiaryFilter)
 
   def address_filter
@@ -43,7 +35,7 @@ class BeneficiaryFilterData
   end
 
   def address_field?(field)
-    field.field_definition.prefix&.address? && field.operator.in?([ :in, :eq ])
+    field.field_definition.attributes[:administrative_level_identifier] && field.operator.in?([ :in, :eq ])
   end
 
   def tree_expression?(element)
@@ -72,6 +64,6 @@ class BeneficiaryFilterData
   end
 
   def address_level(field)
-    ADDRESS_LEVELS.fetch(field.field_definition.name)
+    field.attributes.fetch(:administrative_level)
   end
 end
