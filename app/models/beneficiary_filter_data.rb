@@ -28,7 +28,7 @@ class BeneficiaryFilterData
 
   def address_expression?(element)
     if element.type.field?
-      element.field_definition.prefix&.address?
+      element.field_definition.prefix&.address? && element.operator.in?([ :in, :eq ])
     else
       element.conditions.all? { address_expression?(it) }
     end
