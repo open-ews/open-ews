@@ -19,7 +19,7 @@ class BeneficiaryFilterData
   private
 
   def address_tree_editable?
-    address_elements.one?  && tree_expression?(address_elements.first)
+    address_elements.one? && tree_expression?(address_elements.first)
   end
 
   def address_elements
