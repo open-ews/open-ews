@@ -4,17 +4,33 @@ class BeneficiaryFilterData
 
   attribute :data, FilterDataType.new(filter: BeneficiaryFilter)
 
-  def has_address_fields?
-    data.fields.any? { address_field?(it) }
+  def address_filter
+    return unless address_tree_editable?
+
+    address_elements.first
+  end
+
+  def displayed_filters
+    return data.fields unless address_tree_editable?
+
+    data.fields.reject { address_expression?(it) }
   end
 
   private
 
-  def address_field?(field)
-    if field.type.field?
-      field.address?
+  def address_tree_editable?
+    address_elements.one?
+  end
+
+  def address_elements
+    @address_elements ||= data.fields.select { address_expression?(it) }
+  end
+
+  def address_expression?(element)
+    if element.type.field?
+      element.field_definition.prefix&.address?
     else
-      field.conditions.any? { address_field?(it) }
+      element.conditions.all? { address_expression?(it) }
     end
   end
 end

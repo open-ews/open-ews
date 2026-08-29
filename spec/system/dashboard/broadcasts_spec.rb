@@ -231,7 +231,7 @@ RSpec.describe "Broadcasts" do
     end
   end
 
-  it "show a broadcast", :js, :selenium_chrome do
+  it "show a broadcast" do
     user = create(:user)
     broadcast = create(
       :broadcast,
@@ -241,6 +241,17 @@ RSpec.describe "Broadcasts" do
         "$or": {
           "0": { gender: { eq: "F" }, disability_status: { eq: "disabled" } },
           "1": { date_of_birth: { lt: "2020-01-01" } }
+        },
+        "$and": {
+          "0": {
+            "$or": {
+              "0": { "address.iso_region_code": { in: [ "KH-12" ] } },
+              "1": {
+                "address.iso_region_code": { in: [ "KH-1" ] },
+                "address.administrative_division_level_2_code": { in: [ "0102" ] }
+              }
+            }
+          }
         }
       }
     )

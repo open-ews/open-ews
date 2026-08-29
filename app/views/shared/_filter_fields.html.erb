@@ -39,14 +39,7 @@
   <% end %>
 <% end %>
 
-<% separator = capture do %>
-  <div class="filter-conjunction d-flex align-items-center gap-3">
-    <hr class="flex-grow-1">
-    <span class="badge rounded-pill text-bg-secondary px-3">
-      <%= human_conjunction(local_assigns.fetch(:conjunction, :and)) %>
-    </span>
-    <hr class="flex-grow-1">
-  </div>
-<% end %>
-
-<%= safe_join(field_containers, separator) %>
+<%= safe_join(
+  field_containers,
+  render("shared/filter_conjunction", conjunction: local_assigns.fetch(:conjunction, :and))
+) %>
