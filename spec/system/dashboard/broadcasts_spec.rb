@@ -237,8 +237,7 @@ RSpec.describe "Broadcasts" do
       :broadcast,
       account: user.account,
       beneficiary_filter: {
-        disability_status: { eq: "disabled" },
-        phone_number: { in: [ "855715100850",  "855715100851" ] },
+        iso_country_code: { eq: "KH" },
         "$or": {
           "0": { gender: { eq: "F" }, disability_status: { eq: "disabled" } },
           "1": { date_of_birth: { lt: "2020-01-01" } }
