@@ -14,6 +14,8 @@ km:
     is_null: "មិនមាន"
     in: "នៅក្នុង"
     not_in: "មិននៅក្នុង"
+    and: "និង"
+    or: "ឬ"
   past_participles:
     registered: "ចុះឈ្មោះ"
     delivered: "ផ្ញើ"

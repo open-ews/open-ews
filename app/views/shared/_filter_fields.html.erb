@@ -1,0 +1,52 @@
+<% field_containers = fields.map do |field| %>
+  <% capture do %>
+    <div class="card">
+      <div class="card-body">
+        <% if field.type.field? %>
+          <div class="row mb-3" id="beneficiary_filter_<%= field.name %>">
+            <div class="col">
+              <input class="field-name form-control" type="text" value="<%= field.field_definition.human_name(namespace: current_account.iso_country_code) %>" readonly />
+            </div>
+            <div class="col">
+              <input class="field-operator form-control" type="text" value="<%= field.field_definition.human_operator(field.operator) %>" readonly />
+            </div>
+            <div class="col">
+              <% if field.operator == "between" %>
+                <div class="row">
+                  <div class="col">
+                    <input class="field-value form-control" type="text" value="<%= field.value[0] %>" readonly />
+                  </div>
+                  <div class="col">
+                    <input class="field-value form-control" type="text" value="<%= field.value[1] %>" readonly />
+                  </div>
+                </div>
+              <% elsif field.value.is_a?(Array) %>
+                <select class="input-tags-readonly form-control" readonly multiple>
+                  <% field.value.each do |value| %>
+                    <option selected><%= field.field_definition.human_value(value) %></option>
+                  <% end %>
+                </select>
+              <% else %>
+                <input class="field-value form-control" type="text" value="<%= field.field_definition.human_value(field.value) %>" readonly />
+              <% end %>
+            </div>
+          </div>
+        <% elsif field.type.group? %>
+          <%= render("shared/filter_fields", fields: field.conditions, conjunction: field.operator) %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<% separator = capture do %>
+  <div class="filter-conjunction d-flex align-items-center gap-3">
+    <hr class="flex-grow-1">
+    <span class="badge rounded-pill text-bg-secondary px-3">
+      <%= human_conjunction(local_assigns.fetch(:conjunction, :and)) %>
+    </span>
+    <hr class="flex-grow-1">
+  </div>
+<% end %>
+
+<%= safe_join(field_containers, separator) %>

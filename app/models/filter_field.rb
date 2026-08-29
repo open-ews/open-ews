@@ -1,7 +1,7 @@
 class FilterField
   attr_reader :field_definition, :operator, :value
 
-  delegate :association, :column, to: :field_definition
+  delegate :association, :column, :name, to: :field_definition
 
   def initialize(field_definition:, operator:, value:)
     @field_definition = field_definition

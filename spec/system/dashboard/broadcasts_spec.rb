@@ -242,7 +242,7 @@ RSpec.describe "Broadcasts" do
         "$or": {
           "0": { gender: { eq: "F" }, disability_status: { eq: "disabled" } },
           "1": { date_of_birth: { lt: "2020-01-01" } }
-        },
+        }
       }
     )
 

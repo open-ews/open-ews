@@ -19,6 +19,8 @@ my:
     is_null: "မရှိပါ"
     in: "အတွင်း"
     not_in: "အတွင်း မရှိပါ"
+    and: "နှင့်"
+    or: "သို့မဟုတ်"
   past_participles:
     registered: "မှတ်ပုံတင်"
     delivered: "ပေးပို့"

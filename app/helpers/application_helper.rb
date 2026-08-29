@@ -222,4 +222,8 @@ module ApplicationHelper
       user.name
     end
   end
+
+  def human_conjunction(conjunction)
+    I18n.t("filter_operators.#{conjunction}", default: conjunction.to_s).upcase
+  end
 end

@@ -142,18 +142,11 @@
 
     <%= render("shared/filter_form/field_headers") %>
 
-    <% filter = BeneficiaryFilterData.new(
-      data: @broadcast.beneficiary_filter,
-      address_data_field_definition: CountryAddressData.address_field(current_account.iso_country_code)
-    ) %>
+    <% filter = BeneficiaryFilterData.new(data: @broadcast.beneficiary_filter) %>
 
-    <%= render(
-      "filter_fields",
-      skip_address_fields: @broadcast.created_via.dashboard?,
-      fields: filter.data.fields
-    ) %>
+    <%= render("shared/filter_fields", fields: filter.data.fields) %>
 
-    <% if @broadcast.created_via.dashboard? && filter.has_address_fields? %>
+    <% if false %>
       <div class="row" id="beneficiary_filter_<%= filter.address_data_field.name %>">
         <div class="col">
           <input class="mb-1 field-name form-control" type="text" value="<%= ApplicationRecord.human_attribute_name(:target_areas) %>" readonly />
