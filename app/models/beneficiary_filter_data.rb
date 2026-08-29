@@ -2,6 +2,14 @@ class BeneficiaryFilterData
   include ActiveModel::Model
   include ActiveModel::Attributes
 
+  ADDRESS_LEVELS = {
+    iso_region_code: 1,
+    administrative_division_level_2_code: 2,
+    administrative_division_level_3_code: 3,
+    administrative_division_level_4_code: 4,
+    administrative_division_level_5_code: 5
+  }.freeze
+
   attribute :data, FilterDataType.new(filter: BeneficiaryFilter)
 
   def address_filter
@@ -19,7 +27,7 @@ class BeneficiaryFilterData
   private
 
   def address_tree_editable?
-    address_elements.one?
+    address_elements.one?  && tree_expression?(address_elements.first)
   end
 
   def address_elements
@@ -28,9 +36,42 @@ class BeneficiaryFilterData
 
   def address_expression?(element)
     if element.type.field?
-      element.field_definition.prefix&.address? && element.operator.in?([ :in, :eq ])
+      address_field?(element)
     else
       element.conditions.all? { address_expression?(it) }
     end
+  end
+
+  def address_field?(field)
+    field.field_definition.prefix&.address? && field.operator.in?([ :in, :eq ])
+  end
+
+  def tree_expression?(element)
+    return address_field?(element) if element.type.field?
+
+    case element.operator
+    when :or
+      element.conditions.all? { tree_expression?(it) }
+    when :and
+      return tree_expression?(element.conditions.first) if element.conditions.one?
+
+      levels = tree_path(element)
+      levels.present? && levels.uniq.length == levels.length
+    end
+  end
+
+  def tree_path(element)
+    return address_level(element) if element.type.field?
+    return unless element.operator == :and
+
+    paths = element.conditions.map { tree_path(it) }
+
+    return unless paths.all?
+
+    paths.flatten
+  end
+
+  def address_level(field)
+    ADDRESS_LEVELS.fetch(field.field_definition.name)
   end
 end
