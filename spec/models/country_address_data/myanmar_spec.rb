@@ -5,12 +5,15 @@ module CountryAddressData
     it "returns address localities in Myanmar" do
       result = CountryAddressData.address_data(:MM)
 
-      expect(result).to be_an(Array)
-      expect(result[0]).to be_a(CountryAddressData::Locality)
-      expect(result[0]).to have_attributes(
-        value: "MM-11",
-        name_en: "Kachin",
-        name_local: "ကချင်ပြည်နယ်"
+      expect(result).to have_attributes(
+        local_language: :my,
+        localities: include(
+          have_attributes(
+            value: "MM-11",
+            name_en: "Kachin",
+            name_local: "ကချင်ပြည်နယ်"
+          )
+        )
       )
     end
   end
