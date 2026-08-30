@@ -17,10 +17,6 @@ class FilterField
     Array.wrap(association)
   end
 
-  def type
-    "field".inquiry
-  end
-
   private
 
   # NOTE: cast from user input operator to arel attribute's predications

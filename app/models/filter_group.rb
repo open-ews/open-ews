@@ -13,8 +13,4 @@ class FilterGroup
   def associations
     conditions.flat_map(&:associations)
   end
-
-  def type
-    "group".inquiry
-  end
 end
