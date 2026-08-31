@@ -32,7 +32,7 @@
     <% end %>
   <% end %>
 
-  <% if @broadcast.state_machine.updatable? %>
+  <% if @broadcast.state_machine.updatable? && @broadcast.created_via == "dashboard" %>
     <%= render "shared/edit_resource_page_action", path: edit_dashboard_broadcast_path(@broadcast) %>
 
     <%= render "shared/resource_related_links" do %>
