@@ -1,5 +1,13 @@
 class AddressTreeExpression
-  NodeSelection = Data.define(:id, :level, :children)
+  NodeSelection = Data.define(:id, :level, :children) do
+    def as_json
+      {
+        id:,
+        level:,
+        children: children.map(&:as_json)
+      }
+    end
+  end
 
   attr_reader :filter
 
@@ -63,22 +71,28 @@ class AddressTreeExpression
   def selection_for(element, nodes)
     case element.operator
     when :or
-      # element.conditions.flat_map { selection_for(it, nodes) }
+      element.conditions.flat_map { selection_for(it, nodes) }
     when :and
-      # selection_for_path(element.conditions, nodes)
+      return selection_for(element.conditions.first) if element.conditions.one?
+
+      selection_from_path(element.conditions, nodes)
     else
-      selection_for_field(nodes:, level: address_level(element), value: element.value)
+      selection_from_field(nodes:, level: address_level(element), value: element.value)
     end
   end
 
-  def selection_for_field(nodes:, level:, value:)
+  def selection_from_field(nodes:, level:, value:)
     nodes.each_with_object([]) do |node, result|
       if node.level == level
         result << NodeSelection.new(id: node.id, level: node.level, children: []) if node.id.in?(Array(value))
       else
-        children = selection_for_field(nodes: node.children, level:, value:)
+        children = selection_from_field(nodes: node.children, level:, value:)
         result << NodeSelection.new(id: node.id, level: node.level, children:) if children.any?
       end
     end
+  end
+
+  def selection_from_path(element, nodes)
+
   end
 end

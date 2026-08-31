@@ -110,7 +110,7 @@ RSpec.describe AddressTreeExpression do
                   id: "010201",
                   level: 3,
                   children: []
-                ),
+                )
               ]
             )
           ],
@@ -172,6 +172,38 @@ RSpec.describe AddressTreeExpression do
           )
         )
       )
+
+      filter = build_filter_data_group(
+        operator: :or,
+        conditions: [
+          build_filter_data_group(
+            operator: :and,
+            conditions: [
+              build_address_filter_data_field(
+                operator: :eq,
+                administrative_level: 1,
+                name: :iso_region_code,
+                value: "KH-1",
+              ),
+              build_address_filter_data_field(
+                operator: :eq,
+                administrative_level: 2,
+                name: :administrative_division_level_2_code,
+                value: "0102"
+              ),
+              build_address_filter_data_field(
+                operator: :in,
+                administrative_level: 3,
+                name: :administrative_division_level_3_code,
+                value: [ "010201", "010202" ]
+              )
+            ]
+          )
+        ]
+      )
+
+      tree_expression = AddressTreeExpression.new(filter)
+      tree_selection = tree_expression.to_tree_selection(tree)
     end
   end
 
