@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/heartcombo/responders.git
-  revision: ba83c8abc48101c164cd4324438e8367ec3c1a83
+  revision: 615011b9354f7e3ccaeb8b94e15c58828d980fbe
   specs:
-    responders (3.2.0)
+    responders (3.2.1)
       actionpack (>= 7.0)
       railties (>= 7.0)
 
