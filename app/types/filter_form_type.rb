@@ -36,8 +36,8 @@ class FilterFormType < FormType
   end
 
   def cast_filter_data(filter_data)
-    filter_data.data.fields.each_with_object({}) do |(name, field), result|
-      result[name] = {
+    filter_data.data.fields.each_with_object({}) do |field, result|
+      result[field.name] = {
         operator: field.operator,
         value: field.value
       }
