@@ -151,8 +151,10 @@ RSpec.resource "Broadcasts"  do
               audio_url: "https://www.example.com/test.mp3",
               status: :running,
               beneficiary_filter: {
-                gender: { eq: "M" },
-                "address.iso_region_code" => { in: [ "KH-1", "KH-2" ] }
+                gender: { eq: "M" }
+              },
+              target_areas: {
+                iso_region_code: { in: [ "KH-1", "KH-2" ] }
               }
             }
           }
@@ -166,8 +168,10 @@ RSpec.resource "Broadcasts"  do
         "status" => "queued",
         "audio_url" => "https://www.example.com/test.mp3",
         "beneficiary_filter" => {
-          "gender" => { "eq" => "M" },
-          "address.iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }
+          "gender" => { "eq" => "M" }
+        },
+        "target_areas" => {
+          "iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }
         }
       )
       expect(webhook_endpoint.webhook_request_logs).to contain_exactly(
