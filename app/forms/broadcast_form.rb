@@ -31,6 +31,8 @@ class BroadcastForm < ApplicationForm
   validates :beneficiary_filter, presence: true, if: :new_record?
   validates :beneficiary_groups, length: { maximum: Broadcast::MAX_BENEFICIARY_GROUPS, allow_blank: true }
 
+  validate :validate_audio_file
+
   def self.model_name
     Broadcast.model_name
   end
@@ -100,5 +102,17 @@ class BroadcastForm < ApplicationForm
 
   def create_event(event_type)
     CreateEvent.call(type: event_type, resource: object)
+  end
+
+  def validate_audio_file
+    return if audio_file.blank?
+
+    object.audio_file = audio_file
+
+    if object.invalid?(:audio_file)
+      object.errors[:audio_file].each do |message|
+        errors.add(:audio_file, message)
+      end
+    end
   end
 end
