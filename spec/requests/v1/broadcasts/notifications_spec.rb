@@ -58,20 +58,21 @@ RSpec.resource "Notifications" do
       account = create(:account)
       broadcast = create(:broadcast, account:)
       male = create(:beneficiary, gender: "M")
-      females = create_list(:beneficiary, 2, gender: "F")
+      female1 = create(:beneficiary, gender: "F")
+      female2 = create(:beneficiary, gender: "F")
       create(
         :beneficiary_address,
-        beneficiary: females[0],
+        beneficiary: female1,
         iso_region_code: "KH-12",
       )
       create(
         :beneficiary_address,
-        beneficiary: females[1],
+        beneficiary: female2,
         iso_region_code: "KH-1",
       )
-      create(:notification, beneficiary: male, broadcast:)
-      notification = create(:notification, beneficiary: females[0], broadcast:)
-      create(:notification, beneficiary: females[1], broadcast:)
+      _male_beneficiary_notification = create(:notification, beneficiary: male, broadcast: broadcast)
+      female1_beneficiary_notification = create(:notification, beneficiary: female1, broadcast: broadcast)
+      _female2_beneficiary_notification = create(:notification, beneficiary: female2, broadcast: broadcast)
 
       set_authorization_header_for(account)
       do_request(
@@ -85,7 +86,7 @@ RSpec.resource "Notifications" do
       expect(response_status).to eq(200)
       expect(response_body).to match_jsonapi_resource_collection_schema("notification")
       expect(json_response.fetch("data").pluck("id")).to contain_exactly(
-        notification.id.to_s
+        female1_beneficiary_notification.id.to_s
       )
     end
 
