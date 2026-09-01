@@ -126,4 +126,13 @@ RSpec.describe BroadcastForm do
 
     expect(form.errors[:message]).to be_present
   end
+
+  it "validates the audio file size" do
+    account = create(:account)
+    form = BroadcastForm.new(account:, channel: "audio", audio_file: file_fixture("big_file.mp3"))
+
+    form.valid?
+
+    expect(form.errors[:audio_file]).to be_present
+  end
 end
