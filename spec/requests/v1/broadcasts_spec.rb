@@ -132,6 +132,61 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
+    example "Create a broadcast" do
+      explanation <<~HEREDOC
+        When a broadcast is created via the API, its status will be pending by default, unless the status attribute is explicitly specified in the request.
+        A pending broadcast will not be sent until it is explicitly triggered for delivery.
+      HEREDOC
+
+      account = create(:account, :configured_for_broadcasts)
+      create(:beneficiary_address, beneficiary: create(:beneficiary, gender: "M", account:), iso_region_code: "KH-1")
+
+      set_authorization_header_for(account)
+      perform_enqueued_jobs do
+        do_request(
+          data: {
+            type: :broadcast,
+            attributes: {
+              channels: [ "text_message" ],
+              message: "Test message",
+              beneficiary_filter: {
+                gender: { eq: "M" },
+                "$or": {
+                  "0": {
+                    "address.iso_region_code" => { in: [ "KH-1", "KH-2" ] }
+                  },
+                  "1": {
+                    "address.iso_region_code" => { eq: "KH-3" },
+                    "address.administrative_division_level_2_code": { eq: "0301" }
+                  }
+                }
+              }
+            }
+          }
+        )
+      end
+
+      expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(json_response.dig("data", "attributes")).to include(
+        "channels" => [ "text_message" ],
+        "status" => "pending",
+        "message" => "Test message",
+        "beneficiary_filter" => {
+          "gender" => { "eq" => "M" },
+          "$or" => {
+            "0" => {
+              "address.iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }
+            },
+            "1" => {
+              "address.iso_region_code" => { "eq" => "KH-3" },
+              "address.administrative_division_level_2_code" => { "eq" => "0301" }
+            }
+          }
+        }
+      )
+    end
+
     example "Create and start a voice call broadcast" do
       account = create(:account, :configured_for_broadcasts)
       oauth_application = create(:oauth_application, owner: account)

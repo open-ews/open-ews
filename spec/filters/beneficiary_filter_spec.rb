@@ -90,7 +90,11 @@ RSpec.describe BeneficiaryFilter, type: :request_schema do
             "1": {
               gender: { eq: "M" },
               date_of_birth: { lt: "2020-01-01" },
-              invalid_field: { eq: "invalid" }
+              invalid_field: { eq: "invalid" },
+              "$or": {
+                "1": { iso_country_code: { eq: "AU" } },
+                "2": { "address.iso_region_code": { eq: "US-AL" } }
+              }
             },
             "2": { iso_language_code: { eq: "eng" } },
             "3": { invalid_field: { eq: "invalid" } },
@@ -100,7 +104,13 @@ RSpec.describe BeneficiaryFilter, type: :request_schema do
                   iso_country_code: { eq: "US" }
                 },
                 "2": {
-                  "address.iso_region_code": { eq: "US-AL" }
+                  "address.iso_region_code": { eq: "US-NY" }
+                },
+                "3": {
+                  "$or": {
+                    "1": { "address.iso_region_code": { eq: "US-WA", gender: { eq: "M" } } },
+                    "2": { "address.iso_region_code": { eq: "US-OR", gender: { eq: "F" } } }
+                  }
                 }
               }
             }
@@ -129,6 +139,21 @@ RSpec.describe BeneficiaryFilter, type: :request_schema do
                 field_definition: have_attributes(name: :date_of_birth),
                 operator: :lt,
                 value: Date.parse("2020-01-01")
+              ),
+              have_attributes(
+                operator: :or,
+                conditions: contain_exactly(
+                  have_attributes(
+                    field_definition: have_attributes(name: :iso_country_code),
+                    operator: :eq,
+                    value: "AU"
+                  ),
+                  have_attributes(
+                    field_definition: have_attributes(name: :iso_region_code),
+                    operator: :eq,
+                    value: "US-AL"
+                  )
+                )
               )
             )
           ),
@@ -148,7 +173,22 @@ RSpec.describe BeneficiaryFilter, type: :request_schema do
               have_attributes(
                 field_definition: have_attributes(name: :iso_region_code),
                 operator: :eq,
-                value: "US-AL"
+                value: "US-NY"
+              ),
+              have_attributes(
+                operator: :or,
+                conditions: contain_exactly(
+                  have_attributes(
+                    field_definition: have_attributes(name: :iso_region_code),
+                    operator: :eq,
+                    value: "US-WA"
+                  ),
+                  have_attributes(
+                    field_definition: have_attributes(name: :iso_region_code),
+                    operator: :eq,
+                    value: "US-OR"
+                  )
+                )
               )
             )
           )

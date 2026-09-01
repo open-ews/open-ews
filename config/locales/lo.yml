@@ -14,6 +14,8 @@ lo:
     is_null: "ເປັນຄ່າຫວ່າງ"
     in: "ຢູ່ໃນ"
     not_in: "ບໍ່ຢູ່ໃນ"
+    and: "ແລະ"
+    or: "ຫຼື"
   past_participles:
     registered: "ເຈົາທະບຽນ"
     delivered: "ສົ່ງເສົາ"

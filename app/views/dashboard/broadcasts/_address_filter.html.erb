@@ -1,0 +1,11 @@
+<div class="row" id="address_filter">
+  <div class="col">
+    <input class="mb-1 field-name form-control" type="text" value="<%= ApplicationRecord.human_attribute_name(:target_areas) %>" readonly />
+
+    <div data-controller="treeview"
+         data-treeview-data-value="<%= treeview_address_data.to_json %>"
+         data-treeview-selected-value="<%= Array(["010201"]).to_json %>">
+    >
+    </div>
+  </div>
+</div>

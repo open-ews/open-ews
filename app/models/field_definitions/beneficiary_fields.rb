@@ -59,6 +59,8 @@ module FieldDefinitions
       column: BeneficiaryAddress.arel_table[:iso_region_code],
       schema: FilterSchema::StringType.define,
       association: :addresses,
+      administrative_level: 1,
+      administrative_level_identifier: true,
       description: "The [ISO 3166-2](https://en.wikipedia.org/wiki/ISO_3166-2) region code of the address"
     ),
     Field.new(
@@ -67,6 +69,8 @@ module FieldDefinitions
       column: BeneficiaryAddress.arel_table[:administrative_division_level_2_code],
       schema: FilterSchema::StringType.define,
       association: :addresses,
+      administrative_level: 2,
+      administrative_level_identifier: true,
       description: "The second-level administrative subdivision code of the address (e.g. district code)"
     ),
     Field.new(
@@ -75,6 +79,7 @@ module FieldDefinitions
       column: BeneficiaryAddress.arel_table[:administrative_division_level_2_name],
       schema: FilterSchema::StringType.define,
       association: :addresses,
+      administrative_level: 2,
       description: "The second-level administrative subdivision name of the address (e.g. district name)"
     ),
     Field.new(
@@ -83,6 +88,8 @@ module FieldDefinitions
       column: BeneficiaryAddress.arel_table[:administrative_division_level_3_code],
       schema: FilterSchema::StringType.define,
       association: :addresses,
+      administrative_level: 3,
+      administrative_level_identifier: true,
       description: "The third-level administrative subdivision code of the address (e.g. township code)"
     ),
     Field.new(
@@ -91,6 +98,7 @@ module FieldDefinitions
       column: BeneficiaryAddress.arel_table[:administrative_division_level_3_name],
       schema: FilterSchema::StringType.define,
       association: :addresses,
+      administrative_level: 3,
       description: "The third-level administrative subdivision name of the address (e.g. township name)"
     ),
     Field.new(
@@ -99,6 +107,8 @@ module FieldDefinitions
       column: BeneficiaryAddress.arel_table[:administrative_division_level_4_code],
       schema: FilterSchema::StringType.define,
       association: :addresses,
+      administrative_level: 4,
+      administrative_level_identifier: true,
       description: "The fourth-level administrative subdivision code of the address (e.g. town code)"
     ),
     Field.new(
@@ -107,6 +117,7 @@ module FieldDefinitions
       column: BeneficiaryAddress.arel_table[:administrative_division_level_4_name],
       schema: FilterSchema::StringType.define,
       association: :addresses,
+      administrative_level: 4,
       description: "The fourth-level administrative subdivision name of the address (e.g. town name)"
     ),
     Field.new(
@@ -115,6 +126,8 @@ module FieldDefinitions
       column: BeneficiaryAddress.arel_table[:administrative_division_level_5_code],
       schema: FilterSchema::StringType.define,
       association: :addresses,
+      administrative_level: 5,
+      administrative_level_identifier: true,
       description: "The fifth-level administrative subdivision code of the address (e.g. village code)"
     ),
     Field.new(
@@ -123,6 +136,7 @@ module FieldDefinitions
       column: BeneficiaryAddress.arel_table[:administrative_division_level_5_name],
       schema: FilterSchema::StringType.define,
       association: :addresses,
+      administrative_level: 5,
       description: "The fifth-level administrative subdivision name of the address (e.g. village name)"
     )
   ])

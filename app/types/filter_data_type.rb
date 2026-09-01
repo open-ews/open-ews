@@ -1,29 +1,47 @@
 class FilterDataType < ActiveRecord::Type::Value
   FilterData = Data.define(:fields)
-  FilterData::Field = Data.define(:name, :operator, :value, :field_definition)
+  FilterData::Field = Data.define(:type, :name, :operator, :value, :field_definition, :attributes, :conditions)
 
-  attr_reader :field_definitions
+  attr_reader :filter
 
-  def initialize(field_definitions:, **)
-    @field_definitions = field_definitions
+  def initialize(filter:, **)
+    @filter = filter
+
     super(**)
   end
 
   def cast(value)
     return value if value.is_a?(FilterData)
 
-    fields = (value || {}).each_with_object({}) do |(key, filter_options), result|
-      operator, value = filter_options.first
-      field_definition = field_definitions.find_by!(path: key)
+    fields = filter.new(input_params: value).output
+    FilterData.new(fields: fields.map { parse_field(it) })
+  end
 
-      result[field_definition.name] = FilterData::Field.new(
-        field_definition:,
-        name: field_definition.name,
-        operator:,
-        value:
-      )
+  private
+
+  def parse_field(field)
+    case field
+    when FilterField
+      type = "field".inquiry
+      field_definition = field.field_definition
+      name = field_definition.name
+      attributes = field_definition.attributes
+      value = field.value
+      conditions = []
+    when FilterGroup
+      type = "group".inquiry
+      attributes = {}
+      conditions = field.conditions.map { parse_field(it) }
     end
 
-    FilterData.new(fields:)
+    FilterData::Field.new(
+      type:,
+      name:,
+      field_definition:,
+      operator: field.operator,
+      value:,
+      attributes:,
+      conditions:
+    )
   end
 end

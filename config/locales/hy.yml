@@ -14,6 +14,8 @@ ne:
     is_null: "NULL է"
     in: "Մեջ է"
     not_in: "Մեջ չէ"
+    and: "և"
+    or: "կամ"
   past_participles:
     registered: "Գրանցված"
     delivered: "Առաքված"

@@ -14,6 +14,8 @@ ne:
     is_null: "NULL हो"
     in: "भित्र"
     not_in: "भित्र छैन"
+    and: "र"
+    or: "वा"
   past_participles:
     registered: "दर्ता"
     delivered: "पठाइयो"

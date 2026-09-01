@@ -8,3 +8,6 @@ km:
       gender:
         M: "ប្រុស"
         F: "ស្រី"
+      disability_status:
+       disabled: "ពិការ"
+       none: "គ្មាន"

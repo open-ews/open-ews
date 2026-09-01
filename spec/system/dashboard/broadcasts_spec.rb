@@ -231,6 +231,35 @@ RSpec.describe "Broadcasts" do
     end
   end
 
+  it "show a broadcast" do
+    user = create(:user)
+    broadcast = create(
+      :broadcast,
+      account: user.account,
+      beneficiary_filter: {
+        iso_country_code: { eq: "KH" },
+        "$or": {
+          "0": { gender: { eq: "F" }, disability_status: { eq: "disabled" } },
+          "1": { date_of_birth: { lt: "2020-01-01" } }
+        },
+        "$and": {
+          "0": {
+            "$or": {
+              "0": { "address.iso_region_code": { in: [ "KH-12" ] } },
+              "1": {
+                "address.iso_region_code": { in: [ "KH-1" ] },
+                "address.administrative_division_level_2_code": { in: [ "0102" ] }
+              }
+            }
+          }
+        }
+      }
+    )
+
+    account_sign_in(user)
+    visit dashboard_broadcast_path(broadcast)
+  end
+
   it "delete a broadcast" do
     user = create(:user)
     broadcast = create(:broadcast, account: user.account)
