@@ -13,7 +13,7 @@ class FilterScopeQuery
   private
 
   def joins_with
-    filter_fields.flat_map(&:associations).compact_blank.uniq
+    filter_fields.map(&:association).compact_blank.uniq
   end
 
   def conditions
