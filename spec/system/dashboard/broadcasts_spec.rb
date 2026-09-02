@@ -89,6 +89,7 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_content("Broadcast was successfully created.")
     expect(page).to have_content("Text message")
     expect(page).to have_content("Test message")
+    expect(page).to have_selector(".notification-stats")
   end
 
   it "create an audio broadcast", :js do
@@ -103,6 +104,7 @@ RSpec.describe "Broadcasts" do
 
     expect(page).to have_content("Broadcast was successfully created.")
     expect(page).to have_content("Audio")
+    expect(page).to have_no_selector(".notification-stats")
   end
 
   it "create a broadcast from an unsupported country", :js do
