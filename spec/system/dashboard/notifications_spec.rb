@@ -36,7 +36,7 @@ RSpec.describe "Notifications" do
     expect(page).not_to have_content_tag_for(failed_notification)
   end
 
-  it "does hides the notifications link if the broadcast has no deliverable channels" do
+  it "hides the notifications link if the broadcast has no deliverable channels" do
     user = create(:user)
     broadcast = create(:broadcast, :completed, :audio, account: user.account)
 
