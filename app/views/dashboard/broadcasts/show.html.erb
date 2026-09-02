@@ -7,11 +7,7 @@
       form_class: "d-inline",
       form: {
         data: {
-          turbo_confirm: action(
-            :start_broadcast,
-            count: @broadcast.approximate_beneficiaries,
-            default: "Are you sure?"
-          )
+          turbo_confirm: start_broadcast_confirmation(@broadcast)
         }
       }
     ) do %>

@@ -74,6 +74,20 @@ module ApplicationHelper
     )
   end
 
+  def start_broadcast_confirmation(broadcast)
+    default = "Are you sure?"
+
+    if broadcast.channel_capabilities.any? { it.deliverable? }
+      action(
+        :start_broadcast_with_count,
+        count: @broadcast.approximate_beneficiaries,
+        default:
+      )
+    else
+      action(:start_broadcast, default:)
+    end
+  end
+
   def sidebar_nav(text, path, icon_class:, link_options: {})
     is_active = request.path == path || (path != dashboard_root_path && request.path.start_with?(path))
     content_tag(:li, class: "nav-item #{"active" if is_active}") do
