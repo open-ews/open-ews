@@ -119,6 +119,12 @@ RSpec.resource "Broadcasts"  do
       end
     end
 
+    FieldDefinitions::TargetAreaFields.each do |field|
+      with_options scope: [ :data, :attributes, :target_areas, :geocode ] do
+        parameter(field.path.to_sym, field.description, required: false, method: :_disabled)
+      end
+    end
+
     with_options scope: [ :data, :relationships, :beneficiary_groups ] do
       parameter(
         :"data.*.type", "Must be `beneficiary_group`",
@@ -232,7 +238,11 @@ RSpec.resource "Broadcasts"  do
 
     example "Create and start a text message broadcast" do
       account = create(:account, :configured_for_broadcasts)
-      create(:beneficiary_address, beneficiary: create(:beneficiary, gender: "M", account:), iso_region_code: "KH-1")
+      create(
+        :beneficiary_address,
+        beneficiary: create(:beneficiary, gender: "M", account:),
+        iso_region_code: "KH-1"
+      )
 
       set_authorization_header_for(account)
       perform_enqueued_jobs do
@@ -244,8 +254,12 @@ RSpec.resource "Broadcasts"  do
               message: "Test message",
               status: :running,
               beneficiary_filter: {
-                gender: { eq: "M" },
-                "address.iso_region_code" => { in: [ "KH-1", "KH-2" ] }
+                gender: { eq: "M" }
+              },
+              target_areas: {
+                geocode: {
+                  iso_region_code: [ "KH-1", "KH-2" ]
+                }
               }
             }
           }
@@ -259,8 +273,12 @@ RSpec.resource "Broadcasts"  do
         "status" => "queued",
         "message" => "Test message",
         "beneficiary_filter" => {
-          "gender" => { "eq" => "M" },
-          "address.iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }
+          "gender" => { "eq" => "M" }
+        },
+        "target_areas" => {
+          "geocode" => {
+            "iso_region_code" => [ "KH-1", "KH-2" ]
+          }
         }
       )
     end

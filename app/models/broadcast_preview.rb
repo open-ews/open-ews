@@ -41,7 +41,7 @@ class BroadcastPreview
 
   def target_area_filter_fields
     Hash(broadcast.target_areas["geocode"]).map do |field_name, values|
-      field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name: field_name)
+      field_definition = FieldDefinitions::TargetAreaFields.find_by!(name: field_name)
       FilterField.new(field_definition:, operator: :in, value: values)
     end
   end
