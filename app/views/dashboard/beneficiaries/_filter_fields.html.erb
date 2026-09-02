@@ -5,8 +5,6 @@
 
 <% filter_form.object.class.attributes.each do |attribute_name, attribute_type| %>
   <% field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name: attribute_name) %>
-
-  <% next if whitelist_behavior.omit? && whitelist.exclude?(field_definition) %>
   <% next if field_definition == tree_address_field_definition && display_as_tree %>
 
   <%= render(
@@ -14,8 +12,8 @@
     filter_form:,
     field_name: attribute_name,
     field_definition:,
-    visibility: whitelist_behavior.hide? && whitelist.exclude?(field_definition) ? "hidden".inquiry : "visible".inquiry)
-  %>
+    visibility: ("hidden".inquiry if whitelist_behavior.hide? && whitelist.exclude?(field_definition))
+  ) %>
 <% end %>
 
 <% if display_as_tree %>
