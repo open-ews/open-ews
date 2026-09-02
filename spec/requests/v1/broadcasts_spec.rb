@@ -139,6 +139,14 @@ RSpec.resource "Broadcasts"  do
     end
 
     example "Create and start a voice call broadcast" do
+      explanation <<~HEREDOC
+        For broadcasts with *deliverable notifications*, such as voice calls or text messages,
+        `beneficiary_filter` defines which *beneficiaries* are eligible to receive the broadcast,
+        while `target_areas` further filters those beneficiaries based on their geographic location.
+        Multiple geographic codes in `target_areas` are combined using *OR* logic,
+        so a beneficiary must match the `beneficiary_filter` and be located in *any* of the specified `target_areas`.
+      HEREDOC
+
       account = create(:account, :configured_for_broadcasts)
       oauth_application = create(:oauth_application, owner: account)
       webhook_endpoint = create(:webhook_endpoint, oauth_application:, subscriptions: [ "broadcast.created", "broadcast.updated" ])
@@ -201,41 +209,6 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Supports address beneficiary filters", document: false do
-      account = create(:account, :configured_for_broadcasts)
-      beneficiary = create(:beneficiary, account:)
-      create(:beneficiary, account:)
-      create(:beneficiary_address, beneficiary:, iso_region_code: "KH-1")
-
-      set_authorization_header_for(account)
-      perform_enqueued_jobs do
-        do_request(
-          data: {
-            type: :broadcast,
-            attributes: {
-              channels: [ "text_message" ],
-              message: "Test message",
-              status: :running,
-              beneficiary_filter: {
-                "address.iso_region_code" => { eq: "KH-1" }
-              }
-            }
-          }
-        )
-      end
-
-      expect(response_status).to eq(201)
-      expect(response_body).to match_jsonapi_resource_schema("broadcast")
-      expect(json_response.dig("data", "attributes")).to include(
-        "status" => "queued",
-        "beneficiary_filter" => {
-          "address.iso_region_code" => { "eq" => "KH-1" }
-        }
-      )
-      broadcast = Broadcast.find(json_response.dig("data", "id"))
-      expect(broadcast.beneficiaries).to contain_exactly(beneficiary)
-    end
-
     example "Create and start a text message broadcast" do
       account = create(:account, :configured_for_broadcasts)
       create(
@@ -284,6 +257,12 @@ RSpec.resource "Broadcasts"  do
     end
 
     example "Create and start an audio broadcast" do
+      explanation <<~HEREDOC
+        For broadcasts *without deliverable notifications*, such as audio broadcasts, `beneficiary_filter` cannot be specified.
+        Instead, `target_areas` defines the geographic areas where the broadcast is targeted and does not filter the beneficiaries.
+        Multiple target areas can be specified, and geographic codes are combined using *OR* logic.
+      HEREDOC
+
       account = create(:account)
       set_authorization_header_for(account)
       stub_request(:get, "https://www.example.com/test.mp3").to_return(status: 200, body: file_fixture("test.mp3"))
@@ -295,7 +274,13 @@ RSpec.resource "Broadcasts"  do
             attributes: {
               channels: [ "audio" ],
               audio_url: "https://www.example.com/test.mp3",
-              status: :running
+              status: :running,
+              target_areas: {
+                geocode: {
+                  iso_region_code: [ "KH-1" ],
+                  administrative_division_level_2_code: [ "1201" ]
+                }
+              }
             }
           }
         )
@@ -305,7 +290,13 @@ RSpec.resource "Broadcasts"  do
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
       expect(json_response.dig("data", "attributes")).to include(
         "channels" => [ "audio" ],
-        "status" => "queued"
+        "status" => "queued",
+        "target_areas" => {
+          "geocode" => {
+            "iso_region_code" => [ "KH-1" ],
+            "administrative_division_level_2_code" => [ "1201" ]
+          }
+        }
       )
     end
 
@@ -370,6 +361,41 @@ RSpec.resource "Broadcasts"  do
 
       expect(response_status).to eq(201)
       expect(response_body).to match_jsonapi_resource_schema("broadcast")
+    end
+
+    example "Supports beneficiary address filters", document: false do
+      account = create(:account, :configured_for_broadcasts)
+      beneficiary = create(:beneficiary, account:)
+      create(:beneficiary, account:)
+      create(:beneficiary_address, beneficiary:, iso_region_code: "KH-1")
+
+      set_authorization_header_for(account)
+      perform_enqueued_jobs do
+        do_request(
+          data: {
+            type: :broadcast,
+            attributes: {
+              channels: [ "text_message" ],
+              message: "Test message",
+              status: :running,
+              beneficiary_filter: {
+                "address.iso_region_code" => { eq: "KH-1" }
+              }
+            }
+          }
+        )
+      end
+
+      expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(json_response.dig("data", "attributes")).to include(
+        "status" => "queued",
+        "beneficiary_filter" => {
+          "address.iso_region_code" => { "eq" => "KH-1" }
+        }
+      )
+      broadcast = Broadcast.find(json_response.dig("data", "id"))
+      expect(broadcast.beneficiaries).to contain_exactly(beneficiary)
     end
 
     example "Fail to create a broadcast", document: false do
