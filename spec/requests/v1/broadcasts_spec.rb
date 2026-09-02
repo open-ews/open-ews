@@ -258,9 +258,10 @@ RSpec.resource "Broadcasts"  do
 
     example "Create and start an audio broadcast" do
       explanation <<~HEREDOC
-        For broadcasts *without deliverable notifications*, such as audio broadcasts, `beneficiary_filter` cannot be specified.
-        Instead, `target_areas` defines the geographic areas where the broadcast is targeted and does not filter the beneficiaries.
-        Multiple target areas can be specified, and geographic codes are combined using *OR* logic.
+        For broadcasts *without deliverable notifications*,
+        such as audio broadcasts, `beneficiary_filter` cannot be specified.
+        *Multiple target areas can be specified* to define the geographic areas where the broadcast should be delivered.
+        In this case, `target_areas` does not filter the beneficiaries; it only determines the areas targeted by the broadcast.
       HEREDOC
 
       account = create(:account)
