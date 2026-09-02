@@ -12,6 +12,7 @@ module V1
           optional(:audio_url).filled(:string)
           optional(:message).filled(:string)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
+          optional(:target_areas).value(:hash).schema(BroadcastRequestSchema::TargetAreasSchema)
           optional(:status).filled(included_in?: VALID_STATES)
           optional(:metadata).value(:hash)
         end
@@ -34,9 +35,8 @@ module V1
 
     attribute_rule(:beneficiary_filter) do
       next unless key?
-      next if broadcast_state_machine.updatable?
-
-      key.failure("cannot be updated after broadcast started")
+      next key.failure("cannot be updated after broadcast started") unless broadcast_state_machine.updatable?
+      next key.failure("is not allowed") if resource.channel_capabilities.none?(&:deliverable?)
     end
 
     attribute_rule(:audio_url) do
@@ -67,9 +67,8 @@ module V1
     relationship_rule(:beneficiary_groups).validate(:beneficiary_groups)
     relationship_rule(:beneficiary_groups) do
       next unless key?
-      next if broadcast_state_machine.may_transition_to?(:running)
-
-      key.failure("cannot be updated after broadcast started")
+      next key.failure("cannot be updated after broadcast started") unless broadcast_state_machine.may_transition_to?(:running)
+      next key.failure("is not allowed") if resource.channel_capabilities.none?(&:deliverable?)
     end
 
     def output

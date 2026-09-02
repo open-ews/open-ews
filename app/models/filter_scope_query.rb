@@ -1,9 +1,10 @@
 class FilterScopeQuery
-  attr_reader :scope, :filter_fields
+  attr_reader :scope, :filter_fields, :conjunction
 
-  def initialize(scope, filter_fields)
+  def initialize(scope, filter_fields, **options)
     @scope = scope
     @filter_fields = filter_fields
+    @conjunction = options.fetch(:conjunction, :and)
   end
 
   def apply
@@ -17,6 +18,6 @@ class FilterScopeQuery
   end
 
   def conditions
-    filter_fields.map(&:to_query).reduce(:and)
+    filter_fields.map(&:to_query).reduce(conjunction)
   end
 end

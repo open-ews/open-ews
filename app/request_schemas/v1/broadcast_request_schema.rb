@@ -1,5 +1,15 @@
 module V1
   class BroadcastRequestSchema < JSONAPIRequestSchema
+    TargetAreasSchema = Dry::Schema.Params do
+      optional(:geocode).value(:hash).schema do
+        optional(:iso_region_code).value(:array)
+        optional(:administrative_division_level_2_code).value(:array)
+        optional(:administrative_division_level_3_code).value(:array)
+        optional(:administrative_division_level_4_code).value(:array)
+        optional(:administrative_division_level_5_code).value(:array)
+      end
+    end
+
     option :broadcast_state_machine, default: -> { BroadcastStateMachine.new }
 
     params do
@@ -13,6 +23,7 @@ module V1
           optional(:audio_url).maybe(:str?)
           optional(:message).maybe(:str?)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
+          optional(:target_areas).value(:hash).schema(TargetAreasSchema)
           optional(:status).filled(:str?, eql?: "running")
           optional(:metadata).value(:hash)
         end
@@ -54,9 +65,16 @@ module V1
 
     attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
     attribute_rule(:beneficiary_filter) do |relationships:, context:, **|
-      next if key? || relationships.key?(:beneficiary_groups) || Array(context[:channel_capabilities]).none? { it.deliverable? }
+      next if context[:channel_capabilities].blank?
 
-      key.failure("is missing")
+      if context[:channel_capabilities].any?(&:deliverable?)
+        next if key?
+        next if relationships.key?(:beneficiary_groups)
+
+        key.failure("is missing")
+      else
+        key.failure("is not allowed") if key?
+      end
     end
 
     attribute_rule(:audio_url) do |context:, **|
@@ -73,9 +91,15 @@ module V1
 
     relationship_rule(:beneficiary_groups).validate(:beneficiary_groups)
 
+    relationship_rule(:beneficiary_groups) do |context:, **|
+      next if context[:channel_capabilities].blank?
+
+      key.failure("is not allowed") if key? && context[:channel_capabilities].none?(&:deliverable?)
+    end
+
     def output
       output_data = super
-      result = output_data.slice(:message, :audio_url, :beneficiary_filter, :metadata)
+      result = output_data.slice(:message, :audio_url, :beneficiary_filter, :metadata, :target_areas)
 
       result[:channel] = context[:channels].first
       result[:beneficiary_group_ids] = Array(output_data[:beneficiary_groups])

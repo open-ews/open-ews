@@ -5,10 +5,12 @@ RSpec.describe BroadcastPreview do
     account = create(:account)
     beneficiary = create(:beneficiary, account:, gender: "F")
     create(:beneficiary, :disabled, account:, gender: "F")
+    create(:beneficiary, account:, gender: "F")
     beneficiary_in_group = create(:beneficiary, account:, gender: "M")
     beneficiary_group = create(:beneficiary_group, account:)
     create(:beneficiary, account:, gender: "M")
     create(:beneficiary_group_membership, beneficiary_group:, beneficiary: beneficiary_in_group)
+    create(:beneficiary_address, beneficiary:, iso_region_code: "KH-12")
 
     broadcast = create(
       :broadcast,
@@ -17,7 +19,13 @@ RSpec.describe BroadcastPreview do
       beneficiary_filter: {
         gender: { eq: "F" }
       },
-      beneficiary_groups: [ beneficiary_group ]
+      beneficiary_groups: [ beneficiary_group ],
+      target_areas: {
+        geocode: {
+          iso_region_code: [ "KH-12" ],
+          administrative_division_level_2_code: [ "0102" ]
+        }
+      }
     )
 
     preview = BroadcastPreview.new(broadcast)

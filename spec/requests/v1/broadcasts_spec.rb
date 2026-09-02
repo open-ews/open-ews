@@ -154,7 +154,10 @@ RSpec.resource "Broadcasts"  do
                 gender: { eq: "M" }
               },
               target_areas: {
-                iso_region_code: { in: [ "KH-1", "KH-2" ] }
+                geocode: {
+                  iso_region_code: [ "KH-1", "KH-2" ],
+                  administrative_division_level_2_code: [ "1201", "1202" ]
+                }
               }
             }
           }
@@ -171,9 +174,13 @@ RSpec.resource "Broadcasts"  do
           "gender" => { "eq" => "M" }
         },
         "target_areas" => {
-          "iso_region_code" => { "in" => [ "KH-1", "KH-2" ] }
+          "geocode" => {
+            "iso_region_code" => [ "KH-1", "KH-2" ],
+            "administrative_division_level_2_code" => [ "1201", "1202" ]
+          }
         }
       )
+
       expect(webhook_endpoint.webhook_request_logs).to contain_exactly(
         have_attributes(
           event: have_attributes(
@@ -186,6 +193,41 @@ RSpec.resource "Broadcasts"  do
           )
         )
       )
+    end
+
+    example "Supports address beneficiary filters", document: false do
+      account = create(:account, :configured_for_broadcasts)
+      beneficiary = create(:beneficiary, account:)
+      create(:beneficiary, account:)
+      create(:beneficiary_address, beneficiary:, iso_region_code: "KH-1")
+
+      set_authorization_header_for(account)
+      perform_enqueued_jobs do
+        do_request(
+          data: {
+            type: :broadcast,
+            attributes: {
+              channels: [ "text_message" ],
+              message: "Test message",
+              status: :running,
+              beneficiary_filter: {
+                "address.iso_region_code" => { eq: "KH-1" }
+              }
+            }
+          }
+        )
+      end
+
+      expect(response_status).to eq(201)
+      expect(response_body).to match_jsonapi_resource_schema("broadcast")
+      expect(json_response.dig("data", "attributes")).to include(
+        "status" => "queued",
+        "beneficiary_filter" => {
+          "address.iso_region_code" => { "eq" => "KH-1" }
+        }
+      )
+      broadcast = Broadcast.find(json_response.dig("data", "id"))
+      expect(broadcast.beneficiaries).to contain_exactly(beneficiary)
     end
 
     example "Create and start a text message broadcast" do
