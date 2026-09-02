@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Notifications" do
-  it "can list all notifications for a broadcast", :js do
+  it "lists all notifications for a broadcast", :js do
     user = create(:user)
     broadcast = create(:broadcast, :completed, account: user.account)
     pending_notification = create(:notification, :pending, broadcast:)
@@ -36,7 +36,17 @@ RSpec.describe "Notifications" do
     expect(page).not_to have_content_tag_for(failed_notification)
   end
 
-  it "can show a notification" do
+  it "does hides the notifications link if the broadcast has no deliverable channels" do
+    user = create(:user)
+    broadcast = create(:broadcast, :completed, :audio, account: user.account)
+
+    account_sign_in(user)
+    visit(dashboard_broadcast_path(broadcast))
+
+    expect(page).not_to have_link("Notifications")
+  end
+
+  it "show a notification" do
     user = create(:user)
     broadcast = create(:broadcast, account: user.account)
     notification = create(:notification, broadcast:)

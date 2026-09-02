@@ -34,7 +34,7 @@
     <%= render "shared/resource_related_links" do %>
       <%= render "shared/destroy_resource_page_action", path: dashboard_broadcast_path(@broadcast) %>
     <% end %>
-  <% else %>
+  <% elsif @broadcast.channel_capabilities.any? { it.deliverable? } %>
     <%= render "shared/resource_related_links" do %>
       <%= link_to(dashboard_broadcast_notifications_path(@broadcast), class: "dropdown-item") do %>
         <i class="icon ti ti-message"></i>
