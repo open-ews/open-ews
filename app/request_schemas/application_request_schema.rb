@@ -31,23 +31,6 @@ class ApplicationRequestSchema < Dry::Validation::Contract
     key.failure(text: "is invalid")
   end
 
-  register_macro(:beneficiary_filter) do |macro:|
-    p context[:channel_capabilities]
-    # binding.pry
-    # options = args.first
-    # channel_capabilities = options.fetch(:channel_capabilities)
-    next if channel_capabilities.blank?
-
-    if channel_capabilities.any?(&:deliverable?)
-      next if key?
-      next if relationships.key?(:beneficiary_groups)
-
-      key.failure("is missing")
-    else
-      key.failure("is not allowed") if key?
-    end
-  end
-
   # NOTE: composable contracts
   #
   # params do
