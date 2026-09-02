@@ -7,11 +7,7 @@
       form_class: "d-inline",
       form: {
         data: {
-          turbo_confirm: action(
-            :start_broadcast,
-            count: @broadcast.approximate_beneficiaries,
-            default: "Are you sure?"
-          )
+          turbo_confirm: start_broadcast_confirmation(@broadcast)
         }
       }
     ) do %>
@@ -67,38 +63,40 @@
           <div class="text-danger"><%= error_message_for(@broadcast.error_code) %></div>
         <% end %>
 
-        <div class="notification-stats mt-3">
-          <div class="progress progress-separated mb-3">
-            <% @broadcast.notification_stats_percentage.each do |status, percentage| %>
-              <% count = @broadcast.notification_stats[status] %>
-              <div
-                class="progress-bar bg-<%= notification_status_color(status) %>"
-                role="progressbar"
-                data-bs-toggle="popover"
-                data-bs-content="<%= count_of_total(count, total: pluralize_model(@broadcast.total_notifications_count, Notification.model_name)) %>"
-                data-bs-trigger="hover"
-                style="width: <%= percentage %>%">
-              </div>
-            <% end %>
-          </div>
+        <% if @broadcast.channel_capabilities.any? { it.deliverable? } %>
+          <div class="notification-stats mt-3">
+            <div class="progress progress-separated mb-3">
+              <% @broadcast.notification_stats_percentage.each do |status, percentage| %>
+                <% count = @broadcast.notification_stats[status] %>
+                <div
+                  class="progress-bar bg-<%= notification_status_color(status) %>"
+                  role="progressbar"
+                  data-bs-toggle="popover"
+                  data-bs-content="<%= count_of_total(count, total: pluralize_model(@broadcast.total_notifications_count, Notification.model_name)) %>"
+                  data-bs-trigger="hover"
+                  style="width: <%= percentage %>%">
+                </div>
+              <% end %>
+            </div>
 
-          <div class="row">
-            <% @broadcast.notification_stats_percentage.each do |status, percentage| %>
-              <% count = @broadcast.notification_stats[status] %>
-              <div class="col-auto d-flex align-items-center pe-2"
-                data-bs-toggle="popover"
-                data-bs-content="<%= count_of_total(count, total: pluralize_model(@broadcast.total_notifications_count, Notification.model_name)) %>"
-                data-bs-trigger="hover"
-                data-bs-placement="top"
-                data-bs-trigger="hover"
-              >
-                <span class="legend me-2 bg-<%= notification_status_color(status) %>"></span>
-                <span><%= t("statuses.#{status}", default: status.to_s.humanize) %></span>
-                <span class="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary"><%= number_to_percentage(percentage, precision: 0, strip_insignificant_zeros: true) %></span>
-              </div>
-            <% end %>
+            <div class="row">
+              <% @broadcast.notification_stats_percentage.each do |status, percentage| %>
+                <% count = @broadcast.notification_stats[status] %>
+                <div class="col-auto d-flex align-items-center pe-2"
+                  data-bs-toggle="popover"
+                  data-bs-content="<%= count_of_total(count, total: pluralize_model(@broadcast.total_notifications_count, Notification.model_name)) %>"
+                  data-bs-trigger="hover"
+                  data-bs-placement="top"
+                  data-bs-trigger="hover"
+                >
+                  <span class="legend me-2 bg-<%= notification_status_color(status) %>"></span>
+                  <span><%= t("statuses.#{status}", default: status.to_s.humanize) %></span>
+                  <span class="d-none d-md-inline d-lg-none d-xxl-inline ms-2 text-secondary"><%= number_to_percentage(percentage, precision: 0, strip_insignificant_zeros: true) %></span>
+                </div>
+              <% end %>
+            </div>
           </div>
-        </div>
+        <% end %>
       <% end %>
 
       <% if @broadcast.channel_capabilities.any? { it.audio? } %>
@@ -148,7 +146,7 @@
     ) %>
 
     <% filter.data.fields.values.each do |field| %>
-      <% next if filter.address_data_field.present? && filter.address_fields.values.include?(field) %>
+      <% next if filter.address_data_field.present? && filter.address_data_field == field %>
       <div class="row mb-3" id="beneficiary_filter_<%= field.name %>">
         <div class="col">
           <input class="field-name form-control" type="text" value="<%= field.field_definition.human_name(namespace: current_account.iso_country_code) %>" readonly />
