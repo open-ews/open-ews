@@ -77,7 +77,7 @@ module ApplicationHelper
   def start_broadcast_confirmation(broadcast)
     default = "Are you sure?"
 
-    if broadcast.channel_capabilities.any? { it.deliverable? }
+    if broadcast.channel_capabilities.any?(&:deliverable?)
       action(
         :start_broadcast_with_count,
         count: @broadcast.approximate_beneficiaries,

@@ -58,7 +58,7 @@ module V1
     attribute_rule(:status) do |context:, **|
       next unless key?
 
-      if Array(context[:channel_capabilities]).any? { it.deliverable? } && !account.configured_for_broadcasts?
+      if Array(context[:channel_capabilities]).any?(&:deliverable?) && !account.configured_for_broadcasts?
         base.failure("Account not configured")
       end
     end
@@ -78,13 +78,13 @@ module V1
     end
 
     attribute_rule(:audio_url) do |context:, **|
-      next key.failure("is missing") if value.blank? && Array(context[:channel_capabilities]).any? { it.audio? }
-      next key.failure("is not allowed") if value.present? && Array(context[:channel_capabilities]).none? { it.audio? }
+      next key.failure("is missing") if value.blank? && Array(context[:channel_capabilities]).any?(&:audio?)
+      next key.failure("is not allowed") if value.present? && Array(context[:channel_capabilities]).none?(&:audio?)
     end
 
     attribute_rule(:message) do |context:, **|
-      next key.failure("is missing") if value.blank? && Array(context[:channel_capabilities]).any? { it.text? }
-      next key.failure("is not allowed") if value.present? && Array(context[:channel_capabilities]).none? { it.text? }
+      next key.failure("is missing") if value.blank? && Array(context[:channel_capabilities]).any?(&:text?)
+      next key.failure("is not allowed") if value.present? && Array(context[:channel_capabilities]).none?(&:text?)
     end
 
     attribute_rule(:audio_url).validate(:url_format)
