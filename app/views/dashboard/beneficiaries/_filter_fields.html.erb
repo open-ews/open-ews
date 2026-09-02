@@ -1,16 +1,23 @@
-<% whitelist = local_assigns[:whitelist] %>
+<% whitelist_behavior = local_assigns.fetch(:whitelist_behavior, :none).to_s.inquiry %>
+<% whitelist = Array(local_assigns[:whitelist]) %>
+<% tree_address_field_definition = CountryAddressData.address_field(current_account.iso_country_code) %>
+<% display_as_tree = tree_address_field_definition.present? && (whitelist_behavior.none? || whitelist.include?(tree_address_field_definition)) %>
 
 <% filter_form.object.class.attributes.each do |attribute_name, attribute_type| %>
   <% field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name: attribute_name) %>
-  <% next if whitelist.present? && whitelist.exclude?(field_definition) %>
-  <% next if CountryAddressData.supported?(current_account.iso_country_code) && field_definition.prefix&.address? %>
+  <% next if field_definition == tree_address_field_definition && display_as_tree %>
 
-  <%= render "shared/filter_form/field", filter_form:, field_name: attribute_name, field_definition: %>
+  <%= render(
+    "shared/filter_form/field",
+    filter_form:,
+    field_name: attribute_name,
+    field_definition:,
+    visibility: ("hidden".inquiry if whitelist_behavior.hide? && whitelist.exclude?(field_definition))
+  ) %>
 <% end %>
 
-<% address_field_definition = CountryAddressData.address_field(current_account.iso_country_code) %>
-<% if address_field_definition.present? && (whitelist.blank? || whitelist.include?(address_field_definition)) %>
-  <%= filter_form.simple_fields_for(address_field_definition.name, filter_form.object.attributes[address_field_definition.name.to_s]) do |address_field| %>
+<% if display_as_tree %>
+  <%= filter_form.simple_fields_for(tree_address_field_definition.name, filter_form.object.attributes[tree_address_field_definition.name.to_s]) do |address_field| %>
     <% element_id = address_field.object_name.parameterize.underscore %>
     <div class="row filter-field"
           id="<%= element_id %>"

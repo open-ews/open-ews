@@ -53,7 +53,8 @@
           "dashboard/beneficiaries/filter_fields",
           address_field_label: ApplicationRecord.human_attribute_name(:target_areas),
           filter_form:,
-          whitelist: @broadcast.beneficiary_filter_fields
+          whitelist: @broadcast.beneficiary_filter_fields,
+          whitelist_behavior: :hide
         ) %>
       <% end %>
     </div>
