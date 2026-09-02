@@ -72,9 +72,9 @@ module V1
     end
 
     def output
-      result = super
-      result.delete(:status)
-      beneficiary_groups = result.delete(:beneficiary_groups)
+      output_data = super
+      result = output_data.slice(:audio_url, :message, :beneficiary_filter, :target_areas, :metadata)
+      beneficiary_groups = output_data[:beneficiary_groups]
       result[:desired_status] = context.fetch(:desired_status) if context.key?(:desired_status)
       result[:beneficiary_group_ids] = beneficiary_groups if beneficiary_groups.present?
       result

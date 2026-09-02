@@ -2,11 +2,11 @@ module V1
   class BroadcastRequestSchema < JSONAPIRequestSchema
     TargetAreasSchema = Dry::Schema.Params do
       optional(:geocode).value(:hash).schema do
-        optional(:iso_region_code).value(:array)
-        optional(:administrative_division_level_2_code).value(:array)
-        optional(:administrative_division_level_3_code).value(:array)
-        optional(:administrative_division_level_4_code).value(:array)
-        optional(:administrative_division_level_5_code).value(:array)
+        optional(:iso_region_code).value(Types::UniqueArray)
+        optional(:administrative_division_level_2_code).value(Types::UniqueArray)
+        optional(:administrative_division_level_3_code).value(Types::UniqueArray)
+        optional(:administrative_division_level_4_code).value(Types::UniqueArray)
+        optional(:administrative_division_level_5_code).value(Types::UniqueArray)
       end
     end
 

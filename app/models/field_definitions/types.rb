@@ -9,5 +9,7 @@ module FieldDefinitions
     UpcaseString = String.constructor do |string|
       string.upcase if string.present?
     end
+
+    UniqueArray = Types::Array.of(Types::String).constructor(&:uniq)
   end
 end

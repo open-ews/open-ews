@@ -352,6 +352,31 @@ module V1
       expect(schema.output).to include(
         channel: "text_message"
       )
+
+      schema = validate_schema(
+        input_params: {
+          data: {
+            attributes: {
+              channels: [ "text_message" ],
+              target_areas: {
+                geocode: {
+                  iso_region_code: [ "KH-1", "KH-1" ],
+                  administrative_division_level_2_code: [ "1201", "1201", "1202" ]
+                }
+              }
+            },
+          }
+        }
+      )
+
+      expect(schema.output).to include(
+        target_areas: {
+          geocode: {
+            iso_region_code: [ "KH-1" ],
+            administrative_division_level_2_code: [ "1201", "1202" ]
+          }
+        }
+      )
     end
 
     def validate_schema(input_params:, options: {})
