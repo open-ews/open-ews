@@ -231,6 +231,61 @@ RSpec.describe "Broadcasts" do
     end
   end
 
+  it "update a broadcast created via the API", :js do
+    account = create(
+      :account,
+      iso_country_code: "KH",
+      dashboard_broadcast_beneficiary_filter_whitelist: [
+        "administrative_division_level_3_code",
+        "gender"
+      ]
+    )
+    broadcast = create(
+      :broadcast,
+      :pending,
+      account:,
+      created_via: :api,
+      beneficiary_filter: {
+        date_of_birth: { between: [ "2000-01-01", "2010-01-01" ] },
+        "address.administrative_division_level_2_name": { eq: "Chamkar Mon" },
+        "address.administrative_division_level_3_code": { in: [ "120101" ] }
+      }
+    )
+    user = create(:user, account:)
+
+    account_sign_in(user)
+    visit edit_dashboard_broadcast_path(broadcast)
+
+    expect(page).to have_no_content("Date of birth")
+    expect(page).to have_no_content("District name")
+
+    select_filter("Gender", operator: "Equals", select: "Female")
+
+    click_on("Update Broadcast")
+
+    within("#beneficiary_filter_gender") do
+      expect(page).to have_field(with: "Gender")
+      expect(page).to have_field(with: "Equals")
+      expect(page).to have_field(with: "Female")
+    end
+    within("#beneficiary_filter_date_of_birth") do
+      expect(page).to have_field(with: "Date of birth")
+      expect(page).to have_field(with: "Between")
+      expect(page).to have_field(with: "2000-01-01")
+      expect(page).to have_field(with: "2010-01-01")
+    end
+    within("#beneficiary_filter_administrative_division_level_2_name") do
+      expect(page).to have_field(with: "District name")
+      expect(page).to have_field(with: "Equals")
+      expect(page).to have_field(with: "Chamkar Mon")
+    end
+    within("#beneficiary_filter_administrative_division_level_3_code") do
+      expect(page).to have_content("Phnom Penh")
+      expect(page).to have_content("Chamkar Mon")
+      expect(page).to have_content("Tonle Basak")
+    end
+  end
+
   it "delete a broadcast" do
     user = create(:user)
     broadcast = create(:broadcast, account: user.account)
