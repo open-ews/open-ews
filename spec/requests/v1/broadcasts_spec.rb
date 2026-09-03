@@ -119,9 +119,9 @@ RSpec.resource "Broadcasts"  do
       end
     end
 
-    FieldDefinitions::TargetAreaFields.each do |field|
-      with_options scope: [ :data, :attributes, :target_areas, :geocode ] do
-        parameter(field.path.to_sym, field.description, required: false, method: :_disabled)
+    FieldDefinitions::TargetAreaFields.where(category: :geocode).each do |field|
+      with_options scope: [ :data, :attributes, :target_areas ] do
+        parameter(:"geocode.*.#{field.path}", field.description, required: false, method: :_disabled)
       end
     end
 
@@ -143,8 +143,9 @@ RSpec.resource "Broadcasts"  do
         For broadcasts with *deliverable notifications*, such as voice calls or text messages,
         `beneficiary_filter` defines which *beneficiaries* are eligible to receive the broadcast,
         while `target_areas` further filters those beneficiaries based on their geographic location.
-        Multiple geographic codes in `target_areas` are combined using *OR* logic,
-        so a beneficiary must match the `beneficiary_filter` and be located in *any* of the specified `target_areas`.
+        Multiple geographic targets can be specified in `target_areas`.
+        A geographic target can include one or more geographic codes, allowing you to target a region as a whole or a specific administrative area within a region.
+        Geographic targets are combined using `OR` logic, so a beneficiary must match the `beneficiary_filter` and be located within any of the specified geographic targets.
       HEREDOC
 
       account = create(:account, :configured_for_broadcasts)
@@ -266,8 +267,10 @@ RSpec.resource "Broadcasts"  do
       explanation <<~HEREDOC
         For broadcasts *without deliverable notifications*,
         such as audio broadcasts, `beneficiary_filter` cannot be specified.
-        *Multiple target areas can be specified* to define the geographic areas where the broadcast should be delivered.
-        In this case, `target_areas` does not filter the beneficiaries; it only determines the areas targeted by the broadcast.
+        Multiple geographic targets can be specified in `target_areas` to define the geographic areas where the broadcast should be delivered.
+        Each geographic target can include one or more geographic codes,
+        allowing you to target a region as a whole or a specific administrative area within a region.
+        In this case, `target_areas` does not filter beneficiaries; it only determines the geographic areas targeted by the broadcast.
       HEREDOC
 
       account = create(:account)
@@ -285,7 +288,7 @@ RSpec.resource "Broadcasts"  do
               target_areas: {
                 geocode: [
                   {
-                    iso_region_code: "KH-12",
+                    iso_region_code: "KH-1",
                     administrative_division_level_2_code: "1201",
                     administrative_division_level_3_code: "120101"
                   }
@@ -304,7 +307,7 @@ RSpec.resource "Broadcasts"  do
         "target_areas" => {
           "geocode" => [
             {
-              "iso_region_code" => "KH-12",
+              "iso_region_code" => "KH-1",
               "administrative_division_level_2_code" => "1201",
               "administrative_division_level_3_code" => "120101"
             }
