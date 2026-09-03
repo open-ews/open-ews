@@ -54,12 +54,13 @@ module V1
     end
 
     attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
-    attribute_rule(:beneficiary_filter) do |relationships:, context:, **|
+    attribute_rule(:beneficiary_filter) do |attributes:, relationships:, context:, **|
       next if context[:channel_capabilities].blank?
 
       if context[:channel_capabilities].any?(&:deliverable?)
         next if key?
         next if relationships.key?(:beneficiary_groups)
+        next if attributes[:target_areas].present?
 
         key.failure("is missing")
       else

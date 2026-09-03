@@ -14,7 +14,7 @@ class BroadcastPreview
     FilterScopeQuery.new(
       scope: broadcast.account.beneficiaries.active.where.not(id: group_beneficiaries.select(:id)),
       filter_group: FilterGroup.new(
-        conditions: [ beneficiary_filter.output, target_area_filter.output ]
+        conditions: [ beneficiary_filter_group, target_area_filter_group ]
       )
     ).apply
   end

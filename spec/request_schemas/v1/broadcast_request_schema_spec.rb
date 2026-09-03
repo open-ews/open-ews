@@ -121,6 +121,23 @@ module V1
           }
         )
       ).not_to have_valid_field(:data, :attributes, :beneficiary_filter)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                channels: [ "voice_call" ],
+                target_areas: {
+                  geocode: [
+                    { iso_region_code: "KH-1" }
+                  ]
+                }
+              }
+            }
+          }
+        )
+      ).to have_valid_field(:data, :attributes, :beneficiary_filter)
     end
 
     it "validates the beneficiary groups" do
