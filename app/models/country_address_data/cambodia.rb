@@ -7,18 +7,21 @@ module CountryAddressData
             value: commune.province.iso3166_2,
             name_en: commune.province.name_latin,
             name_local: commune.province.name_km,
+            path: [ commune.province.iso3166_2 ],
             subdivisions: []
           )
           district_locality = CountryAddressData::Locality.new(
             value: commune.district.id,
             name_en: commune.district.name_latin,
             name_local: commune.district.name_km,
+            path: [ commune.province.iso3166_2, commune.district.id ],
             subdivisions: []
           )
           commune_locality = CountryAddressData::Locality.new(
             value: commune.id,
             name_en: commune.name_latin,
             name_local: commune.name_km,
+            path: [ commune.province.iso3166_2, commune.district.id, commune.id ],
             subdivisions: []
           )
 

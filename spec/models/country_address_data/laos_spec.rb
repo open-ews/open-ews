@@ -3,24 +3,27 @@ require "rails_helper"
 module CountryAddressData
   RSpec.describe Laos do
     it "returns address localities in Laos" do
+      baan_province = Baan::Province.all.first
+      baan_district = baan_province.districts.first
+
       result = CountryAddressData.address_data(:LA)
 
-      expect(result).to be_an(Array)
-      expect(result[0]).to be_a(CountryAddressData::Locality)
-
-      first_province = Baan::Province.all.first
-      expect(result[0]).to have_attributes(
-        value: first_province.code,
-        name_en: first_province.name_en,
-        name_local: first_province.name_lo,
-      )
-
-      first_district = first_province.districts.first
-      expect(result[0].subdivisions[0]).to be_a(CountryAddressData::Locality)
-      expect(result[0].subdivisions[0]).to have_attributes(
-        value: first_district.code,
-        name_en: first_district.name_en,
-        name_local: first_district.name_lo,
+      expect(result).to have_attributes(
+        local_language: :lo,
+        localities: include(
+          have_attributes(
+            value: baan_province.code,
+            name_en: baan_province.name_en,
+            name_local: baan_province.name_lo,
+            subdivisions: include(
+              have_attributes(
+                value: baan_district.code,
+                name_en: baan_district.name_en,
+                name_local: baan_district.name_lo
+              )
+            )
+          )
+        )
       )
     end
   end

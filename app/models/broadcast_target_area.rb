@@ -1,0 +1,2 @@
+class BroadcastTargetArea < ApplicationRecord
+end

@@ -109,17 +109,18 @@ module ApplicationHelper
     iso_country_code = current_account.iso_country_code
 
     Rails.cache.fetch("#{iso_country_code}-#{I18n.locale}") do
-      CountryAddressData.address_data(iso_country_code).map { |locality| treeview_node(locality) }
+      address_data = CountryAddressData.address_data(iso_country_code)
+      address_data.localities.map { treeview_node(it, local_language: address_data.local_language) }
     end
   end
 
-  def treeview_node(locality)
-    children = locality.subdivisions.map { |i| treeview_node(i) } if locality.subdivisions.present?
+  def treeview_node(locality, local_language:)
+    children = locality.subdivisions.map { treeview_node(it, local_language:) } if locality.subdivisions.present?
 
     {
       id: locality.value,
-      text: I18n.locale == :en ? locality.name_en : locality.name_local,
-      children: children
+      text: I18n.locale == local_language ? locality.name_local : locality.name_en,
+      children:
     }
   end
 
