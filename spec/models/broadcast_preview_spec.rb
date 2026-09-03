@@ -21,10 +21,13 @@ RSpec.describe BroadcastPreview do
       },
       beneficiary_groups: [ beneficiary_group ],
       target_areas: {
-        geocode: {
-          iso_region_code: [ "KH-12" ],
-          administrative_division_level_2_code: [ "0102" ]
-        }
+        geocode: [
+          { iso_region_code: "KH-12" },
+          {
+            iso_region_code: "KH-2",
+            administrative_division_level_2_code: "0201"
+          }
+        ]
       }
     )
 

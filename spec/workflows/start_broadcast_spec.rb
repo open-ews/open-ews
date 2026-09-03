@@ -27,9 +27,9 @@ RSpec.describe StartBroadcast do
         gender: { eq: "F" }
       },
       target_areas: {
-        geocode: {
-          iso_region_code: [ "KH-12" ]
-        }
+        geocode: [
+          { iso_region_code: "KH-12" }
+        ]
       },
       beneficiary_groups: [ beneficiary_group, other_beneficiary_group ]
     )

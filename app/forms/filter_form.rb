@@ -7,8 +7,8 @@ class FilterForm < ApplicationForm
 
   def apply(scope)
     FilterScopeQuery.new(
-      scope,
-      filter_class.new(input_params: normalized_filter_params).output
+      scope:,
+      filter_group: filter_class.new(input_params: normalized_filter_params).output
     ).apply
   end
 

@@ -1,7 +1,7 @@
 class AggregateQuery
   attr_reader :scope, :group_by_fields
 
-  def initialize(scope, group_by_fields)
+  def initialize(scope:, group_by_fields:)
     @scope = scope
     @group_by_fields = group_by_fields
   end

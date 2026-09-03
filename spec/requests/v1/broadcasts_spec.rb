@@ -168,10 +168,13 @@ RSpec.resource "Broadcasts"  do
                 gender: { eq: "M" }
               },
               target_areas: {
-                geocode: {
-                  iso_region_code: [ "KH-1", "KH-2" ],
-                  administrative_division_level_2_code: [ "1201", "1202" ]
-                }
+                geocode: [
+                  { iso_region_code: "KH-1" },
+                  {
+                    iso_region_code: "KH-2",
+                    administrative_division_level_2_code: "0201"
+                  }
+                ]
               }
             }
           }
@@ -188,10 +191,13 @@ RSpec.resource "Broadcasts"  do
           "gender" => { "eq" => "M" }
         },
         "target_areas" => {
-          "geocode" => {
-            "iso_region_code" => [ "KH-1", "KH-2" ],
-            "administrative_division_level_2_code" => [ "1201", "1202" ]
-          }
+          "geocode" => [
+            { "iso_region_code" => "KH-1" },
+            {
+              "iso_region_code" => "KH-2",
+              "administrative_division_level_2_code" => "0201"
+            }
+          ]
         }
       )
 
@@ -230,9 +236,9 @@ RSpec.resource "Broadcasts"  do
                 gender: { eq: "M" }
               },
               target_areas: {
-                geocode: {
-                  iso_region_code: [ "KH-1", "KH-2" ]
-                }
+                geocode: [
+                  { iso_region_code: "KH-1" }
+                ]
               }
             }
           }
@@ -249,9 +255,9 @@ RSpec.resource "Broadcasts"  do
           "gender" => { "eq" => "M" }
         },
         "target_areas" => {
-          "geocode" => {
-            "iso_region_code" => [ "KH-1", "KH-2" ]
-          }
+          "geocode" => [
+            { "iso_region_code" => "KH-1" }
+          ]
         }
       )
     end
@@ -277,10 +283,13 @@ RSpec.resource "Broadcasts"  do
               audio_url: "https://www.example.com/test.mp3",
               status: :running,
               target_areas: {
-                geocode: {
-                  iso_region_code: [ "KH-1" ],
-                  administrative_division_level_2_code: [ "1201" ]
-                }
+                geocode: [
+                  {
+                    iso_region_code: "KH-12",
+                    administrative_division_level_2_code: "1201",
+                    administrative_division_level_3_code: "120101"
+                  }
+                ]
               }
             }
           }
@@ -293,10 +302,13 @@ RSpec.resource "Broadcasts"  do
         "channels" => [ "audio" ],
         "status" => "queued",
         "target_areas" => {
-          "geocode" => {
-            "iso_region_code" => [ "KH-1" ],
-            "administrative_division_level_2_code" => [ "1201" ]
-          }
+          "geocode" => [
+            {
+              "iso_region_code" => "KH-12",
+              "administrative_division_level_2_code" => "1201",
+              "administrative_division_level_3_code" => "120101"
+            }
+          ]
         }
       )
     end

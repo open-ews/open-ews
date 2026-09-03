@@ -12,7 +12,7 @@ module V1
           optional(:audio_url).filled(:string)
           optional(:message).filled(:string)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
-          optional(:target_areas).value(:hash).schema(BroadcastRequestSchema::TargetAreasSchema)
+          optional(:target_areas).value(:hash).schema(TargetAreaFilter.schema)
           optional(:status).filled(included_in?: VALID_STATES)
           optional(:metadata).value(:hash)
         end

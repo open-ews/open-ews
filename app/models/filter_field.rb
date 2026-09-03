@@ -13,6 +13,12 @@ class FilterField
     column.public_send(operator_method, filter_value)
   end
 
+  def associations
+    return [] if association.blank?
+
+    [ association ]
+  end
+
   private
 
   # NOTE: cast from user input operator to arel attribute's predications

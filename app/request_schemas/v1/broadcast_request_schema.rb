@@ -1,15 +1,5 @@
 module V1
   class BroadcastRequestSchema < JSONAPIRequestSchema
-    TargetAreasSchema = Dry::Schema.Params do
-      optional(:geocode).value(:hash).schema do
-        optional(:iso_region_code).value(Types::UniqueArray)
-        optional(:administrative_division_level_2_code).value(Types::UniqueArray)
-        optional(:administrative_division_level_3_code).value(Types::UniqueArray)
-        optional(:administrative_division_level_4_code).value(Types::UniqueArray)
-        optional(:administrative_division_level_5_code).value(Types::UniqueArray)
-      end
-    end
-
     option :broadcast_state_machine, default: -> { BroadcastStateMachine.new }
 
     params do
@@ -23,7 +13,7 @@ module V1
           optional(:audio_url).maybe(:str?)
           optional(:message).maybe(:str?)
           optional(:beneficiary_filter).filled(:hash).schema(BeneficiaryFilter.schema)
-          optional(:target_areas).value(:hash).schema(TargetAreasSchema)
+          optional(:target_areas).filled(:hash).schema(TargetAreaFilter.schema)
           optional(:status).filled(:str?, eql?: "running")
           optional(:metadata).value(:hash)
         end

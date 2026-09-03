@@ -6,23 +6,17 @@ class BroadcastPreview
   end
 
   def filtered_beneficiaries
-    return Beneficiary.none if !beneficiary_filter.success? || beneficiary_filter.output.blank?
+    beneficiary_filter_group = beneficiary_filter.output
+    target_area_filter_group = target_area_filter.output
 
-    target_areas_scope = FilterScopeQuery.new(
-      Beneficiary,
-      target_area_filter_fields,
-      conjunction: :or
+    return Beneficiary.none if beneficiary_filter_group.blank? && target_area_filter_group.blank?
+
+    FilterScopeQuery.new(
+      scope: broadcast.account.beneficiaries.active.where.not(id: group_beneficiaries.select(:id)),
+      filter_group: FilterGroup.new(
+        conditions: [ beneficiary_filter.output, target_area_filter.output ]
+      )
     ).apply
-
-    beneficiaries_scope = FilterScopeQuery.new(
-      Beneficiary,
-      beneficiary_filter.output
-    ).apply
-
-    broadcast.account.beneficiaries.active
-      .where.not(id: group_beneficiaries.select(:id))
-      .merge(target_areas_scope)
-      .merge(beneficiaries_scope)
   end
 
   def group_beneficiaries
@@ -39,10 +33,7 @@ class BroadcastPreview
     @beneficiary_filter ||= BeneficiaryFilter.new(input_params: broadcast.beneficiary_filter)
   end
 
-  def target_area_filter_fields
-    Hash(broadcast.target_areas["geocode"]).map do |field_name, values|
-      field_definition = FieldDefinitions::TargetAreaFields.find_by!(name: field_name)
-      FilterField.new(field_definition:, operator: :in, value: values)
-    end
+  def target_area_filter
+    @target_area_filter || TargetAreaFilter.new(input_params: broadcast.target_areas)
   end
 end
