@@ -631,6 +631,11 @@ RSpec.resource "Broadcasts"  do
             audio_url: "https://www.example.com/new.mp3",
             beneficiary_filter: {
               gender: { eq: "F" }
+            },
+            target_areas: {
+              geocode: [
+                { iso_region_code: "KH-1" }
+              ]
             }
           },
           relationships: {
@@ -651,6 +656,11 @@ RSpec.resource "Broadcasts"  do
           "audio_url" => "https://www.example.com/new.mp3",
           "beneficiary_filter" => {
             "gender" => { "eq" => "F" }
+          },
+          "target_areas" => {
+            "geocode" => [
+              { "iso_region_code" => "KH-1" }
+            ]
           }
         ),
         "relationships" => {
