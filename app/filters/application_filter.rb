@@ -21,8 +21,6 @@ class ApplicationFilter < ApplicationRequestSchema
       rule(:filter).validate(contract: this)
 
       def output
-        return {} if result[:filter].blank?
-
         self.class.superclass.new(input_params: result[:filter]).output
       end
     end
@@ -30,13 +28,21 @@ class ApplicationFilter < ApplicationRequestSchema
 
   def output
     filters = super
-    return {} if filters.blank?
+    return FilterGroup.new if filters.blank?
 
-    filters.map do |(filter, condition)|
+    build_filter_group(filters)
+  end
+
+  private
+
+  def build_filter_group(filters)
+    group = filters.map do |(filter, condition)|
       operator, value = condition.first
       field_definition = field_collection.find_by!(path: filter)
 
       FilterField.new(field_definition:, operator:, value:)
     end
+
+    FilterGroup.new(conditions: group)
   end
 end

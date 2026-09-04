@@ -34,7 +34,7 @@
     <%= render "shared/resource_related_links" do %>
       <%= render "shared/destroy_resource_page_action", path: dashboard_broadcast_path(@broadcast) %>
     <% end %>
-  <% elsif @broadcast.channel_capabilities.any? { it.deliverable? } %>
+  <% elsif @broadcast.channel_capabilities.any?(&:deliverable?) %>
     <%= render "shared/resource_related_links" do %>
       <%= link_to(dashboard_broadcast_notifications_path(@broadcast), class: "dropdown-item") do %>
         <i class="icon ti ti-message"></i>
@@ -63,7 +63,7 @@
           <div class="text-danger"><%= error_message_for(@broadcast.error_code) %></div>
         <% end %>
 
-        <% if @broadcast.channel_capabilities.any? { it.deliverable? } %>
+        <% if @broadcast.channel_capabilities.any?(&:deliverable?) %>
           <div class="notification-stats mt-3">
             <div class="progress progress-separated mb-3">
               <% @broadcast.notification_stats_percentage.each do |status, percentage| %>
@@ -99,7 +99,7 @@
         <% end %>
       <% end %>
 
-      <% if @broadcast.channel_capabilities.any? { it.audio? } %>
+      <% if @broadcast.channel_capabilities.any?(&:audio?) %>
         <%= f.attribute :audio_file do %>
           <% if @broadcast.audio_file.attached? %>
             <%= audio_tag(@broadcast.audio_file, controls: true) %>
@@ -107,7 +107,7 @@
         <% end %>
       <% end %>
 
-      <% if @broadcast.channel_capabilities.any? { it.text? } %>
+      <% if @broadcast.channel_capabilities.any?(&:text?) %>
         <%= f.attribute :message do %>
           <%= text_area_tag(:message, @broadcast.message, rows: 4, class: "form-control w-100", readonly: true) %>
         <% end %>

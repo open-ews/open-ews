@@ -47,13 +47,15 @@ RSpec.describe StatsQuery, type: :model do
     )
 
     result = StatsQuery.new(
-      filter_fields: [
-        FilterField.new(
-          field_definition: FieldDefinitions::BeneficiaryFields.find_by!(name: :gender),
-          operator: "eq",
-          value: "M"
-        )
-      ],
+      filter_group: FilterGroup.new(
+        conditions: [
+          FilterField.new(
+            field_definition: FieldDefinitions::BeneficiaryFields.find_by!(name: :gender),
+            operator: "eq",
+            value: "M"
+          )
+        ]
+      ),
       group_by_fields: [
         FieldDefinitions::BeneficiaryFields.find_by!(name: :iso_country_code),
         FieldDefinitions::BeneficiaryFields.find_by!(name: :iso_region_code),

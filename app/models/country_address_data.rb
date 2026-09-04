@@ -1,12 +1,15 @@
 module CountryAddressData
-  Locality = Data.define(:value, :name_en, :name_local, :subdivisions)
-  Configuration = Data.define(:address_field, :address_data)
+  Configuration = Data.define(:local_language, :address_field, :data) do
+    def localities
+      data.call
+    end
+  end
 
   SETTINGS = {
-    KH: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_3_code), address_data: -> { CountryAddressData::Cambodia.address_data }),
-    LA: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code), address_data: -> { CountryAddressData::Laos.address_data }),
-    NP: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code), address_data: -> { CountryAddressData::Nepal.address_data }),
-    MM: Configuration.new(address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_5_code), address_data: -> { CountryAddressData::Myanmar.address_data })
+    KH: Configuration.new(local_language: :km, address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_3_code), data: -> { CountryAddressData::Cambodia.address_data }),
+    LA: Configuration.new(local_language: :lo, address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code), data: -> { CountryAddressData::Laos.address_data }),
+    NP: Configuration.new(local_language: :ne, address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_2_code), data: -> { CountryAddressData::Nepal.address_data }),
+    MM: Configuration.new(local_language: :my, address_field: FieldDefinitions::BeneficiaryFields.find_by!(name: :administrative_division_level_5_code), data: -> { CountryAddressData::Myanmar.address_data })
   }
 
   def self.address_field(iso_country_code)
@@ -18,7 +21,7 @@ module CountryAddressData
   def self.address_data(iso_country_code)
     return [] unless supported?(iso_country_code)
 
-    SETTINGS.fetch(iso_country_code.to_sym).address_data.call
+    SETTINGS.fetch(iso_country_code.to_sym)
   end
 
   def self.supported?(iso_country_code)

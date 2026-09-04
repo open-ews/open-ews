@@ -25,7 +25,7 @@ module FieldDefinitions
       @prefix = ActiveSupport::StringInquirer.new(attributes[:prefix].to_s) if attributes.key?(:prefix)
       @path = attributes[:path] = [ prefix, name ].compact.join(".")
       @column = attributes.fetch(:column)
-      @schema = attributes.fetch(:schema)
+      @schema = attributes[:schema]
       @association = attributes[:association]
       @description = attributes[:description]
       @read_only = attributes[:read_only] = attributes.fetch(:read_only, false)

@@ -1,9 +1,9 @@
 class FilterScopeQuery
-  attr_reader :scope, :filter_fields
+  attr_reader :scope, :filter_group
 
-  def initialize(scope, filter_fields)
+  def initialize(scope:, filter_group:)
     @scope = scope
-    @filter_fields = filter_fields
+    @filter_group = filter_group
   end
 
   def apply
@@ -13,10 +13,10 @@ class FilterScopeQuery
   private
 
   def joins_with
-    filter_fields.map(&:association).compact_blank.uniq
+    filter_group.conditions.flat_map(&:associations).compact_blank.uniq
   end
 
   def conditions
-    filter_fields.map(&:to_query).reduce(:and)
+    filter_group.conditions.map(&:to_query).compact_blank.reduce(:and)
   end
 end

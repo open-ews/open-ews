@@ -6,12 +6,17 @@ class BroadcastPreview
   end
 
   def filtered_beneficiaries
-    return Beneficiary.none if !beneficiary_filter.success? || beneficiary_filter.output.blank?
+    beneficiary_filter_group = beneficiary_filter.output
+    target_area_filter_group = target_area_filter.output
+
+    return Beneficiary.none if beneficiary_filter_group.blank? && target_area_filter_group.blank?
 
     FilterScopeQuery.new(
-      broadcast.account.beneficiaries.active,
-      beneficiary_filter.output
-    ).apply.where.not(id: group_beneficiaries.select(:id))
+      scope: broadcast.account.beneficiaries.active.where.not(id: group_beneficiaries.select(:id)),
+      filter_group: FilterGroup.new(
+        conditions: [ beneficiary_filter_group, target_area_filter_group ]
+      )
+    ).apply
   end
 
   def group_beneficiaries
@@ -26,5 +31,9 @@ class BroadcastPreview
 
   def beneficiary_filter
     @beneficiary_filter ||= BeneficiaryFilter.new(input_params: broadcast.beneficiary_filter)
+  end
+
+  def target_area_filter
+    @target_area_filter || TargetAreaFilter.new(input_params: broadcast.target_areas)
   end
 end
