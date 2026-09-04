@@ -271,6 +271,57 @@ module V1
       ).not_to have_valid_field(:data, :relationships, :beneficiary_groups, :data)
     end
 
+    it "validates the target areas" do
+      account = create(:account)
+      broadcast = create(:broadcast, :pending, account:)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                target_areas: {
+                  geocode: [
+                    { administrative_division_level_2_code: "0102" }
+                  ]
+                }
+              }
+            }
+          },
+          options: {
+            account:,
+            resource: broadcast
+          }
+        )
+      ).not_to have_valid_field(:data, :attributes, :target_areas, :geocode, 0)
+
+      expect(
+        validate_schema(
+          input_params: {
+            data: {
+              attributes: {
+                target_areas: {
+                  geocode: [
+                    {
+                      iso_region_code: "KH-1"
+                    },
+                    {
+                      iso_region_code: "KH-2",
+                      administrative_division_level_2_code: "0201"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          options: {
+            account:,
+            resource: broadcast
+          }
+        )
+      ).to have_valid_field(:data, :attributes, :target_areas, :geocode)
+    end
+
     it "handles post processing" do
       pending_broadcast = create(:broadcast, :pending, :voice_call)
       errored_broadcast = create(:broadcast, :errored, :voice_call)

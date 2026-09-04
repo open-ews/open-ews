@@ -31,6 +31,7 @@ module V1
     end
 
     attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
+    attribute_rule(:target_areas).validate(contract: TargetAreaFilter)
     attribute_rule(:audio_url).validate(:url_format)
 
     attribute_rule(:beneficiary_filter) do

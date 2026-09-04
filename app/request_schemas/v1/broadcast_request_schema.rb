@@ -54,6 +54,8 @@ module V1
     end
 
     attribute_rule(:beneficiary_filter).validate(contract: BeneficiaryFilter)
+    attribute_rule(:target_areas).validate(contract: TargetAreaFilter)
+
     attribute_rule(:beneficiary_filter) do |attributes:, relationships:, context:, **|
       next if context[:channel_capabilities].blank?
 
