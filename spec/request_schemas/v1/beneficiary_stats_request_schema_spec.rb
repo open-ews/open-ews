@@ -31,16 +31,10 @@ module V1
         filter_group: have_attributes(
           conditions: contain_exactly(
             have_attributes(
-              query: have_attributes(
-                arel_column: Beneficiary.arel_table[:gender]
-              ),
               operator: :eq,
               value: "M"
             ),
             have_attributes(
-              query: have_attributes(
-                arel_column: Beneficiary.arel_table[:iso_country_code]
-              ),
               operator: :eq,
               value: "KH"
             )

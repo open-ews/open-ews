@@ -2,7 +2,7 @@
   <% element_id = field_form.object_name.parameterize.underscore %>
   <%= tag.div(
     id: element_id,
-    class: "row",
+    class: "row filter-field",
     data: {
       controller: "filter-field",
       action: "change@window->filter-field#sync"
