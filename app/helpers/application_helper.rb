@@ -118,7 +118,9 @@ module ApplicationHelper
           children: [],
           metadata: {
             path: locality.path,
-            field_name: FieldDefinitions::GeocodeFieldMap.to_name(locality.administrative_level)
+            area_definition: locality.path.each_with_object({}).with_index(1) do |(geocode, result), index|
+              result[FieldDefinitions::GeocodeFieldMap.to_name(index)] = geocode
+            end
           }
         }
       end

@@ -91,25 +91,25 @@
       </div>
 
       <% if CountryLocalityData.supported?(current_account.iso_country_code)  %>
-        <%= f.input(
-          :geocode_target_areas,
-          as: :hidden,
-          input_html: {
-            value: @broadcast.geocode_target_areas.as_json.to_json,
+        <%= tag.div(
+          class: "row",
+          id: "target-areas",
+          data: {
+            controller: "geocode-tree",
+            geocode_tree_data_value: locality_tree.to_json,
+            geocode_tree_selected_value: @broadcast.object.geocode_target_areas.pluck(:path).to_json
           }
-        ) %>
+        ) do %>
+          <%= f.hidden_field(
+            :geocode_target_areas,
+            data: {
+              geocode_tree_target: "targetAreasInput"
+            },
+            value: @broadcast.geocode_target_areas.as_json.to_json,
+          ) %>
 
-        <div class="row" id="target_areas">
-          <div class="col">
-            <%= tag.div(
-              data: {
-                controller: :treeview,
-                treeview_data_value: locality_tree.to_json,
-                treeview_selected_value: @broadcast.object.geocode_target_areas.pluck(:path).to_json
-              }
-            ) %>
-          </div>
-        </div>
+          <%= tag.div(data: { geocode_tree_target: "treeContainer" }) %>
+        <% end %>
       <% else %>
         <% geocode_target_areas = @broadcast.geocode_target_areas %>
         <%= f.input(

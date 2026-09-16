@@ -13,6 +13,9 @@ application.register("broadcasts", BroadcastsController)
 import FilterFieldController from "./filter_field_controller"
 application.register("filter-field", FilterFieldController)
 
+import GeocodeTreeController from "./geocode_tree_controller"
+application.register("geocode-tree", GeocodeTreeController)
+
 import NotificationsStatsChartController from "./notifications_stats_chart_controller"
 application.register("notifications-stats-chart", NotificationsStatsChartController)
 
