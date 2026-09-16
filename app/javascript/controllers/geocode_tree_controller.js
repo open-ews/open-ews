@@ -33,9 +33,12 @@ export default class extends Controller {
     })
 
     this.#markChecked()
+    this.#updateGeocodeTargetAreas()
   }
 
   #markChecked() {
+    if (!this.hasSelectedValue || this.selectedValue.length === 0) return
+
     const selectedPaths = new Set(
       this.selectedValue.map((path) => this.#pathKey(path)),
     )
@@ -48,13 +51,15 @@ export default class extends Controller {
   }
 
   #updateGeocodeTargetAreas() {
-    const areas = new Set()
+    if (!this.hasTargetAreasInputTarget) return
+
+    const areaMap = new Map()
 
     const collectAreas = (nodes) => {
       nodes.each((node) => {
         if (node.checked()) {
-          // Store stringified JSON of node.metadata.geocode_area in Set for uniqueness
-          areas.add(JSON.stringify(node.metadata.area_definition))
+          const key = this.#pathKey(node.metadata.path)
+          areaMap.set(key, node.metadata.area_definition)
         } else if (node.hasChildren()) {
           collectAreas(node.getChildren())
         }
@@ -63,12 +68,9 @@ export default class extends Controller {
 
     collectAreas(this.tree.nodes())
 
-    const areaObjects = Array.from(areas).map((item) => JSON.parse(item))
-
-    // Update the input target value
-    if (this.hasTargetAreasInputTarget) {
-      this.targetAreasInputTarget.value = JSON.stringify(areaObjects)
-    }
+    this.targetAreasInputTarget.value = JSON.stringify(
+      Array.from(areaMap.values()),
+    )
   }
 
   #pathKey(path) {
