@@ -49,16 +49,6 @@ class Broadcast < ApplicationRecord
 
   before_create :set_default_status
 
-  def self.geocode_target_areas_equal(...)
-    joins(:geocode_target_areas)
-    .merge(GeocodeTargetArea.where(...))
-    .where.not(id: GeocodeTargetArea.outside(...).select(:broadcast_id)).distinct
-  end
-
-  def self.geocode_target_areas_contain(...)
-    joins(:geocode_target_areas).merge(GeocodeTargetArea.where(...))
-  end
-
   def mark_as_errored!(error_code)
     transaction do
       state_machine.transition_to!(:errored)
