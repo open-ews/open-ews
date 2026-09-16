@@ -9,6 +9,7 @@ export default class extends Controller {
     "beneficiaryGroupsInput",
     "beneficiaryFiltersContainer",
   ]
+
   static values = {
     messageSegmentWarningThreshold: Number,
     characterCountTranslations: Object,
@@ -41,18 +42,10 @@ export default class extends Controller {
     if (this.hasBeneficiaryFiltersContainerTarget) {
       this.beneficiaryFiltersContainerTarget.hidden = !isDeliverable
 
-      const allInputs = this.beneficiaryFiltersContainerTarget.querySelectorAll(
-        "input, select, textarea",
+      // Dispatch event to let child controllers sync their own enabled/disabled states
+      this.beneficiaryFiltersContainerTarget.dispatchEvent(
+        new Event("change", { bubbles: true }),
       )
-
-      if (!isDeliverable) {
-        allInputs.forEach((input) => (input.disabled = true))
-      } else {
-        allInputs.forEach((input) => (input.disabled = false))
-        this.beneficiaryFiltersContainerTarget.dispatchEvent(
-          new Event("change", { bubbles: true }),
-        )
-      }
     }
   }
 
@@ -65,7 +58,7 @@ export default class extends Controller {
   }
 
   #updateCharacterCount() {
-    const input = this.messageInputTarget.querySelector("input, textarea")
+    const input = this.#messageInput
     const infoTarget = this.messageInputTarget.querySelector(".input-info span")
     if (!input || !infoTarget) return
 
@@ -82,13 +75,18 @@ export default class extends Controller {
   }
 
   #checkSegments() {
-    const input = this.messageInputTarget.querySelector("input, textarea")
+    const input = this.#messageInput
     const warningTarget =
       this.messageInputTarget.querySelector(".input-warning")
     if (!input || !warningTarget) return
 
     const segments = new SegmentedMessage(input.value).segmentsCount
-    warningTarget.style.display =
-      segments > this.messageSegmentWarningThresholdValue ? "block" : "none"
+    warningTarget.hidden = segments <= this.messageSegmentWarningThresholdValue
+  }
+
+  get #messageInput() {
+    return this.hasMessageInputTarget
+      ? this.messageInputTarget.querySelector("input, textarea")
+      : null
   }
 }

@@ -1,5 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
 
+const MODE_MAP = {
+  is_null: "null",
+  in: "multi",
+  not_in: "multi",
+  between: "between",
+}
+
 export default class extends Controller {
   static targets = [
     "toggleElement",
@@ -20,53 +27,36 @@ export default class extends Controller {
   }
 
   sync() {
-    // A row is only active if checked AND visible in the DOM
-    const isContainerHidden = this.element.closest("[hidden]") !== null
-    const enabled = this.toggleElementTarget.checked && !isContainerHidden
-    const op = this.operatorTarget.value
+    const isHidden = !!this.element.closest("[hidden]")
+    const enabled = this.toggleElementTarget.checked && !isHidden
+    const activeMode = MODE_MAP[this.operatorTarget.value] || "single"
 
     this.fieldNameTarget.disabled = !enabled
     this.operatorTarget.disabled = !enabled
 
-    // Map operator directly to active key
-    const modeMap = {
-      is_null: "null",
-      in: "multi",
-      not_in: "multi",
-      between: "between",
-    }
-    const activeMode = modeMap[op] || "single"
+    const groups = [
+      {
+        key: "single",
+        input: "value",
+        wrapper: "valueWrapper",
+        visible: !enabled || activeMode === "single",
+      },
+      { key: "null", input: "isNullValue", wrapper: "isNullValueWrapper" },
+      {
+        key: "multi",
+        input: "multiValue",
+        wrapper: "multiValueWrapper",
+        isMulti: true,
+      },
+      {
+        key: "between",
+        input: "betweenValue",
+        wrapper: "betweenValueWrapper",
+        isArray: true,
+      },
+    ]
 
-    // 1. Single Value
-    this.#syncGroup(
-      this.hasValueTarget ? this.valueTarget : null,
-      this.hasValueWrapperTarget ? this.valueWrapperTarget : null,
-      enabled && activeMode === "single",
-      !enabled || activeMode === "single",
-    )
-
-    // 2. Is Null
-    this.#syncGroup(
-      this.hasIsNullValueTarget ? this.isNullValueTarget : null,
-      this.hasIsNullValueWrapperTarget ? this.isNullValueWrapperTarget : null,
-      enabled && activeMode === "null",
-    )
-
-    // 3. Multi Select
-    this.#syncGroup(
-      this.hasMultiValueTarget ? this.multiValueTarget : null,
-      this.hasMultiValueWrapperTarget ? this.multiValueWrapperTarget : null,
-      enabled && activeMode === "multi",
-      enabled && activeMode === "multi",
-      true,
-    )
-
-    // 4. Between Values
-    this.#syncGroup(
-      this.hasBetweenValueTarget ? this.betweenValueTargets : null,
-      this.hasBetweenValueWrapperTarget ? this.betweenValueWrapperTarget : null,
-      enabled && activeMode === "between",
-    )
+    groups.forEach((g) => this.#syncGroup(g, enabled, activeMode))
   }
 
   toggle() {
@@ -83,28 +73,40 @@ export default class extends Controller {
   }
 
   #syncGroup(
-    inputOrInputs,
-    wrapper,
-    isActive,
-    isVisible = isActive,
-    isMulti = false,
+    { key, input, wrapper, visible, isMulti, isArray },
+    enabled,
+    activeMode,
   ) {
-    if (inputOrInputs) {
-      const inputs = Array.isArray(inputOrInputs)
-        ? inputOrInputs
-        : [inputOrInputs]
-      inputs.forEach((input) => (input.disabled = !isActive))
+    const isActive = enabled && activeMode === key
+    const isWrapperVisible = visible ?? isActive
+
+    const inputTarget = isArray
+      ? this.hasBetweenValueTarget
+        ? this.betweenValueTargets
+        : null
+      : this.#target(input)
+
+    const wrapperTarget = this.#target(wrapper)
+
+    if (inputTarget) {
+      const inputs = Array.isArray(inputTarget) ? inputTarget : [inputTarget]
+      inputs.forEach((i) => (i.disabled = !isActive))
     }
 
-    if (wrapper) {
-      wrapper.hidden = !isVisible
+    if (wrapperTarget) {
+      wrapperTarget.hidden = !isWrapperVisible
     }
 
-    if (isMulti && inputOrInputs?.tomselect) {
+    if (isMulti && inputTarget?.tomselect) {
       isActive
-        ? inputOrInputs.tomselect.enable()
-        : inputOrInputs.tomselect.disable()
+        ? inputTarget.tomselect.enable()
+        : inputTarget.tomselect.disable()
     }
+  }
+
+  #target(name) {
+    const capitalized = name.charAt(0).toUpperCase() + name.slice(1)
+    return this[`has${capitalized}Target`] ? this[`${name}Target`] : null
   }
 
   #clearValues() {
