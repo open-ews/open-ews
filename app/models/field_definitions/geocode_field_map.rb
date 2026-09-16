@@ -27,7 +27,7 @@ module FieldDefinitions
       end
 
       def field_definitions
-        BroadcastFields.select { it.metadata.key?(:administrative_level) }
+        GeocodeFields.select { it.metadata.key?(:administrative_level) }
       end
     end
   end
