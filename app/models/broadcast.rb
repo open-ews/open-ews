@@ -2,7 +2,7 @@ class Broadcast < ApplicationRecord
   AUDIO_CONTENT_TYPES = %w[audio/mpeg audio/mp3 audio/wav audio/x-wav].freeze
   MAX_BENEFICIARY_GROUPS = 10
 
-  class StateMachine < StateMachine::ActiveRecord
+  class StateMachine < ::StateMachine::ActiveRecord
     state :pending, initial: true, transitions_to: :queued
     state :queued, transitions_to: [ :running, :errored ]
     state :errored, transitions_to: :queued
@@ -10,6 +10,8 @@ class Broadcast < ApplicationRecord
     state :stopped, transitions_to: [ :running, :completed ]
     state :completed
   end
+
+  attribute :target_areas, TargetAreaDataType.new
 
   enumerize :channel, in: [ :voice_call, :text_message, :audio ]
   enumerize :status, in: StateMachine.state_definitions.map(&:name)
@@ -20,6 +22,8 @@ class Broadcast < ApplicationRecord
   belongs_to :started_by, class_name: "User", optional: true
   belongs_to :stopped_by, class_name: "User", optional: true
   belongs_to :updated_by, class_name: "User", optional: true
+
+  has_many :geocode_target_areas
   has_many :notifications
   has_many :beneficiaries, through: :notifications
   has_many :delivery_attempts

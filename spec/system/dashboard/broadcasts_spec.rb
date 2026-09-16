@@ -29,7 +29,7 @@ RSpec.describe "Broadcasts" do
 
     click_on "Filters"
     select_filter("Status", operator: "Equals", select: "Pending")
-    select_filter("Channels", operator: "In", select: "Voice call")
+    select_filter("Channels", operator: "Contains", select: "Voice call")
     click_on "Apply Filters"
 
     expect(page).to have_content_tag_for(pending_broadcast)
@@ -53,7 +53,6 @@ RSpec.describe "Broadcasts" do
     attach_file("Audio file", file_fixture("test.mp3"))
     select_list("My group", "My other group", from: "Beneficiary groups")
     select_filter("Gender", operator: "Equals", select: "Male")
-    select_filter("Target areas")
     select_tree("Banteay Meanchey", "Mongkol Borey", "Banteay Neang")
 
     click_on("Create Broadcast")
@@ -68,7 +67,7 @@ RSpec.describe "Broadcasts" do
       expect(page).to have_field(with: "Equals")
       expect(page).to have_field(with: "Male")
     end
-    within("#beneficiary_filter_administrative_division_level_3_code") do
+    within("#tree-container") do
       expect(page).to have_content("Banteay Meanchey")
       expect(page).to have_content("Mongkol Borey")
       expect(page).to have_content("Banteay Neang")
@@ -120,11 +119,22 @@ RSpec.describe "Broadcasts" do
     select_filter("ISO region code", operator: "Equals", fill_in: "US-AL")
     select_filter("Administrative division level 2 code", operator: "Equals", fill_in: "001")
     select_filter("Administrative division level 2 name", operator: "Starts with", fill_in: "Autauga")
+    fill_in(
+      "Geocode target areas",
+      with: JSON.pretty_generate(
+        [
+          { iso_region_code: "US-AL" },
+          { iso_region_code: "US-NY", administrative_division_level_2_code: "0201" }
+        ]
+      )
+    )
 
     click_on("Create Broadcast")
 
     expect(page).to have_content("Broadcast was successfully created.")
-
+    expect(page).to have_content("US-AL")
+    expect(page).to have_content("US-NY")
+    expect(page).to have_content("0201")
     within("#beneficiary_filter_iso_country_code") do
       expect(page).to have_field(with: "Country")
       expect(page).to have_field(with: "Equals")
@@ -152,7 +162,6 @@ RSpec.describe "Broadcasts" do
       :account,
       iso_country_code: "KH",
       dashboard_broadcast_beneficiary_filter_whitelist: [
-        "administrative_division_level_3_code",
         "gender"
       ]
     )
@@ -161,7 +170,6 @@ RSpec.describe "Broadcasts" do
     account_sign_in(user)
     visit new_dashboard_broadcast_path
 
-    expect(page).to have_field(with: "Target areas")
     expect(page).to have_field(with: "Gender")
     expect(page).to have_no_field(with: "Phone number")
   end
@@ -178,9 +186,13 @@ RSpec.describe "Broadcasts" do
       beneficiary_groups: [ create_beneficiary_group(name: "My group", account:) ],
       beneficiary_filter: {
         phone_number: { in: [ "855715100850",  "855715100851" ] },
-        disability_status: { eq: 'none' },
-        "address.administrative_division_level_3_code": { in: [ "120101" ] }
+        disability_status: { eq: "none" }
       }
+    )
+    create(
+      :geocode_target_area,
+      broadcast:,
+      path: [ "KH-12", "1201", "120101" ]
     )
 
     account_sign_in(user)
@@ -223,7 +235,7 @@ RSpec.describe "Broadcasts" do
       expect(page).to have_field(with: "In")
       expect(page).to have_select(selected: [ "855715100850",  "855715100851" ])
     end
-    within("#beneficiary_filter_administrative_division_level_3_code") do
+    within("#tree-container") do
       expect(page).to have_content("Banteay Meanchey")
       expect(page).to have_content("Mongkol Borey")
       expect(page).to have_content("Banteay Neang")
@@ -238,8 +250,9 @@ RSpec.describe "Broadcasts" do
       :account,
       iso_country_code: "KH",
       dashboard_broadcast_beneficiary_filter_whitelist: [
-        "administrative_division_level_3_code",
-        "gender"
+        "gender",
+        "iso_language_code",
+        "administrative_division_level_3_code"
       ]
     )
     broadcast = create(
@@ -248,6 +261,7 @@ RSpec.describe "Broadcasts" do
       account:,
       created_via: :api,
       beneficiary_filter: {
+        iso_language_code: { eq: "khm" },
         date_of_birth: { between: [ "2000-01-01", "2010-01-01" ] },
         "address.administrative_division_level_2_name": { eq: "Chamkar Mon" },
         "address.administrative_division_level_3_code": { in: [ "120101" ] }
@@ -262,9 +276,12 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_no_content("District name")
 
     select_filter("Gender", operator: "Equals", select: "Female")
+    deselect_filter("ISO language code")
 
     click_on("Update Broadcast")
 
+    expect(page).to have_content("Broadcast was successfully updated.")
+    expect(page).to have_no_field("ISO language code")
     within("#beneficiary_filter_gender") do
       expect(page).to have_field(with: "Gender")
       expect(page).to have_field(with: "Equals")
@@ -282,10 +299,30 @@ RSpec.describe "Broadcasts" do
       expect(page).to have_field(with: "Chamkar Mon")
     end
     within("#beneficiary_filter_administrative_division_level_3_code") do
-      expect(page).to have_content("Phnom Penh")
-      expect(page).to have_content("Chamkar Mon")
-      expect(page).to have_content("Tonle Basak")
+      expect(page).to have_field(with: "Commune code")
+      expect(page).to have_field(with: "In")
+      expect(page).to have_select(selected: [ "120101" ])
     end
+  end
+
+  it "update a broadcast deselecting all filters", :js do
+    account = create(:account)
+    broadcast = create(:broadcast, :pending, account:,
+      beneficiary_filter: {
+        gender: { eq: "M" }
+      }
+    )
+    user = create(:user, account:)
+
+    account_sign_in(user)
+    visit edit_dashboard_broadcast_path(broadcast)
+
+    deselect_filter("Gender")
+
+    click_on("Update Broadcast")
+
+    expect(page).to have_content("Broadcast was successfully updated.")
+    expect(page).to have_no_field(with: "Gender")
   end
 
   it "delete a broadcast" do
@@ -370,7 +407,7 @@ RSpec.describe "Broadcasts" do
   end
 
   def select_tree(*values)
-    within("#broadcast_beneficiary_filter_administrative_division_level_3_code") do
+    within("#tree-container") do
       values.each do |value|
         title = find("a", text: value)
         if value == values.last

@@ -1,12 +1,21 @@
 import { Controller } from "@hotwired/stimulus"
 import { SegmentedMessage } from "sms-segments-calculator"
 
-// Connects to data-controller="broadcasts"
 export default class extends Controller {
-  static targets = ["channelInput", "audioFileInput", "messageInput"]
+  static targets = [
+    "channelInput",
+    "audioFileInput",
+    "messageInput",
+    "beneficiaryGroupsInput",
+    "beneficiaryFiltersContainer",
+  ]
+
   static values = {
     messageSegmentWarningThreshold: Number,
     characterCountTranslations: Object,
+    deliverableChannels: Array,
+    audioChannels: Array,
+    textChannels: Array,
   }
 
   connect() {
@@ -20,63 +29,64 @@ export default class extends Controller {
   }
 
   toggleChannel() {
-    switch (this.channelInputTarget.value) {
-      case "voice_call":
-      case "audio":
-        this.#toggleInput(this.audioFileInputTarget, true)
-        this.#toggleInput(this.messageInputTarget, false)
-        break
-      case "text_message":
-        this.#toggleInput(this.messageInputTarget, true)
-        this.#toggleInput(this.audioFileInputTarget, false)
-        break
+    const channel = this.channelInputTarget.value
+
+    const isAudio = this.audioChannelsValue.includes(channel)
+    const isText = this.textChannelsValue.includes(channel)
+    const isDeliverable = this.deliverableChannelsValue.includes(channel)
+
+    this.#toggleTarget(this.audioFileInputTarget, isAudio)
+    this.#toggleTarget(this.messageInputTarget, isText)
+    this.#toggleTarget(this.beneficiaryGroupsInputTarget, isDeliverable)
+
+    if (this.hasBeneficiaryFiltersContainerTarget) {
+      this.beneficiaryFiltersContainerTarget.hidden = !isDeliverable
+
+      // Dispatch event to let child controllers sync their own enabled/disabled states
+      this.beneficiaryFiltersContainerTarget.dispatchEvent(
+        new Event("change", { bubbles: true }),
+      )
     }
   }
 
+  #toggleTarget(wrapperTarget, enable) {
+    if (!wrapperTarget) return
+    wrapperTarget.hidden = !enable
+
+    const input = wrapperTarget.querySelector("input, textarea, select")
+    if (input) input.disabled = !enable
+  }
+
   #updateCharacterCount() {
-    const input = this.#getInputTarget(this.messageInputTarget)
-    const infoTarget = this.#getInfoTarget(this.messageInputTarget)
+    const input = this.#messageInput
+    const infoTarget = this.messageInputTarget.querySelector(".input-info span")
+    if (!input || !infoTarget) return
 
     const count = input.value.length
-    const formattedCount = new Intl.NumberFormat().format(count)
-
     const pluralRule = new Intl.PluralRules().select(count)
     const template =
       this.characterCountTranslationsValue[pluralRule] ??
       this.characterCountTranslationsValue.other
 
-    infoTarget.textContent = template.replace("%{count}", formattedCount)
+    infoTarget.textContent = template.replace(
+      "%{count}",
+      new Intl.NumberFormat().format(count),
+    )
   }
 
   #checkSegments() {
-    const input = this.#getInputTarget(this.messageInputTarget)
-    const segmentedMessage = new SegmentedMessage(input.value)
-    const warningTarget = this.#getWarningTarget(this.messageInputTarget)
+    const input = this.#messageInput
+    const warningTarget =
+      this.messageInputTarget.querySelector(".input-warning")
+    if (!input || !warningTarget) return
 
-    if (
-      segmentedMessage.segmentsCount > this.messageSegmentWarningThresholdValue
-    ) {
-      warningTarget.style.display = "block"
-    } else {
-      warningTarget.style.display = "none"
-    }
+    const segments = new SegmentedMessage(input.value).segmentsCount
+    warningTarget.hidden = segments <= this.messageSegmentWarningThresholdValue
   }
 
-  #toggleInput(target, enable) {
-    const input = this.#getInputTarget(target)
-    input.disabled = !enable
-    target.style.display = enable ? "block" : "none"
-  }
-
-  #getInputTarget(target) {
-    return target.querySelector("input, textarea, select")
-  }
-
-  #getWarningTarget(target) {
-    return target.querySelector(".input-warning")
-  }
-
-  #getInfoTarget(target) {
-    return target.querySelector(".input-info span")
+  get #messageInput() {
+    return this.hasMessageInputTarget
+      ? this.messageInputTarget.querySelector("input, textarea")
+      : null
   }
 }

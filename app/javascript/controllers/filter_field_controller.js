@@ -1,7 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
 
-const MULTIPLE_VALUE_OPERATORS = ["in", "not_in"]
-const BETWEEN_OPERATOR = "between"
+const MODE_MAP = {
+  is_null: "null",
+  in: "multi",
+  not_in: "multi",
+  between: "between",
+}
 
 export default class extends Controller {
   static targets = [
@@ -9,78 +13,114 @@ export default class extends Controller {
     "fieldName",
     "operator",
     "value",
+    "valueWrapper",
     "multiValue",
+    "multiValueWrapper",
     "isNullValue",
+    "isNullValueWrapper",
     "betweenValue",
+    "betweenValueWrapper",
   ]
 
   connect() {
-    this.#toggleInputs()
+    this.sync()
   }
 
-  toggle() {
-    this.operatorTarget.value = null
-
-    this.#clearInputValue()
-    this.#toggleInputs()
-  }
-
-  operatorChanged() {
-    this.#clearInputValue()
-    this.#toggleInputs()
-  }
-
-  #toggleInputs() {
-    const enabled = this.toggleElementTarget.checked
-    const isNullSelected = this.operatorTarget.value === "is_null"
-    const isMultiSelected = MULTIPLE_VALUE_OPERATORS.includes(
-      this.operatorTarget.value
-    )
-    const isBetweenSelected = this.operatorTarget.value === BETWEEN_OPERATOR
-    const isSingleSelected =
-      enabled && !isNullSelected && !isMultiSelected && !isBetweenSelected
+  sync() {
+    const isHidden = !!this.element.closest("[hidden]")
+    const enabled = this.toggleElementTarget.checked && !isHidden
+    const activeMode = MODE_MAP[this.operatorTarget.value] || "single"
 
     this.fieldNameTarget.disabled = !enabled
     this.operatorTarget.disabled = !enabled
 
-    this.isNullValueTarget.disabled = !isNullSelected
-    this.isNullValueTarget.style.display = isNullSelected ? "unset" : "none"
+    const groups = [
+      {
+        key: "single",
+        input: "value",
+        wrapper: "valueWrapper",
+        visible: !enabled || activeMode === "single",
+      },
+      { key: "null", input: "isNullValue", wrapper: "isNullValueWrapper" },
+      {
+        key: "multi",
+        input: "multiValue",
+        wrapper: "multiValueWrapper",
+        isMulti: true,
+      },
+      {
+        key: "between",
+        input: "betweenValue",
+        wrapper: "betweenValueWrapper",
+        isArray: true,
+      },
+    ]
 
-    this.valueTarget.disabled = !isSingleSelected
-    this.valueTarget.closest(".value-input").style.display =
-      isSingleSelected || !enabled ? "unset" : "none"
+    groups.forEach((g) => this.#syncGroup(g, enabled, activeMode))
+  }
 
-    this.multiValueTarget.disabled = !isMultiSelected
-    this.multiValueTarget.closest(".multi-value-input").style.display =
-      isMultiSelected ? "unset" : "none"
+  toggle() {
+    if (!this.toggleElementTarget.checked) {
+      this.operatorTarget.value = ""
+      this.#clearValues()
+    }
+    this.sync()
+  }
 
-    const tomSelect = this.multiValueTarget.tomselect
-    if (tomSelect) {
-      this.multiValueTarget.disabled ? tomSelect.disable() : tomSelect.enable()
+  operatorChanged() {
+    this.#clearValues()
+    this.sync()
+  }
+
+  #syncGroup(
+    { key, input, wrapper, visible, isMulti, isArray },
+    enabled,
+    activeMode,
+  ) {
+    const isActive = enabled && activeMode === key
+    const isWrapperVisible = visible ?? isActive
+
+    const inputTarget = isArray
+      ? this.hasBetweenValueTarget
+        ? this.betweenValueTargets
+        : null
+      : this.#target(input)
+
+    const wrapperTarget = this.#target(wrapper)
+
+    if (inputTarget) {
+      const inputs = Array.isArray(inputTarget) ? inputTarget : [inputTarget]
+      inputs.forEach((i) => (i.disabled = !isActive))
     }
 
-    if (this.hasBetweenValueTarget) {
-      this.betweenValueTargets.forEach(
-        (input) => (input.disabled = !isBetweenSelected)
-      )
-      this.betweenValueTarget.closest(".between-value-input").style.display =
-        isBetweenSelected ? "unset" : "none"
+    if (wrapperTarget) {
+      wrapperTarget.hidden = !isWrapperVisible
+    }
+
+    if (isMulti && inputTarget?.tomselect) {
+      isActive
+        ? inputTarget.tomselect.enable()
+        : inputTarget.tomselect.disable()
     }
   }
 
-  #clearInputValue() {
-    this.isNullValueTarget.value = null
-    this.valueTarget.value = null
-    this.multiValueTarget.value = null
+  #target(name) {
+    const capitalized = name.charAt(0).toUpperCase() + name.slice(1)
+    return this[`has${capitalized}Target`] ? this[`${name}Target`] : null
+  }
 
-    if (this.hasBetweenValueTarget) {
-      this.betweenValueTargets.forEach((input) => (input.value = null))
-    }
+  #clearValues() {
+    this.element
+      .querySelectorAll("input:not([type='checkbox']), select, textarea")
+      .forEach((input) => {
+        if (input !== this.fieldNameTarget && input !== this.operatorTarget) {
+          input.value = ""
+        }
+      })
 
-    const tomSelect = this.multiValueTarget.tomselect
-    if (tomSelect) {
-      tomSelect.clear()
-      tomSelect.sync()
+    if (this.hasMultiValueTarget && this.multiValueTarget?.tomselect) {
+      this.multiValueTarget.tomselect.clear()
+      this.multiValueTarget.tomselect.sync()
     }
   }
 }
