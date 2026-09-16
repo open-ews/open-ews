@@ -208,6 +208,15 @@ RSpec.describe BroadcastForm do
 
     form = BroadcastForm.new(
       account: create(:account),
+      geocode_target_areas: [ { "foo" => "bar" } ]
+    )
+
+    form.valid?
+
+    expect(form.errors[:geocode_target_areas]).to be_present
+
+    form = BroadcastForm.new(
+      account: create(:account),
       geocode_target_areas: ""
     )
 
