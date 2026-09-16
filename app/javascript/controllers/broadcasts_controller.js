@@ -41,14 +41,18 @@ export default class extends Controller {
     if (this.hasBeneficiaryFiltersContainerTarget) {
       this.beneficiaryFiltersContainerTarget.hidden = !isDeliverable
 
-      // Broadcast event to child filter controllers to re-sync their internal state
-      const filterCheckboxes =
-        this.beneficiaryFiltersContainerTarget.querySelectorAll(
-          "input[type='checkbox'][data-action*='sync']",
-        )
-      filterCheckboxes.forEach((cb) =>
-        cb.dispatchEvent(new Event("change", { bubbles: true })),
+      const allInputs = this.beneficiaryFiltersContainerTarget.querySelectorAll(
+        "input, select, textarea",
       )
+
+      if (!isDeliverable) {
+        allInputs.forEach((input) => (input.disabled = true))
+      } else {
+        allInputs.forEach((input) => (input.disabled = false))
+        this.beneficiaryFiltersContainerTarget.dispatchEvent(
+          new Event("change", { bubbles: true }),
+        )
+      }
     }
   }
 

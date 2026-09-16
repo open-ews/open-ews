@@ -1,6 +1,14 @@
 <%= filter_form.simple_fields_for(field_name, filter_form.object.attributes[field_name]) do |field_form| %>
   <% element_id = field_form.object_name.parameterize.underscore %>
-  <%= tag.div(id: element_id, class: "row filter-field", data: { controller: "filter-field" }, style: ("display: none;" if local_assigns[:visibility].present? && visibility.hidden?)) do %>
+  <%= tag.div(
+    id: element_id,
+    class: "row",
+    data: {
+      controller: "filter-field",
+      action: "change@window->filter-field#sync"
+    },
+      style: ("display: none;" if local_assigns[:visibility].present? && visibility.hidden?)
+    ) do %>
     <div class="col">
       <div class="input-group mb-3">
         <span class="input-group-text">

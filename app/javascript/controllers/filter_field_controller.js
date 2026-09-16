@@ -20,76 +20,85 @@ export default class extends Controller {
   }
 
   sync() {
-    const enabled = this.toggleElementTarget.checked
-    const operator = this.operatorTarget.value
+    // A row is only active if checked AND visible in the DOM
+    const isContainerHidden = this.element.closest("[hidden]") !== null
+    const enabled = this.toggleElementTarget.checked && !isContainerHidden
+    const op = this.operatorTarget.value
 
-    // 1. Control fields
     this.fieldNameTarget.disabled = !enabled
     this.operatorTarget.disabled = !enabled
 
-    // 2. Determine active input mode
-    let activeMode = "single"
-    if (operator === "is_null") activeMode = "null"
-    else if (["in", "not_in"].includes(operator)) activeMode = "multi"
-    else if (operator === "between") activeMode = "between"
+    // Map operator directly to active key
+    const modeMap = {
+      is_null: "null",
+      in: "multi",
+      not_in: "multi",
+      between: "between",
+    }
+    const activeMode = modeMap[op] || "single"
 
-    // 3. Set Input Disabled States
-    this.#toggleInputState(
+    // 1. Single Value
+    this.#syncGroup(
       this.hasValueTarget ? this.valueTarget : null,
+      this.hasValueWrapperTarget ? this.valueWrapperTarget : null,
       enabled && activeMode === "single",
+      !enabled || activeMode === "single",
     )
-    this.#toggleInputState(
+
+    // 2. Is Null
+    this.#syncGroup(
       this.hasIsNullValueTarget ? this.isNullValueTarget : null,
+      this.hasIsNullValueWrapperTarget ? this.isNullValueWrapperTarget : null,
       enabled && activeMode === "null",
     )
-    this.#toggleInputState(
+
+    // 3. Multi Select
+    this.#syncGroup(
       this.hasMultiValueTarget ? this.multiValueTarget : null,
+      this.hasMultiValueWrapperTarget ? this.multiValueWrapperTarget : null,
+      enabled && activeMode === "multi",
       enabled && activeMode === "multi",
       true,
     )
-    this.#toggleInputState(
+
+    // 4. Between Values
+    this.#syncGroup(
       this.hasBetweenValueTarget ? this.betweenValueTargets : null,
+      this.hasBetweenValueWrapperTarget ? this.betweenValueWrapperTarget : null,
       enabled && activeMode === "between",
     )
-
-    // 4. Set Wrapper Visibility States
-    const showSingleWrapper = enabled ? activeMode === "single" : true
-    const showNullWrapper = enabled && activeMode === "null"
-    const showMultiWrapper = enabled && activeMode === "multi"
-    const showBetweenWrapper = enabled && activeMode === "between"
-
-    if (this.hasValueWrapperTarget)
-      this.valueWrapperTarget.hidden = !showSingleWrapper
-    if (this.hasIsNullValueWrapperTarget)
-      this.isNullValueWrapperTarget.hidden = !showNullWrapper
-    if (this.hasMultiValueWrapperTarget)
-      this.multiValueWrapperTarget.hidden = !showMultiWrapper
-    if (this.hasBetweenValueWrapperTarget)
-      this.betweenValueWrapperTarget.hidden = !showBetweenWrapper
   }
 
-  // Called when the row checkbox changes
   toggle() {
     if (!this.toggleElementTarget.checked) {
-      this.#clearOperator()
-      this.#clearValuesOnly()
+      this.operatorTarget.value = ""
+      this.#clearValues()
     }
     this.sync()
   }
 
-  // Called when the operator dropdown changes
   operatorChanged() {
-    this.#clearValuesOnly()
+    this.#clearValues()
     this.sync()
   }
 
-  #toggleInputState(inputOrInputs, isActive, isMulti = false) {
-    if (!inputOrInputs) return
+  #syncGroup(
+    inputOrInputs,
+    wrapper,
+    isActive,
+    isVisible = isActive,
+    isMulti = false,
+  ) {
+    if (inputOrInputs) {
+      const inputs = Array.isArray(inputOrInputs)
+        ? inputOrInputs
+        : [inputOrInputs]
+      inputs.forEach((input) => (input.disabled = !isActive))
+    }
 
-    const inputs = Array.isArray(inputOrInputs)
-      ? inputOrInputs
-      : [inputOrInputs]
-    inputs.forEach((input) => (input.disabled = !isActive))
+    if (wrapper) {
+      wrapper.hidden = !isVisible
+    }
 
     if (isMulti && inputOrInputs?.tomselect) {
       isActive
@@ -98,23 +107,14 @@ export default class extends Controller {
     }
   }
 
-  #clearOperator() {
-    if (this.hasOperatorTarget) {
-      this.operatorTarget.value = ""
-    }
-  }
-
-  #clearValuesOnly() {
-    const inputsToClear = [
-      ...(this.hasValueTarget ? [this.valueTarget] : []),
-      ...(this.hasIsNullValueTarget ? [this.isNullValueTarget] : []),
-      ...(this.hasMultiValueTarget ? [this.multiValueTarget] : []),
-      ...(this.hasBetweenValueTarget ? this.betweenValueTargets : []),
-    ]
-
-    inputsToClear.forEach((input) => {
-      if (input) input.value = ""
-    })
+  #clearValues() {
+    this.element
+      .querySelectorAll("input:not([type='checkbox']), select, textarea")
+      .forEach((input) => {
+        if (input !== this.fieldNameTarget && input !== this.operatorTarget) {
+          input.value = ""
+        }
+      })
 
     if (this.hasMultiValueTarget && this.multiValueTarget?.tomselect) {
       this.multiValueTarget.tomselect.clear()
