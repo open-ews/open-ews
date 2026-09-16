@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import { SegmentedMessage } from "sms-segments-calculator"
 
-// Connects to data-controller="broadcasts"
 export default class extends Controller {
   static targets = [
     "channelInput",
@@ -29,80 +28,63 @@ export default class extends Controller {
   }
 
   toggleChannel() {
-    const selectedChannel = this.channelInputTarget.value
-    const isAudio = this.audioChannelsValue.includes(selectedChannel)
-    const isText = this.textChannelsValue.includes(selectedChannel)
-    const isDeliverable =
-      this.deliverableChannelsValue.includes(selectedChannel)
+    const channel = this.channelInputTarget.value
 
-    this.#toggleInput(this.audioFileInputTarget, isAudio)
-    this.#toggleInput(this.messageInputTarget, isText)
-    this.#toggleInput(this.beneficiaryGroupsInputTarget, isDeliverable)
-    this.#toggleContainer(this.beneficiaryFiltersContainerTarget, isDeliverable)
+    const isAudio = this.audioChannelsValue.includes(channel)
+    const isText = this.textChannelsValue.includes(channel)
+    const isDeliverable = this.deliverableChannelsValue.includes(channel)
+
+    this.#toggleTarget(this.audioFileInputTarget, isAudio)
+    this.#toggleTarget(this.messageInputTarget, isText)
+    this.#toggleTarget(this.beneficiaryGroupsInputTarget, isDeliverable)
+
+    if (this.hasBeneficiaryFiltersContainerTarget) {
+      this.beneficiaryFiltersContainerTarget.hidden = !isDeliverable
+
+      // Broadcast event to child filter controllers to re-sync their internal state
+      const filterCheckboxes =
+        this.beneficiaryFiltersContainerTarget.querySelectorAll(
+          "input[type='checkbox'][data-action*='sync']",
+        )
+      filterCheckboxes.forEach((cb) =>
+        cb.dispatchEvent(new Event("change", { bubbles: true })),
+      )
+    }
+  }
+
+  #toggleTarget(wrapperTarget, enable) {
+    if (!wrapperTarget) return
+    wrapperTarget.hidden = !enable
+
+    const input = wrapperTarget.querySelector("input, textarea, select")
+    if (input) input.disabled = !enable
   }
 
   #updateCharacterCount() {
-    const input = this.#getInputTarget(this.messageInputTarget)
-    const infoTarget = this.#getInfoTarget(this.messageInputTarget)
+    const input = this.messageInputTarget.querySelector("input, textarea")
+    const infoTarget = this.messageInputTarget.querySelector(".input-info span")
+    if (!input || !infoTarget) return
 
     const count = input.value.length
-    const formattedCount = new Intl.NumberFormat().format(count)
-
     const pluralRule = new Intl.PluralRules().select(count)
     const template =
       this.characterCountTranslationsValue[pluralRule] ??
       this.characterCountTranslationsValue.other
 
-    infoTarget.textContent = template.replace("%{count}", formattedCount)
+    infoTarget.textContent = template.replace(
+      "%{count}",
+      new Intl.NumberFormat().format(count),
+    )
   }
 
   #checkSegments() {
-    const input = this.#getInputTarget(this.messageInputTarget)
-    const segmentedMessage = new SegmentedMessage(input.value)
-    const warningTarget = this.#getWarningTarget(this.messageInputTarget)
+    const input = this.messageInputTarget.querySelector("input, textarea")
+    const warningTarget =
+      this.messageInputTarget.querySelector(".input-warning")
+    if (!input || !warningTarget) return
 
-    if (
-      segmentedMessage.segmentsCount > this.messageSegmentWarningThresholdValue
-    ) {
-      warningTarget.style.display = "block"
-    } else {
-      warningTarget.style.display = "none"
-    }
-  }
-
-  #toggleInput(wrapperTarget, enable) {
-    if (!wrapperTarget) return
-
-    const input = this.#getInputTarget(wrapperTarget)
-    if (input) input.disabled = !enable
-
-    wrapperTarget.hidden = !enable
-  }
-
-  #toggleContainer(containerTarget, enable) {
-    if (!containerTarget) return
-
-    containerTarget.hidden = !enable
-
-    const inputs = containerTarget.querySelectorAll("input, select, textarea")
-    inputs.forEach((input) => {
-      input.disabled = !enable
-
-      if (enable) {
-        input.dispatchEvent(new Event("change", { bubbles: true }))
-      }
-    })
-  }
-
-  #getInputTarget(target) {
-    return target.querySelector("input, textarea, select")
-  }
-
-  #getWarningTarget(target) {
-    return target.querySelector(".input-warning")
-  }
-
-  #getInfoTarget(target) {
-    return target.querySelector(".input-info span")
+    const segments = new SegmentedMessage(input.value).segmentsCount
+    warningTarget.style.display =
+      segments > this.messageSegmentWarningThresholdValue ? "block" : "none"
   }
 }

@@ -8,6 +8,8 @@ export default class extends Controller {
     selected: Array,
   }
 
+  static targets = ["treeContainer"]
+
   connect() {
     this.tree = new InspireTree({
       data: this.dataValue,
@@ -18,7 +20,7 @@ export default class extends Controller {
     })
 
     new InspireTreeDOM(this.tree, {
-      target: this.element,
+      target: this.treeContainerTarget,
     })
 
     this.#markChecked()

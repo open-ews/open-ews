@@ -238,17 +238,23 @@
         <%= Broadcast.human_attribute_name(:target_areas) %>
       </div>
 
-      <div class="row" id="target_areas">
+      <%= tag.div(
+        class: "row",
+        data: {
+          controller: "treeview",
+          treeview_data_value: locality_tree.to_json,
+          treeview_selected_value: @broadcast.geocode_target_areas.pluck(:path).to_json
+        }
+      ) do %>
         <div class="col">
           <%= tag.div(
+            id: "tree-container",
             data: {
-              controller: :treeview,
-              treeview_data_value: locality_tree.to_json,
-              treeview_selected_value: @broadcast.geocode_target_areas.pluck(:path).to_json
+              treeview_target: "treeContainer"
             }
           ) %>
         </div>
-      </div>
+      <% end %>
     <% end %>
   </div>
 </div>

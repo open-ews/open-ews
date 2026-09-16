@@ -53,7 +53,6 @@ RSpec.describe "Broadcasts" do
     attach_file("Audio file", file_fixture("test.mp3"))
     select_list("My group", "My other group", from: "Beneficiary groups")
     select_filter("Gender", operator: "Equals", select: "Male")
-    select_filter("Target areas")
     select_tree("Banteay Meanchey", "Mongkol Borey", "Banteay Neang")
 
     click_on("Create Broadcast")
@@ -68,7 +67,7 @@ RSpec.describe "Broadcasts" do
       expect(page).to have_field(with: "Equals")
       expect(page).to have_field(with: "Male")
     end
-    within("#beneficiary_filter_administrative_division_level_3_code") do
+    within("#tree-container") do
       expect(page).to have_content("Banteay Meanchey")
       expect(page).to have_content("Mongkol Borey")
       expect(page).to have_content("Banteay Neang")
@@ -175,40 +174,6 @@ RSpec.describe "Broadcasts" do
     expect(page).to have_no_field(with: "Phone number")
   end
 
-  it "show a broadcast with a tree", :js do
-    # Todo: remove this after we have fixed the create a broadcast test
-    account = create(:account, iso_country_code: "KH")
-    user = create(:user, account:)
-    broadcast = create(:broadcast, account:)
-    create(
-      :geocode_target_area,
-      path: [ "KH-1", "0102", "010201" ],
-      broadcast:
-    )
-    create(
-      :geocode_target_area,
-      path: [ "KH-2", "0201" ],
-      broadcast:
-    )
-
-    account_sign_in(user)
-    visit dashboard_broadcast_path(broadcast)
-
-    within("#target_areas") do
-      expect(page).to have_content("Banteay Meanchey")
-      expect(page).to have_content("Mongkol Borey")
-      expect(page).to have_content("Banteay Neang")
-      expect(page).to have_no_content("Bat Trang")
-      expect(page).to have_no_content("Phnum Srok")
-      expect(page).to have_content("Battambang")
-      expect(page).to have_content("Banan")
-      expect(page).to have_content("Kantueu Muoy")
-      expect(page).to have_content("Kantueu Pir")
-      expect(page).to have_no_content("Thma Koul")
-      expect(page).to have_no_content("Phnom Penh")
-    end
-  end
-
   it "update a broadcast", :js do
     account = create(:account, iso_country_code: "KH")
     user = create(:user, account:)
@@ -221,9 +186,13 @@ RSpec.describe "Broadcasts" do
       beneficiary_groups: [ create_beneficiary_group(name: "My group", account:) ],
       beneficiary_filter: {
         phone_number: { in: [ "855715100850",  "855715100851" ] },
-        disability_status: { eq: "none" },
-        "address.administrative_division_level_3_code": { in: [ "120101" ] }
+        disability_status: { eq: "none" }
       }
+    )
+    create(
+      :geocode_target_area,
+      broadcast:,
+      path: [ "KH-12", "1201", "120101" ]
     )
 
     account_sign_in(user)
@@ -266,7 +235,7 @@ RSpec.describe "Broadcasts" do
       expect(page).to have_field(with: "In")
       expect(page).to have_select(selected: [ "855715100850",  "855715100851" ])
     end
-    within("#beneficiary_filter_administrative_division_level_3_code") do
+    within("#tree-container") do
       expect(page).to have_content("Banteay Meanchey")
       expect(page).to have_content("Mongkol Borey")
       expect(page).to have_content("Banteay Neang")
@@ -438,7 +407,7 @@ RSpec.describe "Broadcasts" do
   end
 
   def select_tree(*values)
-    within("#broadcast_beneficiary_filter_administrative_division_level_3_code") do
+    within("#tree-container") do
       values.each do |value|
         title = find("a", text: value)
         if value == values.last

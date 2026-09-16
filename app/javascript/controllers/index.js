@@ -4,9 +4,6 @@
 
 import { application } from "./application"
 
-import BeneficiaryAddressesFilterFieldController from "./beneficiary_addresses_filter_field_controller"
-application.register("beneficiary-addresses-filter-field", BeneficiaryAddressesFilterFieldController)
-
 import BroadcastsController from "./broadcasts_controller"
 application.register("broadcasts", BroadcastsController)
 
@@ -17,7 +14,10 @@ import GeocodeTreeController from "./geocode_tree_controller"
 application.register("geocode-tree", GeocodeTreeController)
 
 import NotificationsStatsChartController from "./notifications_stats_chart_controller"
-application.register("notifications-stats-chart", NotificationsStatsChartController)
+application.register(
+  "notifications-stats-chart",
+  NotificationsStatsChartController,
+)
 
 import RemoveNestedFormController from "./remove_nested_form_controller"
 application.register("remove-nested-form", RemoveNestedFormController)

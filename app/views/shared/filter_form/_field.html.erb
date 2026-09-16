@@ -4,9 +4,26 @@
     <div class="col">
       <div class="input-group mb-3">
         <span class="input-group-text">
-          <input class="form-check-input m-0" id="<%= "#{element_id}_enabled" %>" type="checkbox" <%= "checked" if field_form.object.present? %> data-filter-field-target="toggleElement" data-action="filter-field#toggle" />
+          <%= tag.input(
+            class: "form-check-input m-0",
+            id: "#{element_id}_enabled",
+            type: "checkbox",
+            checked: field_form.object.present?,
+            data: {
+              filter_field_target: "toggleElement",
+              action: "filter-field#toggle"
+            }
+          ) %>
         </span>
-        <input class="form-control" type="text" value="<%= human_attribute_name(field_name, namespace: current_account.iso_country_code) %>" readonly data-filter-field-target="fieldName" />
+        <%= tag.input(
+          class: "form-control",
+          type: "text",
+          value: human_attribute_name(field_name, namespace: current_account.iso_country_code),
+          readonly: true,
+          data: {
+            filter_field_target: "fieldName"
+          }
+        ) %>
       </div>
     </div>
 
@@ -20,14 +37,18 @@
         input_html: {
           data: {
             action: "filter-field#operatorChanged",
-            "filter-field-target": "operator"
+            filter_field_target: "operator"
           }
         }
       ) %>
     </div>
 
     <div class="col">
-      <div class="value-input hidden">
+      <%= tag.div(
+        data: {
+          filter_field_target: "valueWrapper"
+        }
+      ) do %>
         <% base_options = { label: false, required: true, input_html: { data: { "filter-field-target": "value" } } } %>
         <% case field_definition.filter.schema %>
         <% when FieldDefinitions::FilterSchema::ListType, FieldDefinitions::FilterSchema::ArrayType %>
@@ -68,7 +89,7 @@
             **base_options
           ) %>
         <% end %>
-      </div>
+      <% end %>
 
       <% if field_definition.filter.schema.is_a?(FieldDefinitions::FilterSchema::ValueType) %>
         <%
@@ -78,7 +99,9 @@
             wrapper: false,
             input_html: {
               name: "#{field_form.object_name}[value][]",
-              data: { "filter-field-target": "betweenValue" }
+              data: {
+                filter_field_target: "betweenValue"
+              }
             }
           }
         %>
@@ -92,7 +115,11 @@
           ) if field_definition.filter.schema.form_value_type == :integer
         %>
         <% existing_field_values = field_form.object&.operator == "between" ? field_form.object.value : [] %>
-        <div class="between-value-input hidden">
+        <%= tag.div(
+          data: {
+            filter_field_target: "betweenValueWrapper"
+          }
+        ) do %>
           <div class="row">
             <% 2.times do |index| %>
               <div class="col">
@@ -110,10 +137,14 @@
               </div>
             <% end %>
           </div>
-        </div>
+        <% end %>
       <% end %>
 
-      <div class="multi-value-input hidden">
+      <%= tag.div(
+        data: {
+          filter_field_target: "multiValueWrapper"
+        }
+      ) do %>
         <% selected_values = [ "in", "not_in" ].include?(field_form.object&.operator) ? field_form.object.value : [] %>
         <% base_options = { label: false, required: true, include_hidden: false, multiple: true, selected: selected_values } %>
         <% if field_definition.filter.schema.respond_to?(:options_for_select) %>
@@ -143,11 +174,25 @@
             **base_options
           ) %>
         <% end %>
-      </div>
+      <% end %>
 
-      <div class="is-null-value-input hidden">
-        <%= field_form.input(:value, label: false, as: :select, required: true, input_html: { data: { "filter-field-target": "isNullValue" } }) %>
-      </div>
+      <%= tag.div(
+        data: {
+          filter_field_target: "isNullValueWrapper",
+        }
+      ) do %>
+        <%= field_form.input(
+          :value,
+          label: false,
+          as: :select,
+          required: true,
+          input_html: {
+            data: {
+              filter_field_target: "isNullValue"
+            }
+          }
+        ) %>
+      <% end%>
     </div>
   <% end %>
 <% end %>
