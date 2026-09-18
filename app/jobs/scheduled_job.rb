@@ -31,7 +31,11 @@ class ScheduledJob < ApplicationJob
 
   def complete_broadcasts
     Broadcast.where(status: :running).find_each do |broadcast|
-      broadcast.transition_to(:completed, touch: :completed_at) if broadcast.notifications.where(status: :pending).none?
+      if broadcast.channel_capabilities.any?(&:deliverable?)
+        broadcast.transition_to(:completed, touch: :completed_at) if broadcast.notifications.where(status: :pending).none?
+      else
+        broadcast.transition_to(:completed, touch: :completed_at)
+      end
     end
   end
 
