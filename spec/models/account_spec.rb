@@ -13,10 +13,17 @@ RSpec.describe Account do
   end
 
   it "validates the dashboard beneficiary filter whitelist" do
-    account = build(:account, dashboard_broadcast_beneficiary_filter_whitelist: [ "invalid_field" ])
+    account = build(:account, dashboard_broadcast_beneficiary_filter_whitelist: [ :gender ])
+    account.valid?
+    expect(account.errors[:dashboard_broadcast_beneficiary_filter_whitelist]).to be_blank
 
-    expect(account).not_to be_valid
-    expect(account.errors[:dashboard_broadcast_beneficiary_filter_whitelist]).to include("is invalid")
+    account = build(:account, dashboard_broadcast_beneficiary_filter_whitelist: [ "invalid_field" ])
+    account.valid?
+    expect(account.errors[:dashboard_broadcast_beneficiary_filter_whitelist]).to be_present
+
+    account = build(:account, dashboard_broadcast_beneficiary_filter_whitelist: nil)
+    account.valid?
+    expect(account.errors[:dashboard_broadcast_beneficiary_filter_whitelist]).to be_blank
   end
 
   describe "#api_key" do

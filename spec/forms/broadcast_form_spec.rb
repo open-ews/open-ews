@@ -1,6 +1,29 @@
 require "rails_helper"
 
 RSpec.describe BroadcastForm do
+  describe "#beneficiary_filter_fields" do
+    it "handles nil whitelists" do
+      account = create(:account, dashboard_broadcast_beneficiary_filter_whitelist: nil)
+
+      form = BroadcastForm.new(account:)
+
+      expect(form.beneficiary_filter_fields).to include(
+        have_attributes(name: :gender)
+      )
+      expect(form.beneficiary_filter_fields).not_to include(
+        have_attributes(name: :status)
+      )
+    end
+
+    it "handles empty whitelists" do
+      account = create(:account, dashboard_broadcast_beneficiary_filter_whitelist: [])
+
+      form = BroadcastForm.new(account:)
+
+      expect(form.beneficiary_filter_fields).to be_empty
+    end
+  end
+
   it "handles initialization" do
     broadcast = create(
       :broadcast,
