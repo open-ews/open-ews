@@ -17,12 +17,7 @@ module FieldDefinitions
       ),
       Field.new(
         name: "channels",
-        filter: Filter.new(
-          schema: FilterSchema::ArrayType.define(included_in: Broadcast.channel.values),
-          query: FieldQuery.new(
-            arel_column: Broadcast.arel_table[:channel],
-          )
-        ),
+        filter: BroadcastFilter.channel,
         description: "Must be one of #{Broadcast.channel.values.map { |t| "`#{t}`" }.join(", ")}.",
       ),
       Field.new(

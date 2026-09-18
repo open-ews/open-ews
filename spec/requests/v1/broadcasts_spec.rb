@@ -53,20 +53,21 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Filter running broadcasts by included coverage area" do
+    example "Filter running audio broadcasts by included coverage area" do
       explanation <<~HEREDOC
         Use the `contains` operator to return broadcasts where any target area contains any of specified administrative divisions.
         The filter matches broadcasts whose target area coverage contains the provided geocodes.
       HEREDOC
 
       account = create(:account)
-      matching_broadcast = create(:broadcast, :running, account:)
-      create(
+      matching_broadcast = create(
         :broadcast,
+        :audio,
         :running,
         account:,
         target_areas: { geocode: [ { iso_region_code: "KH-1" } ] }
       )
+      create(:broadcast, :running, :audio, account:)
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
@@ -89,6 +90,9 @@ RSpec.resource "Broadcasts"  do
           status: {
             eq: :running
           },
+          channels: {
+            contains: [ "audio" ]
+          },
           "target_areas.geocode.administrative_division_level_3_code": {
             contains: [ "010201",  "010202" ]
           }
@@ -102,7 +106,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Filter running broadcasts by exclusive coverage area" do
+    example "Filter running audio broadcasts by exclusive coverage area" do
       explanation <<~HEREDOC
         Use the `eq` operator to return broadcasts where all target areas match exactly the specified administrative divisions.
         The filter matches broadcasts whose target areas are entirely within the provided geocodes.
