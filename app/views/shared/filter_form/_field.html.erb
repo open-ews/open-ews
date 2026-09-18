@@ -3,12 +3,12 @@
   <%= tag.div(
     id: element_id,
     class: "row filter-field",
+    style: ("display: none;" if local_assigns[:visibility]&.hidden?),
     data: {
       controller: "filter-field",
       action: "change@window->filter-field#sync"
-    },
-      style: ("display: none;" if local_assigns[:visibility].present? && local_assigns.fetch(:visibility).hidden?)
-    ) do %>
+    }
+  ) do %>
     <div class="col">
       <div class="input-group mb-3">
         <span class="input-group-text">
