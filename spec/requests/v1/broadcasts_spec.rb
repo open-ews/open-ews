@@ -61,7 +61,12 @@ RSpec.resource "Broadcasts"  do
 
       account = create(:account)
       matching_broadcast = create(:broadcast, :running, account:)
-      create(:broadcast, :running, account:)
+      create(
+        :broadcast,
+        :running,
+        account:,
+        target_areas: { geocode: [ { iso_region_code: "KH-1" } ] }
+      )
       create(
         :geocode_target_area,
         broadcast: matching_broadcast,
@@ -104,7 +109,12 @@ RSpec.resource "Broadcasts"  do
       HEREDOC
 
       account = create(:account)
-      matching_broadcast = create(:broadcast, :running, account:)
+      matching_broadcast = create(
+        :broadcast,
+        :running,
+        account:,
+        target_areas: { geocode: [ { iso_region_code: "KH-1" } ] }
+      )
       non_matching_broadcast = create(:broadcast, :running, account:)
       create(
         :geocode_target_area,
