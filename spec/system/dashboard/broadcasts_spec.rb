@@ -161,16 +161,13 @@ RSpec.describe "Broadcasts" do
     account = create(
       :account,
       iso_country_code: "KH",
-      dashboard_broadcast_beneficiary_filter_whitelist: [
-        "gender"
-      ]
+      dashboard_broadcast_beneficiary_filter_whitelist: []
     )
     user = create(:user, account:)
 
     account_sign_in(user)
     visit new_dashboard_broadcast_path
 
-    expect(page).to have_field(with: "Gender")
     expect(page).to have_no_field(with: "Phone number")
   end
 

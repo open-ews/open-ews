@@ -7,7 +7,7 @@
       controller: "filter-field",
       action: "change@window->filter-field#sync"
     },
-      style: ("display: none;" if local_assigns[:visibility].present? && visibility.hidden?)
+      style: ("display: none;" if local_assigns[:visibility].present? && local_assigns.fetch(:visibility).hidden?)
     ) do %>
     <div class="col">
       <div class="input-group mb-3">
