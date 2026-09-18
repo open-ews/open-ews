@@ -1,5 +1,3 @@
-<% whitelist = local_assigns[:whitelist] %>
-
 <% filter_form.object.class.attributes.each do |attribute_name, attribute_type| %>
   <% field_definition = FieldDefinitions::BeneficiaryFields.find_by!(name: attribute_name) %>
 
@@ -8,6 +6,6 @@
     filter_form:,
     field_name: attribute_name,
     field_definition:,
-    visibility: ("hidden".inquiry if whitelist.present? && whitelist.exclude?(field_definition))
+    visibility: ("hidden".inquiry if local_assigns.key?(:whitelist) && local_assigns.fetch(:whitelist).exclude?(field_definition))
   ) %>
 <% end %>
