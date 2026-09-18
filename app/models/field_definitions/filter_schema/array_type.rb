@@ -2,11 +2,10 @@ module FieldDefinitions
   module FilterSchema
     class ArrayType < Base
       def self.define(type: Dry.Types()::String, **options)
+        value_type = options.key?(:included_in) ? type.enum(*Array(options[:included_in])) : type
         schema = Dry::Schema.Params do
-          schema_options = {}
-          schema_options[:included_in?] = Array(options[:included_in]) if options.key?(:included_in)
           options.fetch(:operators, [ :eq, :contains ]).each do |operator|
-            optional(operator).filled(type | Types::Array.of(type), **schema_options)
+            optional(operator).filled(value_type | Types::Array.of(value_type))
           end
         end
 

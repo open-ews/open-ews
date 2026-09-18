@@ -6,6 +6,8 @@ module FieldDefinitions
       it "supports `eq` operator" do
         expect(validate_schema(build_schema, input: { eq: [ "foo", "bar" ] })).to be_success
         expect(validate_schema(build_schema, input: { eq: "foo" })).to be_success
+        expect(validate_schema(build_schema(included_in: [ "bar" ]), input: { eq: "bar" })).to be_success
+        expect(validate_schema(build_schema(included_in: [ "bar" ]), input: { eq: [ "bar" ] })).to be_success
         expect(validate_schema(build_schema(included_in: [ "bar" ]), input: { eq: "foo" })).not_to be_success
         expect(validate_schema(build_schema(included_in: [ "bar" ]), input: { eq: [ "foo", "bar" ] })).not_to be_success
       end
@@ -13,6 +15,8 @@ module FieldDefinitions
       it "supports `contains` operator" do
         expect(validate_schema(build_schema, input: { contains: [ "foo", "bar" ] })).to be_success
         expect(validate_schema(build_schema, input: { contains: "foo" })).to be_success
+        expect(validate_schema(build_schema(included_in: [ "bar" ]), input: { contains: "bar" })).to be_success
+        expect(validate_schema(build_schema(included_in: [ "bar" ]), input: { contains: [ "bar" ] })).to be_success
         expect(validate_schema(build_schema(included_in: [ "bar" ]), input: { contains: "foo" })).not_to be_success
         expect(validate_schema(build_schema(included_in: [ "bar" ]), input: { contains: [ "foo", "bar" ] })).not_to be_success
       end
