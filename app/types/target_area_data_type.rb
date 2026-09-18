@@ -5,6 +5,8 @@ class TargetAreaDataType < ActiveRecord::Type::Json
     end
 
     def as_json
+      return {} if blank?
+
       { "geocode" => geocode.map(&:as_json) }
     end
 

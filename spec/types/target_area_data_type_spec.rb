@@ -6,6 +6,9 @@ RSpec.describe TargetAreaDataType do
   end
 
   it "handles parsing target area data" do
+    expect(cast_data({})).to have_attributes(as_json: {})
+    expect(cast_data({ geocode: [] })).to have_attributes(as_json: {})
+
     result = cast_data(
       "geocode" => [
         { "iso_region_code" => "KH-1" },
