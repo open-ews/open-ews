@@ -6,6 +6,6 @@
     filter_form:,
     field_name: attribute_name,
     field_definition:,
-    visibility: ("hidden".inquiry if local_assigns.key?(:whitelist) && local_assigns.fetch(:whitelist).exclude?(field_definition))
+    visibility: ("hidden".inquiry if local_assigns[:whitelist].present? && local_assigns.fetch(:whitelist).exclude?(field_definition))
   ) %>
 <% end %>
