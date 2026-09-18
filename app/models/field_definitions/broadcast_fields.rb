@@ -23,7 +23,7 @@ module FieldDefinitions
             arel_column: Broadcast.arel_table[:channel],
           )
         ),
-        description: "Must be one of #{Broadcast.status.values.map { |t| "`#{t}`" }.join(", ")}.",
+        description: "Must be one of #{Broadcast.channel.values.map { |t| "`#{t}`" }.join(", ")}.",
       ),
       Field.new(
         name: "created_at",
