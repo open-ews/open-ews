@@ -1,6 +1,10 @@
 module FieldDefinitions
   module FilterSchema
     class ListType < Base
+      def self.type
+        "list".inquiry
+      end
+
       def self.define(type:, options:)
         schema = Dry::Schema.Params do
           optional(:eq).filled(type, included_in?: options)

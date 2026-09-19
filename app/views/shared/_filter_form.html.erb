@@ -1,6 +1,11 @@
 <%= render "shared/filter_form/form", filter_form: filter_form do |f| %>
   <% filter_form.class.attributes.each do |attribute_name, _attribute_type| %>
     <% field_definition = filter_form.filter_class.field_collection.find_by!(name: attribute_name) %>
-    <%= render "shared/filter_form/field", filter_form: f, field_name: attribute_name, field_definition: %>
+    <%= render(
+      "shared/filter_form/field",
+      filter_form: f,
+      field_name: attribute_name,
+      field_definition:
+    ) %>
   <% end %>
 <% end %>

@@ -3,6 +3,8 @@ module FieldDefinitions
     class Base
       attr_reader :schema_definition, :value_type, :form_value_type, :options
 
+      delegate :type, to: :class
+
       def initialize(schema_definition:, value_type:, **options)
         @schema_definition = schema_definition
         @value_type = value_type

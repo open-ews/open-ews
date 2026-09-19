@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-const MODE_MAP = {
+const STATIC_MODE_MAP = {
   is_null: "null",
   in: "multi",
   not_in: "multi",
@@ -8,6 +8,10 @@ const MODE_MAP = {
 }
 
 export default class extends Controller {
+  static values = {
+    schemaType: String, // "array", "list", "value", "string", etc.
+  }
+
   static targets = [
     "toggleElement",
     "fieldName",
@@ -29,29 +33,37 @@ export default class extends Controller {
   sync() {
     const isHidden = !!this.element.closest("[hidden]")
     const enabled = this.toggleElementTarget.checked && !isHidden
-    const activeMode = MODE_MAP[this.operatorTarget.value] || "single"
+    const activeMode = this.#resolveActiveMode()
 
     this.fieldNameTarget.disabled = !enabled
     this.operatorTarget.disabled = !enabled
 
+    // Keep the active mode wrapper visible even when disabled so an input is always shown
     const groups = [
       {
         key: "single",
         input: "value",
         wrapper: "valueWrapper",
-        visible: !enabled || activeMode === "single",
+        visible: activeMode === "single",
       },
-      { key: "null", input: "isNullValue", wrapper: "isNullValueWrapper" },
+      {
+        key: "null",
+        input: "isNullValue",
+        wrapper: "isNullValueWrapper",
+        visible: activeMode === "null",
+      },
       {
         key: "multi",
         input: "multiValue",
         wrapper: "multiValueWrapper",
+        visible: activeMode === "multi",
         isMulti: true,
       },
       {
         key: "between",
         input: "betweenValue",
         wrapper: "betweenValueWrapper",
+        visible: activeMode === "between",
         isArray: true,
       },
     ]
@@ -70,6 +82,21 @@ export default class extends Controller {
   operatorChanged() {
     this.#clearValues()
     this.sync()
+  }
+
+  #resolveActiveMode() {
+    const operator = this.operatorTarget.value
+
+    if (STATIC_MODE_MAP[operator]) {
+      return STATIC_MODE_MAP[operator]
+    }
+
+    // Array attributes always route to multi mode
+    if (this.schemaTypeValue === "array") {
+      return "multi"
+    }
+
+    return "single"
   }
 
   #syncGroup(
@@ -119,7 +146,8 @@ export default class extends Controller {
       })
 
     if (this.hasMultiValueTarget && this.multiValueTarget?.tomselect) {
-      this.multiValueTarget.tomselect.clear()
+      this.multiValueTarget.tomselect.clear(true)
+      this.multiValueTarget.tomselect.clearOptions()
       this.multiValueTarget.tomselect.sync()
     }
   }

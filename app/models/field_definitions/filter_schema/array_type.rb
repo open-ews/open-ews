@@ -1,6 +1,10 @@
 module FieldDefinitions
   module FilterSchema
     class ArrayType < Base
+      def self.type
+        "array".inquiry
+      end
+
       def self.define(type: Dry.Types()::String, **options)
         value_type = options.key?(:included_in) ? type.enum(*Array(options[:included_in])) : type
         schema = Dry::Schema.Params do

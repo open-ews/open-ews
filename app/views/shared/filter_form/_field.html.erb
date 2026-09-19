@@ -1,12 +1,14 @@
 <%= filter_form.simple_fields_for(field_name, filter_form.object.attributes[field_name]) do |field_form| %>
   <% element_id = field_form.object_name.parameterize.underscore %>
+  <% schema = field_definition.filter.schema %>
   <%= tag.div(
     id: element_id,
     class: "row filter-field",
     style: ("display: none;" if local_assigns[:visibility]&.hidden?),
     data: {
       controller: "filter-field",
-      action: "change@window->filter-field#sync"
+      action: "change@window->filter-field#sync",
+      filter_field_schema_type_value: schema.type
     }
   ) do %>
     <div class="col">
@@ -58,48 +60,48 @@
         }
       ) do %>
         <% base_options = { label: false, required: true, input_html: { data: { "filter-field-target": "value" } } } %>
-        <% case field_definition.filter.schema %>
-        <% when FieldDefinitions::FilterSchema::ListType, FieldDefinitions::FilterSchema::ArrayType %>
+        <% case %>
+        <% when schema.type.list? %>
           <%= field_form.input(
             :value,
             as: :select,
-            collection: field_definition.filter.schema.options_for_select,
+            collection: schema.options_for_select,
             **base_options
           ) %>
-        <% when FieldDefinitions::FilterSchema::StringType %>
+        <% when schema.type.string? %>
           <%= field_form.input(
             :value,
             as: :string,
             **base_options.deep_merge(
               input_html: {
                 class: "w-100",
-                minlength: field_definition.filter.schema.options[:length],
-                maxlength: field_definition.filter.schema.options[:length]
+                minlength: schema.options[:length],
+                maxlength: schema.options[:length]
               }
             )
           ) %>
-        <% when FieldDefinitions::FilterSchema::ValueType %>
+        <% when schema.type.value? %>
           <% if field_form.object.present? && field_form.object.value.is_a?(Array) %>
             <% base_options = base_options.deep_merge(input_html: { value: "" })  %>
-          <% elsif field_definition.filter.schema.form_value_type == :integer %>
+          <% elsif schema.form_value_type == :integer %>
             <% base_options = base_options.deep_merge(
               input_html: {
-                min: field_definition.filter.schema.options.dig(:type_options, :gteq?),
-                max: field_definition.filter.schema.options.dig(:type_options, :lteq?),
+                min: schema.options.dig(:type_options, :gteq?),
+                max: schema.options.dig(:type_options, :lteq?),
                 step: 1
               }
             ) %>
           <% end %>
           <%= field_form.input(
             :value,
-            as: field_definition.filter.schema.form_value_type,
+            as: schema.form_value_type,
             html5: true,
             **base_options
           ) %>
         <% end %>
       <% end %>
 
-      <% if field_definition.filter.schema.is_a?(FieldDefinitions::FilterSchema::ValueType) %>
+      <% if schema.type.value? %>
         <%
           base_options = {
             label: false,
@@ -116,11 +118,11 @@
         <%
           base_options = base_options.deep_merge(
             input_html: {
-              min: field_definition.filter.schema.options.dig(:type_options, :gteq?),
-              max: field_definition.filter.schema.options.dig(:type_options, :lteq?),
+              min: schema.options.dig(:type_options, :gteq?),
+              max: schema.options.dig(:type_options, :lteq?),
               step: 1
             }
-          ) if field_definition.filter.schema.form_value_type == :integer
+          ) if schema.form_value_type == :integer
         %>
         <% existing_field_values = field_form.object&.operator == "between" ? field_form.object.value : [] %>
         <%= tag.div(
@@ -133,7 +135,7 @@
               <div class="col">
                 <%= field_form.input(
                   :value,
-                  as: field_definition.filter.schema.form_value_type,
+                  as: schema.form_value_type,
                   html5: true,
                   **base_options.deep_merge(
                     input_html: {
@@ -148,18 +150,16 @@
         <% end %>
       <% end %>
 
-      <%= tag.div(
-        data: {
-          filter_field_target: "multiValueWrapper"
-        }
-      ) do %>
-        <% selected_values = [ "in", "not_in" ].include?(field_form.object&.operator) ? field_form.object.value : [] %>
+      <%= tag.div(data: { filter_field_target: "multiValueWrapper" }) do %>
+        <% operator = field_form.object&.operator %>
+        <% multi_select_operator = schema.type.array? || ["in", "not_in"].include?(operator) %>
+        <% selected_values = multi_select_operator ? Array(field_form.object&.value) : [] %>
         <% base_options = { label: false, required: true, include_hidden: false, multiple: true, selected: selected_values } %>
-        <% if field_definition.filter.schema.respond_to?(:options_for_select) %>
+        <% if schema.respond_to?(:options_for_select) && schema.options_for_select.present? %>
           <%= field_form.input(
             :value,
             as: :select,
-            collection: field_definition.filter.schema.options_for_select,
+            collection: schema.options_for_select,
             input_html: {
               class: "list-select",
               data: {
