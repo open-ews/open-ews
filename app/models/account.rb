@@ -16,9 +16,6 @@ class Account < ApplicationRecord
   enumerize :iso_country_code, in: ISO3166::Country.codes.freeze
   enumerize :supported_channels, in: Broadcast.channel.values, multiple: true
 
-  validates :dashboard_broadcast_beneficiary_filter_whitelist,
-            array_inclusion: { in: FieldDefinitions::BeneficiaryFields.map(&:name), allow_nil: true }
-
   has_one_attached :logo
 
   def api_key
