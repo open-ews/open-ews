@@ -1,6 +1,10 @@
 module FieldDefinitions
   module FilterSchema
     class StringType < Base
+      def self.type
+        "string".inquiry
+      end
+
       def self.define(type: :string, **options)
         schema = Dry::Schema.Params do
           optional(:eq).filled(type)

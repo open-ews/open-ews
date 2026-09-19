@@ -2,8 +2,9 @@ require "rails_helper"
 
 RSpec.describe "Broadcasts" do
   it "list broadcasts", :js do
-    user = create(:user)
-    pending_broadcast = create(
+    account = create(:account, iso_country_code: "KH")
+    user = create(:user, account:)
+    matching_broadcast = create(
       :broadcast,
       :pending,
       :voice_call,
@@ -30,9 +31,15 @@ RSpec.describe "Broadcasts" do
     click_on "Filters"
     select_filter("Status", operator: "Equals", select: "Pending")
     select_filter("Channels", operator: "Contains", select: "Voice call")
+    expect(page).to have_field(with: "ISO province code", disabled: true)
+    expect(page).to have_field(with: "District code", disabled: true)
+    expect(page).to have_field(with: "Commune code", disabled: true)
+    expect(page).to have_field(with: "Village code", disabled: true)
+    expect(page).to have_field(with: "Group code", disabled: true)
+
     click_on "Apply Filters"
 
-    expect(page).to have_content_tag_for(pending_broadcast)
+    expect(page).to have_content_tag_for(matching_broadcast)
     expect(page).not_to have_content_tag_for(completed_broadcast)
     expect(page).not_to have_content_tag_for(other_broadcast)
   end
