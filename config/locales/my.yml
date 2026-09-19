@@ -1,6 +1,5 @@
 ---
 my:
-  beneficiary_filters: "အကျိုးခံစားခွင့်ရှိသူ စစ်ထုတ်မှုများ"
   field_headers:
     field: "အချက်အလက်"
     operator: "စည်းမျဉ်း"

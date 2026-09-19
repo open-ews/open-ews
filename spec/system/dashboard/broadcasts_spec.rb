@@ -52,6 +52,8 @@ RSpec.describe "Broadcasts" do
     select("Voice call", from: "Channel")
     attach_file("Audio file", file_fixture("test.mp3"))
     select_list("My group", "My other group", from: "Beneficiary groups")
+
+    click_on("Beneficiary filters")
     select_filter("Gender", operator: "Equals", select: "Male")
     select_tree("Banteay Meanchey", "Mongkol Borey", "Banteay Neang")
 
@@ -82,6 +84,7 @@ RSpec.describe "Broadcasts" do
     visit new_dashboard_broadcast_path
     select("Text message", from: "Channel")
     fill_in("Message", with: "Test message")
+    click_on("Beneficiary filters")
     select_filter("Gender", operator: "Equals", select: "Male")
     click_on("Create Broadcast")
 
@@ -115,6 +118,7 @@ RSpec.describe "Broadcasts" do
 
     select("Voice", from: "Channel")
     attach_file("Audio file", file_fixture("test.mp3"))
+    click_on("Beneficiary filters")
     select_filter("Country", operator: "Equals", select: "United States of America")
     select_filter("ISO region code", operator: "Equals", fill_in: "US-AL")
     select_filter("Administrative division level 2 code", operator: "Equals", fill_in: "001")
@@ -155,20 +159,6 @@ RSpec.describe "Broadcasts" do
       expect(page).to have_field(with: "Starts with")
       expect(page).to have_field(with: "Autauga")
     end
-  end
-
-  it "handles whitelisted beneficiary filters" do
-    account = create(
-      :account,
-      iso_country_code: "KH",
-      dashboard_broadcast_beneficiary_filter_whitelist: []
-    )
-    user = create(:user, account:)
-
-    account_sign_in(user)
-    visit new_dashboard_broadcast_path
-
-    expect(page).to have_no_field(with: "Phone number")
   end
 
   it "update a broadcast", :js do
@@ -243,15 +233,7 @@ RSpec.describe "Broadcasts" do
   end
 
   it "update a broadcast created via the API", :js do
-    account = create(
-      :account,
-      iso_country_code: "KH",
-      dashboard_broadcast_beneficiary_filter_whitelist: [
-        "gender",
-        "iso_language_code",
-        "administrative_division_level_3_code"
-      ]
-    )
+    account = create(:account, iso_country_code: "KH")
     broadcast = create(
       :broadcast,
       :pending,

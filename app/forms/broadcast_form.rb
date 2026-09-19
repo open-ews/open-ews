@@ -104,9 +104,6 @@ class BroadcastForm < ApplicationForm
   def beneficiary_filter_fields
     FieldDefinitions::BeneficiaryFields.select do |field|
       next false if field.name == :status
-      next true if account.dashboard_broadcast_beneficiary_filter_whitelist.nil?
-
-      account.dashboard_broadcast_beneficiary_filter_whitelist.include?(field.name.to_s)
     end
   end
 

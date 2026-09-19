@@ -30,6 +30,7 @@ my:
     resource_type: အရင်းအမြစ်အမျိုးအစား
     message: သတင်းစကား
     beneficiary_groups: အကျိုးခံစားခွင့်ရသူ အုပ်စုများ
+    beneficiary_filters: အကျိုးခံစားခွင့်ရှိသူ စစ်ထုတ်မှုများ
     audio_file: အသံဖိုင်
     mm:
       iso_region_code: ISO တိုင်းဒေသကြီးကုဒ်
