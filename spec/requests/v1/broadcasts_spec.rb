@@ -53,7 +53,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Filter running audio broadcasts by included coverage area" do
+    example "Filter broadcasts by included coverage area" do
       explanation <<~HEREDOC
         Use the `contains` operator to return broadcasts where any target area contains any of specified administrative divisions.
         The filter matches broadcasts whose target area coverage contains the provided geocodes.
@@ -106,7 +106,7 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    example "Filter running audio broadcasts by exclusive coverage area" do
+    example "Filter broadcasts by exclusive coverage area" do
       explanation <<~HEREDOC
         Use the `eq` operator to return broadcasts where all target areas match exactly the specified administrative divisions.
         The filter matches broadcasts whose target areas are entirely within the provided geocodes.
@@ -227,20 +227,44 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    FieldDefinitions::BeneficiaryFields.each do |field|
-      with_options scope: [ :data, :attributes, :beneficiary_filter, field.path.to_sym ] do
-        parameter("$operator", field.description, required: false, method: :_disabled)
-      end
+    parameter(
+      :geocode,
+      "An array of geographic target criteria used to filter by region or administrative sub-division levels. Multiple target areas can be specified in the array; see the individual fields below for details.",
+      scope: [ :data, :attributes, :target_areas ],
+      required: false,
+      method: :_disabled
+    )
+
+    FieldDefinitions::GeocodeFields.each do |field|
+      parameter(
+        field.name.to_sym,
+        field.description,
+        scope: [ :data, :attributes, :target_areas, :geocode ],
+        required: false,
+        method: :_disabled
+      )
     end
 
-    with_options scope: [ :data, :relationships, :beneficiary_groups ] do
+    FieldDefinitions::BeneficiaryFields.each do |field|
       parameter(
-        :"data.*.type", "Must be `beneficiary_group`",
+        "$operator",
+        field.description,
+        scope: [ :data, :attributes, :beneficiary_filter, field.path.to_sym ],
+        required: false,
+        method: :_disabled
+      )
+    end
+
+    with_options scope: [ :data, :relationships, :beneficiary_groups, :data ] do
+      parameter(
+        :type,
+        "Must be `beneficiary_group`",
         required: false,
         method: :_disabled
       )
       parameter(
-        :"data.*.id", "The unique ID of the beneficiary group",
+        :id,
+        "The unique ID of the beneficiary group",
         required: false,
         method: :_disabled
       )
@@ -595,14 +619,16 @@ RSpec.resource "Broadcasts"  do
       )
     end
 
-    with_options scope: [ :data, :relationships, :beneficiary_groups ] do
+    with_options scope: [ :data, :relationships, :beneficiary_groups, :data ] do
       parameter(
-        :"data.*.type", "Must be `beneficiary_group`",
+        :type,
+        "Must be `beneficiary_group`",
         required: false,
         method: :_disabled
       )
       parameter(
-        :"data.*.id", "The unique ID of the beneficiary group",
+        :id,
+        "The unique ID of the beneficiary group",
         required: false,
         method: :_disabled
       )

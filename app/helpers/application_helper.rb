@@ -127,38 +127,42 @@ module ApplicationHelper
     end
   end
 
-  def accordion_item(id:, title:, show: false, &)
-    button_classes = [ "accordion-button" ]
-    button_classes << "collapsed" unless show
+  def collapsible_field_group(id:, title:, show: false, **html_options, &)
+    tag.div(class: [ "accordion", "accordion-tabs" ], **html_options) do
+      tag.div(class: "accordion-item") do
+        button_classes = [ "accordion-button" ]
+        button_classes << "collapsed" unless show
 
-    collapse_classes = [ "accordion-collapse", "collapse" ]
-    collapse_classes << "show" if show
+        collapse_classes = [ "accordion-collapse", "collapse" ]
+        collapse_classes << "show" if show
 
-    header = tag.h2(class: "accordion-header form-label string") do
-      tag.button(
-        class: button_classes,
-        type: "button",
-        data: {
-          bs_toggle: "collapse",
-          bs_target: "##{id}"
-        },
-        aria: {
-          expanded: show ? "true" : "false",
-          controls: id
-        }
-      ) do
-        title_span = tag.span(title, class: "w-100 text-center ms-4")
-        icon_span = tag.span(tag.i(class: "ti ti-chevron-down"), class: "accordion-button-toggle")
+        header = tag.h2(class: "accordion-header form-label string") do
+          tag.button(
+            class: button_classes,
+            type: "button",
+            data: {
+              bs_toggle: "collapse",
+              bs_target: "##{id}"
+            },
+            aria: {
+              expanded: show ? "true" : "false",
+              controls: id
+            }
+          ) do
+            title_span = tag.span(title, class: "w-100 text-center ms-4")
+            icon_span = tag.span(tag.i(class: "ti ti-chevron-down"), class: "accordion-button-toggle")
 
-        title_span + icon_span
+            title_span + icon_span
+          end
+        end
+
+        body = tag.div(id: id, class: collapse_classes) do
+          tag.div(capture(&), class: "accordion-body")
+        end
+
+        header + body
       end
     end
-
-    body = tag.div(id: id, class: collapse_classes) do
-      tag.div(capture(&), class: "accordion-body")
-    end
-
-    header + body
   end
 
   def broadcast_status(broadcast)
