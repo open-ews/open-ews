@@ -4,6 +4,8 @@ module API
       module Notifications
         class StatsController < APIController
           def index
+            expires_in(broadcast.completed? ? 1.year : 5.minutes, public: true)
+
             validate_request_schema(
               with: ::V1::NotificationStatsRequestSchema,
               serializer_class: StatSerializer,
