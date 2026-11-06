@@ -9,9 +9,15 @@ module ApplicationHelper
     pending: { color: "gray-200", icon: "clock" },
     queued: { color: "gray-200", icon: "clock" },
     running: { color: "blue", icon: "hourglass-high" },
-    stopped: { color: "yellow", icon: "player-stop-filled" },
+    stopped: { color: "red", icon: "player-stop-filled" },
     completed: { color: "green", icon: "check" },
     errored: { color: "red", icon: "alert-triangle" }
+  }.freeze
+
+  BROADCAST_CHANNELS = {
+    voice_call: { color: "cyan", icon: "phone-outgoing" },
+    text_message: { color: "indigo", icon: "message-2-share" },
+    audio: { color: "azure", icon: "speakerphone" }
   }.freeze
 
   IMPORT_STATUSES = {
@@ -167,10 +173,23 @@ module ApplicationHelper
 
   def broadcast_status(broadcast)
     status = BROADCAST_STATUSES[broadcast.status.to_sym]
-    status_badge(
-      broadcast.status_text,
+    badge(
+      text: broadcast.status_text,
       color: status.fetch(:color),
       icon: status.fetch(:icon)
+    )
+  end
+
+  def broadcast_channel(broadcast, with_text: false)
+    channel = BROADCAST_CHANNELS.fetch(broadcast.channel.to_sym)
+    channel_text = broadcast.channel_text
+    with_text ? text = channel_text : title = channel_text
+
+    badge(
+      text:,
+      title:,
+      color: channel.fetch(:color),
+      icon: channel.fetch(:icon)
     )
   end
 
@@ -183,8 +202,8 @@ module ApplicationHelper
   def notification_status(notification)
     status = NOTIFICATION_STATUSES[notification.status.to_sym]
 
-    status_badge(
-      notification.status_text,
+    badge(
+      text: notification.status_text,
       color: status.fetch(:color),
       icon: status.fetch(:icon)
     )
@@ -197,16 +216,17 @@ module ApplicationHelper
   def import_status(import)
     status = IMPORT_STATUSES[import.status.to_sym]
 
-    status_badge(
-      import.status_text,
+    badge(
+      text: import.status_text,
       color: status.fetch(:color),
       icon: status.fetch(:icon)
     )
   end
 
-  def status_badge(text, color:, icon:)
-    content_tag(:span, class: "badge bg-#{color}-lt") do
-      content_tag(:i, nil, class: "icon ti ti-#{icon}") + text
+  def badge(color:, icon:, text: nil, data: {}, **options)
+    data[:bs_toggle] ||= "tooltip" if options.key?(:title)
+    content_tag(:span, class: "badge bg-#{color}-lt", data:, **options) do
+      content_tag(:i, nil, class: "icon ti ti-#{icon}") + text.to_s
     end
   end
 
