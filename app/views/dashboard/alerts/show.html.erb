@@ -37,10 +37,10 @@
     <%= show_for(@alert) do |f| %>
       <%= f.attribute :id %>
       <%= f.attribute :event do %>
-        <%= status_badge(@alert.event.humanize, color: alert_badge(@alert.event).color, icon: alert_badge(@alert.event).icon) %>
+        <%= status_badge(text: @alert.event.humanize, color: alert_badge(@alert.event).color, icon: alert_badge(@alert.event).icon) %>
       <% end %>
       <%= f.attribute :approval_status do %>
-        <%= status_badge(@alert.approval_status.humanize, color: alert_badge(@alert.approval_status).color, icon: alert_badge(@alert.approval_status).icon) %>
+        <%= status_badge(text: @alert.approval_status.humanize, color: alert_badge(@alert.approval_status).color, icon: alert_badge(@alert.approval_status).icon) %>
       <% end %>
       <%= f.attribute :reviewed_by %>
       <%= f.attribute :reviewed_at, value: local_time(@alert.reviewed_at) %>
@@ -52,10 +52,10 @@
       <%= f.attribute :instruction %>
 
       <%= f.attribute :urgency do %>
-        <%= status_badge(@alert.urgency.humanize, color: alert_badge(@alert.urgency).color, icon: alert_badge(@alert.urgency).icon) %>
+        <%= status_badge(text: @alert.urgency.humanize, color: alert_badge(@alert.urgency).color, icon: alert_badge(@alert.urgency).icon) %>
       <% end %>
       <%= f.attribute :severity do %>
-        <%= status_badge(@alert.severity.humanize, color: alert_badge(@alert.severity).color, icon: alert_badge(@alert.severity).icon) %>
+        <%= status_badge(text: @alert.severity.humanize, color: alert_badge(@alert.severity).color, icon: alert_badge(@alert.severity).icon) %>
       <% end %>
       <%= f.attribute :created_at, value: local_time(@alert.created_at) %>
       <%= f.attribute :created_by %>
@@ -88,11 +88,11 @@
                 <%= broadcast.operator  %>
               </td>
               <td>
-                <%= status_badge(broadcast.channel.upcase, color: alert_badge(broadcast.channel).color, icon: alert_badge(broadcast.channel).icon) %>
+                <%= status_badge(text: broadcast.channel.upcase, color: alert_badge(broadcast.channel).color, icon: alert_badge(broadcast.channel).icon) %>
               </td>
               <% if @alert.approval_status.pending_approval? || @alert.approval_status.rejected? %>
                 <td>
-                  <%= status_badge("pending".humanize, color: alert_badge("pending").color, icon: alert_badge("pending").icon) %>
+                  <%= status_badge(text: "pending".humanize, color: alert_badge("pending").color, icon: alert_badge("pending").icon) %>
                 </td>
                 <td>
                   <% percentage = number_to_percentage(0, precision: 0, strip_insignificant_zeros: true) %>
@@ -110,7 +110,7 @@
                 <td></td>
               <% else %>
                 <td>
-                  <%= status_badge(broadcast.status.humanize, color: alert_badge(broadcast.status).color, icon: alert_badge(broadcast.status).icon) %>
+                  <%= status_badge(text: broadcast.status.humanize, color: alert_badge(broadcast.status).color, icon: alert_badge(broadcast.status).icon) %>
                 </td>
                 <td>
                   <% percentage = number_to_percentage(broadcast.progress_percentage, precision: 0, strip_insignificant_zeros: true) %>
