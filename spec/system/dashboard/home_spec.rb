@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Home" do
-  it "renders the dashboard", :js, :selenium_chrome do
+  it "renders the dashboard" do
     account = create(:account)
     user = create(:user, account:)
     completed_broadcast = create(:broadcast, :voice_call, :completed, account:)
