@@ -27,19 +27,19 @@
               <%= link_to(alert.id, dashboard_alert_path(alert.id)) %>
             </td>
             <td>
-              <%= status_badge(text: alert.event.humanize, color: alert_badge(alert.event).color, icon: alert_badge(alert.event).icon) %>
+              <%= badge(text: alert.event.humanize, color: alert_badge(alert.event).color, icon: alert_badge(alert.event).icon) %>
             </td>
             <td>
               <%= alert.headline %>
             </td>
             <td>
-              <%= status_badge(text: alert.approval_status.humanize, color: alert_badge(alert.approval_status).color, icon: alert_badge(alert.approval_status).icon) %>
+              <%= badge(text: alert.approval_status.humanize, color: alert_badge(alert.approval_status).color, icon: alert_badge(alert.approval_status).icon) %>
             </td>
             <td>
-              <%= status_badge(text: alert.urgency.humanize, color: alert_badge(alert.urgency).color, icon: alert_badge(alert.urgency).icon) %>
+              <%= badge(text: alert.urgency.humanize, color: alert_badge(alert.urgency).color, icon: alert_badge(alert.urgency).icon) %>
             </td>
             <td>
-              <%= status_badge(text: alert.severity.humanize, color: alert_badge(alert.severity).color, icon: alert_badge(alert.severity).icon) %>
+              <%= badge(text: alert.severity.humanize, color: alert_badge(alert.severity).color, icon: alert_badge(alert.severity).icon) %>
             </td>
             <td>
               <%= local_time(alert.created_at) %>
