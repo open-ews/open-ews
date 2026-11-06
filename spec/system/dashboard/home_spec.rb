@@ -4,8 +4,9 @@ RSpec.describe "Home" do
   it "renders the dashboard" do
     account = create(:account)
     user = create(:user, account:)
-    completed_broadcast = create(:broadcast, :completed, account:)
-    running_broadcast = create(:broadcast, :running, account:)
+    completed_broadcast = create(:broadcast, :voice_call, :completed, account:)
+    running_broadcast = create(:broadcast, :text_message, :running, account:)
+    _stopped_broadcast = create(:broadcast, :audio, :stopped, account:)
 
     create_list(:notification, 10, broadcast: completed_broadcast, status: :succeeded)
     create_list(:notification, 2, broadcast: running_broadcast, status: :succeeded)
@@ -21,7 +22,7 @@ RSpec.describe "Home" do
     expect(page).to have_content("Total Beneficiaries")
     expect(page).to have_content("Notifications delivered in the last 12 months")
     expect(page).to have_content("12 notifications were delivered in the last 30 days")
-    expect(page).to have_content("2 broadcasts were issued in the last 30 days")
+    expect(page).to have_content("3 broadcasts were issued in the last 30 days")
 
     within ".beneficiary-stats .total-count" do
       expect(page).to have_content("15")
@@ -32,7 +33,7 @@ RSpec.describe "Home" do
     end
 
     within ".broadcasts-stats .total-count" do
-      expect(page).to have_content("2")
+      expect(page).to have_content("3")
     end
 
     within ".broadcast-card-#{completed_broadcast.id}" do

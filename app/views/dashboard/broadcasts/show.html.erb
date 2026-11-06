@@ -49,7 +49,9 @@
     <%= show_for(@broadcast) do |f| %>
       <%= f.attribute :id %>
       <%= f.attribute :name %>
-      <%= f.attribute :channel, value: @broadcast.channel_text %>
+      <%= f.attribute :channel do %>
+        <%= broadcast_channel(@broadcast, with_text: true) %>
+      <% end %>
 
       <%= f.attribute :beneficiary_groups do %>
         <% @broadcast.beneficiary_groups.each do |beneficiary_group| %>
