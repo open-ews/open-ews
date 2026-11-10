@@ -680,4 +680,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-  4.0.18
+  4.1.0.beta3
